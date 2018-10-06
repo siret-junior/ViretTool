@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
@@ -15,6 +13,7 @@ using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Proxy;
 using Castle.MicroKernel.Registration;
+using Castle.Services.Logging.NLogIntegration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using ViretTool.PresentationLayer.ViewModels;
@@ -46,12 +45,13 @@ namespace ViretTool
 					new DefaultComponentInstaller());
 
 			_container.AddFacility<TypedFactoryFacility>();
-			_container.AddFacility<LoggingFacility>(x => x.LogUsing<NullLogFactory>().WithAppConfig());
+			_container.AddFacility<LoggingFacility>(x => x.LogUsing<NLogFactory>().WithAppConfig());
 
 			_container.Register(Component.For<IEventAggregator>().ImplementedBy<EventAggregator>());
 			_container.Register(Component.For<IWindowManager>().ImplementedBy<WindowManager>());
 
-			AssemblySource.Instance.Add(Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ViretTool.PresentationLayer.dll")));
+			//this tells Caliburn where to look for Views connected to ViewModels
+			AssemblySource.Instance.Add(typeof(MainWindowViewModel).Assembly);
 
 			_container.Install(FromAssembly.This());
 		}
