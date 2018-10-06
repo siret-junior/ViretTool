@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2041
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool", "ViretTool\ViretTool.csproj", "{F935EF6A-5FD9-4FF3-9513-6F6A881FCB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.Core", "ViretTool.Core\ViretTool.Core.csproj", "{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.BusinessLayer", "ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj", "{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.DataLayer", "ViretTool.DataLayer\ViretTool.DataLayer.csproj", "{F7058311-7616-4EA5-B2D2-35E502782537}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.PresentationLayer", "ViretTool.PresentationLayer\ViretTool.PresentationLayer.csproj", "{4234CE6E-64A4-4C2D-A192-EED79B458A25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.Resources", "ViretTool.Resources\ViretTool.Resources.csproj", "{5B076C61-E554-4B37-98F0-63169881A426}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F935EF6A-5FD9-4FF3-9513-6F6A881FCB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F935EF6A-5FD9-4FF3-9513-6F6A881FCB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F935EF6A-5FD9-4FF3-9513-6F6A881FCB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F935EF6A-5FD9-4FF3-9513-6F6A881FCB06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7058311-7616-4EA5-B2D2-35E502782537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7058311-7616-4EA5-B2D2-35E502782537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7058311-7616-4EA5-B2D2-35E502782537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7058311-7616-4EA5-B2D2-35E502782537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4234CE6E-64A4-4C2D-A192-EED79B458A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4234CE6E-64A4-4C2D-A192-EED79B458A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4234CE6E-64A4-4C2D-A192-EED79B458A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4234CE6E-64A4-4C2D-A192-EED79B458A25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B076C61-E554-4B37-98F0-63169881A426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B076C61-E554-4B37-98F0-63169881A426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B076C61-E554-4B37-98F0-63169881A426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B076C61-E554-4B37-98F0-63169881A426}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}
+	EndGlobalSection
+EndGlobal
