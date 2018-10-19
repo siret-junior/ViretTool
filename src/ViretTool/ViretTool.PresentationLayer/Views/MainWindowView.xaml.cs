@@ -15,14 +15,14 @@ using System.Windows.Shapes;
 
 namespace ViretTool.PresentationLayer.Views
 {
-	/// <summary>
-	/// Interaction logic for MainWindowView.xaml
-	/// </summary>
-	public partial class MainWindowView
-	{
-		public MainWindowView()
-		{
-			InitializeComponent();
-		}
-	}
+    /// <summary>
+    /// Interaction logic for MainWindowView.xaml
+    /// </summary>
+    public partial class MainWindowView
+    {
+        public MainWindowView()
+        {
+            InitializeComponent();
+        }
+    }
 }
