@@ -6,6 +6,8 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:local="clr-namespace:ViretTool.PresentationLayer.Controls.Views"
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:ViretTool.PresentationLayer.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DisplayControlViewModel}">
@@ -114,11 +116,11 @@
                     Content="&lt; Previous" />
 
                 <Label
-                    x:Name="CurrentPageNumberText" 
                     Grid.Column="9"
                     Background="White"
                     VerticalContentAlignment="Center"
-                    HorizontalContentAlignment="Left" />
+                    HorizontalContentAlignment="Left"
+                    Content="{Binding CurrentPageNumber}"/>
 
                 <Button
                     x:Name="NextPageButton"
@@ -132,43 +134,44 @@
             </Grid>
         </Grid>
 
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Tiles}"
-                      ScrollViewer.CanContentScroll="True">
+        <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" ItemsSource="{Binding VisibleTiles}">
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <!--<Viewbox
                             Name="viewBox"
                             Stretch="Uniform">-->
-                        <Grid 
+                    <Grid 
                             Background="White"
                             cal:Message.Attach="[Event MouseDown] = [Action MouseDown($eventArgs)];
                                                 [Event MouseMove] = [Action MouseMove($eventArgs)];
                                                 [Event MouseLeave] = [Action MouseLeave($eventArgs)];
                                                 [Event MouseWheel] = [Action MouseWheel($eventArgs)];">
 
-                            <Image Name="Image" Width="100" Height="75" Stretch="Fill" Source="{Binding ImageSource, Mode=OneWay}"/>
-                            <Rectangle Name="rectangle"
+                        <Image Name="Image" Width="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay}"
+                               Height="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay}"
+                               Stretch="Fill" Source="{Binding ImageSource, Mode=OneWay}"/>
+                        <Rectangle Name="rectangle"
                                        Fill="Transparent"
                                        Stroke="Lime"
                                        StrokeThickness="4"
                                        Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
 
-                            <Label Name="videoLabel" 
+                        <Label Name="videoLabel" 
                                FontSize="8"
                                Padding="1"
                                Background="LightSkyBlue"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top" />
-                            <Label Name="groupLabel" 
+                        <Label Name="groupLabel" 
                                FontSize="8"
                                Padding="1"
                                Background="LightSkyBlue"
                                HorizontalAlignment="Left"
                                Visibility="Hidden"
                                VerticalAlignment="Center" />
-                            <Label Name="frameLabel" 
+                        <Label Name="frameLabel" 
                                FontSize="8"
                                Padding="1"
                                Background="LightSkyBlue"
@@ -178,102 +181,107 @@
 
 
 
-                            <Grid Name="DisplayButtons"
+                        <Grid Name="DisplayButtons"
                                   Width="100"
                                   Height="16"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Bottom"
                                   Opacity="0.5"
                                   Visibility="{Binding IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="2*" />
-                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
 
-                                <Button Name="Add"
+                            <Button Name="Add"
                                         Grid.Column="0"
                                         FontSize="7"
                                         Background="LightCoral"
                                         cal:Message.Attach="AddClicked($dataContext)" >
-                                    <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+</TextBlock>
-                                </Button>
-                                <Button Name="Remove"
+                                <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+</TextBlock>
+                            </Button>
+                            <Button Name="Remove"
                                         Grid.Column="1"
                                         FontSize="7"
                                         Background="DeepSkyBlue"
                                         cal:Message.Attach="RemoveClicked($dataContext)">
-                                    <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">-</TextBlock>
-                                </Button>
-                                <Button Name="AddSubmit"
+                                <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">-</TextBlock>
+                            </Button>
+                            <Button Name="AddSubmit"
                                         Grid.Column="2"
                                         FontSize="7"
                                         Background="LightCoral"
                                         cal:Message.Attach="AddSubmitClicked($dataContext)">
-                                    <TextBlock FontSize="10" VerticalAlignment="Top" Margin="0, -2, 0, 0" FontWeight="Bold">++</TextBlock>
-                                </Button>
-                                <Button Name="RemoveSubmit"
+                                <TextBlock FontSize="10" VerticalAlignment="Top" Margin="0, -2, 0, 0" FontWeight="Bold">++</TextBlock>
+                            </Button>
+                            <Button Name="RemoveSubmit"
                                         Grid.Column="3"
                                         FontSize="7"
                                         Background="DeepSkyBlue"
                                         cal:Message.Attach="RemoveSubmitClicked($dataContext)">
-                                    <TextBlock FontSize="12" VerticalAlignment="Top" Margin="0, -2.9, 0, 0" FontWeight="Bold">--</TextBlock>
-                                </Button>
+                                <TextBlock FontSize="12" VerticalAlignment="Top" Margin="0, -2.9, 0, 0" FontWeight="Bold">--</TextBlock>
+                            </Button>
 
-                                <Button x:Name="SubmitButton"
+                            <Button x:Name="SubmitButton"
                                         Grid.Column="4"
                                         FontSize="7"
                                         Background="DarkSeaGreen">
-                                    <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold">Submit</TextBlock>
-                                </Button>
-                            </Grid>
+                                <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold">Submit</TextBlock>
+                            </Button>
+                        </Grid>
 
-                            <Grid Name="scrollHelper"
+                        <Grid Name="scrollHelper"
                                   Width="100"
                                   Height="75"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center"
-                                  Opacity="1"
-                                  Visibility="Visible">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="4*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
+                                  Opacity="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
 
-                                <TextBlock Name="LeftScrollHelper" 
+                            <TextBlock Name="LeftScrollHelper" 
                                            Grid.Column="0"
                                            Visibility="{Binding IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}"
                                            Foreground="Azure"
                                            Text="&lt;" Margin="0,0,1,60">
-                                    <TextBlock.RenderTransform>
-                                        <ScaleTransform ScaleX="1" ScaleY="4" />
-                                    </TextBlock.RenderTransform>
-                                </TextBlock>
-                                <TextBlock Name="RightScrollHelper" 
+                                <TextBlock.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="4" />
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                            <TextBlock Name="RightScrollHelper" 
                                            Grid.Column="2"
                                            Visibility="{Binding IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}"
                                            Foreground="Azure"
                                            TextAlignment="Right"
                                            Text="&gt;" Margin="0,0,1,60">
-                                    <TextBlock.RenderTransform>
-                                        <ScaleTransform ScaleX="1" ScaleY="4" />
-                                    </TextBlock.RenderTransform>
-                                </TextBlock>
-
-                            </Grid>
+                                <TextBlock.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="4" />
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
 
                         </Grid>
+
+                    </Grid>
                     <!--</Viewbox>-->
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"/>
+                    <WrapPanel Orientation="Horizontal">
+
+                    </WrapPanel>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <i:Interaction.Behaviors>
+                <behaviors:ActualSizeBehavior ActualHeight="{Binding DisplayHeight}" ActualWidth="{Binding DisplayWidth}"
+                                              SizeChanged="{Binding DisplaySizeChangedHandler, Mode=OneWay}"/>
+            </i:Interaction.Behaviors>
         </ItemsControl>
     </Grid>
 </UserControl>
