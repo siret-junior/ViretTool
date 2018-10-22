@@ -100,4 +100,7 @@
   <data name="AppTitle" xml:space="preserve">
     <value>Viret Tool</value>
   </data>
+  <data name="WorkingText" xml:space="preserve">
+    <value>Working...</value>
+  </data>
 </root>
