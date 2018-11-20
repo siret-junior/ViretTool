@@ -13,22 +13,23 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,7 +42,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataIO\BlobIO\FixedSize\FixedSizeBlobIOBase.cs" />
+    <Compile Include="DataIO\BlobIO\FixedSize\FixedSizeBlobReader.cs" />
+    <Compile Include="DataIO\BlobIO\FixedSize\FixedSizeBlobWriter.cs" />
+    <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobIOBase.cs" />
+    <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobReader.cs" />
+    <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobWriter.cs" />
+    <Compile Include="DataIO\DataConversionUtilities.cs" />
+    <Compile Include="DataIO\DescriptorIO\ColorSignatureIO\ColorSignatureIOBase.cs" />
+    <Compile Include="DataIO\DescriptorIO\ColorSignatureIO\ColorSignatureReader.cs" />
+    <Compile Include="DataIO\DescriptorIO\FloatVectorIO\FloatVectorIOBase.cs" />
+    <Compile Include="DataIO\DescriptorIO\FloatVectorIO\FloatVectorReader.cs" />
+    <Compile Include="DataIO\FileHeaderUtilities.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetBinaryFormatter.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetBinaryDeserializer.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetFilelistDeserializer.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetSerializationBase.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetBinarySerializer.cs" />
+    <Compile Include="DataIO\ThumbnailIO\ThumbnailRaw.cs" />
+    <Compile Include="DataIO\ThumbnailIO\ThumbnailIOBase.cs" />
+    <Compile Include="DataIO\ThumbnailIO\ThumbnailReader.cs" />
+    <Compile Include="DataIO\ThumbnailIO\ThumbnailWriter.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetFilelistFormatter.cs" />
+    <Compile Include="DataProviders\Dataset\DatasetProvider.cs" />
+    <Compile Include="DataModel\Dataset.cs" />
+    <Compile Include="DataModel\Attributes\DatasetAttributes.cs" />
+    <Compile Include="DataModel\Frame.cs" />
+    <Compile Include="DataModel\Attributes\FrameAttributes.cs" />
+    <Compile Include="DataModel\Group.cs" />
+    <Compile Include="DataModel\Attributes\GroupAttributes.cs" />
+    <Compile Include="DataModel\Shot.cs" />
+    <Compile Include="DataModel\Attributes\ShotAttributes.cs" />
+    <Compile Include="DataModel\Video.cs" />
+    <Compile Include="DataModel\Attributes\VideoAttributes.cs" />
+    <Compile Include="DataProviders\Descriptor\ColorSignatureDescriptorProvider.cs" />
+    <Compile Include="DataProviders\Descriptor\FloatVectorDescriptorProvider.cs" />
+    <Compile Include="DataProviders\Thumbnails\ThumbnailProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataIO\DescriptorIO\KeywordIO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

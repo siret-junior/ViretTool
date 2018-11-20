@@ -15,24 +15,25 @@
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
@@ -111,6 +112,7 @@
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="ArgumentPassingDependencyResolver.cs" />
+    <Compile Include="Installers\BusinessLayerInstaller.cs" />
     <Compile Include="Installers\PresentationLayerInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -139,9 +141,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj">
+      <Project>{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}</Project>
+      <Name>ViretTool.BusinessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViretTool.Core\ViretTool.Core.csproj">
       <Project>{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}</Project>
       <Name>ViretTool.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViretTool.DataLayer\ViretTool.DataLayer.csproj">
+      <Project>{F7058311-7616-4EA5-B2D2-35E502782537}</Project>
+      <Name>ViretTool.DataLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViretTool.PresentationLayer\ViretTool.PresentationLayer.csproj">
       <Project>{4234CE6E-64A4-4C2D-A192-EED79B458A25}</Project>
