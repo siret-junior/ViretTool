@@ -17,42 +17,71 @@
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
                 </ResourceDictionary>
+                <ResourceDictionary>
+                    <DataTemplate x:Key="GroupHeaderTemplate">
+                        <TextBlock Text="{Binding}" FontSize="20" FontWeight="Bold" Foreground="Red"/>
+                    </DataTemplate>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <Grid>
+        <!-- left panel (models) -->
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <!--<ColumnDefinition Width="*"/>-->
-            </Grid.ColumnDefinitions>
 
-            <DockPanel Grid.Row="0" Grid.Column="0" Margin="6">
-                <Label Content="Database path: "/>
-                <TextBox Margin="6,0,0,0" Text="{Binding DatabasePath, UpdateSourceTrigger=PropertyChanged}"/>
-            </DockPanel>
+            <GroupBox Grid.Row="0" Margin="6" Header="{x:Static properties:Resources.TemporalQuery1Header}" HeaderTemplate="{StaticResource GroupHeaderTemplate}">
+                <ContentControl x:Name="Query1" />
+            </GroupBox>
+            <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.TemporalQuery2Header}" HeaderTemplate="{StaticResource GroupHeaderTemplate}">
+                <ContentControl  x:Name="Query2" />
+            </GroupBox>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Margin="6" HorizontalAlignment="Left">
-                <Button x:Name="LoadDatasetButton" Content="Load dataset" Width="100"/>
-            </StackPanel>
-
-            <ContentControl Grid.Row="2" Grid.Column="0" Margin="6" x:Name="DisplayControlViewModel" />
         </Grid>
 
-        <!-- Busy overlay -->
-        <Grid Background="Gray" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Opacity="0.8">
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{x:Static properties:Resources.WorkingText}"
+        <!-- result displays -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <!--<ColumnDefinition Width="*"/>-->
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Row="0" Grid.Column="0" Margin="6">
+                    <Label Content="Database path: "/>
+                    <TextBox Margin="6,0,0,0" Text="{Binding DatabasePath, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="6" HorizontalAlignment="Left">
+                    <Button x:Name="LoadDatasetButton" Content="Load dataset" Width="100"/>
+                </StackPanel>
+
+                <ContentControl Grid.Row="2" Grid.Column="0" Margin="6" x:Name="DisplayControlViewModel" />
+            </Grid>
+
+            <!-- Busy overlay -->
+            <Grid Background="Gray" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Opacity="0.8">
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{x:Static properties:Resources.WorkingText}"
                    FontSize="30" Foreground="White" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>

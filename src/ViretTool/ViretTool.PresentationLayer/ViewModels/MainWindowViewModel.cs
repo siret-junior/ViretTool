@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Castle.Core.Logging;
-using ViretTool.PresentationLayer.Controls.ViewModels;
+using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
+using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
 namespace ViretTool.PresentationLayer.ViewModels
 {
@@ -10,10 +11,12 @@ namespace ViretTool.PresentationLayer.ViewModels
         private string _databasePath;
         private bool _isBusy;
 
-        public MainWindowViewModel(ILogger logger, DisplayControlViewModel displayControlViewModel)
+        public MainWindowViewModel(ILogger logger, DisplayControlViewModel displayControlViewModel, QueryViewModel query1, QueryViewModel query2)
         {
             _logger = logger;
             DisplayControlViewModel = displayControlViewModel;
+            Query1 = query1;
+            Query2 = query2;
         }
 
         public string DatabasePath
@@ -47,6 +50,8 @@ namespace ViretTool.PresentationLayer.ViewModels
         }
 
         public DisplayControlViewModel DisplayControlViewModel { get; }
+        public QueryViewModel Query1 { get; }
+        public QueryViewModel Query2 { get; }
 
         public async void LoadDatasetButton()
         {

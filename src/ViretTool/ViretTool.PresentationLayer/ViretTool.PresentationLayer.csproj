@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -77,11 +78,40 @@
   <ItemGroup>
     <Compile Include="Behaviors\ActualSizeBehavior.cs" />
     <Compile Include="Behaviors\BaseBehavior.cs" />
-    <Compile Include="Controls\ViewModels\DisplayControlViewModel.cs" />
-    <Compile Include="Controls\ViewModels\TileViewModel.cs" />
-    <Compile Include="Controls\Views\DisplayControlView.xaml.cs">
+    <Compile Include="Controls\Common\KeywordSearchControl.xaml.cs">
+      <DependentUpon>KeywordSearchControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Common\KeywordSearch\QueryTextBlock.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\SuggestionPopup.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\SuggestionTextBox.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Suggestion\IIdentifiable.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Suggestion\IQueryPart.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Suggestion\Label.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Suggestion\LabelProvider.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Suggestion\SuggestionProvider.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Suggestion\SuggestionResultItem.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Themes\StringHighlightingConverter.cs" />
+    <Compile Include="Controls\Common\KeywordSearch\Themes\SuggestionTemplateSelector.cs" />
+    <Compile Include="Controls\Common\ModelControl.xaml.cs">
+      <DependentUpon>ModelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Common\SketchCanvas.xaml.cs">
+      <DependentUpon>SketchCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\TileViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\Views\DisplayControlView.xaml.cs">
       <DependentUpon>DisplayControlView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Query\ViewModels\QueryViewModel.cs" />
+    <Compile Include="Controls\Common\FilterControl.xaml.cs">
+      <DependentUpon>FilterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Query\Views\QueryView.xaml.cs">
+      <DependentUpon>QueryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\RadioEnumToBooleanConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindowView.xaml.cs">
@@ -92,13 +122,45 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj">
+      <Project>{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}</Project>
+      <Name>ViretTool.BusinessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViretTool.Resources\ViretTool.Resources.csproj">
       <Project>{5b076c61-e554-4b37-98f0-63169881a426}</Project>
       <Name>ViretTool.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\Views\DisplayControlView.xaml">
+    <Page Include="Controls\Common\KeywordSearchControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\KeywordSearch\Themes\SuggestionPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Common\KeywordSearch\Themes\SuggestionTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Common\ModelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\SketchCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DisplayControl\Views\DisplayControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\FilterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Query\Views\QueryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

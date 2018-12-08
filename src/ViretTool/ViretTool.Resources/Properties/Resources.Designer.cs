@@ -70,6 +70,69 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to B/W.
+        /// </summary>
+        public static string BwFilterText {
+            get {
+                return ResourceManager.GetString("BwFilterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key word.
+        /// </summary>
+        public static string KeywordModelName {
+            get {
+                return ResourceManager.GetString("KeywordModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to % of Black.
+        /// </summary>
+        public static string PercentageBlackFilterText {
+            get {
+                return ResourceManager.GetString("PercentageBlackFilterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Semantic.
+        /// </summary>
+        public static string SemanticModelName {
+            get {
+                return ResourceManager.GetString("SemanticModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Color.
+        /// </summary>
+        public static string SketchModelName {
+            get {
+                return ResourceManager.GetString("SketchModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporal query 1.
+        /// </summary>
+        public static string TemporalQuery1Header {
+            get {
+                return ResourceManager.GetString("TemporalQuery1Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporal query 2.
+        /// </summary>
+        public static string TemporalQuery2Header {
+            get {
+                return ResourceManager.GetString("TemporalQuery2Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Working....
         /// </summary>
         public static string WorkingText {

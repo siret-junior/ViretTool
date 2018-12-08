@@ -123,4 +123,25 @@
   <data name="WorkingText" xml:space="preserve">
     <value>Pracuji...</value>
   </data>
+  <data name="BwFilterText" xml:space="preserve">
+    <value>Č/B</value>
+  </data>
+  <data name="PercentageBlackFilterText" xml:space="preserve">
+    <value>% černé</value>
+  </data>
+  <data name="KeywordModelName" xml:space="preserve">
+    <value>Klíčová slova</value>
+  </data>
+  <data name="SketchModelName" xml:space="preserve">
+    <value>Barvy</value>
+  </data>
+  <data name="TemporalQuery1Header" xml:space="preserve">
+    <value>Dotaz 1</value>
+  </data>
+  <data name="TemporalQuery2Header" xml:space="preserve">
+    <value>Dotaz 2</value>
+  </data>
+  <data name="SemanticModelName" xml:space="preserve">
+    <value>Podobnost</value>
+  </data>
 </root>

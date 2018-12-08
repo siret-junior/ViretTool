@@ -1,9 +1,8 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 
-namespace ViretTool.PresentationLayer.Controls.ViewModels
+namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class TileViewModel : PropertyChangedBase
     {

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ViretTool.PresentationLayer.Controls.Views
+namespace ViretTool.PresentationLayer.Controls.Query.Views
 {
     /// <summary>
-    /// Interaction logic for DisplayControlView.xaml
+    /// Interaction logic for QueryView.xaml
     /// </summary>
-    public partial class DisplayControlView : UserControl
+    public partial class QueryView : UserControl
     {
-        public DisplayControlView()
+        public QueryView()
         {
             InitializeComponent();
         }

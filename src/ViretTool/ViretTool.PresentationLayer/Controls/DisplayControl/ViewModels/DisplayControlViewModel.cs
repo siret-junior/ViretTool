@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Action = System.Action;
 
-namespace ViretTool.PresentationLayer.Controls.ViewModels
+namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class DisplayControlViewModel : PropertyChangedBase
     {
@@ -183,7 +182,7 @@ namespace ViretTool.PresentationLayer.Controls.ViewModels
         {
             for (int i = 0; i < 100000; i++)
             {
-                BitmapImage imageSource = new BitmapImage(new Uri(@"..."));
+                BitmapImage imageSource = new BitmapImage(new Uri(@"d:\Temp\Downloads\signature.png"));
                 imageSource.Freeze();
                 yield return new TileViewModel(imageSource);
             }
