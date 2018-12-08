@@ -13,5 +13,10 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
         // total counts
         protected readonly int FrameCount;
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

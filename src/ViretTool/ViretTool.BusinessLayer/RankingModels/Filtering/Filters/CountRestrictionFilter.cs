@@ -90,29 +90,29 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         }
 
 
-        public void AddVideoToFilterList(int videoId)
-        {
-            mVideoFilterHashset.Add(videoId);
-        }
+        //public void AddVideoToFilterList(int videoId)
+        //{
+        //    mVideoFilterHashset.Add(videoId);
+        //}
 
-        public void AddVideoToFilterList(Video video)
-        {
-            mVideoFilterHashset.Add(video.Id);
-        }
+        //public void AddVideoToFilterList(Video video)
+        //{
+        //    mVideoFilterHashset.Add(video.Id);
+        //}
 
-        public void EnableVideoFilter()
-        {
-            mVideoFilterEnabled = true;
-        }
-        public void DisableVideoFilter()
-        {
-            mVideoFilterEnabled = false;
-        }
+        //public void EnableVideoFilter()
+        //{
+        //    mVideoFilterEnabled = true;
+        //}
+        //public void DisableVideoFilter()
+        //{
+        //    mVideoFilterEnabled = false;
+        //}
 
-        public void ResetVideoFilter()
-        {
-            mVideoFilterHashset.Clear();
-        }
+        //public void ResetVideoFilter()
+        //{
+        //    mVideoFilterHashset.Clear();
+        //}
 
     }
 }

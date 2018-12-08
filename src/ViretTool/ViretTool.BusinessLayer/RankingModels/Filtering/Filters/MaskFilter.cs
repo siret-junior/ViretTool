@@ -9,7 +9,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
     /// <summary>
     /// TODO: precompute various mask combinations (2^(n masks + 1))
     /// </summary>
-    abstract class MaskFilter
+    public abstract class MaskFilter
     {
         bool[] _mask;
         public bool[] Mask

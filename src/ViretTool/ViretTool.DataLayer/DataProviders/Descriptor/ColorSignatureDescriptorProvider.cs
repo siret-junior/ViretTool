@@ -20,15 +20,14 @@ namespace ViretTool.DataLayer.DataProviders.Descriptor
         public byte[][] Descriptors { get; private set; }
 
 
-        public static byte[][] FromDirectory(string inputDirectory)
+        public static ColorSignatureDescriptorProvider FromDirectory(string inputDirectory)
         {
             string[] files = Directory.GetFiles(inputDirectory);
             string inputFile = files.Where(path => path.EndsWith(FILE_EXTENSION)).Single();
-            
-
+            return FromFile(inputFile);
         }
 
-        public static byte[][] FromFile(string inputFile)
+        public static ColorSignatureDescriptorProvider FromFile(string inputFile)
         {
             ColorSignatureDescriptorProvider provider = new ColorSignatureDescriptorProvider();
 
@@ -38,8 +37,11 @@ namespace ViretTool.DataLayer.DataProviders.Descriptor
 
             using (BinaryReader reader = new BinaryReader(new MemoryStream(blobReader.FiletypeMetadata)))
             {
-
+                throw new NotImplementedException();
             }
+
+
+            return provider;
         }
 
     }

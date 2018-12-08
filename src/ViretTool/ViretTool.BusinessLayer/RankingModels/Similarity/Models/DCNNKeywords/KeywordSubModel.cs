@@ -71,33 +71,34 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         #region (Private) Index File Loading
 
         private void LoadFromFile() {
-            mClassLocations = new Dictionary<int, int>();
-            mClassCache = new Dictionary<int, List<KeywordSearchFrame>>();
-            mClauseCache = new Dictionary<List<int>, Dictionary<int, float>>(new DCNNKeywords.ListComparer());
+            throw new NotImplementedException();
+            //mClassLocations = new Dictionary<int, int>();
+            //mClassCache = new Dictionary<int, List<KeywordSearchFrame>>();
+            //mClauseCache = new Dictionary<List<int>, Dictionary<int, float>>(new DCNNKeywords.ListComparer());
 
-            if (mUseIDF) {
-                string idfFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword.idf");
-                IDF = DCNNKeywords.IDFLoader.LoadFromFile(idfFilename);
-            }
+            //if (mUseIDF) {
+            //    string idfFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword.idf");
+            //    IDF = DCNNKeywords.IDFLoader.LoadFromFile(idfFilename);
+            //}
 
-            LastId = mDataset.LAST_FRAME_TO_LOAD;
-            string indexFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword");
+            //LastId = mDataset.LAST_FRAME_TO_LOAD;
+            //string indexFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword");
 
-            mReader = new BinaryReader(File.Open(indexFilename, FileMode.Open, FileAccess.Read, FileShare.Read));
+            //mReader = new BinaryReader(File.Open(indexFilename, FileMode.Open, FileAccess.Read, FileShare.Read));
 
-            // header = 'KS INDEX'+(Int64)-1
-            if (mReader.ReadInt64() != 0x4b5320494e444558 && mReader.ReadInt64() != -1)
-                throw new FileFormatException("Invalid index file format.");
+            //// header = 'KS INDEX'+(Int64)-1
+            //if (mReader.ReadInt64() != 0x4b5320494e444558 && mReader.ReadInt64() != -1)
+            //    throw new FileFormatException("Invalid index file format.");
 
-            // read offests of each class
-            while (true) {
-                int value = mReader.ReadInt32();
-                int valueOffset = mReader.ReadInt32();
+            //// read offests of each class
+            //while (true) {
+            //    int value = mReader.ReadInt32();
+            //    int valueOffset = mReader.ReadInt32();
 
-                if (value != -1) {
-                    mClassLocations.Add(value, valueOffset);
-                } else break;
-            }
+            //    if (value != -1) {
+            //        mClassLocations.Add(value, valueOffset);
+            //    } else break;
+            //}
         }
 
         private List<KeywordSearchFrame> ReadClassFromFile(int classId) {

@@ -12,11 +12,16 @@ namespace ViretTool.DataLayer.DataProviders.Descriptor
     {
         public const string FILE_EXTENSION = ".floatvector";
 
-        public static float[][] FromDirectory(string inputDirectory)
+        public static FloatVectorDescriptorProvider FromDirectory(string inputDirectory)
         {
             string[] files = Directory.GetFiles(inputDirectory);
             string inputFile = files.Where(path => path.EndsWith(FILE_EXTENSION)).Single();
-            return new ThumbnailReader(inputFile);
+            return FromFile(inputFile);
+        }
+
+        public static FloatVectorDescriptorProvider FromFile(string inputFile)
+        {
+            throw new NotImplementedException();
         }
     }
 }

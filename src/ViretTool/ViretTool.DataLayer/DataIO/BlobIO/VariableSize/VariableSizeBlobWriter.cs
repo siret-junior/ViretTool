@@ -8,5 +8,9 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
 {
     internal class VariableSizeBlobWriter : VariableSizeBlobIOBase
     {
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

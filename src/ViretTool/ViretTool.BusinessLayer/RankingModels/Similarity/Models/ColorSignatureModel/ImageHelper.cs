@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel
 {
+    public struct Color
+    {
+        public int R;
+        public int G;
+        public int B;
+    }
+
     public class ImageHelper
     {
+     
         /// <summary>
         /// Structure to define CIE L*a*b*.
         /// </summary>

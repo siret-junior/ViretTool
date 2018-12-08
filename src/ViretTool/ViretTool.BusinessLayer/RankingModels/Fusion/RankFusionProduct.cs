@@ -8,7 +8,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
 {
     public class RankFusionProduct : IRankFusion
     {
-        public Ranking ComputeRanking(Ranking[] rankings)
+        public Ranking OutputRanking { get; private set; }
+
+        public void ComputeRanking(Ranking[] rankings)
         {
             Ranking resultRanking = Ranking.Ones(rankings[0].Ranks.Length);
 
@@ -26,7 +28,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                 }
             });
 
-            return resultRanking;
+            OutputRanking.Ranks = resultRanking.Ranks;
+            OutputRanking.IsUpdated = true;
         }
     }
 }

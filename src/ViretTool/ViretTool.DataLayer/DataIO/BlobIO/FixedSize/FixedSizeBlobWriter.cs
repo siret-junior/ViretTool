@@ -8,5 +8,9 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
 {
     internal class FixedSizeBlobWriter : FizedSizeBlobIOBase
     {
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

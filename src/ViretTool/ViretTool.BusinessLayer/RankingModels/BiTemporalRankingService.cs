@@ -9,20 +9,23 @@ using ViretTool.BusinessLayer.RankingModels.Similarity;
 
 namespace ViretTool.BusinessLayer.RankingModels
 {
-    public class BiTemporalRankingService : ITemporalRankingService<IList<TemporalRankedFrame>>
+    public class BiTemporalRankingService 
+        : IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]>
     {
+        public IRankingService<Query, RankedFrame[]> PrimaryRankingService { get; private set; }
+        public IRankingService<Query, RankedFrame[]> SecondaryRankingService { get; private set; }
+
         public TemporalQuery CachedQuery { get; private set; }
-        public IList<TemporalRankedFrame> CachedTemporalRanking { get; private set; }
-
-        public IRankingService PrimaryRankingService { get; private set; }
+        public TemporalRankedFrame[] CachedResultSet { get; private set; }
+        
         public IFilteringModule FilteringModule { get; private set; }
+        
 
-
-        public IList<TemporalRankedFrame> ComputeRankedResultSet(TemporalQuery query)
+        public TemporalRankedFrame[] ComputeRankedResultSet(TemporalQuery query)
         {
-            if (query.Equals(CachedQuery))
+            if (query.Equals(CachedQuery) /* TODO initial ranking has not changed */)
             {
-                return CachedTemporalRanking;
+                return CachedResultSet;
             }
             else
             {
@@ -33,15 +36,13 @@ namespace ViretTool.BusinessLayer.RankingModels
                 // aggregate temporal rankings
 
 
-
-                float[] ranking = SimilarityModule.ComputeRanking(query.SimilarityQuery);
-                float[] temporalRanking
-                    = FilteringModule.ComputeFiltering(ranking, query.FilteringQuery);
-
-                CachedQuery = query;
-                CachedTemporalRanking = temporalRanking;
-                return filteredRanking;
+                throw new NotImplementedException();
             }
+        }
+
+        public TemporalRankedFrame[] ComputeRankedResultSet(Query query)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,7 +8,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
 {
     public class RankFusionWeightedSum : IRankFusion
     {
-        public Ranking ComputeRanking(Ranking[] rankings, float[] weights)
+        public Ranking OutputRanking { get; private set; }
+
+        public void ComputeRanking(Ranking[] rankings, float[] weights)
         {
             Ranking resultRanking = Ranking.Zeros(rankings[0].Ranks.Length);
 
@@ -22,11 +24,25 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                         resultRanking.Ranks[itemId] = -1;
                         return;
                     }
-                    resultRanking.Ranks[itemId] += itemRank * weights[iRanking];
+
+                    if (weights == null)
+                    {
+                        resultRanking.Ranks[itemId] += itemRank;
+                    }
+                    else
+                    {
+                        resultRanking.Ranks[itemId] += itemRank * weights[iRanking];
+                    }
                 }
             });
 
-            return resultRanking;
+            OutputRanking.Ranks = resultRanking.Ranks;
+            OutputRanking.IsUpdated = true;
+        }
+
+        public void ComputeRanking(Ranking[] rankings)
+        {
+            ComputeRanking(rankings, null);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
+using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity;
 using ViretTool.DataLayer.DataModel;
 
@@ -11,7 +12,7 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public class RankingServiceFactory
     {
-        public static IRankingService<RankedFrame[]> Build(string directory)
+        public static IRankingService<Query, RankedFrame[]> Build(string directory)
         {
             // load dataset
             Dataset dataset = DatasetProvider.FromDirectory(directory);

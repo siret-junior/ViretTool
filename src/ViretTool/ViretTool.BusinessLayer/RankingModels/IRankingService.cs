@@ -7,10 +7,10 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels
 {
-    public interface IRankingService<TResult>
+    public interface IRankingService<TQuery, TResult>
     {
         IRankingModule RankingModule { get; }
 
-        TResult ComputeRanking(Query query);
+        TResult ComputeRankedResultSet(TQuery query);
     }
 }

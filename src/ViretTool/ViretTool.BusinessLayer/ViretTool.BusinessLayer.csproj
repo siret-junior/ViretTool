@@ -58,7 +58,7 @@
     <Compile Include="RankingModels\Filtering\FilteringModule.cs" />
     <Compile Include="RankingModels\IFilteringModule.cs" />
     <Compile Include="RankingModels\IRankingService.cs" />
-    <Compile Include="RankingModels\ITemporalRankingService.cs" />
+    <Compile Include="RankingModels\IBiTemporalRankingService.cs" />
     <Compile Include="RankingModels\Queries\CountFilteringQuery.cs" />
     <Compile Include="RankingModels\Queries\Synset.cs" />
     <Compile Include="RankingModels\Queries\SynsetGroup.cs" />
@@ -73,10 +73,8 @@
     <Compile Include="RankingModels\ISimilarityModule.cs" />
     <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ColorSignatureModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ImageHelper.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNFeatures\ByteVectorModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNFeatures\FloatVectorModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\IDFLoader.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordSearchFrame.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordSubModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\ListComparer.cs" />
@@ -94,6 +92,7 @@
     <Compile Include="RankingModels\Queries\Query.cs" />
     <Compile Include="RankingModels\Queries\SimilarityQuery.cs" />
     <Compile Include="Descriptor\IDescriptorService.cs" />
+    <Compile Include="RankingModels\TemporalRankedFrame.cs" />
     <Compile Include="Thumbnails\CachedThumbnailService.cs" />
     <Compile Include="Thumbnails\IThumbnailService.cs" />
     <Compile Include="Thumbnails\JpegThumbnailService.cs" />

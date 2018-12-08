@@ -35,7 +35,12 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
                 SemanticExampleModel.ComputeRanking(query.SemanticExampleQuery);
 
                 // perform rank fusion
-                RankFusion.ComputeRanking();
+                RankFusion.ComputeRanking(new Ranking[] {
+                    KeywordModel.OutputRanking,
+                    ColorSketchModel.OutputRanking,
+                    SemanticExampleModel.OutputRanking
+                });
+                // TODO: RankFusion should share the ranking object with SimilarityModule
 
                 // cache the query
                 CachedQuery = query;

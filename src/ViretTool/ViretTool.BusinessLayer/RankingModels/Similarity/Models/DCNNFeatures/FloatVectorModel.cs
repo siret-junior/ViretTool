@@ -62,7 +62,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             return mCache[queryId];
         }
 
-        public void RankFramesBasedOnExampleFrames(SemanticExampleQuery query)
+        public void ComputeRanking(SemanticExampleQuery query)
         {
             if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {

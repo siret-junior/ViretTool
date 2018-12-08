@@ -1,7 +1,4 @@
-﻿using ViretTool.BusinessLayer.RankingModels.Filtering;
-using ViretTool.BusinessLayer.RankingModels.Filtering.Queries;
-using ViretTool.BusinessLayer.RankingModels.Similarity;
-namespace ViretTool.BusinessLayer.RankingModels.Queries
+﻿namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
     public class Query
     {

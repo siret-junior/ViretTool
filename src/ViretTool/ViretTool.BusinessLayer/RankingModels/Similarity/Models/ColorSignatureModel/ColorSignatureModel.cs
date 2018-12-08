@@ -195,11 +195,5 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
             return Math.Sqrt(result);
         }
 
-        private struct Color
-        {
-            public int R;
-            public int G;
-            public int B;
-        }
     }
 }
