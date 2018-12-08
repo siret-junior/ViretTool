@@ -5,15 +5,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ViretTool.PresentationLayer.Controls.Common.Sketches;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
     public partial class SketchCanvas : UserControl
     {
-        public delegate void SketchChangedEventHandler(List<Tuple<Point, Color, Point, bool>> colorSketch);
-
-        public delegate void SketchChangingEventHandler();
-
         private readonly List<ColorPoint> mColorPoints;
         private ColorPoint mSelectedColorPoint;
         private ColorPoint mSelectedColorPointEllipse;
@@ -36,6 +33,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
             DrawGrid();
         }
 
+        public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
+            "QueryResult",
+            typeof(SketchQueryResult),
+            typeof(SketchCanvas),
+            new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
+
+        public SketchQueryResult QueryResult
+        {
+            get => (SketchQueryResult)GetValue(QueryResultProperty);
+            set => SetValue(QueryResultProperty, value);
+        }
 
         /// <summary>
         /// Clears all colored circles from the canvas. SketchChangedEvent is not raised.
@@ -50,7 +58,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             mColorPoints.Clear();
             mSelectedColorPoint = null;
 
-            RaiseSketchChangedEvent();
+            OnSketchChanged();
         }
 
         public void DeletePoints()
@@ -63,14 +71,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             mColorPoints.Clear();
             mSelectedColorPoint = null;
         }
-
-        public event SketchChangedEventHandler SketchChangedEvent;
-
-        /// <summary>
-        /// SketchChangedEvent is raised whenever users create, move or delete a colored circle.
-        /// </summary>
-        public event SketchChangingEventHandler SketchChangingEvent;
-
+        
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Point p = e.GetPosition(sketchCanvas);
@@ -83,7 +84,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 mSelectedColorPointEllipse.Area = !mSelectedColorPointEllipse.Area;
 
-                RaiseSketchChangedEvent();
+                OnSketchChanged();
 
                 mSelectedColorPointEllipse = null;
                 return;
@@ -95,7 +96,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 mColorPoints.Remove(mSelectedColorPoint);
                 mSelectedColorPoint.RemoveFromCanvas(sketchCanvas);
 
-                RaiseSketchChangedEvent();
+                OnSketchChanged();
 
                 mSelectedColorPoint = null;
                 return;
@@ -112,7 +113,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     mSelectedColorPoint = new ColorPoint(p, colorPicker.SelectedColor, sketchCanvas);
                     mColorPoints.Add(mSelectedColorPoint);
                     mSelectedColorPoint = null;
-                    RaiseSketchChangedEvent();
+                    OnSketchChanged();
                 }
             }
         }
@@ -145,12 +146,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             if (mSelectedColorPoint != null)
             {
-                RaiseSketchChangedEvent();
+                OnSketchChanged();
             }
 
             if (mSelectedColorPointEllipse != null)
             {
-                RaiseSketchChangedEvent();
+                OnSketchChanged();
             }
 
             mSelectedColorPoint = null;
@@ -195,24 +196,20 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-        private void RaiseSketchChangedEvent()
+        private void OnSketchChanged()
         {
-            SketchChangingEvent?.Invoke();
+            List<SketchColorPoint> colorSketches = new List<SketchColorPoint>();
 
-            if (SketchChangedEvent != null)
+            foreach (ColorPoint CP in mColorPoints)
             {
-                List<Tuple<Point, Color, Point, bool>> colorSketch = new List<Tuple<Point, Color, Point, bool>>();
+                Point position = new Point(CP.Position.X / sketchCanvas.Width, CP.Position.Y / sketchCanvas.Height);
+                Point ellipseAxis = new Point(CP.SearchRadiusX / sketchCanvas.Width, CP.SearchRadiusY / sketchCanvas.Height);
 
-                foreach (ColorPoint CP in mColorPoints)
-                {
-                    Point position = new Point(CP.Position.X / sketchCanvas.Width, CP.Position.Y / sketchCanvas.Height);
-                    Point ellipseAxis = new Point(CP.SearchRadiusX / sketchCanvas.Width, CP.SearchRadiusY / sketchCanvas.Height);
-
-                    colorSketch.Add(new Tuple<Point, Color, Point, bool>(position, CP.FillColor, ellipseAxis, CP.Area));
-                }
-
-                SketchChangedEvent(colorSketch);
+                colorSketches.Add(new SketchColorPoint(position, CP.FillColor, ellipseAxis, CP.Area));
             }
+
+            QueryResult = new SketchQueryResult(colorSketches);
+
         }
 
         private void sketchClearButton_Click(object sender, RoutedEventArgs e)

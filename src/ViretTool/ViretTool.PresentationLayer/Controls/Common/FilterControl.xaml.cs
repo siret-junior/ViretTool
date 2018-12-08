@@ -9,33 +9,43 @@ namespace ViretTool.PresentationLayer.Controls.Common
     /// </summary>
     public partial class FilterControl : UserControl
     {
+        public delegate void FilterChangedHandler(FilterState state, double value);
+
+        public enum FilterState
+        {
+            Y,
+            N,
+            Off
+        }
+
+        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register(
+            "DefaultValue",
+            typeof(double),
+            typeof(FilterControl),
+            new FrameworkPropertyMetadata(0.0d));
+
+
+        public static readonly DependencyProperty FilterNameProperty = DependencyProperty.Register(
+            "FilterName",
+            typeof(string),
+            typeof(FilterControl),
+            new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
+            "State",
+            typeof(FilterState),
+            typeof(FilterControl),
+            new FrameworkPropertyMetadata(FilterState.Off) { BindsTwoWayByDefault = true });
+
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+            "Value",
+            typeof(double),
+            typeof(FilterControl),
+            new FrameworkPropertyMetadata(0.0d) { BindsTwoWayByDefault = true });
+
         public FilterControl()
         {
             InitializeComponent();
-        }
-
-        public enum FilterState { Y, N, Off }
-
-        public delegate void FilterChangedHandler(FilterState state, double value);
-
-        public event FilterChangedHandler FilterChangedEvent;
-
-
-        public static readonly DependencyProperty FilterNameProperty = DependencyProperty.Register("FilterName", typeof(string), typeof(FilterControl), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(FilterControl), new FrameworkPropertyMetadata(0.0d));
-        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register("DefaultValue", typeof(double), typeof(FilterControl), new FrameworkPropertyMetadata(0.0d));
-        public static readonly DependencyProperty StateProperty = DependencyProperty.Register("State", typeof(FilterState), typeof(FilterControl), new FrameworkPropertyMetadata(FilterState.Off));
-
-        public string FilterName
-        {
-            get { return (string)GetValue(FilterNameProperty); }
-            set { SetValue(FilterNameProperty, value); }
-        }
-
-        public double Value
-        {
-            get { return (double)GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
         }
 
         public double DefaultValue
@@ -48,11 +58,25 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
+        public string FilterName
+        {
+            get { return (string)GetValue(FilterNameProperty); }
+            set { SetValue(FilterNameProperty, value); }
+        }
+
         public FilterState State
         {
             get { return (FilterState)GetValue(StateProperty); }
             set { SetValue(StateProperty, value); }
         }
+
+        public double Value
+        {
+            get { return (double)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
+        }
+
+        public event FilterChangedHandler FilterChangedEvent;
 
         public void Reset()
         {
@@ -71,6 +95,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 State = FilterState.Y;
             }
+
             FilterChangedEvent?.Invoke(State, Value / 100d);
         }
     }

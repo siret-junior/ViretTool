@@ -7,7 +7,6 @@
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.Query.ViewModels"
              xmlns:common="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
-             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:QueryViewModel}">
@@ -23,19 +22,19 @@
         </Grid.RowDefinitions>
 
         <!-- Filter -->
-        <common:FilterControl Grid.Row="0" FilterName="{x:Static properties:Resources.BwFilterText}" cal:Message.Attach="[Event FilterChangedEvent] = [Action BwFilterChanged($eventArgs)]"/>
-        <common:FilterControl Grid.Row="1" FilterName="{x:Static properties:Resources.PercentageBlackFilterText}" cal:Message.Attach="[Event FilterChangedEvent] = [Action PercentageBlackFilterChanged($eventArgs)]"/>
+        <common:FilterControl Grid.Row="0" FilterName="{x:Static properties:Resources.BwFilterText}" Value="{Binding BwFilterValue}" State="{Binding BwFilterState}" />
+        <common:FilterControl Grid.Row="1" FilterName="{x:Static properties:Resources.PercentageBlackFilterText}"  Value="{Binding PercentageBlackFilterValue}" State="{Binding PercentageBlackFilterState}" />
 
         <!-- Keyword -->
-        <common:ModelControl Grid.Row="2" ModelName="{x:Static properties:Resources.KeywordModelName}"/>
-        <common:KeywordSearchControl Grid.Row="3" />
+        <common:ModelControl Grid.Row="2" ModelName="{x:Static properties:Resources.KeywordModelName}" Value="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}" />
+        <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" />
 
         <!-- Colors -->
-        <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}"/>
-        <common:SketchCanvas Grid.Row="5" />
+        <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}" Value="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"/>
+        <common:SketchCanvas Grid.Row="5" QueryResult="{Binding SketchQueryResult}"/>
 
         <!-- Semantic examples -->
-        <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}"/>
+        <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" Value="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"/>
         <!-- TODO možná použít display control? -->
     </Grid>
 </UserControl>

@@ -81,6 +81,7 @@
     <Compile Include="Controls\Common\KeywordSearchControl.xaml.cs">
       <DependentUpon>KeywordSearchControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\KeywordSearch\KeywordQueryResult.cs" />
     <Compile Include="Controls\Common\KeywordSearch\QueryTextBlock.cs" />
     <Compile Include="Controls\Common\KeywordSearch\SuggestionPopup.cs" />
     <Compile Include="Controls\Common\KeywordSearch\SuggestionTextBox.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="Controls\Common\SketchCanvas.xaml.cs">
       <DependentUpon>SketchCanvas.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\Sketches\SketchColorPoint.cs" />
+    <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\TileViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\DisplayControlView.xaml.cs">

@@ -3,15 +3,14 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using Caliburn.Micro;
+using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
     public partial class KeywordSearchControl : UserControl
     {
-        public delegate void KeywordChangedHandler(List<List<int>> query, string annotationSource);
-
-
         private readonly Dictionary<string, LabelProvider> mLabelProviders = new Dictionary<string, LabelProvider>();
         private readonly Dictionary<string, SuggestionProvider> mSuggestionProviders = new Dictionary<string, SuggestionProvider>();
 
@@ -48,11 +47,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
         //    suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
         //    suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
         //}
+        
+        public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
+            "QueryResult",
+            typeof(KeywordQueryResult),
+            typeof(KeywordSearchControl),
+            new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
 
-        /// <summary>
-        /// KeywordChangedEvent is raised whenever users changes the input textbox.
-        /// </summary>
-        public event KeywordChangedHandler KeywordChangedEvent;
+        public KeywordQueryResult QueryResult
+        {
+            get => (KeywordQueryResult)GetValue(QueryResultProperty);
+            set => SetValue(QueryResultProperty, value);
+        }
 
         private IEnumerable<IIdentifiable> SuggestionTextBox_GetSuggestionSubtreeEvent(IEnumerable<int> subtree, string filter, string annotationSource)
         {
@@ -91,8 +97,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             sb.Append("}");
 
+            //TODO log somewhere
+
             List<List<int>> expanded = ExpandQuery(query, mLabelProviders[annotationSource]);
-            KeywordChangedEvent?.Invoke(expanded, annotationSource);
+            QueryResult = new KeywordQueryResult(expanded, annotationSource);
         }
 
         private void SuggestionTextBox_SuggestionFilterChangedEvent(string filter, string annotationSource)

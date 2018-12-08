@@ -31,10 +31,29 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public delegate void ModelClearedHandler();
         public event ModelClearedHandler ModelClearedEvent;
 
-        public static readonly DependencyProperty ModelNameProperty = DependencyProperty.Register("ModelName", typeof(string), typeof(ModelControl), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty UseForSortingProperty = DependencyProperty.Register("UseForSorting", typeof(bool), typeof(ModelControl), new FrameworkPropertyMetadata(false));
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(ModelControl), new FrameworkPropertyMetadata(0.0d));
-        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register("DefaultValue", typeof(double), typeof(ModelControl), new FrameworkPropertyMetadata(0.0d));
+        public static readonly DependencyProperty ModelNameProperty = DependencyProperty.Register(
+            "ModelName",
+            typeof(string),
+            typeof(ModelControl),
+            new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty UseForSortingProperty = DependencyProperty.Register(
+            "UseForSorting",
+            typeof(bool),
+            typeof(ModelControl),
+            new FrameworkPropertyMetadata(false) { BindsTwoWayByDefault = true });
+
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+            "Value",
+            typeof(double),
+            typeof(ModelControl),
+            new FrameworkPropertyMetadata(0.0d) { BindsTwoWayByDefault = true });
+
+        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register(
+            "DefaultValue",
+            typeof(double),
+            typeof(ModelControl),
+            new FrameworkPropertyMetadata(0.0d));
 
         public string ModelName
         {
