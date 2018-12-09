@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Caliburn.Micro;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
@@ -17,37 +17,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public KeywordSearchControl()
         {
             InitializeComponent();
+            Initialize = Init;
         }
 
-        public void Clear()
-        {
-            suggestionTextBox.ClearQuery();
-        }
-
-        //TODO GUI
-        //public void Init(DataModel.Dataset dataset, string[] annotationSources)
-        //{
-        //    suggestionTextBox.AnnotationSources = annotationSources;
-
-        //    foreach (string source in annotationSources)
-        //    {
-        //        string labels = dataset.GetFileNameByExtension($"-{source}.label");
-
-        //        var labelProvider = new LabelProvider(labels);
-        //        mLabelProviders.Add(source, labelProvider);
-
-        //        var suggestionProvider = new SuggestionProvider(labelProvider);
-        //        mSuggestionProviders.Add(source, suggestionProvider);
-        //        suggestionProvider.SuggestionResultsReadyEvent += suggestionTextBox.OnSuggestionResultsReady;
-        //        suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;
-        //    }
-
-        //    suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
-        //    suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
-        //    suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
-        //    suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
-        //}
-        
         public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
             "QueryResult",
             typeof(KeywordQueryResult),
@@ -58,6 +30,55 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get => (KeywordQueryResult)GetValue(QueryResultProperty);
             set => SetValue(QueryResultProperty, value);
+        }
+
+        public static readonly DependencyProperty InitializeProperty = DependencyProperty.Register(
+            "Initialize",
+            typeof(Action<string, string[]>),
+            typeof(KeywordSearchControl),
+            null);
+
+        public Action<string, string[]> Initialize
+        {
+            get => (Action<string, string[]>)GetValue(InitializeProperty);
+            set => SetValue(InitializeProperty, value);
+        }
+
+        public void Clear()
+        {
+            suggestionTextBox.ClearQuery();
+        }
+
+        private void Init(string datatsetPath, string[] annotationSources)
+        {
+            suggestionTextBox.AnnotationSources = annotationSources;
+
+            foreach (string source in annotationSources)
+            {
+                string labels = GetFileNameByExtension(datatsetPath, $"-{source}.label");
+
+                var labelProvider = new LabelProvider(labels);
+                mLabelProviders.Add(source, labelProvider);
+
+                var suggestionProvider = new SuggestionProvider(labelProvider);
+                mSuggestionProviders.Add(source, suggestionProvider);
+                suggestionProvider.SuggestionResultsReadyEvent += suggestionTextBox.OnSuggestionResultsReady;
+                suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;
+            }
+
+            suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
+            suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
+            suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
+            suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
+        }
+
+        private string GetFileNameByExtension(string datasetPath, string extension)
+        {
+            string stripFilename = System.IO.Path.GetFileNameWithoutExtension(datasetPath);
+            string modelFilename = stripFilename.Split('-')[0] + extension;
+            string parentDirectory = System.IO.Directory.GetParent(datasetPath).ToString();
+
+            return System.IO.Path.Combine(parentDirectory, modelFilename);
         }
 
         private IEnumerable<IIdentifiable> SuggestionTextBox_GetSuggestionSubtreeEvent(IEnumerable<int> subtree, string filter, string annotationSource)

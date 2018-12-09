@@ -1,4 +1,9 @@
 ﻿using System;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
+using ViretTool.BusinessLayer.RankingModels;
+using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.DataLayer.DataIO.ThumbnailIO;
 using ViretTool.DataLayer.DataModel;
@@ -6,7 +11,17 @@ using ViretTool.DataLayer.DataProviders.Thumbnails;
 
 namespace ViretTool.Installers
 {
-    public class BusinessLayerInstaller
+    public class BusinessLayerInstaller :IWindsorInstaller
+    {
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            container.Register(
+                Component.For<IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]>>().ImplementedBy<BiTemporalRankingService>());
+        }
+    }
+
+
+    public class BusinessLayerInstallerManual
     {
         public Dataset Dataset { get; private set; }
         public JpegThumbnailService ThumbnailService { get; private set; }

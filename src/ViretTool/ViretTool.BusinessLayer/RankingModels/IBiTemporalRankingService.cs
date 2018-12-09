@@ -9,7 +9,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity;
 
 namespace ViretTool.BusinessLayer.RankingModels
 {
-    interface IBiTemporalRankingService<TSimpleQuery, TSimpleResult, TTemporalQuery, TTemporalResult>
+    public interface IBiTemporalRankingService<TSimpleQuery, TSimpleResult, TTemporalQuery, TTemporalResult>
     {
         IRankingService<TSimpleQuery, TSimpleResult> PrimaryRankingService { get; }
         IRankingService<TSimpleQuery, TSimpleResult> SecondaryRankingService { get; }

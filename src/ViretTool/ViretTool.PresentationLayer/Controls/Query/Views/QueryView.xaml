@@ -27,7 +27,7 @@
 
         <!-- Keyword -->
         <common:ModelControl Grid.Row="2" ModelName="{x:Static properties:Resources.KeywordModelName}" Value="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}" />
-        <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" />
+        <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" Initialize="{Binding InitializeKeywordSearchMethod, Mode=OneWayToSource}" />
 
         <!-- Colors -->
         <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}" Value="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"/>
