@@ -99,7 +99,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 int frameNumber = _globalIdToVideoFramenumber[globalId].frameNumber;
                 byte[] jpegData = BaseBlobReader.ReadByteBlob(globalId);
 
-                thumbnails[globalId] = new ThumbnailRaw(videoId, frameNumber, jpegData);
+                thumbnails[globalId - globalIdStart] = new ThumbnailRaw(videoId, frameNumber, jpegData);
             }
 
             return thumbnails;

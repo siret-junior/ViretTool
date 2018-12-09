@@ -137,12 +137,9 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <!--<Viewbox
-                            Name="viewBox"
-                            Stretch="Uniform">-->
                     <Grid 
                             Background="White"
-                            cal:Message.Attach="[Event MouseDown] = [Action MouseDown($eventArgs)];
+                            cal:Message.Attach="[Event MouseDown] = [Action TileMouseDown($dataContext)];
                                                 [Event MouseMove] = [Action MouseMove($eventArgs)];
                                                 [Event MouseLeave] = [Action MouseLeave($eventArgs)];
                                                 [Event MouseWheel] = [Action MouseWheel($eventArgs)];">
@@ -267,7 +264,6 @@
                         </Grid>
 
                     </Grid>
-                    <!--</Viewbox>-->
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

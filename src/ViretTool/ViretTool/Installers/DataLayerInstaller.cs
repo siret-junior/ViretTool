@@ -10,7 +10,6 @@ namespace ViretTool.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //factory
             container.Register(
                 Component.For<ThumbnailProvider>().LifestyleSingleton(),
                 Component.For<DatasetProvider>().LifestyleSingleton());

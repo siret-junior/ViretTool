@@ -2,7 +2,7 @@
 {
     public interface IDatabaseServicesFactory
     {
-        DatasetServices Create(string datasetFolder);
+        DatasetServices Create(string datasetDirectory);
 
 
         void Release(DatasetServices databaseServices);

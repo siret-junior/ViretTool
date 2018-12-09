@@ -9,9 +9,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private bool _isSelected;
         private bool _isMouseOver;
 
-        public TileViewModel(BitmapImage imageSource)
+        public TileViewModel(BitmapImage imageSource, int videoId, int frameNumber)
         {
             ImageSource = imageSource;
+            VideoId = videoId;
+            FrameNumber = frameNumber;
         }
 
 
@@ -31,6 +33,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         public BitmapImage ImageSource { get; }
+        public int VideoId { get; }
+        public int FrameNumber { get; }
 
         public bool IsMouseOver
         {
@@ -45,10 +49,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 _isMouseOver = value;
                 NotifyOfPropertyChange();
             }
-        }
-
-        public void MouseDown(MouseButtonEventArgs e)
-        {
         }
 
         public void MouseMove(MouseEventArgs e)

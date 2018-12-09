@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -38,6 +40,8 @@ namespace ViretTool.PresentationLayer.ViewModels
 
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
+
+            QueryResults.SelectedFrameChanged += async (sender, model) => await videoSnapshots.Load(model.VideoId);
         }
 
         public bool IsBusy
@@ -63,26 +67,45 @@ namespace ViretTool.PresentationLayer.ViewModels
 
         public async void OpenDatabase()
         {
-            CommonOpenFileDialog folderBrowserDialog = new CommonOpenFileDialog { IsFolderPicker = true };
-            if (folderBrowserDialog.ShowDialog() != CommonFileDialogResult.Ok)
+            using (CommonOpenFileDialog folderBrowserDialog = new CommonOpenFileDialog { IsFolderPicker = true })
             {
-                return;
-            }
+                if (folderBrowserDialog.ShowDialog() != CommonFileDialogResult.Ok)
+                {
+                    return;
+                }
 
+                await OpenDataset(folderBrowserDialog.FileName);
+            }
+        }
+
+        private async Task OpenDataset(string datasetFolder)
+        {
             IsBusy = true;
             try
             {
-                await Task.Run(() => _datasetServicesManager.OpenDataset(folderBrowserDialog.FileName));
-                //TODO load initial view etc.
+                await Task.Run(() => _datasetServicesManager.OpenDataset(datasetFolder));
+                if (!_datasetServicesManager.IsDatasetOpened)
+                {
+                    throw new DataException("Something went wrong while opening dataset.");
+                }
+
+                await QueryResults.LoadInitialDisplay();
+
             }
             catch (Exception e)
             {
-                _logger.Error("Error while opening databaset.", e);
+                LogError(e, "Error while opening dataset");
             }
             finally
             {
                 IsBusy = false;
             }
+        }
+
+        private void LogError(Exception e, string errorMessage)
+        {
+            MessageBox.Show($"{errorMessage}: {e.Message}", "Error");
+            _logger.Error(errorMessage, e);
         }
 
         protected override void OnActivate()
@@ -102,7 +125,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             }
             catch (Exception e)
             {
-                _logger.Error("Error during query evaluation.", e);
+                LogError(e, "Error during query evaluation");
             }
             finally
             {

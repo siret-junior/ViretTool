@@ -2,8 +2,7 @@
 {
     public interface IDatasetService
     {
-        //TODO
-        int VideoCount { get; }
-        
+        int[] VideoIds { get; }
+        int[] GetFrameIdsForVideo(int videoId);
     }
 }

@@ -18,16 +18,16 @@ namespace ViretTool.BusinessLayer.Services
 
         public bool IsDatasetOpened => CurrentDataset != null;
 
-        public void OpenDataset(string datasetFolder)
+        public void OpenDataset(string datasetDirectory)
         {
             if (IsDatasetOpened)
             {
                 ReleaseDataset();
             }
 
-            DatasetServices services = _databaseServicesFactory.Create(datasetFolder);
+            DatasetServices services = _databaseServicesFactory.Create(datasetDirectory);
             CurrentDataset = services;
-            CurrentDatasetFolder = datasetFolder;
+            CurrentDatasetFolder = datasetDirectory;
             DatasetOpened?.Invoke(this, CurrentDataset);
         }
 

@@ -1,48 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
+using ViretTool.BusinessLayer.Datasets;
+using ViretTool.BusinessLayer.Services;
+using ViretTool.BusinessLayer.Thumbnails;
 using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class DisplayControlViewModel : PropertyChangedBase
     {
-        private List<TileViewModel> _selectedTiles = new List<TileViewModel>();
-        private List<TileViewModel> _submittedTiles = new List<TileViewModel>();
-        private List<TileViewModel> _loadedTiles = new List<TileViewModel>();
-
-        private bool _isSortDisplayChecked;
+        private readonly IDatasetServicesManager _datasetServicesManager;
+        private int _currentPageNumber;
         private bool _isLargeDisplayChecked;
         private bool _isShowFilteredVideosChecked;
-        private int _currentPageNumber;
 
-        public DisplayControlViewModel()
+        private bool _isSortDisplayChecked;
+        private readonly List<TileViewModel> _loadedTiles = new List<TileViewModel>();
+
+        private readonly List<TileViewModel> _selectedTiles = new List<TileViewModel>();
+        private readonly List<TileViewModel> _submittedTiles = new List<TileViewModel>();
+
+        public DisplayControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
-
+            _datasetServicesManager = datasetServicesManager;
         }
 
-        public BindableCollection<TileViewModel> VisibleTiles { get; } = new BindableCollection<TileViewModel>();
-
-        public int ImageHeight { get; } = 75;
-        public int ImageWidth { get; } = 100;
-
-        public bool IsSortDisplayChecked
+        public int CurrentPageNumber
         {
-            get => _isSortDisplayChecked;
+            get => _currentPageNumber;
             set
             {
-                if (_isSortDisplayChecked == value)
+                if (_currentPageNumber == value)
                 {
                     return;
                 }
 
-                _isSortDisplayChecked = value;
+                _currentPageNumber = value;
                 NotifyOfPropertyChange();
             }
         }
+
+        public int DisplayHeight { get; set; }
+
+        public Action DisplaySizeChangedHandler => UpdateVisibleTiles;
+
+        public int DisplayWidth { get; set; }
+
+        public int ImageHeight { get; } = 75;
+        public int ImageWidth { get; } = 100;
 
         public bool IsLargeDisplayChecked
         {
@@ -74,25 +84,33 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public int CurrentPageNumber
+        public bool IsSortDisplayChecked
         {
-            get => _currentPageNumber;
+            get => _isSortDisplayChecked;
             set
             {
-                if (_currentPageNumber == value)
+                if (_isSortDisplayChecked == value)
                 {
                     return;
                 }
 
-                _currentPageNumber = value;
+                _isSortDisplayChecked = value;
                 NotifyOfPropertyChange();
             }
         }
 
-        public int DisplayWidth { get; set; }
-        public int DisplayHeight { get; set; }
+        public BindableCollection<TileViewModel> VisibleTiles { get; } = new BindableCollection<TileViewModel>();
 
-        public Action DisplaySizeChangedHandler => UpdateVisibleTiles;
+        public void AddClicked(TileViewModel tileViewModel)
+        {
+            tileViewModel.IsSelected = true;
+            _selectedTiles.Add(tileViewModel);
+        }
+
+        public void AddSubmitClicked(TileViewModel tileViewModel)
+        {
+            _submittedTiles.Add(tileViewModel);
+        }
 
         public void FilterVideoButton()
         {
@@ -102,6 +120,41 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void FirstPageButton()
         {
             CurrentPageNumber = 0;
+            UpdateVisibleTiles();
+        }
+
+        public void LastPageButton()
+        {
+            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
+            CurrentPageNumber = (int)Math.Ceiling(_loadedTiles.Count / (double)itemsCount) - 1;
+            UpdateVisibleTiles();
+        }
+
+        public async Task Load(int videoId)
+        {
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            _loadedTiles.Clear();
+            await Task.Run(() => _loadedTiles.AddRange(LoadThumbnails(videoId)));
+            CurrentPageNumber = 0;
+            UpdateVisibleTiles();
+        }
+
+        public async Task LoadInitialDisplay()
+        {
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            const int videoCount = 10;
+
+            _loadedTiles.Clear();
+            Random random = new Random(); //shuffle initial images randomly
+            await Task.Run(
+                () => _loadedTiles.AddRange(datasetService.VideoIds.OrderBy(_ => random.Next()).Take(videoCount).SelectMany(LoadThumbnails).OrderBy(_ => random.Next())));
+            CurrentPageNumber = 0;
+            UpdateVisibleTiles();
+        }
+
+        public void NextPageButton()
+        {
+            CurrentPageNumber++;
             UpdateVisibleTiles();
         }
 
@@ -116,34 +169,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleTiles();
         }
 
-        public void NextPageButton()
-        {
-            CurrentPageNumber++;
-            UpdateVisibleTiles();
-        }
-
-        public void LastPageButton()
-        {
-            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            CurrentPageNumber = (int)Math.Ceiling(_loadedTiles.Count / (double)itemsCount) - 1;
-            UpdateVisibleTiles();
-        }
-
-        public void AddClicked(TileViewModel tileViewModel)
-        {
-            tileViewModel.IsSelected = true;
-            _selectedTiles.Add(tileViewModel);
-        }
-
         public void RemoveClicked(TileViewModel tileViewModel)
         {
             tileViewModel.IsSelected = false;
             _selectedTiles.Remove(tileViewModel);
-        }
-
-        public void AddSubmitClicked(TileViewModel tileViewModel)
-        {
-            _submittedTiles.Add(tileViewModel);
         }
 
         public void RemoveSubmitClicked(TileViewModel tileViewModel)
@@ -151,6 +180,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             _submittedTiles.Remove(tileViewModel);
         }
 
+        public event EventHandler<TileViewModel> SelectedFrameChanged;
 
 
         public void SubmitButton()
@@ -158,36 +188,33 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             //TODO - submit _submittedTiles
         }
 
-        public void UpdateVisibleTiles()
+        public void TileMouseDown(TileViewModel tileViewModel)
+        {
+            SelectedFrameChanged?.Invoke(this, tileViewModel);
+        }
+
+        private TileViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = new MemoryStream(thumbnail.Image);
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
+
+            return new TileViewModel(bitmapImage, thumbnail.VideoId, thumbnail.FrameNumber);
+        }
+
+        private IEnumerable<TileViewModel> LoadThumbnails(int videoId)
+        {
+            Thumbnail<byte[]>[] thumbnails = _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnails(videoId);
+            return thumbnails.Select(ConvertThumbnailToViewModel);
+        }
+
+        private void UpdateVisibleTiles()
         {
             var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
             VisibleTiles.Clear();
             VisibleTiles.AddRange(_loadedTiles.Skip(CurrentPageNumber * itemsCount).Take(itemsCount));
         }
-
-
-        public async Task LoadDataset(string databasePath)
-        {
-            await Task.Run(
-                () =>
-                {
-                    _loadedTiles.Clear();
-                    _loadedTiles.AddRange(LoadData(databasePath));
-                });
-            CurrentPageNumber = 0;
-            UpdateVisibleTiles();
-        }
-
-        private IEnumerable<TileViewModel> LoadData(string databasePath)
-        {
-            for (int i = 0; i < 100000; i++)
-            {
-                BitmapImage imageSource = new BitmapImage(new Uri(@"d:\Temp\Downloads\signature.png"));
-                imageSource.Freeze();
-                yield return new TileViewModel(imageSource);
-            }
-        }
-
-        
     }
 }
