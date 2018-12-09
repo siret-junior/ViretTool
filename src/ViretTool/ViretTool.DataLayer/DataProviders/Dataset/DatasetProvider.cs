@@ -10,19 +10,32 @@ namespace ViretTool.DataLayer.DataProviders.Dataset
     public class DatasetProvider
     {
         public const string FILE_EXTENSION = ".dataset";
+        public const string FRAME_ATTRIBUTES_EXTENSION = ".frameattributes";
 
         public DataModel.Dataset FromDirectory(string inputDirectory)
         {
             string[] files = Directory.GetFiles(inputDirectory);
-            string inputFile = files.Single(path => path.EndsWith(FILE_EXTENSION));
-            return FromBinaryFile(inputFile);
+            string datasetFile = files.Single(path => path.EndsWith(FILE_EXTENSION));
+            string frameAttributesFile = files.Single(path => path.EndsWith(FRAME_ATTRIBUTES_EXTENSION));
+            return FromBinaryFile(datasetFile, frameAttributesFile);
         }
 
-        public DataModel.Dataset FromBinaryFile(string inputFilePath)
+        public DataModel.Dataset FromBinaryFile(string datasetPath, string frameAttributesPath)
         {
-            using (FileStream inputStream = File.Open(inputFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream inputStream = File.Open(datasetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 DataModel.Dataset dataset = DatasetBinaryFormatter.Instance.Deserialize(inputStream);
+
+                // TODO:
+                using (StreamReader reader = new StreamReader(frameAttributesPath))
+                {
+                    for (int i = 0; i < dataset.Frames.Count; i++)
+                    {
+                        dataset.Frames[i].FrameNumber = int.Parse(reader.ReadLine());
+                    }
+                }
+
+
                 return dataset;
             }
             

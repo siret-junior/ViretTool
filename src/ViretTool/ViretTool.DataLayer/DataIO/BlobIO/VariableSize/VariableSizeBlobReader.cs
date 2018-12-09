@@ -6,14 +6,20 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
     public class VariableSizeBlobReader : VariableSizeBlobIOBase
     {
         public BinaryReader BaseBinaryReader { get; private set; }
-        public byte[] DatasetHeader { get; private set; }
-
-        public int BlobCount { get; private set; }
-        public long[] BlobOffsets { get; private set; }
-        public byte[] FiletypeMetadata { get; private set; }
-
         private object _lockObject = new object();
 
+        // common for all files extracted from the same dataset at the same time
+        public byte[] DatasetHeader { get; private set; }
+
+        // blob specific metadata
+        public int BlobCount { get; private set; }
+        public long[] BlobOffsets { get; private set; }
+        public int[] BlobLengths { get; private set; }
+
+        // blob filetype interpretation metadata
+        public byte[] FiletypeMetadata { get; private set; }
+
+        
 
         public VariableSizeBlobReader(string filePath)
         {
@@ -22,8 +28,9 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
 
             DatasetHeader = FileHeaderUtilities.ReadDatasetHeader(BaseBinaryReader);
             ReadAndVerifyFiletypeHeader();
-            ReadBlobOffsets();
+            
             ReadBlobMetadata();
+            ReadFiletypeMetadata();
         }
 
         public override void Dispose()
@@ -60,36 +67,46 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
         private void ReadAndVerifyFiletypeHeader()
         {
             string filetypeId = BaseBinaryReader.ReadString();
-            if (!filetypeId.Equals(VARIABLE_SIZE_BLOB_FILETYPE_ID))
+            if (!filetypeId.Equals(VARIABLE_SIZE_BLOBS_FILETYPE_ID))
             {
                 throw new IOException($"Fixed-size blob filetype mismatch: {filetypeId}" 
-                    + $" ({VARIABLE_SIZE_BLOB_FILETYPE_ID} expected)");
+                    + $" ({VARIABLE_SIZE_BLOBS_FILETYPE_ID} expected)");
             }
 
             int filetypeVersion = BaseBinaryReader.ReadInt32();
-            if (!filetypeVersion.Equals(VARIABLE_SIZE_BLOB_VERSION))
+            if (!filetypeVersion.Equals(VARIABLE_SIZE_BLOBS_VERSION))
             {
                 throw new IOException($"Fixed-size blob version mismatch: {filetypeVersion}"
-                    + $" ({VARIABLE_SIZE_BLOB_VERSION} expected)");
+                    + $" ({VARIABLE_SIZE_BLOBS_VERSION} expected)");
             }
         }
         
-        private void ReadBlobOffsets()
+        private void ReadBlobMetadata()
         {
-            BlobCount = BaseBinaryReader.ReadInt32();
-            BlobOffsets = new long[BlobCount];
-            for (int i = 0; i < BlobCount; i++)
+            int metadataLength = BaseBinaryReader.ReadInt32();
+            byte[] blobMetadata = BaseBinaryReader.ReadBytes(metadataLength);
+
+            using (MemoryStream metadataStream = new MemoryStream(blobMetadata))
+            using (BinaryReader reader = new BinaryReader(metadataStream))
             {
-                BlobOffsets[i] = BaseBinaryReader.ReadInt64();
-            }
+                BlobCount = reader.ReadInt32();
+                BlobOffsets = new long[BlobCount];
+                for (int i = 0; i < BlobCount; i++)
+                {
+                    BlobOffsets[i] = reader.ReadInt64();
+                }
+                BlobLengths = new int[BlobCount];
+                for (int i = 0; i < BlobCount; i++)
+                {
+                    BlobLengths[i] = reader.ReadInt32();
+                }
+            }    
         }
 
-        private void ReadBlobMetadata()
+        private void ReadFiletypeMetadata()
         {
             int metadataLength = BaseBinaryReader.ReadInt32();
             FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
         }
-
-
     }
 }

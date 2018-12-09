@@ -17,6 +17,9 @@ namespace ViretTool.Installers
             LoadDataset(dataDirectory);
             LoadThumbnailService(dataDirectory);
 
+
+
+            // TODO
             LoadDescriptorService(dataDirectory);
 
             LoadRankingService(dataDirectory);
@@ -28,13 +31,12 @@ namespace ViretTool.Installers
 
         private void LoadDataset(string dataDirectory)
         {
-            //Dataset = DatasetProvider.FromDirectory(dataDirectory);
+            Dataset = new DatasetProvider().FromDirectory(dataDirectory);
         }
 
         private void LoadThumbnailService(string dataDirectory)
         {
-            //ThumbnailReader thumbnailReader = ThumbnailProvider.FromDirectory(dataDirectory);
-            //ThumbnailService = new JpegThumbnailService(thumbnailReader, dataDirectory);
+            ThumbnailService = new JpegThumbnailService(dataDirectory);
         }
 
         private void LoadDescriptorService(string dataDirectory)

@@ -12,9 +12,9 @@ namespace ViretTool.BusinessLayer.Thumbnails
     {
         private readonly ThumbnailReader _baseThumbnailReader;
 
-        public JpegThumbnailService(ThumbnailProvider thumbnailProvider, string datasetFolder)
+        public JpegThumbnailService(string datasetDirectory)
         {
-            _baseThumbnailReader = thumbnailProvider.FromDirectory(datasetFolder);
+            _baseThumbnailReader = new ThumbnailProvider().FromDirectory(datasetDirectory);
         }
 
 

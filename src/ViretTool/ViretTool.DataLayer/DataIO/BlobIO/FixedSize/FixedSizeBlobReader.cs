@@ -61,17 +61,17 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
         private void ReadAndVerifyFiletypeHeader()
         {
             string filetypeId = BaseBinaryReader.ReadString();
-            if (!filetypeId.Equals(FIXED_SIZE_BLOB_FILETYPE_ID))
+            if (!filetypeId.Equals(FIXED_SIZE_BLOBS_FILETYPE_ID))
             {
                 throw new IOException($"Fixed-size blob filetype mismatch: {filetypeId}" 
-                    + $" ({FIXED_SIZE_BLOB_FILETYPE_ID} expected)");
+                    + $" ({FIXED_SIZE_BLOBS_FILETYPE_ID} expected)");
             }
 
             int filetypeVersion = BaseBinaryReader.ReadInt32();
-            if (!filetypeVersion.Equals(FIXED_SIZE_BLOB_VERSION))
+            if (!filetypeVersion.Equals(FIXED_SIZE_BLOBS_VERSION))
             {
                 throw new IOException($"Fixed-size blob version mismatch: {filetypeVersion}"
-                    + $" ({FIXED_SIZE_BLOB_VERSION} expected)");
+                    + $" ({FIXED_SIZE_BLOBS_VERSION} expected)");
             }
         }
 

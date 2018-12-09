@@ -13,7 +13,7 @@
         /// <summary>
         /// Number of the frame in the source video.
         /// </summary>
-        public int FrameNumber { get; private set; }
+        public int FrameNumber { get; internal set; }
 
 
         // Parent mappings
