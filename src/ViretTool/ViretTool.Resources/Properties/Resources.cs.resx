@@ -144,4 +144,10 @@
   <data name="SemanticModelName" xml:space="preserve">
     <value>Podobnost</value>
   </data>
+  <data name="FileHeader" xml:space="preserve">
+    <value>Soubor</value>
+  </data>
+  <data name="OpenDatabaseHeader" xml:space="preserve">
+    <value>Otevřít databázi</value>
+  </data>
 </root>

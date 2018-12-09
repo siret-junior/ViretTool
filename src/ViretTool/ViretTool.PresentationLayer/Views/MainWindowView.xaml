@@ -26,6 +26,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -33,16 +34,23 @@
         </Grid.ColumnDefinitions>
 
         <!-- left panel (models) -->
-        <Grid Grid.Row="0">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <GroupBox Grid.Row="0" Margin="6" Header="{x:Static properties:Resources.TemporalQuery1Header}" HeaderTemplate="{StaticResource GroupHeaderTemplate}">
+            <Menu Grid.Row="0" Width="Auto" Background="White">
+                <MenuItem Header="{x:Static properties:Resources.FileHeader}">
+                    <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
+                </MenuItem>
+            </Menu>
+
+            <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.TemporalQuery1Header}" HeaderTemplate="{StaticResource GroupHeaderTemplate}">
                 <ContentControl x:Name="Query1" />
             </GroupBox>
-            <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.TemporalQuery2Header}" HeaderTemplate="{StaticResource GroupHeaderTemplate}">
+            <GroupBox Grid.Row="2" Margin="6" Header="{x:Static properties:Resources.TemporalQuery2Header}" HeaderTemplate="{StaticResource GroupHeaderTemplate}">
                 <ContentControl  x:Name="Query2" />
             </GroupBox>
 
@@ -56,31 +64,19 @@
 
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <!--<ColumnDefinition Width="*"/>-->
-                </Grid.ColumnDefinitions>
 
-                <DockPanel Grid.Row="0" Grid.Column="0" Margin="6">
-                    <Label Content="Database path: "/>
-                    <TextBox Margin="6,0,0,0" Text="{Binding DatabasePath, UpdateSourceTrigger=PropertyChanged}"/>
-                </DockPanel>
-
-                <StackPanel Grid.Row="1" Grid.Column="0" Margin="6" HorizontalAlignment="Left">
-                    <Button x:Name="LoadDatasetButton" Content="Load dataset" Width="100"/>
-                </StackPanel>
-
-                <ContentControl Grid.Row="2" Grid.Column="0" Margin="6" x:Name="DisplayControlViewModel" />
+                <ContentControl Grid.Row="0" x:Name="QueryResults" />
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+                <ContentControl Grid.Row="2" x:Name="VideoSnapshots" />
             </Grid>
 
             <!-- Busy overlay -->
             <Grid Background="Gray" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Opacity="0.8">
-                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{x:Static properties:Resources.WorkingText}"
-                   FontSize="30" Foreground="White" />
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{x:Static properties:Resources.WorkingText}" FontSize="30" Foreground="White" />
             </Grid>
         </Grid>
     </Grid>

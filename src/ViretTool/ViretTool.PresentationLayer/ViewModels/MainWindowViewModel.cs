@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
@@ -18,15 +20,17 @@ namespace ViretTool.PresentationLayer.ViewModels
 
         public MainWindowViewModel(
             ILogger logger,
-            DisplayControlViewModel displayControlViewModel,
+            DisplayControlViewModel queryResults,
+            DisplayControlViewModel videoSnapshots,
             QueryViewModel query1,
             QueryViewModel query2,
             IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]> temporalRankingService)
         {
             _logger = logger;
             _temporalRankingService = temporalRankingService;
-            DisplayControlViewModel = displayControlViewModel;
 
+            QueryResults = queryResults;
+            VideoSnapshots = videoSnapshots;
             Query1 = query1;
             Query2 = query2;
 
@@ -54,21 +58,6 @@ namespace ViretTool.PresentationLayer.ViewModels
             }
         }
 
-        public string DatabasePath
-        {
-            get => _databasePath;
-            set
-            {
-                if (_databasePath == value)
-                {
-                    return;
-                }
-
-                _databasePath = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
         public bool IsBusy
         {
             get => _isBusy;
@@ -84,19 +73,23 @@ namespace ViretTool.PresentationLayer.ViewModels
             }
         }
 
-        public DisplayControlViewModel DisplayControlViewModel { get; }
+        public DisplayControlViewModel QueryResults { get; }
+        public DisplayControlViewModel VideoSnapshots { get; }
         public QueryViewModel Query1 { get; }
         public QueryViewModel Query2 { get; }
 
-        public async void LoadDatasetButton()
+        public async void OpenDatabase()
         {
-            if (string.IsNullOrEmpty(DatabasePath))
+            CommonOpenFileDialog folderBrowserDialog = new CommonOpenFileDialog { IsFolderPicker = true };
+            if (folderBrowserDialog.ShowDialog() != CommonFileDialogResult.Ok)
             {
                 return;
             }
 
+            _databasePath = folderBrowserDialog.FileName;
+
             IsBusy = true;
-            await DisplayControlViewModel.LoadDataset(DatabasePath);
+            await QueryResults.LoadDataset(_databasePath);
             IsBusy = false;
         }
 

@@ -79,11 +79,29 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        public static string FileHeader {
+            get {
+                return ResourceManager.GetString("FileHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key word.
         /// </summary>
         public static string KeywordModelName {
             get {
                 return ResourceManager.GetString("KeywordModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open database.
+        /// </summary>
+        public static string OpenDatabaseHeader {
+            get {
+                return ResourceManager.GetString("OpenDatabaseHeader", resourceCulture);
             }
         }
         

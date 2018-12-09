@@ -144,4 +144,10 @@
   <data name="SemanticModelName" xml:space="preserve">
     <value>Semantic</value>
   </data>
+  <data name="FileHeader" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="OpenDatabaseHeader" xml:space="preserve">
+    <value>Open database</value>
+  </data>
 </root>
