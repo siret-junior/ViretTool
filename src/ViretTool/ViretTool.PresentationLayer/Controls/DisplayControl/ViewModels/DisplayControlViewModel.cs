@@ -20,7 +20,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private bool _isShowFilteredVideosChecked;
 
         private bool _isSortDisplayChecked;
-        private readonly List<TileViewModel> _loadedTiles = new List<TileViewModel>();
+        private List<TileViewModel> _loadedTiles = new List<TileViewModel>();
 
         private readonly List<TileViewModel> _selectedTiles = new List<TileViewModel>();
         private readonly List<TileViewModel> _submittedTiles = new List<TileViewModel>();
@@ -132,9 +132,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public async Task Load(int videoId)
         {
-            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-            _loadedTiles.Clear();
-            await Task.Run(() => _loadedTiles.AddRange(LoadThumbnails(videoId)));
+            _loadedTiles = await Task.Run(() => LoadThumbnails(videoId).ToList());
             CurrentPageNumber = 0;
             UpdateVisibleTiles();
         }
@@ -144,10 +142,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
             const int videoCount = 10;
 
-            _loadedTiles.Clear();
             Random random = new Random(); //shuffle initial images randomly
-            await Task.Run(
-                () => _loadedTiles.AddRange(datasetService.VideoIds.OrderBy(_ => random.Next()).Take(videoCount).SelectMany(LoadThumbnails).OrderBy(_ => random.Next())));
+            _loadedTiles = await Task.Run(
+                               () => datasetService.VideoIds.OrderBy(_ => random.Next()).Take(videoCount).SelectMany(LoadThumbnails).OrderBy(_ => random.Next()).ToList());
             CurrentPageNumber = 0;
             UpdateVisibleTiles();
         }
