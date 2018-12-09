@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.Thumbnails
 {
-    interface IThumbnailService<T>
+    public interface IThumbnailService<T>
     {
         T GetThumbnail(int videoId, int frameId);
         T[] GetThumbnails(int videoId);

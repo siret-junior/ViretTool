@@ -113,6 +113,8 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="ArgumentPassingDependencyResolver.cs" />
     <Compile Include="Installers\BusinessLayerInstaller.cs" />
+    <Compile Include="Installers\BusinessLayerInstallerManual.cs" />
+    <Compile Include="Installers\DataLayerInstaller.cs" />
     <Compile Include="Installers\PresentationLayerInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -138,7 +140,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj">

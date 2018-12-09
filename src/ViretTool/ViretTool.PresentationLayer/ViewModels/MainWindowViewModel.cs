@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
@@ -13,9 +13,9 @@ namespace ViretTool.PresentationLayer.ViewModels
 {
     public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive
     {
+        private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly ILogger _logger;
         private readonly IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]> _temporalRankingService;
-        private string _databasePath;
         private bool _isBusy;
 
         public MainWindowViewModel(
@@ -24,9 +24,11 @@ namespace ViretTool.PresentationLayer.ViewModels
             DisplayControlViewModel videoSnapshots,
             QueryViewModel query1,
             QueryViewModel query2,
+            IDatasetServicesManager datasetServicesManager,
             IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]> temporalRankingService)
         {
             _logger = logger;
+            _datasetServicesManager = datasetServicesManager;
             _temporalRankingService = temporalRankingService;
 
             QueryResults = queryResults;
@@ -36,26 +38,6 @@ namespace ViretTool.PresentationLayer.ViewModels
 
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
-        }
-
-        private async Task OnQuerySettingsChanged()
-        {
-            IsBusy = true;
-            try
-            {
-                TemporalRankedFrame[] queryResult =
-                    await Task.Run(() => _temporalRankingService.ComputeRankedResultSet(new TemporalQuery(new[] { Query1.FinalQuery, Query2.FinalQuery })));
-
-                //TODO - visualize result
-            }
-            catch (Exception e)
-            {
-                _logger.Error("Error during query evaluation", e);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
         }
 
         public bool IsBusy
@@ -73,10 +55,11 @@ namespace ViretTool.PresentationLayer.ViewModels
             }
         }
 
-        public DisplayControlViewModel QueryResults { get; }
-        public DisplayControlViewModel VideoSnapshots { get; }
         public QueryViewModel Query1 { get; }
         public QueryViewModel Query2 { get; }
+
+        public DisplayControlViewModel QueryResults { get; }
+        public DisplayControlViewModel VideoSnapshots { get; }
 
         public async void OpenDatabase()
         {
@@ -86,16 +69,45 @@ namespace ViretTool.PresentationLayer.ViewModels
                 return;
             }
 
-            _databasePath = folderBrowserDialog.FileName;
-
             IsBusy = true;
-            await QueryResults.LoadDataset(_databasePath);
-            IsBusy = false;
+            try
+            {
+                await Task.Run(() => _datasetServicesManager.OpenDataset(folderBrowserDialog.FileName));
+                //TODO load initial view etc.
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Error while opening databaset.", e);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         protected override void OnActivate()
         {
             _logger.Debug("Main window activated");
+        }
+
+        private async Task OnQuerySettingsChanged()
+        {
+            IsBusy = true;
+            try
+            {
+                TemporalRankedFrame[] queryResult =
+                    await Task.Run(() => _temporalRankingService.ComputeRankedResultSet(new TemporalQuery(new[] { Query1.FinalQuery, Query2.FinalQuery })));
+
+                //TODO - visualize result
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Error during query evaluation.", e);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }
