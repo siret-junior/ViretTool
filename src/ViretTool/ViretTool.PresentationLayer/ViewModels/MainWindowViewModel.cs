@@ -67,15 +67,34 @@ namespace ViretTool.PresentationLayer.ViewModels
 
         public async void OpenDatabase()
         {
-            using (CommonOpenFileDialog folderBrowserDialog = new CommonOpenFileDialog { IsFolderPicker = true })
+            string datasetDirectory = GetDatasetDirectory();
+            if (datasetDirectory == null)
             {
-                if (folderBrowserDialog.ShowDialog() != CommonFileDialogResult.Ok)
-                {
-                    return;
-                }
-
-                await OpenDataset(folderBrowserDialog.FileName);
+                return;
             }
+
+            await OpenDataset(datasetDirectory);
+        }
+
+        private string GetDatasetDirectory()
+        {
+            try
+            {
+                using (CommonOpenFileDialog folderBrowserDialog = new CommonOpenFileDialog { IsFolderPicker = true })
+                {
+                    if (folderBrowserDialog.ShowDialog() == CommonFileDialogResult.Ok)
+                    {
+                        //copy helps for some reason
+                        return string.Copy(folderBrowserDialog.FileName);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e, "Error while opening folder browser");
+            }
+
+            return null;
         }
 
         private async Task OpenDataset(string datasetFolder)

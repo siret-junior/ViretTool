@@ -67,22 +67,13 @@
 
 
         <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="0,2,0,2">
-            <RadioButton GroupName="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}}, Path=FilterName}" IsChecked="{Binding
-                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}},
-                Mode=TwoWay, Path=State, Converter={StaticResource enumConverter}, ConverterParameter=Y}" Checked="RadioButton_Checked">
-
+            <RadioButton  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}}, Mode=TwoWay, Path=State, Converter={StaticResource enumConverter}, ConverterParameter=Y}" Checked="RadioButton_Checked">
                 <Run Foreground="Green">Y</Run>
             </RadioButton>
-            <RadioButton GroupName="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}}, Path=FilterName}" IsChecked="{Binding
-                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}},
-                Mode=TwoWay, Path=State, Converter={StaticResource enumConverter}, ConverterParameter=N}" Checked="RadioButton_Checked">
-
+            <RadioButton  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}}, Mode=TwoWay, Path=State, Converter={StaticResource enumConverter}, ConverterParameter=N}" Checked="RadioButton_Checked">
                 <Run Foreground="Red">N</Run>
             </RadioButton>
-            <RadioButton GroupName="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}}, Path=FilterName}" IsChecked="{Binding
-                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}},
-                Mode=TwoWay, Path=State, Converter={StaticResource enumConverter}, ConverterParameter=Off}" Checked="RadioButton_Checked">
-
+            <RadioButton IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:FilterControl}}, Mode=TwoWay, Path=State, Converter={StaticResource enumConverter}, ConverterParameter=Off}" Checked="RadioButton_Checked">
                 <Run Foreground="Gray">Off</Run>
             </RadioButton>
         </StackPanel>
