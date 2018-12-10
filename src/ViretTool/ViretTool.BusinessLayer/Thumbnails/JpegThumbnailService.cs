@@ -8,7 +8,7 @@ using ViretTool.DataLayer.DataProviders.Thumbnails;
 
 namespace ViretTool.BusinessLayer.Thumbnails
 {
-    public class JpegThumbnailService : IThumbnailService<Thumbnail<byte[]>>
+    public class JpegThumbnailService : IThumbnailService<Thumbnail<byte[]>>, IDisposable
     {
         private readonly ThumbnailReader _baseThumbnailReader;
 
@@ -41,6 +41,11 @@ namespace ViretTool.BusinessLayer.Thumbnails
         public Thumbnail<byte[]>[] GetThumbnails(int videoId, int startFrame, int endFrame)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            _baseThumbnailReader?.Dispose();
         }
     }
 }

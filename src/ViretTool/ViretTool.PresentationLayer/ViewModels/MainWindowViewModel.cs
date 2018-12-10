@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Castle.Core.Logging;
-using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.Win32;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;
@@ -80,13 +81,16 @@ namespace ViretTool.PresentationLayer.ViewModels
         {
             try
             {
-                using (CommonOpenFileDialog folderBrowserDialog = new CommonOpenFileDialog { IsFolderPicker = true })
+                OpenFileDialog folderBrowserDialog = new OpenFileDialog
+                                                     {
+                                                         ValidateNames = false,
+                                                         CheckFileExists = false,
+                                                         CheckPathExists = true,
+                                                         FileName = Resources.Properties.Resources.SelectDirectoryText
+                                                     };
+                if (folderBrowserDialog.ShowDialog() == true)
                 {
-                    if (folderBrowserDialog.ShowDialog() == CommonFileDialogResult.Ok)
-                    {
-                        //copy helps for some reason
-                        return string.Copy(folderBrowserDialog.FileName);
-                    }
+                    return Path.GetDirectoryName(folderBrowserDialog.FileName);
                 }
             }
             catch (Exception e)

@@ -150,4 +150,7 @@
   <data name="OpenDatabaseHeader" xml:space="preserve">
     <value>Otevřít databázi</value>
   </data>
+  <data name="SelectDirectoryText" xml:space="preserve">
+    <value>Vyberte složku</value>
+  </data>
 </root>

@@ -150,4 +150,7 @@
   <data name="OpenDatabaseHeader" xml:space="preserve">
     <value>Open database</value>
   </data>
+  <data name="SelectDirectoryText" xml:space="preserve">
+    <value>Select directory</value>
+  </data>
 </root>

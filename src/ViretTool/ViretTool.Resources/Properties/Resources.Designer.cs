@@ -115,6 +115,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select directory.
+        /// </summary>
+        public static string SelectDirectoryText {
+            get {
+                return ResourceManager.GetString("SelectDirectoryText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Semantic.
         /// </summary>
         public static string SemanticModelName {
