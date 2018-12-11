@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
@@ -20,6 +21,7 @@ namespace ViretTool.PresentationLayer.ViewModels
         private readonly ILogger _logger;
         private readonly IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]> _temporalRankingService;
         private bool _isBusy;
+        private bool _isFirstQueryPrimary = true;
 
         public MainWindowViewModel(
             ILogger logger,
@@ -43,6 +45,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
             QueryResults.SelectedFrameChanged += async (sender, model) => await videoSnapshots.Load(model.VideoId);
+            QueryResults.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries.Select(q => q.Clone()).ToList());
         }
 
         public bool IsBusy
@@ -65,6 +68,20 @@ namespace ViretTool.PresentationLayer.ViewModels
 
         public DisplayControlViewModel QueryResults { get; }
         public DisplayControlViewModel VideoSnapshots { get; }
+
+        public bool IsFirstQueryPrimary
+        {
+            get => _isFirstQueryPrimary;
+            set
+            {
+                if (_isFirstQueryPrimary == value)
+                {
+                    return;
+                }
+                _isFirstQueryPrimary = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public async void OpenDatabase()
         {

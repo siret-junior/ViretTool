@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Thumbnails;
+using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
@@ -20,14 +22,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private bool _isShowFilteredVideosChecked;
 
         private bool _isSortDisplayChecked;
-        private List<TileViewModel> _loadedTiles = new List<TileViewModel>();
+        private List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
 
-        private readonly List<TileViewModel> _selectedTiles = new List<TileViewModel>();
-        private readonly List<TileViewModel> _submittedTiles = new List<TileViewModel>();
+        private readonly List<FrameViewModel> _selectedFramesForQuery = new List<FrameViewModel>();
+        private readonly List<FrameViewModel> _submittedFrames = new List<FrameViewModel>();
 
         public DisplayControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
             _datasetServicesManager = datasetServicesManager;
+            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
+            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
         }
 
         public int CurrentPageNumber
@@ -47,12 +51,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public int DisplayHeight { get; set; }
 
-        public Action DisplaySizeChangedHandler => UpdateVisibleTiles;
+        public Action DisplaySizeChangedHandler => UpdateVisibleFrames;
 
         public int DisplayWidth { get; set; }
 
-        public int ImageHeight { get; } = 75;
-        public int ImageWidth { get; } = 100;
+        public int ImageHeight { get; }
+        public int ImageWidth { get; }
 
         public bool IsLargeDisplayChecked
         {
@@ -99,17 +103,48 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public BindableCollection<TileViewModel> VisibleTiles { get; } = new BindableCollection<TileViewModel>();
+        public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
-        public void AddClicked(TileViewModel tileViewModel)
+        public void AddToQueryClicked(FrameViewModel frameViewModel)
         {
-            tileViewModel.IsSelected = true;
-            _selectedTiles.Add(tileViewModel);
+            if (!frameViewModel.IsSelectedForQuery)
+            {
+                ConsiderFrameToQueries(frameViewModel);
+            }
+
+            FramesForQueryChanged?.Invoke(this, _selectedFramesForQuery);
         }
 
-        public void AddSubmitClicked(TileViewModel tileViewModel)
+        private void ConsiderFrameToQueries(FrameViewModel frameViewModel)
         {
-            _submittedTiles.Add(tileViewModel);
+            if (frameViewModel.IsSelectedForQuery)
+            {
+                _selectedFramesForQuery.Remove(frameViewModel);
+            }
+            else
+            {
+                _selectedFramesForQuery.Add(frameViewModel);
+            }
+
+            frameViewModel.IsSelectedForQuery = !frameViewModel.IsSelectedForQuery;
+        }
+
+        public void AddSubmitClicked(FrameViewModel frameViewModel)
+        {
+            _submittedFrames.Add(frameViewModel);
+        }
+
+        public void FrameSelected(FrameViewModel frameViewModel)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                ConsiderFrameToQueries(frameViewModel);
+                return;
+            }
+
+            _loadedFrames.ForEach(f => f.IsSelectedForDetail = false);
+            frameViewModel.IsSelectedForDetail = true;
+            SelectedFrameChanged?.Invoke(this, frameViewModel);
         }
 
         public void FilterVideoButton()
@@ -120,21 +155,21 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void FirstPageButton()
         {
             CurrentPageNumber = 0;
-            UpdateVisibleTiles();
+            UpdateVisibleFrames();
         }
 
         public void LastPageButton()
         {
             var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            CurrentPageNumber = (int)Math.Ceiling(_loadedTiles.Count / (double)itemsCount) - 1;
-            UpdateVisibleTiles();
+            CurrentPageNumber = (int)Math.Ceiling(_loadedFrames.Count / (double)itemsCount) - 1;
+            UpdateVisibleFrames();
         }
 
         public async Task Load(int videoId)
         {
-            _loadedTiles = await Task.Run(() => LoadThumbnails(videoId).ToList());
+            _loadedFrames = await Task.Run(() => LoadThumbnails(videoId).ToList());
             CurrentPageNumber = 0;
-            UpdateVisibleTiles();
+            UpdateVisibleFrames();
         }
 
         public async Task LoadInitialDisplay()
@@ -143,16 +178,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             const int videoCount = 10;
 
             Random random = new Random(); //shuffle initial images randomly
-            _loadedTiles = await Task.Run(
+            _loadedFrames = await Task.Run(
                                () => datasetService.VideoIds.OrderBy(_ => random.Next()).Take(videoCount).SelectMany(LoadThumbnails).OrderBy(_ => random.Next()).ToList());
             CurrentPageNumber = 0;
-            UpdateVisibleTiles();
+            UpdateVisibleFrames();
         }
 
         public void NextPageButton()
         {
             CurrentPageNumber++;
-            UpdateVisibleTiles();
+            UpdateVisibleFrames();
         }
 
         public void PreviousPageButton()
@@ -163,55 +198,48 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
 
             CurrentPageNumber--;
-            UpdateVisibleTiles();
+            UpdateVisibleFrames();
         }
 
-        public void RemoveClicked(TileViewModel tileViewModel)
+        public void RemoveClicked(FrameViewModel frameViewModel)
         {
-            tileViewModel.IsSelected = false;
-            _selectedTiles.Remove(tileViewModel);
+            frameViewModel.IsSelectedForQuery = false;
+            _selectedFramesForQuery.Remove(frameViewModel);
         }
 
-        public void RemoveSubmitClicked(TileViewModel tileViewModel)
+        public void RemoveSubmitClicked(FrameViewModel frameViewModel)
         {
-            _submittedTiles.Remove(tileViewModel);
+            _submittedFrames.Remove(frameViewModel);
         }
 
-        public event EventHandler<TileViewModel> SelectedFrameChanged;
+        public event EventHandler<FrameViewModel> SelectedFrameChanged;
+
+        public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
 
 
         public void SubmitButton()
         {
-            //TODO - submit _submittedTiles
+            //TODO - submit _submittedFrames
         }
 
-        public void TileMouseDown(TileViewModel tileViewModel)
+        private FrameViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail, byte[][] frameDataFromSameVideo)
         {
-            SelectedFrameChanged?.Invoke(this, tileViewModel);
+            int[] allFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(thumbnail.VideoId);
+            return new FrameViewModel(thumbnail.Image, thumbnail.VideoId, thumbnail.FrameNumber, allFrameNumbers, frameDataFromSameVideo);
         }
 
-        private TileViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail)
-        {
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.StreamSource = new MemoryStream(thumbnail.Image);
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
-
-            return new TileViewModel(bitmapImage, thumbnail.VideoId, thumbnail.FrameNumber);
-        }
-
-        private IEnumerable<TileViewModel> LoadThumbnails(int videoId)
+        private IEnumerable<FrameViewModel> LoadThumbnails(int videoId)
         {
             Thumbnail<byte[]>[] thumbnails = _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnails(videoId);
-            return thumbnails.Select(ConvertThumbnailToViewModel);
+            var frameDataFromSameVideo = thumbnails.Select(t => t.Image).ToArray();
+            return thumbnails.Select(t => ConvertThumbnailToViewModel(t, frameDataFromSameVideo));
         }
 
-        private void UpdateVisibleTiles()
+        private void UpdateVisibleFrames()
         {
             var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            VisibleTiles.Clear();
-            VisibleTiles.AddRange(_loadedTiles.Skip(CurrentPageNumber * itemsCount).Take(itemsCount));
+            VisibleFrames.Clear();
+            VisibleFrames.AddRange(_loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount));
         }
     }
 }

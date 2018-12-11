@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="ViretTool.PresentationLayer.Controls.Common.FrameControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
+             xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
+             xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance local:FrameViewModel}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave" MouseWheel="FrameControl_OnMouseWheel">
+        <Image Name="Image"
+               Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}" 
+               Height="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}"
+               Stretch="Fill" Source="{Binding ImageSource, Mode=OneWay}"/>
+        <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
+                   Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <Rectangle Fill="Transparent" Stroke="Red" StrokeThickness="4" StrokeDashArray="4 4"
+                   Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <!-- TODO -->
+        <Label Name="videoLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
+        <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />
+
+        <Popup Name="DisplayButtons" Width="100" Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.5" 
+               MouseLeave="FrameControl_OnMouseLeave"
+               IsOpen="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Name="Add" Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked" >
+                    <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+</TextBlock>
+                </Button>
+                <Button Name="Remove" Grid.Column="1" FontSize="7" Background="DeepSkyBlue">
+                    <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">-</TextBlock>
+                </Button>
+                <Button Name="AddSubmit" Grid.Column="2" FontSize="7" Background="LightCoral">
+                    <TextBlock FontSize="10" VerticalAlignment="Top" Margin="0, -2, 0, 0" FontWeight="Bold">++</TextBlock>
+                </Button>
+                <Button Name="RemoveSubmit" Grid.Column="3" FontSize="7" Background="DeepSkyBlue">
+                    <TextBlock FontSize="12" VerticalAlignment="Top" Margin="0, -2.9, 0, 0" FontWeight="Bold">--</TextBlock>
+                </Button>
+
+                <Button x:Name="SubmitButton" Grid.Column="4" FontSize="7" Background="DarkSeaGreen">
+                    <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.SubmitButtonText}"/>
+                </Button>
+            </Grid>
+        </Popup>
+
+        <Grid Name="ScrollHelper"
+              Width="100"
+              Height="75"
+              Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Opacity="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Name="LeftScrollHelper" Grid.Column="0" Foreground="Azure" Text="&lt;" Margin="0,0,1,60">
+                <TextBlock.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="4" />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <TextBlock Name="RightScrollHelper" Grid.Column="2" Foreground="Azure" TextAlignment="Right" Text="&gt;" Margin="0,0,1,60">
+                <TextBlock.RenderTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="4" />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

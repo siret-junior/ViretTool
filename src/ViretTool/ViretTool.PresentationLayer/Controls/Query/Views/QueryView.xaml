@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -36,5 +37,20 @@
         <!-- Semantic examples -->
         <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" Value="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"/>
         <!-- TODO možná použít display control? -->
+        <ItemsControl x:Name="ImagesDisplay" Grid.Row="7" ItemsSource="{Binding QueryObjects}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <common:FrameControl FrameWidth="{x:Static properties:Resources.ImageWidth}"
+                                         FrameHeight="{x:Static properties:Resources.ImageHeight}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal">
+
+                    </WrapPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </Grid>
 </UserControl>

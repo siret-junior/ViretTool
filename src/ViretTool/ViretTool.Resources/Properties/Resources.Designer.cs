@@ -88,6 +88,24 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 75.
+        /// </summary>
+        public static string ImageHeight {
+            get {
+                return ResourceManager.GetString("ImageHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 100.
+        /// </summary>
+        public static string ImageWidth {
+            get {
+                return ResourceManager.GetString("ImageWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key word.
         /// </summary>
         public static string KeywordModelName {
@@ -115,6 +133,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Query is primary.
+        /// </summary>
+        public static string PrimaryQueryLabel {
+            get {
+                return ResourceManager.GetString("PrimaryQueryLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select directory.
         /// </summary>
         public static string SelectDirectoryText {
@@ -138,6 +165,15 @@ namespace ViretTool.Resources.Properties {
         public static string SketchModelName {
             get {
                 return ResourceManager.GetString("SketchModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string SubmitButtonText {
+            get {
+                return ResourceManager.GetString("SubmitButtonText", resourceCulture);
             }
         }
         

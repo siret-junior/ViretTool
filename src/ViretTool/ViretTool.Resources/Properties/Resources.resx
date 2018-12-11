@@ -153,4 +153,16 @@
   <data name="SelectDirectoryText" xml:space="preserve">
     <value>Select directory</value>
   </data>
+  <data name="SubmitButtonText" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="PrimaryQueryLabel" xml:space="preserve">
+    <value>Query is primary</value>
+  </data>
+  <data name="ImageWidth" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="ImageHeight" xml:space="preserve">
+    <value>75</value>
+  </data>
 </root>

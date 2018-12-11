@@ -68,5 +68,10 @@ namespace ViretTool.BusinessLayer.Thumbnails
         {
             throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+            BaseThumbnailService.Dispose();
+        }
     }
 }

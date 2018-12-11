@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Caliburn.Micro;
@@ -34,6 +35,8 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             //when any property is changed, new settings are rebuild - maybe we want to throttle?
             PropertyChanged += BuildQuerySettings;
         }
+
+        public BindableCollection<FrameViewModel> QueryObjects { get; } = new BindableCollection<FrameViewModel>();
 
         public FilterControl.FilterState BwFilterState
         {
@@ -224,6 +227,12 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             InitializeKeywordSearchMethod(datasetPath, annotationSources);
         }
 
+        public void UpdateQueryObjects(IList<FrameViewModel> queries)
+        {
+            QueryObjects.Clear();
+            QueryObjects.AddRange(queries);
+        }
+
         private void BuildQuerySettings(object sender, PropertyChangedEventArgs args)
         {
             _logger.Info($"Query changed: {args.PropertyName}: {sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)}");
@@ -239,7 +248,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 -1,
                 SketchQueryResult?.SketchColorPoints?.Select(
                                      point => new Ellipse(
-                                         point.Area ? Ellipse.State.Any : Ellipse.State.All,
+                                         point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                          (int)point.Position.X,
                                          (int)point.Position.Y,
                                          (int)point.EllipseAxis.X,

@@ -153,4 +153,10 @@
   <data name="SelectDirectoryText" xml:space="preserve">
     <value>Vyberte složku</value>
   </data>
+  <data name="SubmitButtonText" xml:space="preserve">
+    <value>Poslat</value>
+  </data>
+  <data name="PrimaryQueryLabel" xml:space="preserve">
+    <value>Dotaz je primární</value>
+  </data>
 </root>

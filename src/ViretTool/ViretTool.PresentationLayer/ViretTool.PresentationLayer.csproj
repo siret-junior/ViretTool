@@ -79,6 +79,9 @@
   <ItemGroup>
     <Compile Include="Behaviors\ActualSizeBehavior.cs" />
     <Compile Include="Behaviors\BaseBehavior.cs" />
+    <Compile Include="Controls\Common\FrameControl.xaml.cs">
+      <DependentUpon>FrameControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Common\KeywordSearchControl.xaml.cs">
       <DependentUpon>KeywordSearchControl.xaml</DependentUpon>
     </Compile>
@@ -103,7 +106,7 @@
     <Compile Include="Controls\Common\Sketches\SketchColorPoint.cs" />
     <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModel.cs" />
-    <Compile Include="Controls\DisplayControl\ViewModels\TileViewModel.cs" />
+    <Compile Include="Controls\Common\FrameViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\DisplayControlView.xaml.cs">
       <DependentUpon>DisplayControlView.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,7 @@
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\RadioEnumToBooleanConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -136,6 +140,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\Common\FrameControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Common\KeywordSearchControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
