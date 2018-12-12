@@ -10,32 +10,32 @@ namespace ViretTool.PresentationLayer.Controls.Common
     public partial class FrameControl : UserControl
     {
         public static readonly RoutedEvent AddToQueryClickedEvent = EventManager.RegisterRoutedEvent(
-            "AddToQueryClicked",
+            nameof(AddToQueryClicked),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
         public static readonly RoutedEvent FrameSelectedEvent = EventManager.RegisterRoutedEvent(
-            "FrameSelected",
+            nameof(FrameSelected),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
 
         public static readonly DependencyProperty IsMouseOverFrameProperty = DependencyProperty.Register(
-            "IsMouseOverFrame",
+            nameof(IsMouseOverFrame),
             typeof(bool),
             typeof(FrameControl),
             new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
 
         public static readonly DependencyProperty FrameWidthProperty = DependencyProperty.Register(
-            "FrameWidth",
+            nameof(FrameWidth),
             typeof(int),
             typeof(FrameControl),
             new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
 
         public static readonly DependencyProperty FrameHeightProperty = DependencyProperty.Register(
-            "FrameHeight",
+            nameof(FrameHeight),
             typeof(int),
             typeof(FrameControl),
             new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });

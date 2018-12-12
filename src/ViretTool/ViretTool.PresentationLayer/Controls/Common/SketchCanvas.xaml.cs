@@ -34,15 +34,39 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
         public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
-            "QueryResult",
+            nameof(QueryResult),
             typeof(SketchQueryResult),
             typeof(SketchCanvas),
             new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
+
+        public static readonly DependencyProperty CanvasWidthProperty = DependencyProperty.Register(
+            nameof(CanvasWidth),
+            typeof(int),
+            typeof(SketchCanvas),
+            new FrameworkPropertyMetadata(default(int)) { BindsTwoWayByDefault = true });
+
+        public static readonly DependencyProperty CanvasHeightProperty = DependencyProperty.Register(
+            nameof(CanvasHeight),
+            typeof(int),
+            typeof(SketchCanvas),
+            new FrameworkPropertyMetadata(default(int)) { BindsTwoWayByDefault = true });
 
         public SketchQueryResult QueryResult
         {
             get => (SketchQueryResult)GetValue(QueryResultProperty);
             set => SetValue(QueryResultProperty, value);
+        }
+
+        public int CanvasWidth
+        {
+            get => (int)GetValue(CanvasWidthProperty);
+            set => SetValue(CanvasWidthProperty, value);
+        }
+
+        public int CanvasHeight
+        {
+            get => (int)GetValue(CanvasHeightProperty);
+            set => SetValue(CanvasHeightProperty, value);
         }
 
         /// <summary>

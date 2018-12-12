@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.RankingModels.Queries;
@@ -28,12 +32,27 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private bool _semanticUseForSorting;
         private double _semanticValue;
         private SketchQueryResult _sketchQueryResult;
+        private int _canvasWidth = 240;
+        private int _canvasHeight = 320;
 
         public QueryViewModel(ILogger logger)
         {
             _logger = logger;
             //when any property is changed, new settings are rebuild - maybe we want to throttle?
-            PropertyChanged += BuildQuerySettings;
+            IObservable<Unit> onPropertyChanged =
+                Observable
+                    .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                        eventHandler => PropertyChanged += eventHandler,
+                        eventHandler => PropertyChanged -= eventHandler).Select(_ => Unit.Default);
+            IObservable<Unit> onQueriesChanged = Observable
+                .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                    eventHandler => QueryObjects.CollectionChanged += eventHandler,
+                    eventHandler => QueryObjects.CollectionChanged -= eventHandler).Select(_ => Unit.Default);
+
+            onPropertyChanged.Merge(onQueriesChanged)
+                      .Throttle(TimeSpan.FromSeconds(0.1))
+                      .ObserveOn(SynchronizationContext.Current)
+                      .Subscribe(_ => BuildQuerySettings());
         }
 
         public BindableCollection<FrameViewModel> QueryObjects { get; } = new BindableCollection<FrameViewModel>();
@@ -222,6 +241,36 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             }
         }
 
+        public int CanvasWidth
+        {
+            get => _canvasWidth;
+            set
+            {
+                if (_canvasWidth == value)
+                {
+                    return;
+                }
+
+                _canvasWidth = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int CanvasHeight
+        {
+            get => _canvasHeight;
+            set
+            {
+                if (_canvasHeight == value)
+                {
+                    return;
+                }
+
+                _canvasHeight = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public void InitializeKeywordSearch(string datasetPath, string[] annotationSources)
         {
             InitializeKeywordSearchMethod(datasetPath, annotationSources);
@@ -233,9 +282,9 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QueryObjects.AddRange(queries);
         }
 
-        private void BuildQuerySettings(object sender, PropertyChangedEventArgs args)
+        private void BuildQuerySettings()
         {
-            _logger.Info($"Query changed: {args.PropertyName}: {sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)}");
+            //_logger.Info($"Query changed: {args.PropertyName}: {sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)}");
             //MessageBox.Show($"{args.PropertyName}: {sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)}");
 
             //TODO a lot of unclear settings
@@ -243,9 +292,9 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             KeywordQuery keyWordQuery = new KeywordQuery(
                 KeywordQueryResult?.Query?.Select(parts => new SynsetGroup(parts.Select(p => new Synset(keywordAnnotationSource, p)).ToArray())).ToArray() ?? new SynsetGroup[0]);
 
-            var colorSketchQuery = new ColorSketchQuery(
-                -1,
-                -1,
+            ColorSketchQuery colorSketchQuery = new ColorSketchQuery(
+                CanvasWidth,
+                CanvasHeight,
                 SketchQueryResult?.SketchColorPoints?.Select(
                                      point => new Ellipse(
                                          point.Area ? Ellipse.State.All : Ellipse.State.Any,
@@ -260,7 +309,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                  .ToArray());
 
             //TODO use (e.g. color) for sorting?
-            var semanticExampleQuery = new SemanticExampleQuery(new int[0], new int[0]);
+            SemanticExampleQuery semanticExampleQuery = new SemanticExampleQuery(QueryObjects.Select(q => q.FrameNumber).ToArray(), new int[0]);
 
             FinalQuery = new BusinessLayer.RankingModels.Queries.Query(
                 new SimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),

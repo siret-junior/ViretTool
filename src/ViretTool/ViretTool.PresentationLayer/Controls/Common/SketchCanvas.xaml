@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:ViretTool.PresentationLayer.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -11,12 +13,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Viewbox Name = "viewBox" 
-                 Grid.Row="1"
-                 Stretch = "Uniform">
-            <Canvas Name="sketchCanvas" 
-                    Width="320"
-                    Height="240" />
+        <Viewbox Grid.Row="0" Stretch = "Uniform">
+            <Canvas x:Name="sketchCanvas" Width="320" Height="240" >
+                <!-- Currently not doing anything, ViewBox only zooms Canvas -->
+                <i:Interaction.Behaviors>
+                    <behaviors:ActualSizeBehavior ActualHeight="{Binding Path=CanvasWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SketchCanvas}}, Mode=OneWayToSource}"
+                                                  ActualWidth="{Binding Path=CanvasHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SketchCanvas}}, Mode=OneWayToSource}"/>
+                </i:Interaction.Behaviors>
+            </Canvas>
         </Viewbox>
     </Grid>
 </UserControl>

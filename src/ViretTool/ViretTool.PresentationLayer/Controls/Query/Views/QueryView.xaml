@@ -32,7 +32,7 @@
 
         <!-- Colors -->
         <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}" Value="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"/>
-        <common:SketchCanvas Grid.Row="5" QueryResult="{Binding SketchQueryResult}"/>
+        <common:SketchCanvas Grid.Row="5" QueryResult="{Binding SketchQueryResult}" CanvasWidth="{Binding CanvasWidth}" CanvasHeight="{Binding CanvasHeight}" />
 
         <!-- Semantic examples -->
         <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" Value="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"/>
