@@ -26,7 +26,7 @@ namespace ViretTool.PresentationLayer.ViewModels
         public MainWindowViewModel(
             ILogger logger,
             DisplayControlViewModelBase queryResults,
-            ScrollDisplayControlViewModel videoSnapshots,
+            ScrollDisplayControlViewModel detailView,
             QueryViewModel query1,
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager,
@@ -37,15 +37,16 @@ namespace ViretTool.PresentationLayer.ViewModels
             _temporalRankingService = temporalRankingService;
 
             QueryResults = queryResults;
-            VideoSnapshots = videoSnapshots;
+            DetailView = detailView;
             Query1 = query1;
             Query2 = query2;
 
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
-            QueryResults.SelectedFrameChanged += async (sender, model) => await videoSnapshots.Load(model.VideoId);
+            QueryResults.SelectedFrameChanged += async (sender, model) => await detailView.LoadVideoForFrame(model);
             QueryResults.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
+            DetailView.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
         }
 
         public bool IsBusy
@@ -67,7 +68,7 @@ namespace ViretTool.PresentationLayer.ViewModels
         public QueryViewModel Query2 { get; }
 
         public DisplayControlViewModelBase QueryResults { get; }
-        public DisplayControlViewModelBase VideoSnapshots { get; }
+        public DisplayControlViewModelBase DetailView { get; }
 
         public bool IsFirstQueryPrimary
         {
@@ -159,7 +160,9 @@ namespace ViretTool.PresentationLayer.ViewModels
             try
             {
                 TemporalRankedFrame[] queryResult =
-                    await Task.Run(() => _temporalRankingService.ComputeRankedResultSet(new TemporalQuery(new[] { Query1.FinalQuery, Query2.FinalQuery })));
+                    await Task.Run(
+                        () => _temporalRankingService.ComputeRankedResultSet(
+                            new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
 
                 //TODO - visualize result
             }

@@ -1,4 +1,8 @@
-﻿using ViretTool.BusinessLayer.Services;
+﻿using System;
+using System.Threading.Tasks;
+using Caliburn.Micro;
+using ViretTool.BusinessLayer.Services;
+using ViretTool.PresentationLayer.Controls.Common;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -39,6 +43,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 _columnCount = value;
                 NotifyOfPropertyChange();
             }
+        }
+
+        public Action<int> ScrollToColumn { private get; set; }
+
+        public override async Task LoadVideoForFrame(FrameViewModel frameViewModel)
+        {
+            await base.LoadVideoForFrame(frameViewModel);
+
+            int indexOfFrame = _loadedFrames.FindIndex(f => f.FrameNumber == frameViewModel.FrameNumber);
+            int columnWithFrame = indexOfFrame / RowCount;
+            int columnNumberToScroll = Math.Max(0, columnWithFrame - ColumnCount / 2); //frame should be in the middle
+            ScrollToColumn(columnNumberToScroll);
         }
 
         protected override void UpdateVisibleFrames()

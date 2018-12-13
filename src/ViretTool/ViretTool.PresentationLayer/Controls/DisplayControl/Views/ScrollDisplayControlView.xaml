@@ -67,7 +67,12 @@
                                   Focusable="False">
                         <ItemsPresenter
                             SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:ScrollToColumnIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}"/>
+                        </i:Interaction.Behaviors>
+
                     </ScrollViewer>
+
                 </ControlTemplate>
             </ItemsControl.Template>
             <i:Interaction.Behaviors>

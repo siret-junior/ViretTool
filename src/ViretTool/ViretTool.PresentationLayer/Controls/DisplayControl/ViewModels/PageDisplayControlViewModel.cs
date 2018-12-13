@@ -1,13 +1,32 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.PresentationLayer.Controls.Common;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class PageDisplayControlViewModel : DisplayControlViewModelBase
     {
+        private int _currentPageNumber;
+
         public PageDisplayControlViewModel(IDatasetServicesManager datasetServicesManager) : base(datasetServicesManager)
         {
+        }
+
+        public int CurrentPageNumber
+        {
+            get => _currentPageNumber;
+            set
+            {
+                if (_currentPageNumber == value)
+                {
+                    return;
+                }
+
+                _currentPageNumber = value;
+                NotifyOfPropertyChange();
+            }
         }
 
         public void FirstPageButton()
@@ -38,6 +57,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             CurrentPageNumber--;
             UpdateVisibleFrames();
+        }
+
+        public override Task LoadInitialDisplay()
+        {
+            CurrentPageNumber = 0;
+            return base.LoadInitialDisplay();
+        }
+
+        public override Task LoadVideoForFrame(FrameViewModel frameViewModel)
+        {
+            CurrentPageNumber = 0;
+            return base.LoadVideoForFrame(frameViewModel);
         }
 
         protected override void UpdateVisibleFrames()

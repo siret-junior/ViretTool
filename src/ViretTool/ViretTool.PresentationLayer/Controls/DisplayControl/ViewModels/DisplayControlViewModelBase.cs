@@ -15,7 +15,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
-        private int _currentPageNumber;
         private bool _isLargeDisplayChecked;
         private bool _isShowFilteredVideosChecked;
 
@@ -27,21 +26,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             _datasetServicesManager = datasetServicesManager;
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
-        }
-
-        public int CurrentPageNumber
-        {
-            get => _currentPageNumber;
-            set
-            {
-                if (_currentPageNumber == value)
-                {
-                    return;
-                }
-
-                _currentPageNumber = value;
-                NotifyOfPropertyChange();
-            }
         }
 
         public int DisplayHeight { get; set; }
@@ -126,22 +110,21 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             //TODO
         }
 
-        public async Task Load(int videoId)
+        public virtual async Task LoadVideoForFrame(FrameViewModel frameViewModel)
         {
-            _loadedFrames = await Task.Run(() => LoadThumbnails(videoId).ToList());
-            CurrentPageNumber = 0;
+            _loadedFrames = await Task.Run(() => LoadThumbnails(frameViewModel.VideoId).ToList());
+            _loadedFrames.Single(f => f.FrameNumber == frameViewModel.FrameNumber).IsSelectedForDetail = true;
             UpdateVisibleFrames();
         }
 
-        public async Task LoadInitialDisplay()
+        public virtual async Task LoadInitialDisplay()
         {
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-            const int videoCount = 10;
+            const int videoCount = 2;
 
             Random random = new Random(); //shuffle initial images randomly
             _loadedFrames = await Task.Run(
                                () => datasetService.VideoIds.OrderBy(_ => random.Next()).Take(videoCount).SelectMany(LoadThumbnails).OrderBy(_ => random.Next()).ToList());
-            CurrentPageNumber = 0;
             UpdateVisibleFrames();
         }
 
