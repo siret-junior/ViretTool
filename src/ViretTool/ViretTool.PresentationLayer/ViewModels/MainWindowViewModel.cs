@@ -25,8 +25,8 @@ namespace ViretTool.PresentationLayer.ViewModels
 
         public MainWindowViewModel(
             ILogger logger,
-            DisplayControlViewModel queryResults,
-            DisplayControlViewModel videoSnapshots,
+            DisplayControlViewModelBase queryResults,
+            ScrollDisplayControlViewModel videoSnapshots,
             QueryViewModel query1,
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager,
@@ -66,8 +66,8 @@ namespace ViretTool.PresentationLayer.ViewModels
         public QueryViewModel Query1 { get; }
         public QueryViewModel Query2 { get; }
 
-        public DisplayControlViewModel QueryResults { get; }
-        public DisplayControlViewModel VideoSnapshots { get; }
+        public DisplayControlViewModelBase QueryResults { get; }
+        public DisplayControlViewModelBase VideoSnapshots { get; }
 
         public bool IsFirstQueryPrimary
         {

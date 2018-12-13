@@ -50,6 +50,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.1.2\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -105,10 +106,16 @@
     </Compile>
     <Compile Include="Controls\Common\Sketches\SketchColorPoint.cs" />
     <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
-    <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModel.cs" />
+    <Compile Include="Controls\Common\VirtualizedUniformGrid.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModelBase.cs" />
     <Compile Include="Controls\Common\FrameViewModel.cs" />
-    <Compile Include="Controls\DisplayControl\Views\DisplayControlView.xaml.cs">
-      <DependentUpon>DisplayControlView.xaml</DependentUpon>
+    <Compile Include="Controls\DisplayControl\ViewModels\PageDisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\ScrollDisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml.cs">
+      <DependentUpon>PageDisplayControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml.cs">
+      <DependentUpon>ScrollDisplayControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Query\ViewModels\QueryViewModel.cs" />
     <Compile Include="Controls\Common\FilterControl.xaml.cs">
@@ -164,11 +171,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\DisplayControl\Views\DisplayControlView.xaml">
+    <Page Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Common\FilterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

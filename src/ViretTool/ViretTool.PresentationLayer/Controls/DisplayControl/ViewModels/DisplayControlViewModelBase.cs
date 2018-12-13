@@ -12,7 +12,7 @@ using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
-    public class DisplayControlViewModel : PropertyChangedBase
+    public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
         private int _currentPageNumber;
@@ -20,9 +20,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private bool _isShowFilteredVideosChecked;
 
         private bool _isSortDisplayChecked;
-        private List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
+        protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
 
-        public DisplayControlViewModel(IDatasetServicesManager datasetServicesManager)
+        protected DisplayControlViewModelBase(IDatasetServicesManager datasetServicesManager)
         {
             _datasetServicesManager = datasetServicesManager;
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
@@ -100,6 +100,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
+        protected abstract void UpdateVisibleFrames();
+
         public void AddToQueryClicked(FrameViewModel frameViewModel)
         {
             frameViewModel.IsSelectedForQuery = true;
@@ -143,38 +145,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
-        public void FirstPageButton()
-        {
-            CurrentPageNumber = 0;
-            UpdateVisibleFrames();
-        }
-
-        public void LastPageButton()
-        {
-            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            CurrentPageNumber = (int)Math.Ceiling(_loadedFrames.Count / (double)itemsCount) - 1;
-            UpdateVisibleFrames();
-        }
-
-        public void NextPageButton()
-        {
-            CurrentPageNumber++;
-            UpdateVisibleFrames();
-        }
-
-        public void PreviousPageButton()
-        {
-            if (CurrentPageNumber <= 0)
-            {
-                return;
-            }
-
-            CurrentPageNumber--;
-            UpdateVisibleFrames();
-        }
-
-        
-        
         public event EventHandler<FrameViewModel> SelectedFrameChanged;
 
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
@@ -185,24 +155,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             //TODO - submit _submittedFrames
         }
 
-        private FrameViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail, byte[][] frameDataFromSameVideo)
+        private FrameViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail, Thumbnail<byte[]>[] thumbnailsFromSameVideo)
         {
-            int[] allFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(thumbnail.VideoId);
+            //TODO is wrong! int[] allFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(thumbnail.VideoId);
+            byte[][] frameDataFromSameVideo = thumbnailsFromSameVideo.Select(t => t.Image).ToArray();
+            var allFrameNumbers = thumbnailsFromSameVideo.Select(t => t.FrameNumber).ToArray();
             return new FrameViewModel(thumbnail.Image, thumbnail.VideoId, thumbnail.FrameNumber, allFrameNumbers, frameDataFromSameVideo);
         }
 
         private IEnumerable<FrameViewModel> LoadThumbnails(int videoId)
         {
             Thumbnail<byte[]>[] thumbnails = _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnails(videoId);
-            var frameDataFromSameVideo = thumbnails.Select(t => t.Image).ToArray();
-            return thumbnails.Select(t => ConvertThumbnailToViewModel(t, frameDataFromSameVideo));
-        }
-
-        private void UpdateVisibleFrames()
-        {
-            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            VisibleFrames.Clear();
-            VisibleFrames.AddRange(_loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount));
+            return thumbnails.Select(t => ConvertThumbnailToViewModel(t, thumbnails));
         }
     }
 }

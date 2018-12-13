@@ -28,7 +28,7 @@
         <Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
         <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />
 
-        <Popup Name="DisplayButtons" Width="100" Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.5" 
+        <Popup Name="DisplayButtons" Width="100" Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                MouseLeave="FrameControl_OnMouseLeave"
                IsOpen="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}">
             <Grid>

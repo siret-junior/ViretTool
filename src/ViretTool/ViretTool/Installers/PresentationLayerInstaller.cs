@@ -20,8 +20,10 @@ namespace ViretTool.Installers
 
                 Component.For<QueryView>().LifestyleTransient(),
                 Component.For<QueryViewModel>().LifestyleTransient(),
-                Component.For<DisplayControlView>().LifestyleTransient(),
-                Component.For<DisplayControlViewModel>().LifestyleTransient());
+                Component.For<PageDisplayControlView>().LifestyleTransient(),
+                Component.For<ScrollDisplayControlView>().LifestyleTransient(),
+                Component.For<ScrollDisplayControlViewModel>().LifestyleTransient(),
+                Component.For<DisplayControlViewModelBase>().ImplementedBy<PageDisplayControlViewModel>().LifestyleTransient());
         }
     }
 }
