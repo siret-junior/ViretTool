@@ -37,6 +37,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         public QueryViewModel(ILogger logger)
         {
             _logger = logger;
+
+            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
+            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
+
             //when any property is changed, new settings are rebuild - maybe we want to throttle?
             IObservable<string> onPropertyChanged =
                 Observable
@@ -55,6 +59,9 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                       .ObserveOn(SynchronizationContext.Current)
                       .Subscribe(BuildQuerySettings);
         }
+
+        public int ImageHeight { get; }
+        public int ImageWidth { get; }
 
         public BindableCollection<FrameViewModel> QueryObjects { get; } = new BindableCollection<FrameViewModel>();
 

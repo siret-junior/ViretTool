@@ -10,7 +10,13 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:FrameViewModel}">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave" MouseWheel="FrameControl_OnMouseWheel">
         <Image Name="Image"
@@ -28,9 +34,9 @@
         <Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
         <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />
 
-        <Popup Name="DisplayButtons" Width="100" Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+        <Grid Name="DisplayButtons" Width="100" Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.6"
                MouseLeave="FrameControl_OnMouseLeave"
-               IsOpen="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}">
+               Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -57,7 +63,7 @@
                     <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.SubmitButtonText}"/>
                 </Button>
             </Grid>
-        </Popup>
+        </Grid>
 
         <Grid Name="ScrollHelper"
               Width="100"
@@ -84,6 +90,17 @@
             </TextBlock>
 
         </Grid>
+
+        <Popup IsOpen="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}" MouseLeave="FrameControl_OnMouseLeave"
+               Placement="Relative" HorizontalOffset="{Binding Path=FrameWidthHalf, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}"
+               VerticalOffset="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}">
+            <Popup.LayoutTransform>
+                <ScaleTransform ScaleX="2" ScaleY="2" />
+            </Popup.LayoutTransform>
+            <Image Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}" 
+                   Height="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}"
+                   Stretch="Fill" Source="{Binding ImageSource, Mode=OneWay}"/>
+        </Popup>
 
     </Grid>
 </UserControl>

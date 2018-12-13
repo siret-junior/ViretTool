@@ -69,6 +69,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
             set => SetValue(FrameWidthProperty, value);
         }
 
+        public int FrameWidthHalf => -FrameWidth / 2;
+
         public int FrameHeight
         {
             get => (int)GetValue(FrameHeightProperty);

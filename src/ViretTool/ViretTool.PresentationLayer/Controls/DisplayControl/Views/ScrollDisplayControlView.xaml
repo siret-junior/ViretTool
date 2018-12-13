@@ -51,8 +51,8 @@
                     <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)];
                                                              [Event FramesSubmitted] = [Action FramesSubmitted()];
                                                              [Event FrameSelected] = [Action FrameSelected($dataContext)];" 
-                                         FrameWidth="{x:Static properties:Resources.ImageWidth}"
-                                         FrameHeight="{x:Static properties:Resources.ImageHeight}" />
+                                         FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
+                                         FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
@@ -62,19 +62,12 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.Template>
                 <ControlTemplate>
-                    <Border
-                        BorderThickness="{TemplateBinding Border.BorderThickness}"
-                        Padding="{TemplateBinding Control.Padding}"
-                        BorderBrush="{TemplateBinding Border.BorderBrush}"
-                        Background="{TemplateBinding Panel.Background}"
-                        SnapsToDevicePixels="True">
-                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
-                            Padding="{TemplateBinding Control.Padding}"
-                            Focusable="False">
-                            <ItemsPresenter
-                                SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                        </ScrollViewer>
-                    </Border>
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
+                                  Padding="{TemplateBinding Control.Padding}"
+                                  Focusable="False">
+                        <ItemsPresenter
+                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                    </ScrollViewer>
                 </ControlTemplate>
             </ItemsControl.Template>
             <i:Interaction.Behaviors>
