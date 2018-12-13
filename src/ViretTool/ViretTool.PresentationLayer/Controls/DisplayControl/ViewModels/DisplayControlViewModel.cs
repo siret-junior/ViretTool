@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
@@ -23,9 +21,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         private bool _isSortDisplayChecked;
         private List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
-
-        private readonly List<FrameViewModel> _selectedFramesForQuery = new List<FrameViewModel>();
-        private readonly List<FrameViewModel> _submittedFrames = new List<FrameViewModel>();
 
         public DisplayControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
@@ -107,38 +102,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void AddToQueryClicked(FrameViewModel frameViewModel)
         {
-            if (!frameViewModel.IsSelectedForQuery)
-            {
-                ConsiderFrameToQueries(frameViewModel);
-            }
-
-            FramesForQueryChanged?.Invoke(this, _selectedFramesForQuery);
-        }
-
-        private void ConsiderFrameToQueries(FrameViewModel frameViewModel)
-        {
-            if (frameViewModel.IsSelectedForQuery)
-            {
-                _selectedFramesForQuery.Remove(frameViewModel);
-            }
-            else
-            {
-                _selectedFramesForQuery.Add(frameViewModel);
-            }
-
-            frameViewModel.IsSelectedForQuery = !frameViewModel.IsSelectedForQuery;
-        }
-
-        public void AddSubmitClicked(FrameViewModel frameViewModel)
-        {
-            _submittedFrames.Add(frameViewModel);
+            frameViewModel.IsSelectedForQuery = true;
+            FramesForQueryChanged?.Invoke(this, _loadedFrames.Where(f => f.IsSelectedForQuery).ToList());
         }
 
         public void FrameSelected(FrameViewModel frameViewModel)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                ConsiderFrameToQueries(frameViewModel);
+                frameViewModel.IsSelectedForQuery = !frameViewModel.IsSelectedForQuery;
                 return;
             }
 
@@ -150,19 +122,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void FilterVideoButton()
         {
             //TODO
-        }
-
-        public void FirstPageButton()
-        {
-            CurrentPageNumber = 0;
-            UpdateVisibleFrames();
-        }
-
-        public void LastPageButton()
-        {
-            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            CurrentPageNumber = (int)Math.Ceiling(_loadedFrames.Count / (double)itemsCount) - 1;
-            UpdateVisibleFrames();
         }
 
         public async Task Load(int videoId)
@@ -184,6 +143,19 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
+        public void FirstPageButton()
+        {
+            CurrentPageNumber = 0;
+            UpdateVisibleFrames();
+        }
+
+        public void LastPageButton()
+        {
+            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
+            CurrentPageNumber = (int)Math.Ceiling(_loadedFrames.Count / (double)itemsCount) - 1;
+            UpdateVisibleFrames();
+        }
+
         public void NextPageButton()
         {
             CurrentPageNumber++;
@@ -201,23 +173,14 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
-        public void RemoveClicked(FrameViewModel frameViewModel)
-        {
-            frameViewModel.IsSelectedForQuery = false;
-            _selectedFramesForQuery.Remove(frameViewModel);
-        }
-
-        public void RemoveSubmitClicked(FrameViewModel frameViewModel)
-        {
-            _submittedFrames.Remove(frameViewModel);
-        }
-
+        
+        
         public event EventHandler<FrameViewModel> SelectedFrameChanged;
 
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
 
 
-        public void SubmitButton()
+        public void FramesSubmitted()
         {
             //TODO - submit _submittedFrames
         }

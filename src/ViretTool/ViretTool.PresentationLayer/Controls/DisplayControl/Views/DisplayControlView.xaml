@@ -138,8 +138,9 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)]; 
-                                                             [Event FrameSelected] = [Action FrameSelected($dataContext)]" 
+                    <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)];
+                                                             [Event FramesSubmitted] = [Action FramesSubmitted()];
+                                                             [Event FrameSelected] = [Action FrameSelected($dataContext)];" 
                                          FrameWidth="{x:Static properties:Resources.ImageWidth}"
                                          FrameHeight="{x:Static properties:Resources.ImageHeight}" />
                 </DataTemplate>

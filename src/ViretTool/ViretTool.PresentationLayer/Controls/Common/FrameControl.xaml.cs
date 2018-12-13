@@ -15,8 +15,20 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
+        public static readonly RoutedEvent RemoveFromQueryClickedEvent = EventManager.RegisterRoutedEvent(
+            nameof(RemoveFromQueryClicked),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
         public static readonly RoutedEvent FrameSelectedEvent = EventManager.RegisterRoutedEvent(
             nameof(FrameSelected),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
+        public static readonly RoutedEvent FramesSubmittedEvent = EventManager.RegisterRoutedEvent(
+            nameof(FramesSubmitted),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
@@ -69,22 +81,29 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(AddToQueryClickedEvent, value);
         }
 
+        public event RoutedEventHandler RemoveFromQueryClicked
+        {
+            add => AddHandler(RemoveFromQueryClickedEvent, value);
+            remove => RemoveHandler(RemoveFromQueryClickedEvent, value);
+        }
+
         public event RoutedEventHandler FrameSelected
         {
             add => AddHandler(FrameSelectedEvent, value);
             remove => RemoveHandler(FrameSelectedEvent, value);
         }
 
-
-
-        private void ButtonAddClicked(object sender, RoutedEventArgs e)
+        public event RoutedEventHandler FramesSubmitted
         {
-            RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
+            add => AddHandler(FramesSubmittedEvent, value);
+            remove => RemoveHandler(FramesSubmittedEvent, value);
         }
+
+
 
         private void FrameControl_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(FrameSelectedEvent, DataContext));
+            RaiseEvent(new RoutedEventArgs(FrameSelectedEvent));
         }
 
         private void FrameControl_OnMouseLeave(object sender, MouseEventArgs e)
@@ -107,6 +126,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 ((FrameViewModel)DataContext).ScrollPrevious();
             }
+        }
+
+        private void ButtonAddClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
+        }
+
+        private void ButtonRemovedClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(RemoveFromQueryClickedEvent));
+        }
+
+        private void SubmitClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(FramesSubmittedEvent));
         }
     }
 }

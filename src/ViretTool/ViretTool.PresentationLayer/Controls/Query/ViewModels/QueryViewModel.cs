@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using Caliburn.Micro;
@@ -39,20 +38,22 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         {
             _logger = logger;
             //when any property is changed, new settings are rebuild - maybe we want to throttle?
-            IObservable<Unit> onPropertyChanged =
+            IObservable<string> onPropertyChanged =
                 Observable
                     .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
                         eventHandler => PropertyChanged += eventHandler,
-                        eventHandler => PropertyChanged -= eventHandler).Select(_ => Unit.Default);
-            IObservable<Unit> onQueriesChanged = Observable
-                .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-                    eventHandler => QueryObjects.CollectionChanged += eventHandler,
-                    eventHandler => QueryObjects.CollectionChanged -= eventHandler).Select(_ => Unit.Default);
+                        eventHandler => PropertyChanged -= eventHandler)
+                    .Select(p => $"{p.EventArgs.PropertyName}: {p.Sender.GetType().GetProperty(p.EventArgs.PropertyName)?.GetValue(p.Sender)}");
+            IObservable<string> onQueriesChanged = Observable
+                                                   .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                                                       eventHandler => QueryObjects.CollectionChanged += eventHandler,
+                                                       eventHandler => QueryObjects.CollectionChanged -= eventHandler)
+                                                   .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
 
             onPropertyChanged.Merge(onQueriesChanged)
                       .Throttle(TimeSpan.FromSeconds(0.1))
                       .ObserveOn(SynchronizationContext.Current)
-                      .Subscribe(_ => BuildQuerySettings());
+                      .Subscribe(BuildQuerySettings);
         }
 
         public BindableCollection<FrameViewModel> QueryObjects { get; } = new BindableCollection<FrameViewModel>();
@@ -276,16 +277,22 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             InitializeKeywordSearchMethod(datasetPath, annotationSources);
         }
 
+        public void RemoveFromQueryClicked(FrameViewModel frameViewModel)
+        {
+            frameViewModel.IsSelectedForQuery = false;
+            QueryObjects.Remove(frameViewModel);
+        }
+
         public void UpdateQueryObjects(IList<FrameViewModel> queries)
         {
             QueryObjects.Clear();
             QueryObjects.AddRange(queries);
         }
 
-        private void BuildQuerySettings()
+        private void BuildQuerySettings(string change)
         {
-            //_logger.Info($"Query changed: {args.PropertyName}: {sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)}");
-            //MessageBox.Show($"{args.PropertyName}: {sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)}");
+            _logger.Info(change);
+            //MessageBox.Show(change);
 
             //TODO a lot of unclear settings
             string keywordAnnotationSource = KeywordQueryResult?.AnnotationSource;

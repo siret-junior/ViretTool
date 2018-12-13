@@ -45,7 +45,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
             QueryResults.SelectedFrameChanged += async (sender, model) => await videoSnapshots.Load(model.VideoId);
-            QueryResults.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries.Select(q => q.Clone()).ToList());
+            QueryResults.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
         }
 
         public bool IsBusy

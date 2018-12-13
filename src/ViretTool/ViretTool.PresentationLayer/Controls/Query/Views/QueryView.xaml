@@ -7,6 +7,7 @@
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.Query.ViewModels"
              xmlns:common="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:QueryViewModel}">
@@ -41,7 +42,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <common:FrameControl FrameWidth="{x:Static properties:Resources.ImageWidth}"
-                                         FrameHeight="{x:Static properties:Resources.ImageHeight}" />
+                                         FrameHeight="{x:Static properties:Resources.ImageHeight}"
+                                         cal:Message.Attach="[Event RemoveFromQueryClicked] = [Action RemoveFromQueryClicked($dataContext)];"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
