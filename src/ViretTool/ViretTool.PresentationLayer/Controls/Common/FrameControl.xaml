@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
-             xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:FrameViewModel}">
@@ -39,17 +38,19 @@
                Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Name="Add" Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked" >
+                <Button Name="Add" Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked"
+                        Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+</TextBlock>
                 </Button>
-                <Button Name="Remove" Grid.Column="1" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked">
+                <Button Name="Remove" Grid.Column="1" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked"
+                        Visibility="{Binding Path=IsNotSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">-</TextBlock>
                 </Button>
                 <!--<Button Name="AddSubmit" Grid.Column="2" FontSize="7" Background="LightCoral">
@@ -59,7 +60,8 @@
                     <TextBlock FontSize="12" VerticalAlignment="Top" Margin="0, -2.9, 0, 0" FontWeight="Bold">\-\-</TextBlock>
                 </Button>-->
 
-                <Button x:Name="SubmitButton" Grid.Column="4" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked">
+                <Button x:Name="SubmitButton" Grid.Column="4" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked"
+                        Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.SubmitButtonText}"/>
                 </Button>
             </Grid>

@@ -18,7 +18,7 @@ namespace ViretTool.PresentationLayer.Controls.SubmitControl.Views
     /// <summary>
     /// Interaction logic for SubmitControlView.xaml
     /// </summary>
-    public partial class SubmitControlView : UserControl
+    public partial class SubmitControlView : Window
     {
         public SubmitControlView()
         {

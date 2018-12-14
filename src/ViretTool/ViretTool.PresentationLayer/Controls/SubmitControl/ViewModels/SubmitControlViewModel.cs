@@ -9,8 +9,8 @@ namespace ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels
     {
         public SubmitControlViewModel()
         {
-            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight) * 2;
-            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth) * 2;
+            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
+            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
         }
 
         public int ImageHeight { get; set; }

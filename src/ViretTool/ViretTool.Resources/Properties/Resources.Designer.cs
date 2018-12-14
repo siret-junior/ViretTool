@@ -250,6 +250,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string SubmitWindowTitle {
+            get {
+                return ResourceManager.GetString("SubmitWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temporal query 1.
         /// </summary>
         public static string TemporalQuery1Header {

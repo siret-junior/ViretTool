@@ -183,4 +183,7 @@
   <data name="SearchResultsText" xml:space="preserve">
     <value>Výsledky hledání:</value>
   </data>
+  <data name="SubmitWindowTitle" xml:space="preserve">
+    <value>Poslat</value>
+  </data>
 </root>

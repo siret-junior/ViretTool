@@ -189,4 +189,7 @@
   <data name="SearchResultsText" xml:space="preserve">
     <value>Search results:</value>
   </data>
+  <data name="SubmitWindowTitle" xml:space="preserve">
+    <value>Submit</value>
+  </data>
 </root>

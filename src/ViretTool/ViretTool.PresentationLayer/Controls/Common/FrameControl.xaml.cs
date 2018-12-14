@@ -40,6 +40,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(FrameControl),
             new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
 
+        public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.Register(
+            nameof(IsSelectable),
+            typeof(bool),
+            typeof(FrameControl),
+            null);
+
         public static readonly DependencyProperty FrameWidthProperty = DependencyProperty.Register(
             nameof(FrameWidth),
             typeof(int),
@@ -62,6 +68,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             get => (bool)GetValue(IsMouseOverFrameProperty);
             private set => SetValue(IsMouseOverFrameProperty, value);
         }
+
+        public bool IsSelectable
+        {
+            get => (bool)GetValue(IsSelectableProperty);
+            set => SetValue(IsSelectableProperty, value);
+        }
+
+        public bool IsNotSelectable => !IsSelectable;
 
         public int FrameWidth
         {
@@ -105,7 +119,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void FrameControl_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(FrameSelectedEvent));
+            if (IsSelectable)
+            {
+                RaiseEvent(new RoutedEventArgs(FrameSelectedEvent));
+            }
         }
 
         private void FrameControl_OnMouseLeave(object sender, MouseEventArgs e)
@@ -132,7 +149,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
+            if (IsSelectable)
+            {
+                RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
+            }
         }
 
         private void ButtonRemovedClicked(object sender, RoutedEventArgs e)
@@ -142,7 +162,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void SubmitClicked(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(FramesSubmittedEvent));
+            if (IsSelectable)
+            {
+                RaiseEvent(new RoutedEventArgs(FramesSubmittedEvent));
+            }
         }
     }
 }
