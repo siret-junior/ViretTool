@@ -323,10 +323,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 SketchQueryResult?.SketchColorPoints?.Select(
                                      point => new Ellipse(
                                          point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                         (int)(point.Position.X * CanvasWidth),
-                                         (int)(point.Position.Y * CanvasHeight),
-                                         (int)(point.EllipseAxis.X * CanvasWidth),
-                                         (int)(point.EllipseAxis.Y * CanvasHeight),
+                                         point.Position.X,
+                                         point.Position.Y,
+                                         point.EllipseAxis.X,
+                                         point.EllipseAxis.Y,
                                          0,
                                          point.FillColor.R,
                                          point.FillColor.G,

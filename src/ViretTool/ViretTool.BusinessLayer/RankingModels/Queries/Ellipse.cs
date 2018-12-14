@@ -5,10 +5,10 @@
         public enum State { All, Any }
         public State EllipseState { get; private set; }
 
-        public int PositionX { get; private set; }
-        public int PositionY { get; private set; }
-        public int HorizontalAxis { get; private set; }
-        public int VerticalAxis { get; private set; }
+        public double PositionX { get; private set; }
+        public double PositionY { get; private set; }
+        public double HorizontalAxis { get; private set; }
+        public double VerticalAxis { get; private set; }
         public int Rotation { get; private set; }
 
         public int ColorR { get; private set; }
@@ -17,9 +17,9 @@
 
 
         public Ellipse(
-            State ellipseState, 
-            int positionX, int positionY, 
-            int horizontalAxis, int verticalAxis, 
+            State ellipseState,
+            double positionX, double positionY,
+            double horizontalAxis, double verticalAxis, 
             int rotation, 
             int colorR, int colorG, int colorB)
         {
