@@ -8,6 +8,7 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public class Ranking
     {
+        public string Name { get; set; }
         public float[] Ranks { get; set; }
         public bool IsUpdated { get; set; }
 

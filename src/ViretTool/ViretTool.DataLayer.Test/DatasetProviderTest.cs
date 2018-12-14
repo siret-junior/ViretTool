@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ViretTool.DataLayer.DataModel;
 using System.IO;
-using ViretTool.DataLayer.DataIO.DatasetIO;
 using System.Linq;
+using ViretTool.DataLayer.DataProviders.Dataset;
+using ViretTool.DataLayer.DataIO.DatasetIO;
 
 namespace ViretTool.DataLayer.Test
 {
@@ -19,8 +20,9 @@ namespace ViretTool.DataLayer.Test
         {
             Dataset datasetFromFilelist = DeserializeFromFilelist();
 
-            DatasetProvider.ToBinaryFile(datasetFromFilelist, DATASET_TEST_FILE);
-            Dataset datasetFromBinaryFile = DatasetProvider.FromBinaryFile(DATASET_TEST_FILE);
+            DatasetProvider datasetProvider = new DatasetProvider();
+            datasetProvider.ToBinaryFile(datasetFromFilelist, DATASET_TEST_FILE);
+            Dataset datasetFromBinaryFile = datasetProvider.FromBinaryFile(DATASET_TEST_FILE);
             File.Delete(DATASET_TEST_FILE);
 
             byte[] serializedFromFilelist = Serialize(datasetFromFilelist);

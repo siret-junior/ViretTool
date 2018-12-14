@@ -8,7 +8,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
 {
     public class RankFusionProduct : IRankFusion
     {
-        public Ranking OutputRanking { get; private set; }
+        public Ranking OutputRanking { get; set; }
 
         public void ComputeRanking(Ranking[] rankings)
         {

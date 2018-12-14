@@ -12,7 +12,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
         public int BlobLength { get; private set; }
         public byte[] FiletypeMetadata { get; private set; }
 
-        private object _lockObject = new object();
+        private readonly object _lockObject = new object();
 
 
         public FixedSizeBlobReader(string filePath)
@@ -22,11 +22,12 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
 
             DatasetHeader = FileHeaderUtilities.ReadDatasetHeader(BaseBinaryReader);
             ReadAndVerifyFiletypeHeader();
-            ReadBlobLayout();
+
             ReadBlobMetadata();
+            ReadFiletypeMetadata();
             DataStartOffset = BaseBinaryReader.BaseStream.Position;
         }
-        
+
         public override void Dispose()
         {
             ((IDisposable)BaseBinaryReader).Dispose();
@@ -55,8 +56,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
                 BaseBinaryReader.BaseStream.Seek(position, SeekOrigin.Begin);
             }
         }
-
-
+        
 
         private void ReadAndVerifyFiletypeHeader()
         {
@@ -74,18 +74,24 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
                     + $" ({FIXED_SIZE_BLOBS_VERSION} expected)");
             }
         }
-
-
-        private void ReadBlobLayout()
-        {
-            BlobCount = BaseBinaryReader.ReadInt32();
-            BlobLength = BaseBinaryReader.ReadInt32();
-        }
-
+        
         private void ReadBlobMetadata()
         {
             int metadataSize = BaseBinaryReader.ReadInt32();
-            FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataSize);
+            byte[] blobMetadata = BaseBinaryReader.ReadBytes(metadataSize);
+            
+            using (MemoryStream metadataStream = new MemoryStream(blobMetadata))
+            using (BinaryReader reader = new BinaryReader(metadataStream))
+            {
+                BlobCount = reader.ReadInt32();
+                BlobLength = reader.ReadInt32();
+            }
+        }
+
+        private void ReadFiletypeMetadata()
+        {
+            int metadataLength = BaseBinaryReader.ReadInt32();
+            FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
         }
     }
 }

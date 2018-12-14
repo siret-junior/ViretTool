@@ -5,14 +5,14 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public interface ISimilarityModule
     {
-        IKeywordModel<KeywordQuery> KeywordModel { get; }
-        IColorSketchModel<ColorSketchQuery> ColorSketchModel { get; }
-        ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; }
+        IKeywordModel<KeywordQuery> KeywordModel { get; set; }
+        IColorSketchModel<ColorSketchQuery> ColorSketchModel { get; set; }
+        ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; set; }
         IRankFusion RankFusion { get; }
 
         SimilarityQuery CachedQuery { get; }
-        Ranking InputRanking { get; }
-        Ranking OutputRanking { get; }
+        Ranking InputRanking { get; set; }
+        Ranking OutputRanking { get; set; }
 
         void ComputeRanking(SimilarityQuery query);
     }

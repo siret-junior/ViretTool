@@ -10,40 +10,75 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
 {
     public class ColorSignatureReader : ColorSignatureIOBase
     {
-        public byte[] DatasetHeader { get; }
+        public FixedSizeBlobReader BaseBlobReader { get; private set; }
+        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
 
-        public int DescriptorCount { get; }
-        public int DescriptorLength { get; }
+        public int DescriptorCount => BaseBlobReader.BlobCount;
+        public int DescriptorLength => BaseBlobReader.BlobLength;
 
         public int SignatureWidth { get; }
         public int SignatureHeight { get; }
 
-        public byte[][] Descriptors { get; }
-
+        //public byte[][] Descriptors { get; }
+        
 
         public ColorSignatureReader(string filePath)
         {
-            using (FixedSizeBlobReader blobReader = new FixedSizeBlobReader(filePath))
+            BaseBlobReader = new FixedSizeBlobReader(filePath);
+
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
-                DatasetHeader = blobReader.DatasetHeader;
-                DescriptorCount = blobReader.BlobCount;
-                DescriptorLength = blobReader.BlobLength;
+                ReadAndVerifyFiletypeAndVersion(reader);
 
-                // load metadata
-                byte[] metadata = blobReader.FiletypeMetadata;
-                using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-                {
-                    SignatureWidth = reader.ReadInt32();
-                    SignatureHeight = reader.ReadInt32();
-                }
+                SignatureWidth = reader.ReadInt32();
+                SignatureHeight = reader.ReadInt32();
 
-                // load descriptors
-                Descriptors = new byte[DescriptorCount][];
-                for (int iSignature = 0; iSignature < DescriptorCount; iSignature++)
-                {
-                    Descriptors[iSignature] = blobReader.ReadByteBlob(iSignature);
-                }
+                //int descriptorCount = reader.ReadInt32();
+                //if (descriptorCount != DescriptorCount)
+                //{
+                //    throw new IOException(
+                //        $"Descriptor count mismatch between ColorSignatureReader ({descriptorCount})" +
+                //        $" and underlying BlobReader ({DescriptorCount})");
+                //}
+
+                //int descriptorLength = reader.ReadInt32();
+                //if (descriptorLength != DescriptorLength)
+                //{
+                //    throw new IOException(
+                //        $"Descriptor length mismatch between ColorSignatureReader ({descriptorLength})" +
+                //        $" and underlying BlobReader ({DescriptorLength})");
+                //}
             }
         }
+
+        public override void Dispose()
+        {
+            BaseBlobReader.Dispose();
+        }
+
+        public byte[] ReadDescriptor(int id)
+        {
+            return BaseBlobReader.ReadByteBlob(id);
+        }
+
+
+        private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
+        {
+            string filetype = reader.ReadString();
+            if (!filetype.Equals(COLOR_SIGNATURES_FILETYPE_ID))
+            {
+                throw new IOException($"Filetype error: {filetype} (expected {COLOR_SIGNATURES_FILETYPE_ID})");
+            }
+
+            int version = reader.ReadInt32();
+            if (version != COLOR_SIGNATURES_VERSION)
+            {
+                throw new IOException($"Incorrect \"{COLOR_SIGNATURES_FILETYPE_ID}\" filetype version: "
+                    + $"{version} (expected {COLOR_SIGNATURES_VERSION})");
+            }
+        }
+
+
     }
 }

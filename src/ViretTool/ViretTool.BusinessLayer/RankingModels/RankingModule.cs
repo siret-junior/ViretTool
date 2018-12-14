@@ -9,21 +9,23 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public class RankingModule : IRankingModule
     {
-        public ISimilarityModule SimilarityModule { get; private set; }
-        public IFilteringModule FilteringModule { get; private set; }
+        public ISimilarityModule SimilarityModule { get; set; }
+        public IFilteringModule FilteringModule { get; set; }
 
         public Query CachedQuery { get; private set; }
-        public Ranking InputRanking { get; private set; }
-        public Ranking OutputRanking { get; private set; }
+        public Ranking InputRanking { get; set; }
+        public Ranking OutputRanking { get; set; }
 
         
         public void ComputeRanking(Query query)
         {
-            if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 OutputRanking.IsUpdated = false;
+                return;
             }
-            else
+
+            if (query != null)
             {
                 // compute partial rankings (if neccessary)
                 SimilarityModule.ComputeRanking(query.SimilarityQuery);
@@ -31,6 +33,22 @@ namespace ViretTool.BusinessLayer.RankingModels
 
                 // cache the query
                 CachedQuery = query;
+            }
+            else
+            {
+                // TODO just reassign array reference (also in submodels)
+                // null query, set to 0 rank
+                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = 0;
+                    }
+                }
             }
         }
     }

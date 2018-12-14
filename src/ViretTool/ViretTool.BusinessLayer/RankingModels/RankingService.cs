@@ -4,11 +4,11 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels
 {
-    internal class RankingService : IRankingService<Query, RankedFrame[]>
+    internal class RankingService : IRankingService<Query, RankedResultSet>
     {
         public IRankingModule RankingModule { get; internal set; }
 
-        public RankedFrame[] ComputeRankedResultSet(Query query)
+        public RankedResultSet ComputeRankedResultSet(Query query)
         {
             RankingModule.ComputeRanking(query);
             float[] ranks = RankingModule.OutputRanking.Ranks;
@@ -22,11 +22,12 @@ namespace ViretTool.BusinessLayer.RankingModels
                     accumulator.Add(new RankedFrame(itemId, ranks[itemId]));
                 }
             }
-            RankedFrame[] resultSet = accumulator.ToArray();
+            RankedFrame[] rankedFrames = accumulator.ToArray();
 
             // sort descending
-            Array.Sort(resultSet, (rankedFrame1, rankedFrame2) => rankedFrame2.Rank.CompareTo(rankedFrame1.Rank));
-            return resultSet;
+            Array.Sort(rankedFrames, (rankedFrame1, rankedFrame2) => rankedFrame2.Rank.CompareTo(rankedFrame1.Rank));
+
+            return new RankedResultSet(query, rankedFrames);
         }
     }
 }

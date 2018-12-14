@@ -9,10 +9,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
 {
     public class FilteringModule : IFilteringModule
     {
-        public FilteringQuery CachedQuery { get; private set; }
-        public Ranking InputRanking { get; private set; }
+        public FilteringQuery CachedQuery { get; set; }
 
-        public Ranking OutputRanking { get; private set; }
+        public Ranking InputRanking { get; set; }
+        public Ranking OutputRanking { get; set; }
 
         // TODO: add modules
 
@@ -20,11 +20,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         public void ComputeRanking(FilteringQuery query)
         {
             // TODO if all filters are off
-            if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 OutputRanking.IsUpdated = false;
+                return;
             }
-            else
+
+
+            if (query != null)
             {
                 // TODO: filters
 
@@ -34,8 +37,28 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
 
                 // cache result
                 CachedQuery = query;
-                OutputRanking.Ranks = filteredRanking.Ranks;
-                OutputRanking.IsUpdated = true;
+                //OutputRanking.Ranks = filteredRanking.Ranks;
+                //OutputRanking.IsUpdated = true;
+
+                // TODO: temp fix:
+                OutputRanking.Ranks = InputRanking.Ranks;
+                OutputRanking.IsUpdated = InputRanking.IsUpdated;
+            }
+            else
+            {
+                // TODO just reassign array reference (also in submodels)
+                // null query, set to 0 rank
+                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = 0;
+                    }
+                }
             }
         }
 

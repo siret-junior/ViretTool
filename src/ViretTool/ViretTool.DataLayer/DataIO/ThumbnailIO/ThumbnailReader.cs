@@ -24,7 +24,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public int ThumbnailHeight { get; }
 
         public int VideoCount { get; private set; }
-        public int ThumbnailCount { get; }
+        public int ThumbnailCount => BaseBlobReader.BlobCount;
         public int FramesPerSecond { get; private set; }
 
         public int[] VideoOffsets { get; private set; }
@@ -37,7 +37,6 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public ThumbnailReader(string filePath)
         {
             BaseBlobReader = new VariableSizeBlobReader(filePath);
-            ThumbnailCount = BaseBlobReader.BlobCount;
 
             byte[] metadata = BaseBlobReader.FiletypeMetadata;
             using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
@@ -48,7 +47,13 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 ThumbnailHeight = reader.ReadInt32();
 
                 VideoCount = reader.ReadInt32();
-                ThumbnailCount = reader.ReadInt32();
+                int thumbnailCount = reader.ReadInt32();
+                if (thumbnailCount != ThumbnailCount)
+                {
+                    throw new IOException(
+                        $"Thumbnail count mismatch between ThumbnailReader ({thumbnailCount})" +
+                        $" and underlying BlobReader ({ThumbnailCount})");
+                }
                 FramesPerSecond = reader.ReadInt32();
 
                 VideoOffsets = DataConversionUtilities.TranslateToIntArray(

@@ -20,13 +20,14 @@ namespace ViretTool.DataLayer.DataProviders.Dataset
             return FromBinaryFile(datasetFile, frameAttributesFile);
         }
 
-        public DataModel.Dataset FromBinaryFile(string datasetPath, string frameAttributesPath)
+        public DataModel.Dataset FromBinaryFile(string datasetPath, string frameAttributesPath = null)
         {
             using (FileStream inputStream = File.Open(datasetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 DataModel.Dataset dataset = DatasetBinaryFormatter.Instance.Deserialize(inputStream);
 
                 // TODO:
+                if (frameAttributesPath != null)
                 using (StreamReader reader = new StreamReader(frameAttributesPath))
                 {
                     for (int i = 0; i < dataset.Frames.Count; i++)

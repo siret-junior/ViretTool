@@ -7,8 +7,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
         public KeywordQuery KeywordQuery { get; private set; }
         public ColorSketchQuery ColorSketchQuery { get; private set; }
         public SemanticExampleQuery SemanticExampleQuery { get; private set; }
-
-
+        
         public SimilarityQuery(
             KeywordQuery keywordQuery, 
             ColorSketchQuery colorSketchQuery, 

@@ -19,7 +19,7 @@ namespace ViretTool.PresentationLayer.ViewModels
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly ILogger _logger;
-        private readonly IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]> _temporalRankingService;
+        private readonly IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> _temporalRankingService;
         private bool _isBusy;
         private bool _isFirstQueryPrimary = true;
 
@@ -30,7 +30,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             QueryViewModel query1,
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager,
-            IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]> temporalRankingService)
+            IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> temporalRankingService)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
@@ -159,7 +159,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             IsBusy = true;
             try
             {
-                TemporalRankedFrame[] queryResult =
+                TemporalRankedResultSet queryResult =
                     await Task.Run(
                         () => _temporalRankingService.ComputeRankedResultSet(
                             new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));

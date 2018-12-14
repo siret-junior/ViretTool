@@ -19,7 +19,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
         /// <summary>
         /// Extracted features from DCNN, normalized to |v| = 1 and each dimension globally quantized to byte
         /// </summary>
-        public List<float[]> mFloatVectors;
+        public float[][] mFloatVectors;
 
         private int mVectorDimension;
 
@@ -28,7 +28,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
         private Dictionary<int, float[]> mCache = new Dictionary<int, float[]>();
 
 
-        public FloatVectorModel(List<float[]> floatVectors)
+        public FloatVectorModel(float[][] floatVectors)
         {
             mFloatVectors = floatVectors;
         }
@@ -64,37 +64,54 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 
         public void ComputeRanking(SemanticExampleQuery query)
         {
-            if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
 
-            float[] ranking = new float[InputRanking.Ranks.Length];
-            
-            foreach (int positiveQueryId in query.PositiveExampleIds)
+            if (query != null)
             {
-                float[] partialResults = AddQueryResultsToCache(positiveQueryId, true);
-                Parallel.For(0, InputRanking.Ranks.Length, i => 
-                {
-                    ranking[i] += partialResults[i];
-                });
-            }
+                float[] ranking = new float[InputRanking.Ranks.Length];
 
-            if (query.NegativeExampleIds != null)
-            {
-                foreach (int negativeQueryId in query.NegativeExampleIds)
+                foreach (int positiveQueryId in query.PositiveExampleIds)
                 {
-                    float[] partialResults = AddQueryResultsToCache(negativeQueryId, false);
+                    float[] partialResults = AddQueryResultsToCache(positiveQueryId, true);
                     Parallel.For(0, InputRanking.Ranks.Length, i =>
                     {
-                        ranking[i] -= partialResults[i];
+                        ranking[i] += partialResults[i];
                     });
                 }
-            }
 
-            OutputRanking.Ranks = ranking;
+                if (query.NegativeExampleIds != null)
+                {
+                    foreach (int negativeQueryId in query.NegativeExampleIds)
+                    {
+                        float[] partialResults = AddQueryResultsToCache(negativeQueryId, false);
+                        Parallel.For(0, InputRanking.Ranks.Length, i =>
+                        {
+                            ranking[i] -= partialResults[i];
+                        });
+                    }
+                }
+                OutputRanking.Ranks = ranking;
+            }
+            else
+            {
+                // null query, set to 0 rank
+                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = 0;
+                    }
+                }
+            }
             OutputRanking.IsUpdated = true;
         }
 

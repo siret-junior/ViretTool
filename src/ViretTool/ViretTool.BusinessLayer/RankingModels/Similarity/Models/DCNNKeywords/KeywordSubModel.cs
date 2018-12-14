@@ -8,12 +8,13 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 {
-
     /// <summary>
     /// Searches an index file and displays results
     /// </summary>
     class KeywordSubModel : IKeywordModel<KeywordQuery>
     {
+        private const string KEYWORD_MODEL_EXTENSION = ".keyword";
+
         public KeywordQuery CachedQuery { get; private set; }
         public Ranking InputRanking { get; set; }
         public Ranking OutputRanking { get; set; }
@@ -40,29 +41,63 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         /// <param name="lp">For class name to class id conversion</param>
         /// <param name="filePath">Relative or absolute path to index file</param>
-        public KeywordSubModel(string source, bool useIDF = false) {
+        public KeywordSubModel(string inputFile, string source, bool useIDF = false) {
             mSource = source;
             mUseIDF = useIDF;
 
             //mLoadTask = Task.Factory.StartNew(LoadFromFile);
-            LoadFromFile();
+            LoadFromFile(inputFile);
         }
-        
+
+        public static KeywordSubModel FromDirectory(string directory)
+        {
+            string inputFile = Directory.GetFiles(directory)
+                    .Where(dir => Path.GetFileName(dir).EndsWith(KEYWORD_MODEL_EXTENSION))
+                    .FirstOrDefault();
+
+            if (inputFile != null)
+            {
+                return new KeywordSubModel(inputFile, "TODO: NasNet");
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         #region Rank Methods
 
         public void ComputeRanking(KeywordQuery query)//List<List<int>> query) 
         {
-            if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
 
-
-            Tuple<int, Ranking> result = ComputeRankedFrames(query);
-            OutputRanking.Ranks = result.Item2.Ranks;
+            if (query != null)
+            {
+                Tuple<int, Ranking> result = ComputeRankedFrames(query);
+                OutputRanking.Ranks = result.Item2.Ranks;
+            }
+            else
+            {
+                // null query, set to 0 rank
+                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = 0;
+                    }
+                }
+            }
+            OutputRanking.IsUpdated = true;
         }
 
         #endregion
@@ -70,35 +105,40 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         #region (Private) Index File Loading
 
-        private void LoadFromFile() {
-            throw new NotImplementedException();
-            //mClassLocations = new Dictionary<int, int>();
-            //mClassCache = new Dictionary<int, List<KeywordSearchFrame>>();
-            //mClauseCache = new Dictionary<List<int>, Dictionary<int, float>>(new DCNNKeywords.ListComparer());
+        private void LoadFromFile(string inputFile) {
+            //throw new NotImplementedException();
+            mClassLocations = new Dictionary<int, int>();
+            mClassCache = new Dictionary<int, List<KeywordSearchFrame>>();
+            mClauseCache = new Dictionary<List<int>, Dictionary<int, float>>(new DCNNKeywords.ListComparer());
 
-            //if (mUseIDF) {
-            //    string idfFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword.idf");
-            //    IDF = DCNNKeywords.IDFLoader.LoadFromFile(idfFilename);
-            //}
+            if (mUseIDF)
+            {
+                throw new NotImplementedException();
+                //string idfFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword.idf");
+                //IDF = DCNNKeywords.IDFLoader.LoadFromFile(idfFilename);
+            }
 
             //LastId = mDataset.LAST_FRAME_TO_LOAD;
-            //string indexFilename = mDataset.GetFileNameByExtension($"-{mSource}.keyword");
+            string indexFilename = inputFile;// mDataset.GetFileNameByExtension($"-{mSource}.keyword");
 
-            //mReader = new BinaryReader(File.Open(indexFilename, FileMode.Open, FileAccess.Read, FileShare.Read));
+            mReader = new BinaryReader(File.Open(indexFilename, FileMode.Open, FileAccess.Read, FileShare.Read));
 
-            //// header = 'KS INDEX'+(Int64)-1
-            //if (mReader.ReadInt64() != 0x4b5320494e444558 && mReader.ReadInt64() != -1)
-            //    throw new FileFormatException("Invalid index file format.");
+            // header = 'KS INDEX'+(Int64)-1
+            if (mReader.ReadInt64() != 0x4b5320494e444558 && mReader.ReadInt64() != -1)
+                throw new FileFormatException("Invalid index file format.");
 
-            //// read offests of each class
-            //while (true) {
-            //    int value = mReader.ReadInt32();
-            //    int valueOffset = mReader.ReadInt32();
+            // read offests of each class
+            while (true)
+            {
+                int value = mReader.ReadInt32();
+                int valueOffset = mReader.ReadInt32();
 
-            //    if (value != -1) {
-            //        mClassLocations.Add(value, valueOffset);
-            //    } else break;
-            //}
+                if (value != -1)
+                {
+                    mClassLocations.Add(value, valueOffset);
+                }
+                else break;
+            }
         }
 
         private List<KeywordSearchFrame> ReadClassFromFile(int classId) {
@@ -144,14 +184,15 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         private Tuple<int, Ranking> ComputeRankedFrames(KeywordQuery query)//List<List<int>> query) 
         {
             Ranking result = Ranking.Zeros(InputRanking.Ranks.Length);
-
+            
             List<Dictionary<int, float>> clauses = ResolveClauses(query.SynsetGroups);
             Dictionary<int, float> queryClause = UniteClauses(clauses);
 
-            foreach (KeyValuePair<int, float> pair in queryClause) {
+            foreach (KeyValuePair<int, float> pair in queryClause)
+            {
                 result.Ranks[pair.Key] = pair.Value;
             }
-            
+
             return new Tuple<int, Ranking>(queryClause.Count, result);
         }
 

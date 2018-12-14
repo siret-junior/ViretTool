@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,10 +50,13 @@
     <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobReader.cs" />
     <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobWriter.cs" />
     <Compile Include="DataIO\DataConversionUtilities.cs" />
+    <Compile Include="DataIO\DescriptorIO\ColorSignatureIO\ColorSignatureExtractor.cs" />
     <Compile Include="DataIO\DescriptorIO\ColorSignatureIO\ColorSignatureIOBase.cs" />
     <Compile Include="DataIO\DescriptorIO\ColorSignatureIO\ColorSignatureReader.cs" />
+    <Compile Include="DataIO\DescriptorIO\ColorSignatureIO\ColorSignatureWriter.cs" />
     <Compile Include="DataIO\DescriptorIO\FloatVectorIO\FloatVectorIOBase.cs" />
     <Compile Include="DataIO\DescriptorIO\FloatVectorIO\FloatVectorReader.cs" />
+    <Compile Include="DataIO\DescriptorIO\FloatVectorIO\FloatVectorWriter.cs" />
     <Compile Include="DataIO\FileHeaderUtilities.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinaryFormatter.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinaryDeserializer.cs" />

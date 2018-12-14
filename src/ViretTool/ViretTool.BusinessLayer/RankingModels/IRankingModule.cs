@@ -8,8 +8,8 @@ namespace ViretTool.BusinessLayer.RankingModels
         IFilteringModule FilteringModule { get; }
 
         Query CachedQuery { get; }
-        Ranking InputRanking { get; }
-        Ranking OutputRanking { get; }
+        Ranking InputRanking { get; set; }
+        Ranking OutputRanking { get; set; }
 
         void ComputeRanking(Query query);
     }

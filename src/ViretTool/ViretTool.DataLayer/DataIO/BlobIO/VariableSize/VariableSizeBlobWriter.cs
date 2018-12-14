@@ -54,18 +54,10 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             BlobOffsets = new long[BlobCount];
             _blobOffsetsStreamOffset = BaseBinaryWriter.BaseStream.Position;
             BaseBinaryWriter.BaseStream.Seek(BlobCount * sizeof(long), SeekOrigin.Current);
-            //for (int iBlob = 0; iBlob < blobCount; iBlob++)
-            //{
-            //    BaseBinaryWriter.Write((long)-1);
-            //}
 
             BlobLengths = new int[BlobCount];
             _blobLengthsStreamOffset = BaseBinaryWriter.BaseStream.Position;
             BaseBinaryWriter.BaseStream.Seek(BlobCount * sizeof(int), SeekOrigin.Current);
-            //for (int iBlob = 0; iBlob < blobCount; iBlob++)
-            //{
-            //    BaseBinaryWriter.Write((int)-1);
-            //}
 
             // reserve space
             BaseBinaryWriter.Seek(METADATA_RESERVE_SPACE_SIZE, SeekOrigin.Current);
@@ -86,7 +78,8 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
         {
             if (_writtenBlobCount >= BlobCount)
             {
-                throw new ArgumentOutOfRangeException($"Trying to write more blobs than previously reserved: {BlobCount}");
+                throw new ArgumentOutOfRangeException(
+                    $"Trying to write more blobs than previously reserved: {BlobCount}");
             }
 
             BlobOffsets[_writtenBlobCount] = BaseBinaryWriter.BaseStream.Position;

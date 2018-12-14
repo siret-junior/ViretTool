@@ -10,37 +10,62 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
 {
     public class FloatVectorReader : FloatVectorIOBase
     {
-        public byte[] DatasetHeader { get; }
+        public FixedSizeBlobReader BaseBlobReader { get; private set; }
+        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
 
-        public int VectorCount { get; }
-        public int VectorLength { get; }
-
+        public int DescriptorCount => BaseBlobReader.BlobCount;
+        public int DescriptorLength => BaseBlobReader.BlobLength / sizeof(float);
+        
         public string Source { get; }
 
-        public float[][] Descriptors { get; }
+        //public float[][] Descriptors { get; }
 
 
         public FloatVectorReader(string filePath)
         {
-            using (FixedSizeBlobReader blobReader = new FixedSizeBlobReader(filePath))
+            BaseBlobReader = new FixedSizeBlobReader(filePath);
+
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
-                DatasetHeader = blobReader.DatasetHeader;
-                VectorCount = blobReader.BlobCount;
-                VectorLength = blobReader.BlobLength / sizeof(float);
+                ReadAndVerifyFiletypeAndVersion(reader);
 
-                // load metadata
-                byte[] metadata = blobReader.FiletypeMetadata;
-                using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-                {
-                    Source = reader.ReadString();
-                }
+                Source = reader.ReadString();
+            }
 
-                // load descriptors
-                Descriptors = new float[VectorCount][];
-                for (int iVector = 0; iVector < VectorCount; iVector++)
-                {
-                    Descriptors[iVector] = blobReader.ReadFloatBlob(iVector);
-                }
+            //// load descriptors
+            //Descriptors = new float[VectorCount][];
+            //for (int iVector = 0; iVector < VectorCount; iVector++)
+            //{
+            //    Descriptors[iVector] = blobReader.ReadFloatBlob(iVector);
+            //}
+        }
+
+        
+        public override void Dispose()
+        {
+            BaseBlobReader.Dispose();
+        }
+        
+        public float[] ReadDescriptor(int id)
+        {
+            return BaseBlobReader.ReadFloatBlob(id);
+        }
+
+
+        private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
+        {
+            string filetype = reader.ReadString();
+            if (!filetype.Equals(FLOAT_VECTOR_FILETYPE_ID))
+            {
+                throw new IOException($"Filetype error: {filetype} (expected {FLOAT_VECTOR_FILETYPE_ID})");
+            }
+
+            int version = reader.ReadInt32();
+            if (version != FLOAT_VECTOR_VERSION)
+            {
+                throw new IOException($"Incorrect \"{FLOAT_VECTOR_FILETYPE_ID}\" filetype version: "
+                    + $"{version} (expected {FLOAT_VECTOR_VERSION})");
             }
         }
     }

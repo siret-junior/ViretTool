@@ -17,17 +17,19 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
         public IRankFusion RankFusion { get; set; }
 
         public SimilarityQuery CachedQuery { get; private set; }
-        public Ranking InputRanking { get; private set; }
-        public Ranking OutputRanking { get; private set; }
+        public Ranking InputRanking { get; set; }
+        public Ranking OutputRanking { get; set; }
         
         
         public void ComputeRanking(SimilarityQuery query)
         {
-            if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 OutputRanking.IsUpdated = false;
+                return;
             }
-            else
+
+            if (query != null)
             {
                 // compute partial rankings (if neccessary)
                 KeywordModel.ComputeRanking(query.KeywordQuery);
@@ -45,6 +47,23 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
                 // cache the query
                 CachedQuery = query;
             }
+            else
+            {
+                // TODO just reassign array reference (also in submodels)
+                // null query, set to 0 rank
+                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = 0;
+                    }
+                }
+            }
+            OutputRanking.IsUpdated = true;
         }
     }
 }

@@ -53,7 +53,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 }
 
                 // reserve space
-                writer.Seek(METADATA_RESERVE_SPACE_SIZE, SeekOrigin.Current);
+                writer.Write(new byte[METADATA_RESERVE_SPACE_SIZE]);
 
                 thumbnailMetadata = metadataStream.ToArray();
             }
@@ -61,6 +61,17 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             BaseBlobWriter = new VariableSizeBlobWriter(
                 outputFile, datasetHeader, thumbnailCount, thumbnailMetadata);
         }
+
+        public override void Dispose()
+        {
+            BaseBlobWriter.Dispose();
+        }
+        
+        public void WriteThumbnail(byte[] thumbnailData)
+        {
+            BaseBlobWriter.WriteBlob(thumbnailData);
+        }
+
 
         private void ProcessThumbnailKeys((int videoId, int frameNumber)[] thumbnailKeys)
         {
@@ -89,18 +100,6 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
             VideoOffsets = videoOffsets.ToArray();
             VideoFrameCounts = videoFrameCounts.ToArray();
-        }
-
-        public void WriteThumbnail(byte[] thumbnailData)
-        {
-            BaseBlobWriter.WriteBlob(thumbnailData);
-        }
-
-
-
-        public override void Dispose()
-        {
-            BaseBlobWriter.Dispose();
         }
     }
 }

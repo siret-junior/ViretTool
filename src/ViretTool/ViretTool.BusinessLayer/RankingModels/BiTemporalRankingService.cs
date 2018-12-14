@@ -10,39 +10,71 @@ using ViretTool.BusinessLayer.RankingModels.Similarity;
 namespace ViretTool.BusinessLayer.RankingModels
 {
     public class BiTemporalRankingService 
-        : IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]>
+        : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
     {
-        public IRankingService<Query, RankedFrame[]> PrimaryRankingService { get; private set; }
-        public IRankingService<Query, RankedFrame[]> SecondaryRankingService { get; private set; }
+        public IRankingModule PrimaryRankingModule { get; set; }
+        public IRankingModule SecondaryRankingModule { get; set; }
 
         public TemporalQuery CachedQuery { get; private set; }
-        public TemporalRankedFrame[] CachedResultSet { get; private set; }
+        public TemporalRankedResultSet CachedResultSet { get; private set; }
         
-        public IFilteringModule FilteringModule { get; private set; }
+        public IFilteringModule FilteringModule { get; set; }
         
 
-        public TemporalRankedFrame[] ComputeRankedResultSet(TemporalQuery query)
+        public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
         {
-            if (query.Equals(CachedQuery) /* TODO initial ranking has not changed */)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) /* TODO initial ranking has not changed */)
             {
                 return CachedResultSet;
             }
-            else
+
+            if (query != null)
             {
                 // compute partial rankings
+                PrimaryRankingModule.ComputeRanking(query.TemporalQueries[0]);
+                // TODO:
+                //SecondaryRankingModule.ComputeRanking(query.TemporalQueries[1]);
 
-
+                float[] ranks = PrimaryRankingModule.OutputRanking.Ranks;
 
                 // aggregate temporal rankings
+                // TODO: secondary temporal query
 
 
-                throw new NotImplementedException();
+                // retrieve filtered result
+                List<RankedFrame> accumulator = new List<RankedFrame>(ranks.Length);
+                for (int itemId = 0; itemId < ranks.Length; itemId++)
+                {
+                    if (ranks[itemId] != float.MinValue)
+                    {
+                        accumulator.Add(new RankedFrame(itemId, ranks[itemId]));
+                    }
+                }
+                RankedFrame[] primaryRankedFrames = accumulator.ToArray();
+
+                // sort descending
+                Array.Sort(primaryRankedFrames, (rankedFrame1, rankedFrame2) => rankedFrame2.Rank.CompareTo(rankedFrame1.Rank));
+
+                return new TemporalRankedResultSet(query,
+                    new RankedFrame[][] { primaryRankedFrames, primaryRankedFrames });
+            }
+            else
+            {
+                int itemCount = PrimaryRankingModule.InputRanking.Ranks.Length;
+                RankedFrame[] rankedFrames = new RankedFrame[itemCount];
+                for (int i = 0; i < itemCount; i++)
+                {
+                    rankedFrames[i] = new RankedFrame(i, itemCount - i);
+                }
+
+                return new TemporalRankedResultSet(query,
+                    new RankedFrame[][] { rankedFrames, rankedFrames });
             }
         }
 
-        public TemporalRankedFrame[] ComputeRankedResultSet(Query query)
+        public TemporalRankedResultSet ComputeRankedResultSet(Query query)
         {
-            throw new NotImplementedException();
+            return ComputeRankedResultSet(new TemporalQuery(new Query[2] { query, null }));
         }
     }
 }

@@ -4,6 +4,7 @@
     {
         public SimilarityQuery SimilarityQuery { get; private set; }
         public FilteringQuery FilteringQuery { get; private set; }
+
         
 
         public Query(SimilarityQuery similarityQuery, FilteringQuery filteringQuery)

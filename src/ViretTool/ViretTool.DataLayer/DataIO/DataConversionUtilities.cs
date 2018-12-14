@@ -28,5 +28,12 @@ namespace ViretTool.DataLayer.DataIO
             Buffer.BlockCopy(byteBuffer, 0, longs, 0, byteBuffer.Length);
             return longs;
         }
+
+        public static byte[] TranslateToByteArray(float[] floatArray)
+        {
+            byte[] bytes = new byte[floatArray.Length * sizeof(float)];
+            Buffer.BlockCopy(floatArray, 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace ViretTool.Installers
                 Component.For<IThumbnailService<Thumbnail<byte[]>>>().ImplementedBy<JpegThumbnailService>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<IDatasetService>().ImplementedBy<DatasetService>().LifestyleBoundTo<DatasetServices>(),
 
-                Component.For<IBiTemporalRankingService<Query, RankedFrame[], TemporalQuery, TemporalRankedFrame[]>>().ImplementedBy<BiTemporalRankingService>());
+                Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>().ImplementedBy<BiTemporalRankingService>());
         }
     }
 }

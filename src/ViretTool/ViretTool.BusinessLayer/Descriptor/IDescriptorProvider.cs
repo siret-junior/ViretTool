@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.Descriptor
 {
-    interface IDescriptorService<T>
+    public interface IDescriptorProvider<T>
     {
         byte[] DatasetHeader { get; }
+
+        int DescriptorCount { get; }
+        int DescriptorLength { get; }
 
         T[] Descriptors { get; }
         T GetDescriptor(int index);

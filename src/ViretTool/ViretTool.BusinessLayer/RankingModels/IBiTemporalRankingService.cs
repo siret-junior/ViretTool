@@ -11,8 +11,8 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public interface IBiTemporalRankingService<TSimpleQuery, TSimpleResult, TTemporalQuery, TTemporalResult>
     {
-        IRankingService<TSimpleQuery, TSimpleResult> PrimaryRankingService { get; }
-        IRankingService<TSimpleQuery, TSimpleResult> SecondaryRankingService { get; }
+        IRankingModule PrimaryRankingModule { get; }
+        IRankingModule SecondaryRankingModule { get; }
 
         TTemporalQuery CachedQuery { get; }
         TTemporalResult CachedResultSet { get; }

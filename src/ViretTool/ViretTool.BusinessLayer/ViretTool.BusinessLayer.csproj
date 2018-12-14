@@ -45,7 +45,8 @@
   <ItemGroup>
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />
-    <Compile Include="Descriptor\ColorSignatureDescriptorService.cs" />
+    <Compile Include="Descriptor\ColorSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptor\SemanticVectorDescriptorProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankingModels\BiTemporalRanking.cs" />
     <Compile Include="RankingModels\Filtering\Filters\MaskFilter.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="RankingModels\Similarity\Models\ISemanticExampleModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\ISimilarityModel.cs" />
     <Compile Include="RankingModels\Queries\Ellipse.cs" />
+    <Compile Include="RankingModels\RankedResultSet.cs" />
     <Compile Include="RankingModels\Similarity\SimilarityModule.cs" />
     <Compile Include="RankingModels\BiTemporalRankingService.cs" />
     <Compile Include="RankingModels\Queries\ColorSketchQuery.cs" />
@@ -94,8 +96,8 @@
     <Compile Include="RankingModels\Queries\KeywordQuery.cs" />
     <Compile Include="RankingModels\Queries\Query.cs" />
     <Compile Include="RankingModels\Queries\SimilarityQuery.cs" />
-    <Compile Include="Descriptor\IDescriptorService.cs" />
-    <Compile Include="RankingModels\TemporalRankedFrame.cs" />
+    <Compile Include="Descriptor\IDescriptorProvider.cs" />
+    <Compile Include="RankingModels\TemporalRankedResultSet.cs" />
     <Compile Include="Services\DatasetServicesManager.cs" />
     <Compile Include="Services\DatasetServices.cs" />
     <Compile Include="Services\IDatabaseServicesFactory.cs" />

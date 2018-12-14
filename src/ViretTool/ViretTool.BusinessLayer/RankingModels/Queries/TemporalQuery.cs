@@ -6,7 +6,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     {
         public Query[] TemporalQueries { get; private set; }
 
-
+        
         public TemporalQuery(Query[] temporalQueries)
         {
             TemporalQueries = temporalQueries;

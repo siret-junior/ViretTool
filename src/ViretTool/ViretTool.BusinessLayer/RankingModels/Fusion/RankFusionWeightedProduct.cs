@@ -8,7 +8,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
 {
     public class RankFusionWeightedProduct : IRankFusion
     {
-        public Ranking OutputRanking => throw new NotImplementedException();
+        public Ranking OutputRanking { get; set; }
 
         public void ComputeRanking(Ranking[] rankings)
         {

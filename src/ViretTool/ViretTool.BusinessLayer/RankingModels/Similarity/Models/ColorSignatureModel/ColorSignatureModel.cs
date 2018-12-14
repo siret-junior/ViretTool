@@ -21,8 +21,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         /// A thumbnail based signature in RGB format, stored as a 1D byte array.
         /// </summary>
         private byte[][] _colorSignatures;
-        private int _signatureWidth = 32;     // TODO: load dynamically from provided initializer file
-        private int _signatureHeight = 18;
+        private int _signatureWidth = 26;     // TODO: load dynamically from provided initializer file
+        private int _signatureHeight = 15;
 
         private Dictionary<Ellipse, Ranking> _partialRankingCache = new Dictionary<Ellipse, Ranking>();
 
@@ -41,33 +41,52 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
 
         public void ComputeRanking(ColorSketchQuery query)
         {
-            if (query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
-            
-            // remove old not used ellipse cache entires
-            foreach (Ellipse key in _partialRankingCache.Keys)
+
+            if (query != null)
             {
-                if (!query.ColorSketchEllipses.Contains(key))
+                // remove old not used ellipse cache entires
+                foreach (Ellipse key in _partialRankingCache.Keys)
                 {
-                    _partialRankingCache.Remove(key);
+                    if (!query.ColorSketchEllipses.Contains(key))
+                    {
+                        _partialRankingCache.Remove(key);
+                    }
+                }
+
+                // add new ellipse partial ranking entries
+                foreach (Ellipse ellipse in query.ColorSketchEllipses)
+                {
+                    if (!_partialRankingCache.ContainsKey(ellipse))
+                    {
+                        _partialRankingCache.Add(ellipse, EvaluateOneQueryCentroid(ellipse));
+                    }
+                }
+
+                // perform fusion of partial rankings
+                RankFusion.ComputeRanking(_partialRankingCache.Values.ToArray());
+            }
+            else
+            {
+                // null query, set to 0 rank
+                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = 0;
+                    }
                 }
             }
-
-            // add new ellipse partial ranking entries
-            foreach (Ellipse ellipse in query.ColorSketchEllipses)
-            {
-                if (!_partialRankingCache.ContainsKey(ellipse))
-                {
-                    _partialRankingCache.Add(ellipse, EvaluateOneQueryCentroid(ellipse));
-                }
-            }
-
-            // perform fusion of partial rankings
-            RankFusion.ComputeRanking(_partialRankingCache.Values.ToArray());
+            OutputRanking.IsUpdated = true;
         }
 
         private Ranking EvaluateOneQueryCentroid(Ellipse ellipse)//Tuple<Point, Color, Point, bool> qc)
