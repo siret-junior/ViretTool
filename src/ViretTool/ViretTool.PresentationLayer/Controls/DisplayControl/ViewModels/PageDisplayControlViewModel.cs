@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
@@ -67,6 +68,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             CurrentPageNumber = 0;
             return base.LoadInitialDisplay();
+        }
+
+        public override Task LoadFramesFromQueryResult(TemporalRankedResultSet frameViewModel)
+        {
+            CurrentPageNumber = 0;
+            return base.LoadFramesFromQueryResult(frameViewModel);
         }
 
         public override Task LoadVideoForFrame(FrameViewModel frameViewModel)

@@ -70,14 +70,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         public void ComputeRanking(KeywordQuery query)//List<List<int>> query) 
         {
-            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if (query == null && CachedQuery == null || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
 
-            if (query != null)
+            if (query != null && query.SynsetGroups.Any())
             {
                 Tuple<int, Ranking> result = ComputeRankedFrames(query);
                 OutputRanking.Ranks = result.Item2.Ranks;

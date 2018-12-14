@@ -7,24 +7,22 @@ namespace ViretTool.PresentationLayer.Controls.Common
 {
     public class FrameViewModel : PropertyChangedBase
     {
-        private readonly int[] _allFrameNumbers;
-        private readonly byte[][] _frameDataFromSameVideo;
         private bool _isSelectedForQuery;
         private bool _isSelectedForDetail;
         private byte[] _frameData;
+        private readonly Lazy<(int[] AllFrameNumbers, byte[][] FrameDataFromSameVideo)> _framesInTheVideo;
 
-        public FrameViewModel(byte[] frameData, int videoId, int frameNumber, int[] allFrameNumbers, byte[][] frameDataFromSameVideo)
+        public FrameViewModel(byte[] frameData, int videoId, int frameNumber, Lazy<(int[] AllFrameNumbers, byte[][] FrameDataFromSameVideo)> framesInTheVideo)
         {
             _frameData = frameData;
-            _allFrameNumbers = allFrameNumbers;
-            _frameDataFromSameVideo = frameDataFromSameVideo;
+            _framesInTheVideo = framesInTheVideo;
             VideoId = videoId;
             FrameNumber = frameNumber;
         }
 
         public FrameViewModel Clone()
         {
-            return new FrameViewModel(_frameData, VideoId, FrameNumber, _allFrameNumbers, _frameDataFromSameVideo);
+            return new FrameViewModel(_frameData, VideoId, FrameNumber, _framesInTheVideo);
         }
 
         public int FrameNumber { get; private set; }
@@ -88,14 +86,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
         //+1 or -1 position
         private void ReloadBitmap(int position)
         {
-            int newIndex = Array.IndexOf(_allFrameNumbers, FrameNumber) + position;
-            if (newIndex < 0 || newIndex >= _allFrameNumbers.Length)
+            (int[] allFrameNumbers, byte[][] frameDataFromSameVideo) = _framesInTheVideo.Value;
+            int newIndex = Array.IndexOf(allFrameNumbers, FrameNumber) + position;
+            if (newIndex < 0 || newIndex >= allFrameNumbers.Length)
             {
                 return;
             }
 
-            FrameNumber = _allFrameNumbers[newIndex];
-            _frameData = _frameDataFromSameVideo[newIndex];
+            FrameNumber = allFrameNumbers[newIndex];
+            _frameData = frameDataFromSameVideo[newIndex];
             NotifyOfPropertyChange(nameof(ImageSource));
         }
     }

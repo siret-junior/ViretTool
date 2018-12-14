@@ -137,6 +137,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void FrameControl_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (!(DataContext is FrameViewModel))
+            {
+                return;
+            }
+
             if (e.Delta > 0)
             {
                 ((FrameViewModel)DataContext).ScrollNext();

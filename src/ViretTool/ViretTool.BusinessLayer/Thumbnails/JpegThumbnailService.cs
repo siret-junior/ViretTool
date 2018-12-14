@@ -28,7 +28,7 @@ namespace ViretTool.BusinessLayer.Thumbnails
         {
             ThumbnailRaw[] thumbnailsRaw = _baseThumbnailReader.ReadVideoThumbnails(videoId);
             Thumbnail<byte[]>[] thumbnails = new Thumbnail<byte[]>[thumbnailsRaw.Length];
-            for (int i = 0; i < thumbnailsRaw.Length; i++)
+            for (int i = 0; i < thumbnails.Length; i++)
             {
                 thumbnails[i] = new Thumbnail<byte[]>(
                     thumbnailsRaw[i].VideoId,

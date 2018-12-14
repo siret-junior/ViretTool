@@ -8,6 +8,7 @@ using System.Threading;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.Sketches;
@@ -17,6 +18,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
     public class QueryViewModel : PropertyChangedBase
     {
         private readonly ILogger _logger;
+        private readonly IDatasetServicesManager _datasetServicesManager;
 
         public EventHandler QuerySettingsChanged;
         private FilterControl.FilterState _bwFilterState;
@@ -34,9 +36,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private int _canvasWidth = 240;
         private int _canvasHeight = 320;
 
-        public QueryViewModel(ILogger logger)
+        public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
         {
             _logger = logger;
+            _datasetServicesManager = datasetServicesManager;
 
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
@@ -55,9 +58,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                    .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
 
             onPropertyChanged.Merge(onQueriesChanged)
-                      .Throttle(TimeSpan.FromSeconds(0.1))
-                      .ObserveOn(SynchronizationContext.Current)
-                      .Subscribe(BuildQuerySettings);
+                             .Throttle(TimeSpan.FromSeconds(0.1))
+                             .Where(_ => datasetServicesManager.IsDatasetOpened)
+                             .ObserveOn(SynchronizationContext.Current)
+                             .Subscribe(BuildQuerySettings);
         }
 
         public int ImageHeight { get; }
@@ -292,8 +296,15 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
         public void UpdateQueryObjects(IList<FrameViewModel> queries)
         {
+            //maybe get some feedback, what changed?
+            var queriesToInsert = queries.Where(q => _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _)).ToList();
+            if (!QueryObjects.Any() && !queriesToInsert.Any())
+            {
+                return;
+            }
+
             QueryObjects.Clear();
-            QueryObjects.AddRange(queries);
+            QueryObjects.AddRange(queriesToInsert);
         }
 
         private void BuildQuerySettings(string change)
@@ -312,18 +323,20 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 SketchQueryResult?.SketchColorPoints?.Select(
                                      point => new Ellipse(
                                          point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                         (int)point.Position.X,
-                                         (int)point.Position.Y,
-                                         (int)point.EllipseAxis.X,
-                                         (int)point.EllipseAxis.Y,
+                                         (int)(point.Position.X * CanvasWidth),
+                                         (int)(point.Position.Y * CanvasHeight),
+                                         (int)(point.EllipseAxis.X * CanvasWidth),
+                                         (int)(point.EllipseAxis.Y * CanvasHeight),
                                          0,
                                          point.FillColor.R,
                                          point.FillColor.G,
                                          point.FillColor.B))
-                                 .ToArray());
+                                 .ToArray() ?? new Ellipse[0]);
 
             //TODO use (e.g. color) for sorting?
-            SemanticExampleQuery semanticExampleQuery = new SemanticExampleQuery(QueryObjects.Select(q => q.FrameNumber).ToArray(), new int[0]);
+            SemanticExampleQuery semanticExampleQuery = new SemanticExampleQuery(
+                QueryObjects.Select(q => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber)).ToArray(),
+                new int[0]);
 
             FinalQuery = new BusinessLayer.RankingModels.Queries.Query(
                 new SimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),

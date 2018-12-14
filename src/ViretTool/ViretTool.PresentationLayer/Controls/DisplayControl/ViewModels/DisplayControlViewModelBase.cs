@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Datasets;
+using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -129,6 +130,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
+        public virtual async Task LoadFramesFromQueryResult(TemporalRankedResultSet frameViewModel)
+        {
+            //TODO - combine both results
+            _loadedFrames = await Task.Run(
+                                () => frameViewModel.TemporalResultSets.First()
+                                                    .Take(10000)
+                                                    .Select(r => GetFrameViewModelForFrameIdCached(r.Id))
+                                                    .Where(f => f != null)
+                                                    .ToList());
+            UpdateVisibleFrames();
+        }
+
         public virtual async Task LoadInitialDisplay()
         {
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
@@ -136,7 +149,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             Random random = new Random(); //shuffle initial images randomly
             _loadedFrames = await Task.Run(
-                               () => datasetService.VideoIds.OrderBy(_ => random.Next()).Take(videoCount).SelectMany(LoadThumbnails).OrderBy(_ => random.Next()).ToList());
+                                () => datasetService.VideoIds.OrderBy(_ => random.Next())
+                                                    .Take(videoCount)
+                                                    .SelectMany(LoadThumbnails)
+                                                    .Where(f => datasetService.TryGetFrameIdForFrameNumber(f.VideoId, f.FrameNumber, out _))
+                                                    .OrderBy(_ => random.Next())
+                                                    .ToList());
             UpdateVisibleFrames();
         }
 
@@ -155,18 +173,36 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected abstract void UpdateVisibleFrames();
 
-        private FrameViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail, Thumbnail<byte[]>[] thumbnailsFromSameVideo)
+        private FrameViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail)
         {
-            //TODO is wrong! int[] allFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(thumbnail.VideoId);
-            byte[][] frameDataFromSameVideo = thumbnailsFromSameVideo.Select(t => t.Image).ToArray();
-            var allFrameNumbers = thumbnailsFromSameVideo.Select(t => t.FrameNumber).ToArray();
-            return new FrameViewModel(thumbnail.Image, thumbnail.VideoId, thumbnail.FrameNumber, allFrameNumbers, frameDataFromSameVideo);
+            int videoId = thumbnail.VideoId;
+            return new FrameViewModel(
+                thumbnail.Image,
+                videoId,
+                thumbnail.FrameNumber,
+                new Lazy<(int[] AllFrameNumbers, byte[][] FrameDataFromSameVideo)>(() => GetFramesFromSameVideo(videoId)));
         }
 
         private IEnumerable<FrameViewModel> LoadThumbnails(int videoId)
         {
+            return _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnails(videoId).Select(ConvertThumbnailToViewModel);
+        }
+
+        private (int[] frameNumbers, byte[][] dataFromSameVideo) GetFramesFromSameVideo(int videoId)
+        {
             Thumbnail<byte[]>[] thumbnails = _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnails(videoId);
-            return thumbnails.Select(t => ConvertThumbnailToViewModel(t, thumbnails));
+            int[] frameNumbers = thumbnails.Select(t => t.FrameNumber).ToArray();
+            byte[][] dataFromSameVideo = thumbnails.Select(t => t.Image).ToArray();
+            return (frameNumbers, dataFromSameVideo);
+        }
+
+        private FrameViewModel GetFrameViewModelForFrameIdCached(int frameId)
+        {
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            int videoId = datasetService.GetVideoIdForFrameId(frameId);
+            int frameNumber = datasetService.GetFrameNumberForFrameId(frameId);
+            Thumbnail<byte[]> thumbnail = _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnail(videoId, frameNumber);
+            return ConvertThumbnailToViewModel(thumbnail);
         }
     }
 }

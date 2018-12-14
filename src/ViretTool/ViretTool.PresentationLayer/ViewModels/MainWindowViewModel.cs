@@ -19,7 +19,7 @@ namespace ViretTool.PresentationLayer.ViewModels
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly ILogger _logger;
-        private readonly IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> _temporalRankingService;
+        private IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> _temporalRankingService;
         private bool _isBusy;
         private bool _isFirstQueryPrimary = true;
 
@@ -130,6 +130,9 @@ namespace ViretTool.PresentationLayer.ViewModels
                     throw new DataException("Something went wrong while opening dataset.");
                 }
 
+                //TODO - register properly
+                _temporalRankingService = RankingServiceFactory.Build(_datasetServicesManager.CurrentDatasetFolder);
+
                 await QueryResults.LoadInitialDisplay();
 
             }
@@ -156,15 +159,23 @@ namespace ViretTool.PresentationLayer.ViewModels
 
         private async Task OnQuerySettingsChanged()
         {
+            if (!_datasetServicesManager.IsDatasetOpened)
+            {
+                return;
+            }
+
             IsBusy = true;
             try
             {
                 TemporalRankedResultSet queryResult =
                     await Task.Run(
-                        () => _temporalRankingService.ComputeRankedResultSet(
-                            new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
+                        () =>
+                        {
+                            return _temporalRankingService.ComputeRankedResultSet(
+                                new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery }));
+                        });
 
-                //TODO - visualize result
+                await QueryResults.LoadFramesFromQueryResult(queryResult);
             }
             catch (Exception e)
             {

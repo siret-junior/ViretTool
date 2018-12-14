@@ -48,10 +48,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                 return;
             }
 
-            if (query != null)
+            if (query != null && query.ColorSketchEllipses.Any())
             {
                 // remove old not used ellipse cache entires
-                foreach (Ellipse key in _partialRankingCache.Keys)
+                foreach (Ellipse key in _partialRankingCache.Keys.ToList())
                 {
                     if (!query.ColorSketchEllipses.Contains(key))
                     {
