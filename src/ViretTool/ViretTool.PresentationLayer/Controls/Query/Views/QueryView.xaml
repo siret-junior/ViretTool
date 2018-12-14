@@ -37,7 +37,6 @@
 
         <!-- Semantic examples -->
         <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" Value="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"/>
-        <!-- TODO možná použít display control? -->
         <ItemsControl x:Name="ImagesDisplay" Grid.Row="7" ItemsSource="{Binding QueryObjects}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -48,9 +47,7 @@
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal">
-
-                    </WrapPanel>
+                    <WrapPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

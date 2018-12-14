@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
+using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
 using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
@@ -15,15 +18,22 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
+        private readonly IWindowManager _windowManager;
+        private readonly SubmitControlViewModel _submitControlViewModel;
+
         private bool _isLargeDisplayChecked;
         private bool _isShowFilteredVideosChecked;
-
         private bool _isSortDisplayChecked;
+
+        protected readonly ILogger _logger;
         protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
 
-        protected DisplayControlViewModelBase(IDatasetServicesManager datasetServicesManager)
+        protected DisplayControlViewModelBase(ILogger logger, IDatasetServicesManager datasetServicesManager, IWindowManager windowManager, SubmitControlViewModel submitControlViewModel)
         {
+            _logger = logger;
             _datasetServicesManager = datasetServicesManager;
+            _windowManager = windowManager;
+            _submitControlViewModel = submitControlViewModel;
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
         }
@@ -84,7 +94,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
-        protected abstract void UpdateVisibleFrames();
+        public event EventHandler<FrameViewModel> SelectedFrameChanged;
+
+        public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
 
         public void AddToQueryClicked(FrameViewModel frameViewModel)
         {
@@ -128,15 +140,20 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
-        public event EventHandler<FrameViewModel> SelectedFrameChanged;
-
-        public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
-
-
-        public void FramesSubmitted()
+        public void FramesSubmitted(FrameViewModel frameViewModel)
         {
-            //TODO - submit _submittedFrames
+            _submitControlViewModel.Initialize(_loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().Select(f => f.Clone()).ToList());
+            if (_windowManager.ShowDialog(_submitControlViewModel) != true)
+            {
+                return;
+            }
+
+            _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
+            MessageBox.Show("Frames submitted");
+            //TODO send SubmittedFrames.Select(...) somewhere
         }
+
+        protected abstract void UpdateVisibleFrames();
 
         private FrameViewModel ConvertThumbnailToViewModel(Thumbnail<byte[]> thumbnail, Thumbnail<byte[]>[] thumbnailsFromSameVideo)
         {

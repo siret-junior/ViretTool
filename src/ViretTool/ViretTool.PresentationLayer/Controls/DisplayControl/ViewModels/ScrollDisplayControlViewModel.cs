@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -11,7 +13,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private int _rowCount;
         private int _columnCount;
 
-        public ScrollDisplayControlViewModel(IDatasetServicesManager datasetServicesManager) : base(datasetServicesManager)
+        public ScrollDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IWindowManager windowManager, SubmitControlViewModel submitControlViewModel)
+            : base(logger, datasetServicesManager, windowManager, submitControlViewModel)
         {
         }
 

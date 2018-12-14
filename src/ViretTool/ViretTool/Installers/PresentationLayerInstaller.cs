@@ -5,6 +5,8 @@ using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.DisplayControl.Views;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.Views;
+using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
+using ViretTool.PresentationLayer.Controls.SubmitControl.Views;
 using ViretTool.PresentationLayer.ViewModels;
 using ViretTool.PresentationLayer.Views;
 
@@ -23,7 +25,9 @@ namespace ViretTool.Installers
                 Component.For<PageDisplayControlView>().LifestyleTransient(),
                 Component.For<ScrollDisplayControlView>().LifestyleTransient(),
                 Component.For<ScrollDisplayControlViewModel>().LifestyleTransient(),
-                Component.For<DisplayControlViewModelBase>().ImplementedBy<PageDisplayControlViewModel>().LifestyleTransient());
+                Component.For<DisplayControlViewModelBase>().ImplementedBy<PageDisplayControlViewModel>().LifestyleTransient(),
+                Component.For<SubmitControlView>().LifestyleTransient(),
+                Component.For<SubmitControlViewModel>().LifestyleTransient());
         }
     }
 }

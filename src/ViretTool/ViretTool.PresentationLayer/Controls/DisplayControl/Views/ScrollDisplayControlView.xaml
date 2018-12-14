@@ -39,7 +39,7 @@
                 Background="DarkGray"
                 FontWeight="Bold"
                 FontSize="14"
-                Content="Search results:" 
+                Content="{x:Static properties:Resources.SearchResultsText}" 
                 VerticalAlignment="Center"/>
         </Grid>
 
@@ -49,7 +49,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)];
-                                                             [Event FramesSubmitted] = [Action FramesSubmitted()];
+                                                             [Event FramesSubmitted] = [Action FramesSubmitted($dataContext)];
                                                              [Event FrameSelected] = [Action FrameSelected($dataContext)];" 
                                          FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                          FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Caliburn.Micro;
+using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -10,7 +13,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         private int _currentPageNumber;
 
-        public PageDisplayControlViewModel(IDatasetServicesManager datasetServicesManager) : base(datasetServicesManager)
+        public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IWindowManager windowManager, SubmitControlViewModel submitControlViewModel)
+            : base(logger, datasetServicesManager, windowManager, submitControlViewModel)
         {
         }
 

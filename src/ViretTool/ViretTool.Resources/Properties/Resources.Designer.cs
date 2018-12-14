@@ -79,11 +79,38 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelButtonText {
+            get {
+                return ResourceManager.GetString("CancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ClearButtonText {
+            get {
+                return ResourceManager.GetString("ClearButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         public static string FileHeader {
             get {
                 return ResourceManager.GetString("FileHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;&lt; First.
+        /// </summary>
+        public static string FirstPageButtonText {
+            get {
+                return ResourceManager.GetString("FirstPageButtonText", resourceCulture);
             }
         }
         
@@ -115,6 +142,24 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last &gt;&gt;.
+        /// </summary>
+        public static string LastPageButtonText {
+            get {
+                return ResourceManager.GetString("LastPageButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next &gt;.
+        /// </summary>
+        public static string NextPageButtonText {
+            get {
+                return ResourceManager.GetString("NextPageButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open database.
         /// </summary>
         public static string OpenDatabaseHeader {
@@ -133,11 +178,29 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt; Previous.
+        /// </summary>
+        public static string PreviousPageButtonText {
+            get {
+                return ResourceManager.GetString("PreviousPageButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Query is primary.
         /// </summary>
         public static string PrimaryQueryLabel {
             get {
                 return ResourceManager.GetString("PrimaryQueryLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search results:.
+        /// </summary>
+        public static string SearchResultsText {
+            get {
+                return ResourceManager.GetString("SearchResultsText", resourceCulture);
             }
         }
         
@@ -165,6 +228,15 @@ namespace ViretTool.Resources.Properties {
         public static string SketchModelName {
             get {
                 return ResourceManager.GetString("SketchModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sort.
+        /// </summary>
+        public static string SortCheckBoxText {
+            get {
+                return ResourceManager.GetString("SortCheckBoxText", resourceCulture);
             }
         }
         

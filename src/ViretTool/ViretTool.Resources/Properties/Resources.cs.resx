@@ -159,4 +159,28 @@
   <data name="PrimaryQueryLabel" xml:space="preserve">
     <value>Dotaz je primární</value>
   </data>
+  <data name="SortCheckBoxText" xml:space="preserve">
+    <value>Třídit</value>
+  </data>
+  <data name="ClearButtonText" xml:space="preserve">
+    <value>Smazat</value>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Zrušit</value>
+  </data>
+  <data name="FirstPageButtonText" xml:space="preserve">
+    <value>&lt;&lt; První</value>
+  </data>
+  <data name="PreviousPageButtonText" xml:space="preserve">
+    <value>&lt; Předchozí</value>
+  </data>
+  <data name="NextPageButtonText" xml:space="preserve">
+    <value>Další &gt;</value>
+  </data>
+  <data name="LastPageButtonText" xml:space="preserve">
+    <value>Poslední &gt;&gt;</value>
+  </data>
+  <data name="SearchResultsText" xml:space="preserve">
+    <value>Výsledky hledání:</value>
+  </data>
 </root>

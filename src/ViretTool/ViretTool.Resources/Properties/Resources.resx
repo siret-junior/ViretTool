@@ -165,4 +165,28 @@
   <data name="ImageHeight" xml:space="preserve">
     <value>75</value>
   </data>
+  <data name="SortCheckBoxText" xml:space="preserve">
+    <value>Sort</value>
+  </data>
+  <data name="ClearButtonText" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FirstPageButtonText" xml:space="preserve">
+    <value>&lt;&lt; First</value>
+  </data>
+  <data name="PreviousPageButtonText" xml:space="preserve">
+    <value>&lt; Previous</value>
+  </data>
+  <data name="NextPageButtonText" xml:space="preserve">
+    <value>Next &gt;</value>
+  </data>
+  <data name="LastPageButtonText" xml:space="preserve">
+    <value>Last &gt;&gt;</value>
+  </data>
+  <data name="SearchResultsText" xml:space="preserve">
+    <value>Search results:</value>
+  </data>
 </root>

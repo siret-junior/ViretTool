@@ -125,6 +125,10 @@
     <Compile Include="Controls\Query\Views\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SubmitControl\ViewModels\SubmitControlViewModel.cs" />
+    <Compile Include="Controls\SubmitControl\Views\SubmitControlView.xaml.cs">
+      <DependentUpon>SubmitControlView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\RadioEnumToBooleanConverter.cs" />
@@ -186,6 +190,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Query\Views\QueryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SubmitControl\Views\SubmitControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
