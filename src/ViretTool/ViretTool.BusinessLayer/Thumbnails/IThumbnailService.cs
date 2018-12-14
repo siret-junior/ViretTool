@@ -8,7 +8,7 @@ namespace ViretTool.BusinessLayer.Thumbnails
 {
     public interface IThumbnailService<T> : IDisposable
     {
-        T GetThumbnail(int videoId, int frameId);
+        T GetThumbnail(int videoId, int frameNumber);
         T[] GetThumbnails(int videoId);
         T[] GetThumbnails(int videoId, int startFrame, int endFrame);
     }

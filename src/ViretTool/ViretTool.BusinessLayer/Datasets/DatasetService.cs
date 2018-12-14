@@ -18,6 +18,7 @@ namespace ViretTool.BusinessLayer.Datasets
         public DatasetService(DatasetProvider datasetProvider, string datasetDirectory)
         {
             _dataset = datasetProvider.FromDirectory(datasetDirectory);
+            //frames in videos contain only selected (not all 4FPS) frames
             _frameIdForFrameNumber = new Lazy<IReadOnlyDictionary<(int, int), int>>(() => _dataset.Frames.ToDictionary(f => (f.ParentVideo.Id, f.FrameNumber), f => f.Id));
             _frameIdsForVideoId = new Lazy<IReadOnlyDictionary<int, int[]>>(() => _dataset.Videos.ToDictionary(v => v.Id, v => v.Frames.Select(f => f.Id).ToArray()));
             _frameNumberForFrameId = new Lazy<IReadOnlyDictionary<int, int>>(() => _dataset.Frames.ToDictionary(f => f.Id, f => f.FrameNumber));

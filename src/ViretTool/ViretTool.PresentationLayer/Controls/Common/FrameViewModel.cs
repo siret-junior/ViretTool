@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
+using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -9,20 +11,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
     {
         private bool _isSelectedForQuery;
         private bool _isSelectedForDetail;
-        private byte[] _frameData;
-        private readonly Lazy<(int[] AllFrameNumbers, byte[][] FrameDataFromSameVideo)> _framesInTheVideo;
+        private readonly IThumbnailService<Thumbnail<byte[]>> _thumbnailService;
+        private readonly Lazy<int[]> _framesInTheVideo;
 
-        public FrameViewModel(byte[] frameData, int videoId, int frameNumber, Lazy<(int[] AllFrameNumbers, byte[][] FrameDataFromSameVideo)> framesInTheVideo)
+        public FrameViewModel(int videoId, int frameNumber, IThumbnailService<Thumbnail<byte[]>> thumbnailService)
         {
-            _frameData = frameData;
-            _framesInTheVideo = framesInTheVideo;
+            _thumbnailService = thumbnailService;
             VideoId = videoId;
             FrameNumber = frameNumber;
+
+            _framesInTheVideo = new Lazy<int[]>(() => _thumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
         }
 
         public FrameViewModel Clone()
         {
-            return new FrameViewModel(_frameData, VideoId, FrameNumber, _framesInTheVideo);
+            return new FrameViewModel(VideoId, FrameNumber, _thumbnailService);
         }
 
         public int FrameNumber { get; private set; }
@@ -33,7 +36,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
-                bitmapImage.StreamSource = new MemoryStream(_frameData);
+                bitmapImage.StreamSource = new MemoryStream(_thumbnailService.GetThumbnail(VideoId, FrameNumber).Image);
                 bitmapImage.EndInit();
                 bitmapImage.Freeze();
 
@@ -86,7 +89,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         //+1 or -1 position
         private void ReloadBitmap(int position)
         {
-            (int[] allFrameNumbers, byte[][] frameDataFromSameVideo) = _framesInTheVideo.Value;
+            int[] allFrameNumbers = _framesInTheVideo.Value;
             int newIndex = Array.IndexOf(allFrameNumbers, FrameNumber) + position;
             if (newIndex < 0 || newIndex >= allFrameNumbers.Length)
             {
@@ -94,7 +97,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             FrameNumber = allFrameNumbers[newIndex];
-            _frameData = frameDataFromSameVideo[newIndex];
             NotifyOfPropertyChange(nameof(ImageSource));
         }
     }
