@@ -9,7 +9,6 @@ using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.Services;
-using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
 using Action = System.Action;
@@ -18,7 +17,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
-        private readonly IDatasetServicesManager _datasetServicesManager;
+        protected readonly IDatasetServicesManager _datasetServicesManager;
         private readonly IWindowManager _windowManager;
         private readonly SubmitControlViewModel _submitControlViewModel;
 
@@ -97,6 +96,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public event EventHandler<FrameViewModel> SelectedFrameChanged;
 
+        public event EventHandler<(FrameViewModel SelectedFrame, IEnumerable<int> VisibleFrameIds)> SortFrames;
+
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
 
         public void AddToQueryClicked(FrameViewModel frameViewModel)
@@ -129,22 +130,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                                 () => _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnails(frameViewModel.VideoId)
                                                              .Select(t => ConvertThumbnailToViewModel(t.VideoId, t.FrameNumber))
                                                              .ToList());
-            FrameViewModel selectedFrame = _loadedFrames.SingleOrDefault(f => f.FrameNumber == frameViewModel.FrameNumber);
-            if (selectedFrame != null)
-            {
-                selectedFrame.IsSelectedForDetail = true;
-            }
+            SelectFrame(frameViewModel);
             UpdateVisibleFrames();
         }
 
-        public virtual async Task LoadFramesFromQueryResult(TemporalRankedResultSet frameViewModel)
+        public virtual async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
         {
-            //TODO - combine both results
-            _loadedFrames = await Task.Run(
-                                () => frameViewModel.TemporalResultSets.First()
-                                                    .Select(r => GetFrameViewModelForFrameId(r.Id))
-                                                    .Where(f => f != null)
-                                                    .ToList());
+            _loadedFrames = await Task.Run(() => sortedFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
             UpdateVisibleFrames();
         }
 
@@ -170,7 +162,29 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             //TODO send SubmittedFrames.Select(...) somewhere
         }
 
+        public void OnSortDisplay(FrameViewModel frameViewModel)
+        {
+            SortFrames?.Invoke(this, (frameViewModel, _loadedFrames.Select(GetFrameId).Where(t => t.HasValue).Select(t => t.Value).ToList()));
+        }
+
         protected abstract void UpdateVisibleFrames();
+
+        protected FrameViewModel SelectFrame(FrameViewModel frame)
+        {
+            int? frameId = GetFrameId(frame);
+            if (!frameId.HasValue)
+            {
+                return null;
+            }
+
+            FrameViewModel selectedFrame = _loadedFrames.SingleOrDefault(f => GetFrameId(f) == frameId);
+            if (selectedFrame != null)
+            {
+                selectedFrame.IsSelectedForDetail = true;
+            }
+
+            return selectedFrame;
+        }
 
         private FrameViewModel ConvertThumbnailToViewModel(int videoId, int frameNumber)
         {
@@ -189,6 +203,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             int videoId = datasetService.GetVideoIdForFrameId(frameId);
             int frameNumber = datasetService.GetFrameNumberForFrameId(frameId);
             return ConvertThumbnailToViewModel(videoId, frameNumber);
+        }
+
+        private int? GetFrameId(FrameViewModel frame)
+        {
+            return !_datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId) ? (int?)null : frameId;
         }
     }
 }

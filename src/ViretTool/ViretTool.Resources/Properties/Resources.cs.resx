@@ -186,4 +186,7 @@
   <data name="SubmitWindowTitle" xml:space="preserve">
     <value>Poslat</value>
   </data>
+  <data name="MapButtonText" xml:space="preserve">
+    <value>Mapa</value>
+  </data>
 </root>

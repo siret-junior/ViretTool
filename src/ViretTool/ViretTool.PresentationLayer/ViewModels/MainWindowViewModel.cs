@@ -46,6 +46,7 @@ namespace ViretTool.PresentationLayer.ViewModels
 
             QueryResults.SelectedFrameChanged += async (sender, model) => await detailView.LoadVideoForFrame(model);
             QueryResults.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
+            QueryResults.SortFrames += async (sender, tuple) => await detailView.LoadSortedDisplay(tuple.SelectedFrame, tuple.VisibleFrameIds);
             DetailView.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
         }
 
@@ -131,7 +132,7 @@ namespace ViretTool.PresentationLayer.ViewModels
                 }
 
                 //TODO - register properly
-                _temporalRankingService = RankingServiceFactory.Build(_datasetServicesManager.CurrentDatasetFolder);
+                _temporalRankingService = RankingServiceFactory.Build(_datasetServicesManager);
 
                 await QueryResults.LoadInitialDisplay();
 
@@ -169,13 +170,11 @@ namespace ViretTool.PresentationLayer.ViewModels
             {
                 TemporalRankedResultSet queryResult =
                     await Task.Run(
-                        () =>
-                        {
-                            return _temporalRankingService.ComputeRankedResultSet(
-                                new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery }));
-                        });
+                        () => _temporalRankingService.ComputeRankedResultSet(
+                            new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
 
-                await QueryResults.LoadFramesFromQueryResult(queryResult);
+                //TODO - combine both results
+                await QueryResults.LoadFramesForIds(queryResult.TemporalResultSets.First().Select(rf => rf.Id));
             }
             catch (Exception e)
             {

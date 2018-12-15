@@ -42,7 +42,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
 
@@ -61,6 +61,10 @@
                                 <TextBlock FontSize="12" VerticalAlignment="Top" Margin="0, -2.9, 0, 0" FontWeight="Bold">\-\-</TextBlock>
                             </Button>-->
 
+                        <Button x:Name="SortedButton" Grid.Column="3" FontSize="7" Background="DeepSkyBlue" Click="SortedClicked"
+                                Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.MapButtonText}"/>
+                        </Button>
                         <Button x:Name="SubmitButton" Grid.Column="4" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked"
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.SubmitButtonText}"/>

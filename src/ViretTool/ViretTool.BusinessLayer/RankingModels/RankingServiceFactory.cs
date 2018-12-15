@@ -11,6 +11,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.DataLayer.DataModel;
 using ViretTool.DataLayer.DataProviders.Dataset;
 
@@ -21,17 +22,17 @@ namespace ViretTool.BusinessLayer.RankingModels
     public class RankingServiceFactory
     {
         public static IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> 
-            Build(string directory)
+            Build(IDatasetServicesManager datasetServicesManager)
         {
+            string directory = datasetServicesManager.CurrentDatasetFolder;
+
             // load dataset (TODO: verify all files against the dataset header)
             Dataset dataset = new DatasetProvider().FromDirectory(directory);
             int frameCount = dataset.Frames.Count;
 
             // load descriptor providers
-            ColorSignatureDescriptorProvider colorSignatureProvider
-                = ColorSignatureDescriptorProvider.FromDirectory(directory);
-            SemanticVectorDescriptorProvider semanticVectorProvider
-                = SemanticVectorDescriptorProvider.FromDirectory(directory);
+            IDescriptorProvider<byte[]> colorSignatureProvider = datasetServicesManager.CurrentDataset.ColorSignatureProvider;
+            IDescriptorProvider<float[]> semanticVectorProvider = datasetServicesManager.CurrentDataset.SemanticVectorProvider;
             // TODO: keyword, filtering...
 
             // load similarity models

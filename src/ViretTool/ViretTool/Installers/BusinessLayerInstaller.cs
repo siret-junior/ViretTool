@@ -3,6 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using ViretTool.BusinessLayer.Datasets;
+using ViretTool.BusinessLayer.Descriptor;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;
@@ -26,6 +27,12 @@ namespace ViretTool.Installers
                 Component.For<IThumbnailService<Thumbnail<byte[]>>>().ImplementedBy<JpegThumbnailService>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<IDatasetService>().ImplementedBy<DatasetService>().LifestyleBoundTo<DatasetServices>(),
 
+                Component.For<IDescriptorProvider<float[]>>()
+                         .UsingFactoryMethod((_, context) => SemanticVectorDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
+                Component.For<IDescriptorProvider<byte[]>>()
+                         .UsingFactoryMethod((_, context) => ColorSignatureDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
                 Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>().ImplementedBy<BiTemporalRankingService>());
         }
     }

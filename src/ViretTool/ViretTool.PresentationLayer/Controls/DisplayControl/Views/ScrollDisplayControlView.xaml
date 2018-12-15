@@ -22,63 +22,65 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="DarkGray">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
+    <common:BusyIndicator IsBusy="{Binding IsBusy}">
+        <Grid Background="DarkGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="1100" />
-            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1100" />
+                </Grid.ColumnDefinitions>
 
-            <Label 
-                Grid.Column="0" 
-                Background="DarkGray"
-                FontWeight="Bold"
-                FontSize="14"
-                Content="{x:Static properties:Resources.SearchResultsText}" 
-                VerticalAlignment="Center"/>
+                <Label 
+                    Grid.Column="0" 
+                    Background="DarkGray"
+                    FontWeight="Bold"
+                    FontSize="14"
+                    Content="{x:Static properties:Resources.SearchResultsText}" 
+                    VerticalAlignment="Center"/>
+            </Grid>
+
+            <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" ItemsSource="{Binding VisibleFrames}"
+                          ScrollViewer.CanContentScroll="True">
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)];
+                                                                 [Event FramesSubmitted] = [Action FramesSubmitted($dataContext)];" 
+                                             IsSelectable="True"
+                                             FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
+                                             FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <common:VirtualizedUniformGrid Orientation="Horizontal" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
+                                      Padding="{TemplateBinding Control.Padding}"
+                                      Focusable="False">
+                            <ItemsPresenter
+                                SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                            <i:Interaction.Behaviors>
+                                <behaviors:ScrollToColumnIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}"/>
+                            </i:Interaction.Behaviors>
+
+                        </ScrollViewer>
+
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <i:Interaction.Behaviors>
+                    <behaviors:ActualSizeBehavior ActualHeight="{Binding DisplayHeight}" ActualWidth="{Binding DisplayWidth}"
+                                                  SizeChanged="{Binding DisplaySizeChangedHandler, Mode=OneWay}"/>
+                </i:Interaction.Behaviors>
+            </ItemsControl>
         </Grid>
-
-        <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" ItemsSource="{Binding VisibleFrames}"
-                      ScrollViewer.CanContentScroll="True">
-
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)];
-                                                             [Event FramesSubmitted] = [Action FramesSubmitted($dataContext)];" 
-                                         IsSelectable="True"
-                                         FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
-                                         FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <common:VirtualizedUniformGrid Orientation="Horizontal" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.Template>
-                <ControlTemplate>
-                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
-                                  Padding="{TemplateBinding Control.Padding}"
-                                  Focusable="False">
-                        <ItemsPresenter
-                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                        <i:Interaction.Behaviors>
-                            <behaviors:ScrollToColumnIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}"/>
-                        </i:Interaction.Behaviors>
-
-                    </ScrollViewer>
-
-                </ControlTemplate>
-            </ItemsControl.Template>
-            <i:Interaction.Behaviors>
-                <behaviors:ActualSizeBehavior ActualHeight="{Binding DisplayHeight}" ActualWidth="{Binding DisplayWidth}"
-                                              SizeChanged="{Binding DisplaySizeChangedHandler, Mode=OneWay}"/>
-            </i:Interaction.Behaviors>
-        </ItemsControl>
-    </Grid>
+    </common:BusyIndicator>
 </UserControl>

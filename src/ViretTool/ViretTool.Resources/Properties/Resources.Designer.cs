@@ -151,6 +151,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        public static string MapButtonText {
+            get {
+                return ResourceManager.GetString("MapButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next &gt;.
         /// </summary>
         public static string NextPageButtonText {

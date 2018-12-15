@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace ViretTool.PresentationLayer.Helpers
 {
-    public static class VisualHelper
+    internal static class VisualHelper
     {
         public static T FindChild<T>(this DependencyObject parent, string childName = null) where T : DependencyObject
         {

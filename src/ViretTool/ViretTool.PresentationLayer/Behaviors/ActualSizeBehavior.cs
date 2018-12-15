@@ -51,8 +51,7 @@ namespace ViretTool.PresentationLayer.Behaviors
                                         h => AssociatedObject.SizeChanged -= h).Throttle(TimeSpan.FromMilliseconds(300))
                                     .ObserveOn(AssociatedObject.Dispatcher)
                                     .Subscribe(_ => AssociatedObjectOnSizeChanged());
-            ActualHeight = (int)AssociatedObject.ActualHeight;
-            ActualWidth = (int)AssociatedObject.ActualWidth;
+            AssociatedObjectOnSizeChanged();
         }
 
         private void AssociatedObjectOnSizeChanged()

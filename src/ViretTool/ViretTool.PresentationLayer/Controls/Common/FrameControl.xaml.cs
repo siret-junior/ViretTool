@@ -33,6 +33,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
+        public static readonly RoutedEvent SortDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(SortDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+        
 
         public static readonly DependencyProperty IsMouseOverFrameProperty = DependencyProperty.Register(
             nameof(IsMouseOverFrame),
@@ -115,6 +121,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(FramesSubmittedEvent, value);
         }
 
+        public event RoutedEventHandler SortDisplay
+        {
+            add => AddHandler(SortDisplayEvent, value);
+            remove => RemoveHandler(SortDisplayEvent, value);
+        }
+
 
 
         private void FrameControl_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -154,10 +166,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
         {
-            if (IsSelectable)
-            {
-                RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
-            }
+            RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
         }
 
         private void ButtonRemovedClicked(object sender, RoutedEventArgs e)
@@ -167,10 +176,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void SubmitClicked(object sender, RoutedEventArgs e)
         {
-            if (IsSelectable)
-            {
-                RaiseEvent(new RoutedEventArgs(FramesSubmittedEvent));
-            }
+            RaiseEvent(new RoutedEventArgs(FramesSubmittedEvent));
+        }
+
+        private void SortedClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
         }
     }
 }

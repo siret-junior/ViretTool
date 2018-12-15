@@ -192,4 +192,7 @@
   <data name="SubmitWindowTitle" xml:space="preserve">
     <value>Submit</value>
   </data>
+  <data name="MapButtonText" xml:space="preserve">
+    <value>Map</value>
+  </data>
 </root>

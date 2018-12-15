@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Castle.Core.Logging;
@@ -10,27 +12,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class ScrollDisplayControlViewModel : DisplayControlViewModelBase
     {
-        private int _rowCount;
         private int _columnCount;
+        private bool _isBusy;
+        private int _rowCount;
 
-        public ScrollDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IWindowManager windowManager, SubmitControlViewModel submitControlViewModel)
+        public ScrollDisplayControlViewModel(
+            ILogger logger,
+            IDatasetServicesManager datasetServicesManager,
+            IWindowManager windowManager,
+            SubmitControlViewModel submitControlViewModel)
             : base(logger, datasetServicesManager, windowManager, submitControlViewModel)
         {
-        }
-
-        public int RowCount
-        {
-            get => _rowCount;
-            set
-            {
-                if (_rowCount == value)
-                {
-                    return;
-                }
-
-                _rowCount = value;
-                NotifyOfPropertyChange();
-            }
+            UpdateVisibleFrames();
         }
 
         public int ColumnCount
@@ -48,16 +41,55 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (_isBusy == value)
+                {
+                    return;
+                }
+
+                _isBusy = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int RowCount
+        {
+            get => _rowCount;
+            set
+            {
+                if (_rowCount == value)
+                {
+                    return;
+                }
+
+                _rowCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public Action<int> ScrollToColumn { private get; set; }
+
+        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, IEnumerable<int> visibleFrameIds)
+        {
+            IsBusy = true;
+            int[] sortedFrameIds = await Task.Run(() => GetSortedFrameIds(visibleFrameIds));
+
+            await base.LoadFramesForIds(sortedFrameIds);
+
+            FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
+            ScrollToFrame(newlySelectedFrame);
+            IsBusy = false;
+        }
 
         public override async Task LoadVideoForFrame(FrameViewModel frameViewModel)
         {
             await base.LoadVideoForFrame(frameViewModel);
 
-            int indexOfFrame = _loadedFrames.FindIndex(f => f.FrameNumber == frameViewModel.FrameNumber);
-            int columnWithFrame = indexOfFrame / RowCount;
-            int columnNumberToScroll = Math.Max(0, columnWithFrame - ColumnCount / 2); //frame should be in the middle
-            ScrollToColumn(columnNumberToScroll);
+            ScrollToFrame(frameViewModel);
         }
 
         protected override void UpdateVisibleFrames()
@@ -67,6 +99,39 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             VisibleFrames.Clear();
             VisibleFrames.AddRange(_loadedFrames);
+        }
+
+        private int[] GetSortedFrameIds(IEnumerable<int> visibleFrameIds)
+        {
+            List<float[]> data = visibleFrameIds.Select(id => _datasetServicesManager.CurrentDataset.SemanticVectorProvider.Descriptors[id]).ToList();
+            int width = data.Count / RowCount;
+            int height = RowCount;
+            //we ignore items out of the grid
+            int[,] sortedFrames = new GridSorter().SortItems(data.Take(width * height).ToList(), width, height);
+
+            int[] result = new int[width * height];
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    result[i * height + j] = sortedFrames[i, j];
+                }
+            }
+
+            return result;
+        }
+
+        private void ScrollToFrame(FrameViewModel frameViewModel)
+        {
+            if (frameViewModel == null)
+            {
+                return;
+            }
+
+            int indexOfFrame = _loadedFrames.IndexOf(frameViewModel);
+            int columnWithFrame = indexOfFrame / RowCount;
+            int columnNumberToScroll = Math.Max(0, columnWithFrame - ColumnCount / 2); //frame should be in the middle
+            ScrollToColumn(columnNumberToScroll);
         }
     }
 }

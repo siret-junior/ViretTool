@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -70,10 +71,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return base.LoadInitialDisplay();
         }
 
-        public override Task LoadFramesFromQueryResult(TemporalRankedResultSet frameViewModel)
+        public override Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
         {
             CurrentPageNumber = 0;
-            return base.LoadFramesFromQueryResult(frameViewModel);
+            return base.LoadFramesForIds(sortedFrameIds);
         }
 
         public override Task LoadVideoForFrame(FrameViewModel frameViewModel)
