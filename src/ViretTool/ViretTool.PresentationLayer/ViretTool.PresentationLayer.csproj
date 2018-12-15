@@ -81,6 +81,7 @@
     <Compile Include="Behaviors\ActualSizeBehavior.cs" />
     <Compile Include="Behaviors\BaseBehavior.cs" />
     <Compile Include="Behaviors\ScrollToColumnIndexBehavior.cs" />
+    <Compile Include="Controls\Common\BusyIndicator.cs" />
     <Compile Include="Controls\Common\FrameControl.xaml.cs">
       <DependentUpon>FrameControl.xaml</DependentUpon>
     </Compile>
@@ -194,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SubmitControl\Views\SubmitControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\BusyIndicatorStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
