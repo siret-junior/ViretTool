@@ -57,5 +57,7 @@ namespace ViretTool.BusinessLayer.Datasets
         }
 
         public int[] VideoIds => _dataset.Videos.Select(v => v.Id).ToArray();
+
+        public int FrameCount => _dataset.Frames.Count;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity;
@@ -13,7 +14,7 @@ namespace ViretTool.BusinessLayer.RankingModels
     public class BiTemporalRankingService 
         : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
     {
-        public Dataset Dataset { get; private set; }
+        public IDatasetService DatasetService { get; private set; }
 
         public IRankingModule PrimaryRankingModule { get; set; }
         public IRankingModule SecondaryRankingModule { get; set; }
@@ -26,9 +27,8 @@ namespace ViretTool.BusinessLayer.RankingModels
         public RankingBuffer OutputRanking { get; private set; }
 
 
-        public BiTemporalRankingService(Dataset dataset)
+        public BiTemporalRankingService()
         {
-            InputRanking = RankingBuffer.Zeros("InitialRanking", dataset.Frames.Count);
         }
 
 
@@ -38,6 +38,12 @@ namespace ViretTool.BusinessLayer.RankingModels
                 || query.Equals(CachedQuery))
             {
                 return CachedResultSet;
+            }
+
+            // create input ranking if neccessary
+            if (InputRanking == null)
+            {
+                InputRanking = RankingBuffer.Zeros("InitialRanking", DatasetService.FrameCount);
             }
 
             if (query != null)

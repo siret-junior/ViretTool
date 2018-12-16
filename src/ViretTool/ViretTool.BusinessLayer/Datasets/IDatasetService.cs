@@ -2,6 +2,7 @@
 {
     public interface IDatasetService
     {
+        int FrameCount { get; }
         int[] VideoIds { get; }
         int[] GetFrameIdsForVideo(int videoId);
         int[] GetFrameNumbersForVideo(int videoId);

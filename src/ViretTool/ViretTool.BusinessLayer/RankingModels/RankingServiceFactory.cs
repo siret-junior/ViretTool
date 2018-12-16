@@ -58,7 +58,7 @@ namespace ViretTool.BusinessLayer.RankingModels
             // TODO: implement filtering
 
             // load service
-            BiTemporalRankingService rankingService = new BiTemporalRankingService(dataset);
+            BiTemporalRankingService rankingService = new BiTemporalRankingService();
             RankingModule primaryRankingModule = new RankingModule();
             primaryRankingModule.SimilarityModule = similarityModule;
             primaryRankingModule.FilteringModule = filteringModule;

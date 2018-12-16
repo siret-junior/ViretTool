@@ -57,7 +57,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
             foreach (string source in annotationSources)
             {
                 //string labels = GetFileNameByExtension(datatsetDirectory, $"-{source}.label");
-                string labelsFilePath = Path.Combine(datasetDirectory, $"{Path.GetFileName(datasetDirectory)}-{source}.label");
+                //string labelsFilePath = Path.Combine(datasetDirectory, $"{Path.GetFileName(datasetDirectory)}-{source}.label");
+                string labelsFilePath = Directory.GetFiles(datasetDirectory).Where(file => file.EndsWith(".label")).First();
+
 
                 var labelProvider = new LabelProvider(labelsFilePath);
                 mLabelProviders.Add(source, labelProvider);
