@@ -164,7 +164,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
                 float imageProbability = mReader.ReadSingle();
 
                 if (imageId != -1) {
-                    if (imageId > LastId) continue;
+                    //if (imageId > LastId) continue; // skipping frames after a certain frame is now handled differently
 
                     list.Add(new KeywordSearchFrame(imageId, imageProbability));
                 } else break;
