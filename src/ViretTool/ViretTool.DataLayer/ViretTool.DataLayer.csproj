@@ -63,6 +63,9 @@
     <Compile Include="DataIO\DatasetIO\DatasetFilelistDeserializer.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetSerializationBase.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinarySerializer.cs" />
+    <Compile Include="DataIO\FilterIO\MaskFilterIOBase.cs" />
+    <Compile Include="DataIO\FilterIO\MaskFilterReader.cs" />
+    <Compile Include="DataIO\FilterIO\MaskFilterWriter.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailRaw.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailIOBase.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailReader.cs" />

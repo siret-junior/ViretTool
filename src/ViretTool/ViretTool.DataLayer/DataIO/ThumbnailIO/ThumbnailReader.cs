@@ -130,6 +130,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 }
             }
 
+            // TODO: remove?
             throw new NotImplementedException();
         }
 

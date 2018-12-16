@@ -44,6 +44,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorSignatureDescriptorExt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FloatVectorFileConverter", "FloatVectorFileConverter\FloatVectorFileConverter.csproj", "{7F061487-3780-4B05-8813-8592FD9BA705}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackAndWhiteFilterExtractor", "BlackAndWhiteFilterExtractor\BlackAndWhiteFilterExtractor.csproj", "{881D6795-3A96-4AAE-9560-36693EA1D65D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThumbnailVisualizationTest", "ThumbnailVisualizationTest\ThumbnailVisualizationTest.csproj", "{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorSignatureVisualizationTest", "ColorSignatureVisualizationTest\ColorSignatureVisualizationTest.csproj", "{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -86,6 +92,18 @@ Global
 		{7F061487-3780-4B05-8813-8592FD9BA705}.Debug|x64.Build.0 = Debug|x64
 		{7F061487-3780-4B05-8813-8592FD9BA705}.Release|x64.ActiveCfg = Release|x64
 		{7F061487-3780-4B05-8813-8592FD9BA705}.Release|x64.Build.0 = Release|x64
+		{881D6795-3A96-4AAE-9560-36693EA1D65D}.Debug|x64.ActiveCfg = Debug|x64
+		{881D6795-3A96-4AAE-9560-36693EA1D65D}.Debug|x64.Build.0 = Debug|x64
+		{881D6795-3A96-4AAE-9560-36693EA1D65D}.Release|x64.ActiveCfg = Release|x64
+		{881D6795-3A96-4AAE-9560-36693EA1D65D}.Release|x64.Build.0 = Release|x64
+		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Debug|x64.ActiveCfg = Debug|x64
+		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Debug|x64.Build.0 = Debug|x64
+		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Release|x64.ActiveCfg = Release|x64
+		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Release|x64.Build.0 = Release|x64
+		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug|x64.ActiveCfg = Debug|x64
+		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug|x64.Build.0 = Debug|x64
+		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release|x64.ActiveCfg = Release|x64
+		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +116,9 @@ Global
 		{E23F79E3-F261-42F2-BA40-803880674AEA} = {F38D82C4-0A4A-48DA-9CD6-A2FBB46F305E}
 		{13C97BA1-77F4-458C-AF1F-A4DE1E803330} = {BF158285-9F97-4B1C-BEC7-AB0D49B4F98D}
 		{7F061487-3780-4B05-8813-8592FD9BA705} = {BF158285-9F97-4B1C-BEC7-AB0D49B4F98D}
+		{881D6795-3A96-4AAE-9560-36693EA1D65D} = {E23F79E3-F261-42F2-BA40-803880674AEA}
+		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
+		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}
