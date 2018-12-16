@@ -73,7 +73,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public Action<int> ScrollToColumn { private get; set; }
 
-        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, IEnumerable<int> visibleFrameIds)
+        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, IList<int> visibleFrameIds)
         {
             IsBusy = true;
             int[] sortedFrameIds = await Task.Run(() => GetSortedFrameIds(visibleFrameIds));
@@ -85,11 +85,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IsBusy = false;
         }
 
-        public override async Task LoadVideoForFrame(FrameViewModel frameViewModel)
+        public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)
         {
-            await base.LoadVideoForFrame(frameViewModel);
+            await base.LoadVideoForFrame(selectedFrame);
 
-            ScrollToFrame(frameViewModel);
+            FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
+            ScrollToFrame(newlySelectedFrame);
         }
 
         protected override void UpdateVisibleFrames()
@@ -101,20 +102,20 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             VisibleFrames.AddRange(_loadedFrames);
         }
 
-        private int[] GetSortedFrameIds(IEnumerable<int> visibleFrameIds)
+        private int[] GetSortedFrameIds(IList<int> visibleFrameIds)
         {
             List<float[]> data = visibleFrameIds.Select(id => _datasetServicesManager.CurrentDataset.SemanticVectorProvider.Descriptors[id]).ToList();
             int width = data.Count / RowCount;
             int height = RowCount;
             //we ignore items out of the grid
-            int[,] sortedFrames = new GridSorter().SortItems(data.Take(width * height).ToList(), width, height);
+            int[,] sortedFrames = new GridSorterFast().SortItems(data.Take(width * height).ToList(), width, height);
 
             int[] result = new int[width * height];
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    result[i * height + j] = sortedFrames[i, j];
+                    result[i * height + j] = visibleFrameIds[sortedFrames[i, j]];
                 }
             }
 
@@ -125,6 +126,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             if (frameViewModel == null)
             {
+                ScrollToColumn(0);
                 return;
             }
 

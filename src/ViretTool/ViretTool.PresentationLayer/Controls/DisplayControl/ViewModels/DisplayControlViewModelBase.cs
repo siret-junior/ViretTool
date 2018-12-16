@@ -96,7 +96,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public event EventHandler<FrameViewModel> SelectedFrameChanged;
 
-        public event EventHandler<(FrameViewModel SelectedFrame, IEnumerable<int> VisibleFrameIds)> SortFrames;
+        public event EventHandler<(FrameViewModel SelectedFrame, IList<int> VisibleFrameIds)> SortFrames;
 
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
 
@@ -164,7 +164,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void OnSortDisplay(FrameViewModel frameViewModel)
         {
-            SortFrames?.Invoke(this, (frameViewModel, _loadedFrames.Select(GetFrameId).Where(t => t.HasValue).Select(t => t.Value).ToList()));
+            const int topFramesCount = 1000;
+            SortFrames?.Invoke(this, (frameViewModel, _loadedFrames.Take(topFramesCount).Select(GetFrameId).Where(t => t.HasValue).Select(t => t.Value).ToList()));
         }
 
         protected abstract void UpdateVisibleFrames();

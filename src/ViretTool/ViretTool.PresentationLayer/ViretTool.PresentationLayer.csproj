@@ -110,6 +110,7 @@
     <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
     <Compile Include="Controls\Common\VirtualizedUniformGrid.cs" />
     <Compile Include="Controls\DisplayControl\GridSorter.cs" />
+    <Compile Include="Controls\DisplayControl\GridSorterFast.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModelBase.cs" />
     <Compile Include="Controls\Common\FrameViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\PageDisplayControlViewModel.cs" />
