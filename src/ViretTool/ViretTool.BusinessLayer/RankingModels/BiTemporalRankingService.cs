@@ -45,6 +45,7 @@ namespace ViretTool.BusinessLayer.RankingModels
             if (InputRanking == null)
             {
                 InputRanking = RankingBuffer.Zeros("InitialRanking", DatasetService.FrameCount);
+                OutputRanking = RankingBuffer.Zeros("OutputRanking", DatasetService.FrameCount);
             }
 
             if (query != null)

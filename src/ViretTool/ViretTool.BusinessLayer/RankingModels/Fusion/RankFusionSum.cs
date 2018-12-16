@@ -13,7 +13,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
 
 
         public void ComputeRanking(RankingBuffer[] inputRankings, RankingBuffer outputRanking)
-        {  
+        {
+            InputRankings = inputRankings;
+            OutputRanking = outputRanking;
+
             Parallel.For(0, outputRanking.Ranks.Length, itemId =>
             {
                 outputRanking.Ranks[itemId] = 0;
