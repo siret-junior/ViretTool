@@ -15,10 +15,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 
         // cache
         public CountFilteringQuery CachedQuery { get; private set; }
-        public Ranking CachedResultRanking { get; private set; }
+        public RankingBuffer CachedResultRanking { get; private set; }
 
 
-        public Ranking ComputeRanking(CountFilteringQuery query, Ranking initialRanking)
+        public RankingBuffer ComputeRanking(CountFilteringQuery query, RankingBuffer initialRanking)
         {
             // TODO if all filters are off
             if (query.Equals(CachedQuery) && !initialRanking.IsUpdated)
@@ -33,7 +33,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             int[] videoHitCounter = new int[Dataset.Videos.Count];
 
             // copy initial ranking
-            Ranking resultRanking = new Ranking(initialRanking);
+
+            // TODO:
+            RankingBuffer resultRanking = new RankingBuffer("TODO", initialRanking.Ranks);
 
             // single thread execution is required
             for (int i = 0; i < resultRanking.Ranks.Length; i++)
@@ -85,7 +87,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             
             // cache result
             CachedQuery = query;
-            CachedResultRanking = new Ranking(resultRanking.Ranks, false);
+            // TODO
+            CachedResultRanking = new RankingBuffer("TODO", resultRanking.Ranks, false);
             return resultRanking;
         }
 

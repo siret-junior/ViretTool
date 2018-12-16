@@ -6,24 +6,36 @@ using System.Threading.Tasks;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity;
+using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.BusinessLayer.RankingModels
 {
     public class BiTemporalRankingService 
         : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
     {
+        public Dataset Dataset { get; private set; }
+
         public IRankingModule PrimaryRankingModule { get; set; }
         public IRankingModule SecondaryRankingModule { get; set; }
+        public IFilteringModule FilteringModule { get; set; }
 
         public TemporalQuery CachedQuery { get; private set; }
         public TemporalRankedResultSet CachedResultSet { get; private set; }
-        
-        public IFilteringModule FilteringModule { get; set; }
-        
+
+        public RankingBuffer InputRanking { get; private set; }
+        public RankingBuffer OutputRanking { get; private set; }
+
+
+        public BiTemporalRankingService(Dataset dataset)
+        {
+            InputRanking = RankingBuffer.Zeros("InitialRanking", dataset.Frames.Count);
+        }
+
 
         public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
         {
-            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) /* TODO initial ranking has not changed */)
+            if ((query == null && CachedQuery == null) 
+                || query.Equals(CachedQuery))
             {
                 return CachedResultSet;
             }
@@ -31,11 +43,11 @@ namespace ViretTool.BusinessLayer.RankingModels
             if (query != null)
             {
                 // compute partial rankings
-                PrimaryRankingModule.ComputeRanking(query.TemporalQueries[0]);
+                PrimaryRankingModule.ComputeRanking(query.TemporalQueries[0], InputRanking, OutputRanking);
                 // TODO:
                 //SecondaryRankingModule.ComputeRanking(query.TemporalQueries[1]);
 
-                float[] ranks = PrimaryRankingModule.OutputRanking.Ranks;
+                float[] ranks = OutputRanking.Ranks;
 
                 // aggregate temporal rankings
                 // TODO: secondary temporal query

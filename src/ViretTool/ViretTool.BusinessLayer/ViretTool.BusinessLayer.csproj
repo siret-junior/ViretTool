@@ -72,7 +72,7 @@
     <Compile Include="RankingModels\Queries\ThresholdFilteringQuery.cs" />
     <Compile Include="RankingModels\IRankingModule.cs" />
     <Compile Include="RankingModels\RankedFrame.cs" />
-    <Compile Include="RankingModels\Ranking.cs" />
+    <Compile Include="RankingModels\RankingBuffer.cs" />
     <Compile Include="RankingModels\RankingModule.cs" />
     <Compile Include="RankingModels\RankingService.cs" />
     <Compile Include="RankingModels\RankingServiceFactory.cs" />

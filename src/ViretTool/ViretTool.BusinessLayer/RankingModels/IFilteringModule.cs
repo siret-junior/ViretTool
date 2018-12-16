@@ -5,9 +5,9 @@ namespace ViretTool.BusinessLayer.RankingModels
     public interface IFilteringModule
     {
         FilteringQuery CachedQuery { get; }
-        Ranking InputRanking { get; set; }
-        Ranking OutputRanking { get; set; }
+        RankingBuffer InputRanking { get; }
+        RankingBuffer OutputRanking { get; }
 
-        void ComputeRanking(FilteringQuery query);
+        void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking);
     }
 }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.RankingModels.Fusion
 {
-    public class RankFusionWeightedProduct : IRankFusion
-    {
-        public Ranking OutputRanking { get; set; }
+    //public class RankFusionWeightedProduct : IRankFusion
+    //{
+    //    public RankingBuffer OutputRanking { get; set; }
 
-        public void ComputeRanking(Ranking[] rankings)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public void ComputeRanking(RankingBuffer[] rankings)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 }

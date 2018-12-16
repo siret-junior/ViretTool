@@ -16,8 +16,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         private const string KEYWORD_MODEL_EXTENSION = ".keyword";
 
         public KeywordQuery CachedQuery { get; private set; }
-        public Ranking InputRanking { get; set; }
-        public Ranking OutputRanking { get; set; }
+        public RankingBuffer InputRanking { get; set; }
+        public RankingBuffer OutputRanking { get; set; }
 
 
         private bool mUseIDF;
@@ -68,18 +68,23 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         #region Rank Methods
 
-        public void ComputeRanking(KeywordQuery query)//List<List<int>> query) 
+        public void ComputeRanking(KeywordQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)//List<List<int>> query) 
         {
-            if (query == null && CachedQuery == null || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            InputRanking = inputRanking;
+            OutputRanking = outputRanking;
+
+            if ((query == null && CachedQuery == null) 
+                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
+            OutputRanking.IsUpdated = true;
 
             if (query != null && query.SynsetGroups.Any())
             {
-                Tuple<int, Ranking> result = ComputeRankedFrames(query);
+                Tuple<int, RankingBuffer> result = ComputeRankedFrames(query);
                 OutputRanking.Ranks = result.Item2.Ranks;
             }
             else
@@ -97,7 +102,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
                     }
                 }
             }
-            OutputRanking.IsUpdated = true;
         }
 
         #endregion
@@ -181,9 +185,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         #region (Private) List Unions & Multiplications
 
-        private Tuple<int, Ranking> ComputeRankedFrames(KeywordQuery query)//List<List<int>> query) 
+        private Tuple<int, RankingBuffer> ComputeRankedFrames(KeywordQuery query)//List<List<int>> query) 
         {
-            Ranking result = Ranking.Zeros(InputRanking.Ranks.Length);
+            // TODO
+            RankingBuffer result = RankingBuffer.Zeros("TODO", InputRanking.Ranks.Length);
             
             List<Dictionary<int, float>> clauses = ResolveClauses(query.SynsetGroups);
             Dictionary<int, float> queryClause = UniteClauses(clauses);
@@ -193,7 +198,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
                 result.Ranks[pair.Key] = pair.Value;
             }
 
-            return new Tuple<int, Ranking>(queryClause.Count, result);
+            return new Tuple<int, RankingBuffer>(queryClause.Count, result);
         }
 
 

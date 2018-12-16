@@ -13,8 +13,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
     public class ColorSignatureModel : IColorSketchModel<ColorSketchQuery>
     {
         public ColorSketchQuery CachedQuery { get; private set; }
-        public Ranking InputRanking { get; set; }
-        public Ranking OutputRanking { get; set; }
+        public RankingBuffer InputRanking { get; set; }
+        public RankingBuffer OutputRanking { get; set; }
         public IRankFusion RankFusion { get; set; }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         private int _signatureWidth = 26;     // TODO: load dynamically from provided initializer file
         private int _signatureHeight = 15;
 
-        private Dictionary<Ellipse, Ranking> _partialRankingCache = new Dictionary<Ellipse, Ranking>();
+        private Dictionary<Ellipse, RankingBuffer> _partialRankingCache = new Dictionary<Ellipse, RankingBuffer>();
 
 
         public ColorSignatureModel(byte[][] colorSignatures)
@@ -39,14 +39,19 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         }
 
 
-        public void ComputeRanking(ColorSketchQuery query)
+        public void ComputeRanking(ColorSketchQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
-            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            InputRanking = inputRanking;
+            OutputRanking = outputRanking;
+
+            if ((query == null && CachedQuery == null) 
+                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
+            OutputRanking.IsUpdated = true;
 
             if (query != null && query.ColorSketchEllipses.Any())
             {
@@ -69,7 +74,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                 }
 
                 // perform fusion of partial rankings
-                RankFusion.ComputeRanking(_partialRankingCache.Values.ToArray());
+                RankFusion.ComputeRanking(_partialRankingCache.Values.ToArray(), OutputRanking);
             }
             else
             {
@@ -86,10 +91,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                     }
                 }
             }
-            OutputRanking.IsUpdated = true;
         }
 
-        private Ranking EvaluateOneQueryCentroid(Ellipse ellipse)//Tuple<Point, Color, Point, bool> qc)
+        private RankingBuffer EvaluateOneQueryCentroid(Ellipse ellipse)//Tuple<Point, Color, Point, bool> qc)
         {
             float[] distances = new float[InputRanking.Ranks.Length];
 
@@ -155,7 +159,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                 }
             });
 
-            return new Ranking(distances);
+            // TODO
+            return new RankingBuffer("TODO", distances);
         }
 
 

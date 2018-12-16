@@ -9,18 +9,24 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
 {
     public class FilteringModule : IFilteringModule
     {
+
+
         public FilteringQuery CachedQuery { get; set; }
 
-        public Ranking InputRanking { get; set; }
-        public Ranking OutputRanking { get; set; }
+        public RankingBuffer InputRanking { get; set; }
+        public RankingBuffer OutputRanking { get; set; }
 
         // TODO: add modules
 
 
-        public void ComputeRanking(FilteringQuery query)
+        public void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
+            InputRanking = inputRanking;
+            OutputRanking = outputRanking;
+            
             // TODO if all filters are off
-            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            if ((query == null && CachedQuery == null) 
+                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
             {
                 OutputRanking.IsUpdated = false;
                 return;
@@ -32,7 +38,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 // TODO: filters
 
                 // aggregate filters
-                Ranking filteredRanking = null;
+                RankingBuffer filteredRanking = null;
                 // TODO:
 
                 // cache result
@@ -62,9 +68,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             }
         }
 
-        public static Ranking ApplyFilters(Ranking ranking, bool[][] masks)
+        public static RankingBuffer ApplyFilters(RankingBuffer ranking, bool[][] masks)
         {
-            Ranking resultRanking = Ranking.Zeros(ranking.Ranks.Length);
+            // TODO:
+            RankingBuffer resultRanking = RankingBuffer.Zeros("TODO", ranking.Ranks.Length);
 
             Parallel.For(0, ranking.Ranks.Length, itemId =>
             {

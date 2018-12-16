@@ -8,8 +8,9 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public interface IRankFusion
     {
-        Ranking OutputRanking { get; set; }
+        RankingBuffer[] InputRankings { get; }
+        RankingBuffer OutputRanking { get; }
 
-        void ComputeRanking(Ranking[] rankings);
+        void ComputeRanking(RankingBuffer[] inputRankings, RankingBuffer outputRanking);
     }
 }

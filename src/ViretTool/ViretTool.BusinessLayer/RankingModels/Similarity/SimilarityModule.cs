@@ -17,53 +17,74 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
         public IRankFusion RankFusion { get; set; }
 
         public SimilarityQuery CachedQuery { get; private set; }
-        public Ranking InputRanking { get; set; }
-        public Ranking OutputRanking { get; set; }
-        
-        
-        public void ComputeRanking(SimilarityQuery query)
+        public RankingBuffer InputRanking { get; set; }
+        public RankingBuffer KeywordIntermediateRanking { get; set; }
+        public RankingBuffer ColorIntermediateRanking { get; set; }
+        public RankingBuffer SemanticExampleIntermediateRanking { get; set; }
+        public RankingBuffer OutputRanking { get; set; }
+
+        public SimilarityModule()
         {
-            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+        }
+
+        public void ComputeRanking(SimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
+        {
+            InputRanking = inputRanking;
+            OutputRanking = outputRanking;
+
+            if ((query == null && CachedQuery == null) 
+                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
             {
                 OutputRanking.IsUpdated = false;
                 return;
             }
+            OutputRanking.IsUpdated = true;
 
             if (query != null)
             {
+                // create itermediate rankings if neccessary
+                if (KeywordIntermediateRanking == null)
+                {
+                    KeywordIntermediateRanking 
+                        = RankingBuffer.Zeros("KeywordModuleItermediate", InputRanking.Ranks.Length);
+                }
+                if (ColorIntermediateRanking == null)
+                {
+                    ColorIntermediateRanking 
+                        = RankingBuffer.Zeros("ColorModuleItermediate", InputRanking.Ranks.Length);
+                }
+                if (SemanticExampleIntermediateRanking == null)
+                {
+                    SemanticExampleIntermediateRanking 
+                        = RankingBuffer.Zeros("SemanticExampleModuleItermediate", InputRanking.Ranks.Length);
+                }
+
                 // compute partial rankings (if neccessary)
-                KeywordModel.ComputeRanking(query.KeywordQuery);
-                ColorSketchModel.ComputeRanking(query.ColorSketchQuery);
-                SemanticExampleModel.ComputeRanking(query.SemanticExampleQuery);
+                KeywordModel.ComputeRanking(query.KeywordQuery, 
+                    InputRanking, KeywordIntermediateRanking);
+                ColorSketchModel.ComputeRanking(query.ColorSketchQuery, 
+                    InputRanking, ColorIntermediateRanking);
+                SemanticExampleModel.ComputeRanking(query.SemanticExampleQuery, 
+                    InputRanking, SemanticExampleIntermediateRanking);
 
                 // perform rank fusion
-                RankFusion.ComputeRanking(new Ranking[] {
-                    KeywordModel.OutputRanking,
-                    ColorSketchModel.OutputRanking,
-                    SemanticExampleModel.OutputRanking
-                });
-                // TODO: RankFusion should share the ranking object with SimilarityModule
-
+                RankFusion.ComputeRanking(
+                    new RankingBuffer[] 
+                    {
+                        KeywordIntermediateRanking,
+                        ColorIntermediateRanking,
+                        SemanticExampleIntermediateRanking
+                    },
+                    OutputRanking);
+                
                 // cache the query
                 CachedQuery = query;
             }
             else
             {
-                // TODO just reassign array reference (also in submodels)
-                // null query, set to 0 rank
-                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
-                {
-                    if (InputRanking.Ranks[i] == float.MinValue)
-                    {
-                        OutputRanking.Ranks[i] = float.MinValue;
-                    }
-                    else
-                    {
-                        OutputRanking.Ranks[i] = 0;
-                    }
-                }
+                // no query, output is the same as input
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
             }
-            OutputRanking.IsUpdated = true;
         }
     }
 }

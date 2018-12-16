@@ -11,9 +11,7 @@ namespace ViretTool.BusinessLayer.RankingModels
         IRankFusion RankFusion { get; }
 
         SimilarityQuery CachedQuery { get; }
-        Ranking InputRanking { get; set; }
-        Ranking OutputRanking { get; set; }
 
-        void ComputeRanking(SimilarityQuery query);
+        void ComputeRanking(SimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking);
     }
 }

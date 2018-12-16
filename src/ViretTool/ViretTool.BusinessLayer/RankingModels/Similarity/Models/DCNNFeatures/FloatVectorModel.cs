@@ -12,8 +12,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
     public class FloatVectorModel : ISemanticExampleModel<SemanticExampleQuery>
     {
         public SemanticExampleQuery CachedQuery { get; private set; }
-        public Ranking InputRanking { get; set; }
-        public Ranking OutputRanking { get; set; }
+        public RankingBuffer InputRanking { get; set; }
+        public RankingBuffer OutputRanking { get; set; }
         public IRankFusion RankFusion { get; set; }
 
         /// <summary>
@@ -62,14 +62,19 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             return mCache[queryId];
         }
 
-        public void ComputeRanking(SemanticExampleQuery query)
+        public void ComputeRanking(SemanticExampleQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
-            if ((query == null && CachedQuery == null) || query.Equals(CachedQuery) && !InputRanking.IsUpdated)
+            InputRanking = inputRanking;
+            OutputRanking = outputRanking;
+
+            if ((query == null && CachedQuery == null) 
+                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
             {
                 // query and input ranking are the same as before, return cached result
                 OutputRanking.IsUpdated = false;
                 return;
             }
+            OutputRanking.IsUpdated = true;
 
             if (query != null)
             {
@@ -112,7 +117,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
                     }
                 }
             }
-            OutputRanking.IsUpdated = true;
         }
 
         public float[] GetFrameSemanticVector(int frameId)

@@ -9,9 +9,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
     public interface ISimilarityModel<TQuery>
     {
         TQuery CachedQuery { get; }
-        Ranking InputRanking { get; set; }
-        Ranking OutputRanking { get; set; }
+        RankingBuffer InputRanking { get; }
+        RankingBuffer OutputRanking { get; }
 
-        void ComputeRanking(TQuery query);
+        void ComputeRanking(TQuery query, RankingBuffer InputRanking, RankingBuffer OutputRanking);
     }
 }
