@@ -29,12 +29,10 @@ namespace ViretTool.PresentationLayer.ViewModels
             ScrollDisplayControlViewModel detailView,
             QueryViewModel query1,
             QueryViewModel query2,
-            IDatasetServicesManager datasetServicesManager,
-            IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> temporalRankingService)
+            IDatasetServicesManager datasetServicesManager)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
-            _temporalRankingService = temporalRankingService;
 
             QueryResults = queryResults;
             DetailView = detailView;

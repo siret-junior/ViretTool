@@ -7,6 +7,7 @@ using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.BusinessLayer.RankingModels
@@ -27,10 +28,10 @@ namespace ViretTool.BusinessLayer.RankingModels
         public RankingBuffer OutputRanking { get; private set; }
 
 
-        public BiTemporalRankingService()
+        public BiTemporalRankingService(IDatasetServicesManager datasetServicesManager)
         {
+            DatasetService = datasetServicesManager.CurrentDataset.DatasetService;
         }
-
 
         public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
         {
