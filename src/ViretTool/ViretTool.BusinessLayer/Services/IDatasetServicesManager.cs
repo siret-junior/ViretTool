@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.Services
 {
@@ -12,5 +13,6 @@ namespace ViretTool.BusinessLayer.Services
         event EventHandler DatasetReleased;
 
         void OpenDataset(string datasetFolder);
+        Task OpenDatasetAsync(string datasetDirectory);
     }
 }

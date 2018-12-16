@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.Services
 {
@@ -28,6 +29,20 @@ namespace ViretTool.BusinessLayer.Services
             DatasetServices services = _databaseServicesFactory.Create(datasetDirectory);
             CurrentDataset = services;
             CurrentDatasetFolder = datasetDirectory;
+            DatasetOpened?.Invoke(this, CurrentDataset);
+        }
+
+        public async Task OpenDatasetAsync(string datasetDirectory)
+        {
+            if (IsDatasetOpened)
+            {
+                ReleaseDataset();
+            }
+
+            DatasetServices services = await Task.Run(() => _databaseServicesFactory.Create(datasetDirectory));
+            CurrentDataset = services;
+            CurrentDatasetFolder = datasetDirectory;
+            //event should be invoked on the main thread
             DatasetOpened?.Invoke(this, CurrentDataset);
         }
 

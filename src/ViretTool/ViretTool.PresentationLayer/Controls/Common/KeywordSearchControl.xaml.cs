@@ -18,11 +18,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public KeywordSearchControl()
         {
             InitializeComponent();
-            Initialize = Init;
+            Loaded += (sender, args) => Initialize = Init;
         }
 
         public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
-            "QueryResult",
+            nameof(QueryResult),
             typeof(KeywordQueryResult),
             typeof(KeywordSearchControl),
             new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
@@ -34,7 +34,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
         public static readonly DependencyProperty InitializeProperty = DependencyProperty.Register(
-            "Initialize",
+            nameof(Initialize),
             typeof(Action<string, string[]>),
             typeof(KeywordSearchControl),
             null);
@@ -57,7 +57,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             foreach (string source in annotationSources)
             {
                 //string labels = GetFileNameByExtension(datatsetDirectory, $"-{source}.label");
-                string labelsFilePath = Path.Combine(datasetDirectory, $"-{source}.label");
+                string labelsFilePath = Path.Combine(datasetDirectory, $"{Path.GetFileName(datasetDirectory)}-{source}.label");
 
                 var labelProvider = new LabelProvider(labelsFilePath);
                 mLabelProviders.Add(source, labelProvider);
@@ -68,6 +68,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;
             }
 
+            suggestionTextBox.AnnotationSource = annotationSources.First();
             suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
             suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
             suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;

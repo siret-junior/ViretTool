@@ -40,6 +40,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
+            _datasetServicesManager.DatasetOpened += (sender, services) => InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
 
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
@@ -281,11 +282,6 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 _canvasHeight = value;
                 NotifyOfPropertyChange();
             }
-        }
-
-        public void InitializeKeywordSearch(string datasetDirectory, string[] annotationSources)
-        {
-            InitializeKeywordSearchMethod(datasetDirectory, annotationSources);
         }
 
         public void RemoveFromQueryClicked(FrameViewModel frameViewModel)

@@ -125,7 +125,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             IsBusy = true;
             try
             {
-                await Task.Run(() => _datasetServicesManager.OpenDataset(datasetFolder));
+                await _datasetServicesManager.OpenDatasetAsync(datasetFolder);
                 if (!_datasetServicesManager.IsDatasetOpened)
                 {
                     throw new DataException("Something went wrong while opening dataset.");
