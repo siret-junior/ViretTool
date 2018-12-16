@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ViretTool.BusinessLayer.Descriptor;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
 using ViretTool.BusinessLayer.RankingModels.Fusion;
 using ViretTool.BusinessLayer.RankingModels.Queries;

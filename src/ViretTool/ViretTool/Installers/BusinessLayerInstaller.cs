@@ -3,7 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using ViretTool.BusinessLayer.Datasets;
-using ViretTool.BusinessLayer.Descriptor;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;

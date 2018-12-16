@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO;
 
-namespace ViretTool.BusinessLayer.Descriptor
+namespace ViretTool.BusinessLayer.Descriptors
 {
     public class SemanticVectorDescriptorProvider : IDescriptorProvider<float[]>
     {

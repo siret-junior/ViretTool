@@ -1,5 +1,5 @@
 ﻿using ViretTool.BusinessLayer.Datasets;
-using ViretTool.BusinessLayer.Descriptor;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.BusinessLayer.Services

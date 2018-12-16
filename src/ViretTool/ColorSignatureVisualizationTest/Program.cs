@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ViretTool.BusinessLayer.Descriptor;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.DataLayer.DataModel;
 using ViretTool.DataLayer.DataProviders.Dataset;

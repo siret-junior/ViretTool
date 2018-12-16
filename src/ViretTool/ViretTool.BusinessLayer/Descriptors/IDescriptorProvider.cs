@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViretTool.BusinessLayer.Descriptor
+namespace ViretTool.BusinessLayer.Descriptors
 {
     public interface IDescriptorProvider<T>
     {
