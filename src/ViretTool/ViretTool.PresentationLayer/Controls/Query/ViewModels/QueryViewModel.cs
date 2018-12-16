@@ -283,9 +283,9 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             }
         }
 
-        public void InitializeKeywordSearch(string datasetPath, string[] annotationSources)
+        public void InitializeKeywordSearch(string datasetDirectory, string[] annotationSources)
         {
-            InitializeKeywordSearchMethod(datasetPath, annotationSources);
+            InitializeKeywordSearchMethod(datasetDirectory, annotationSources);
         }
 
         public void RemoveFromQueryClicked(FrameViewModel frameViewModel)

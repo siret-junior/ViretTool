@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -49,15 +50,16 @@ namespace ViretTool.PresentationLayer.Controls.Common
             suggestionTextBox.ClearQuery();
         }
 
-        private void Init(string datatsetPath, string[] annotationSources)
+        private void Init(string datasetDirectory, string[] annotationSources)
         {
             suggestionTextBox.AnnotationSources = annotationSources;
 
             foreach (string source in annotationSources)
             {
-                string labels = GetFileNameByExtension(datatsetPath, $"-{source}.label");
+                //string labels = GetFileNameByExtension(datatsetDirectory, $"-{source}.label");
+                string labelsFilePath = Path.Combine(datasetDirectory, $"-{source}.label");
 
-                var labelProvider = new LabelProvider(labels);
+                var labelProvider = new LabelProvider(labelsFilePath);
                 mLabelProviders.Add(source, labelProvider);
 
                 var suggestionProvider = new SuggestionProvider(labelProvider);
