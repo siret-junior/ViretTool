@@ -5,9 +5,9 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public interface ISimilarityModule
     {
-        IKeywordModel<KeywordQuery> KeywordModel { get; set; }
-        IColorSketchModel<ColorSketchQuery> ColorSketchModel { get; set; }
-        ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; set; }
+        IKeywordModel<KeywordQuery> KeywordModel { get; }
+        IColorSketchModel<ColorSketchQuery> ColorSketchModel { get; }
+        ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; }
         IRankFusion RankFusion { get; }
 
         SimilarityQuery CachedQuery { get; }

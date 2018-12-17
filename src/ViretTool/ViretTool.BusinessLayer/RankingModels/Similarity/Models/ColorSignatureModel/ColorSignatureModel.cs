@@ -6,16 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel
 {
     public class ColorSignatureModel : IColorSketchModel<ColorSketchQuery>
     {
+        public ColorSignatureModel(IRankFusion rankFusion, IDescriptorProvider<byte[]> colorSignatures)
+        {
+            RankFusion = rankFusion;
+            _colorSignatures = colorSignatures.Descriptors;
+        }
+
         public ColorSketchQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
-        public IRankFusion RankFusion { get; set; }
+        public IRankFusion RankFusion { get; }
 
         /// <summary>
         /// A thumbnail based signature in RGB format, stored as a 1D byte array.
@@ -25,12 +32,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         private int _signatureHeight = 15;
 
         private Dictionary<Ellipse, RankingBuffer> _partialRankingCache = new Dictionary<Ellipse, RankingBuffer>();
-
-
-        public ColorSignatureModel(byte[][] colorSignatures)
-        {
-            _colorSignatures = colorSignatures;
-        }
 
         public void Clear()
         {

@@ -10,11 +10,23 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
 {
     public class SimilarityModule : ISimilarityModule
     {
-        public IKeywordModel<KeywordQuery> KeywordModel { get; set; }
-        public IColorSketchModel<ColorSketchQuery> ColorSketchModel { get; set; }
-        public ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; set; }
+        public SimilarityModule(
+            IKeywordModel<KeywordQuery> keywordModel,
+            IColorSketchModel<ColorSketchQuery> colorSketchModel,
+            ISemanticExampleModel<SemanticExampleQuery> semanticExampleModel,
+            IRankFusion rankFusion)
+        {
+            KeywordModel = keywordModel;
+            ColorSketchModel = colorSketchModel;
+            SemanticExampleModel = semanticExampleModel;
+            RankFusion = rankFusion;
+        }
 
-        public IRankFusion RankFusion { get; set; }
+        public IKeywordModel<KeywordQuery> KeywordModel { get; }
+        public IColorSketchModel<ColorSketchQuery> ColorSketchModel { get; }
+        public ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; }
+
+        public IRankFusion RankFusion { get; }
 
         public SimilarityQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
@@ -23,8 +35,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
         public RankingBuffer SemanticExampleIntermediateRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
 
-        public SimilarityModule()
+        public SimilarityModule(IRankFusion rankFusion)
         {
+            RankFusion = rankFusion;
         }
 
         public void ComputeRanking(SimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)

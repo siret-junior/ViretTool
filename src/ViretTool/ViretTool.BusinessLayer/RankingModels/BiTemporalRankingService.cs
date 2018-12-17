@@ -15,23 +15,29 @@ namespace ViretTool.BusinessLayer.RankingModels
     public class BiTemporalRankingService 
         : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
     {
-        public IDatasetService DatasetService { get; private set; }
+        public BiTemporalRankingService(
+            IDatasetService datasetService,
+            IRankingModule primaryRankingModule,
+            IRankingModule secondaryRankingModule,
+            IFilteringModule filteringModule)
+        {
+            DatasetService = datasetService;
+            PrimaryRankingModule = primaryRankingModule;
+            SecondaryRankingModule = secondaryRankingModule;
+            FilteringModule = filteringModule;
+        }
 
-        public IRankingModule PrimaryRankingModule { get; set; }
-        public IRankingModule SecondaryRankingModule { get; set; }
-        public IFilteringModule FilteringModule { get; set; }
+        public IDatasetService DatasetService { get; }
+
+        public IRankingModule PrimaryRankingModule { get; }
+        public IRankingModule SecondaryRankingModule { get; }
+        public IFilteringModule FilteringModule { get; }
 
         public TemporalQuery CachedQuery { get; private set; }
         public TemporalRankedResultSet CachedResultSet { get; private set; }
 
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
-
-
-        public BiTemporalRankingService(IDatasetServicesManager datasetServicesManager)
-        {
-            DatasetService = datasetServicesManager.CurrentDataset.DatasetService;
-        }
 
         public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
         {

@@ -11,7 +11,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
     /// <summary>
     /// Searches an index file and displays results
     /// </summary>
-    class KeywordSubModel : IKeywordModel<KeywordQuery>
+    public class KeywordSubModel : IKeywordModel<KeywordQuery>
     {
         private const string KEYWORD_MODEL_EXTENSION = ".keyword";
 

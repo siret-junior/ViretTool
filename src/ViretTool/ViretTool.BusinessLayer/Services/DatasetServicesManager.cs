@@ -48,7 +48,7 @@ namespace ViretTool.BusinessLayer.Services
 
         private void ReleaseDataset()
         {
-            _databaseServicesFactory.Release(CurrentDataset);
+            _databaseServicesFactory.Destroy(CurrentDataset);
             CurrentDataset = null;
             CurrentDatasetFolder = null;
             DatasetReleased?.Invoke(this, EventArgs.Empty);

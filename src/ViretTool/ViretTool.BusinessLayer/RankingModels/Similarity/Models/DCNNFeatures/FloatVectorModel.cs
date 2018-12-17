@@ -5,16 +5,23 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 {
     public class FloatVectorModel : ISemanticExampleModel<SemanticExampleQuery>
     {
+        public FloatVectorModel(IRankFusion rankFusion, IDescriptorProvider<float[]> semanticDescriptorProvider)
+        {
+            mFloatVectors = semanticDescriptorProvider.Descriptors;
+            RankFusion = rankFusion;
+        }
+
         public SemanticExampleQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
-        public IRankFusion RankFusion { get; set; }
+        public IRankFusion RankFusion { get; }
 
         /// <summary>
         /// Extracted features from DCNN, normalized to |v| = 1 and each dimension globally quantized to byte
@@ -26,12 +33,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
         private readonly string mDescriptorsFilename;
 
         private Dictionary<int, float[]> mCache = new Dictionary<int, float[]>();
-
-
-        public FloatVectorModel(float[][] floatVectors)
-        {
-            mFloatVectors = floatVectors;
-        }
 
         public void Clear()
         {

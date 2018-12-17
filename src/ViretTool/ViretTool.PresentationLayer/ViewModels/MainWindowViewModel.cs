@@ -19,7 +19,6 @@ namespace ViretTool.PresentationLayer.ViewModels
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly ILogger _logger;
-        private IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet> _temporalRankingService;
         private bool _isBusy;
         private bool _isFirstQueryPrimary = true;
 
@@ -129,9 +128,6 @@ namespace ViretTool.PresentationLayer.ViewModels
                     throw new DataException("Something went wrong while opening dataset.");
                 }
 
-                //TODO - register properly
-                _temporalRankingService = RankingServiceFactory.Build(_datasetServicesManager);
-
                 await QueryResults.LoadInitialDisplay();
 
             }
@@ -168,7 +164,7 @@ namespace ViretTool.PresentationLayer.ViewModels
             {
                 TemporalRankedResultSet queryResult =
                     await Task.Run(
-                        () => _temporalRankingService.ComputeRankedResultSet(
+                        () => _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(
                             new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
 
                 //TODO - combine both results

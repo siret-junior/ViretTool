@@ -9,21 +9,22 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public class RankingModule : IRankingModule
     {
+        public RankingModule(ISimilarityModule similarityModule, IFilteringModule filteringModule)
+        {
+            SimilarityModule = similarityModule;
+            FilteringModule = filteringModule;
+        }
+
         public int FrameCount { get; private set; }
 
-        public ISimilarityModule SimilarityModule { get; set; }
-        public IFilteringModule FilteringModule { get; set; }
+        public ISimilarityModule SimilarityModule { get; }
+        public IFilteringModule FilteringModule { get; }
 
         public Query CachedQuery { get; private set; }
 
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer IntermediateRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
-
-
-        public RankingModule()
-        {
-        }
 
         public void ComputeRanking(Query query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {

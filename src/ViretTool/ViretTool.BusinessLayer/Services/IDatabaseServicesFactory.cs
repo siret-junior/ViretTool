@@ -5,6 +5,6 @@
         DatasetServices Create(string datasetDirectory);
 
 
-        void Release(DatasetServices databaseServices);
+        void Destroy(DatasetServices databaseServices);
     }
 }

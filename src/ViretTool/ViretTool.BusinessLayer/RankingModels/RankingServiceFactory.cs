@@ -28,41 +28,27 @@ namespace ViretTool.BusinessLayer.RankingModels
             string directory = datasetServicesManager.CurrentDatasetFolder;
 
             //load dataset(TODO: verify all files against the dataset header)
-            Dataset dataset = new DatasetProvider().FromDirectory(directory);
-            int frameCount = dataset.Frames.Count;
-
             // load descriptor providers
-            IDescriptorProvider<byte[]> colorSignatureProvider = datasetServicesManager.CurrentDataset.ColorSignatureProvider;
-            IDescriptorProvider<float[]> semanticVectorProvider = datasetServicesManager.CurrentDataset.SemanticVectorProvider;
             // TODO: keyword, filtering...
 
             // load similarity models
-            ColorSignatureModel colorSignatureModel
-                = new ColorSignatureModel(colorSignatureProvider.Descriptors);
-            FloatVectorModel floatVectorModel
-                = new FloatVectorModel(semanticVectorProvider.Descriptors);
+            ColorSignatureModel colorSignatureModel = new ColorSignatureModel(new RankFusionSum(), datasetServicesManager.CurrentDataset.ColorSignatureProvider);
+            FloatVectorModel floatVectorModel = new FloatVectorModel(new RankFusionSum(), datasetServicesManager.CurrentDataset.SemanticVectorProvider);
             KeywordSubModel keywordModel = KeywordSubModel.FromDirectory(directory);
 
             // load modules
-            SimilarityModule similarityModule = new SimilarityModule();
+            SimilarityModule similarityModule = new SimilarityModule(keywordModel, colorSignatureModel, floatVectorModel, new RankFusionSum());
             FilteringModule filteringModule = new FilteringModule();
-            RankingModule rankingModule = new RankingModule();
 
-            // fill module dependencies
-            colorSignatureModel.RankFusion = new RankFusionSum();
-            floatVectorModel.RankFusion = new RankFusionSum();
-            similarityModule.ColorSketchModel = colorSignatureModel;
-            similarityModule.SemanticExampleModel = floatVectorModel;
-            similarityModule.KeywordModel = keywordModel;
-            similarityModule.RankFusion = new RankFusionSum();
             // TODO: implement filtering
 
             // load service
-            BiTemporalRankingService rankingService = new BiTemporalRankingService(datasetServicesManager);
-            RankingModule primaryRankingModule = new RankingModule();
-            primaryRankingModule.SimilarityModule = similarityModule;
-            primaryRankingModule.FilteringModule = filteringModule;
-            rankingService.PrimaryRankingModule = primaryRankingModule;
+            RankingModule primaryRankingModule = new RankingModule(similarityModule, filteringModule);
+            BiTemporalRankingService rankingService = new BiTemporalRankingService(
+                datasetServicesManager.CurrentDataset.DatasetService,
+                primaryRankingModule,
+                null,
+                filteringModule);
             // TODO: secondary service
             
             return rankingService;
