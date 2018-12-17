@@ -86,8 +86,19 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         protected override void UpdateVisibleFrames()
         {
             int itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            VisibleFrames.Clear();
-            VisibleFrames.AddRange(_loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount));
+            List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
+            if (VisibleFrames.Count != itemsCount || VisibleFrames.Count != viewModelsToAdd.Count)
+            {
+                VisibleFrames.Clear();
+                VisibleFrames.AddRange(viewModelsToAdd);
+                return;
+            }
+
+            int i = 0;
+            foreach (FrameViewModel frameViewModel in viewModelsToAdd)
+            {
+                VisibleFrames[i++] = frameViewModel;
+            }
         }
     }
 }

@@ -124,7 +124,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         private void ScrollToFrame(FrameViewModel frameViewModel)
         {
-            if (frameViewModel == null)
+            if (frameViewModel == null || RowCount == 0)
             {
                 ScrollToColumn(0);
                 return;

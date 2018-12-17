@@ -113,7 +113,6 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="ArgumentPassingDependencyResolver.cs" />
     <Compile Include="Installers\BusinessLayerInstaller.cs" />
-    <Compile Include="Installers\BusinessLayerInstallerManual.cs" />
     <Compile Include="Installers\DataLayerInstaller.cs" />
     <Compile Include="Installers\PresentationLayerInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

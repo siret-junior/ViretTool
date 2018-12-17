@@ -33,6 +33,7 @@ namespace ViretTool.Installers
 
                 //lifestyleBound is very important - current instance is released when data services are no longer used (new dataset is opened)
                 Component.For<IThumbnailService<Thumbnail<byte[]>>>().ImplementedBy<JpegThumbnailService>().LifestyleBoundTo<DatasetServices>(),
+                Component.For<IThumbnailService<Thumbnail<byte[]>>>().ImplementedBy<CachedThumbnailService<Thumbnail<byte[]>>>().LifestyleBoundTo<DatasetServices>().IsDefault(),
                 Component.For<IDatasetService>().ImplementedBy<DatasetService>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<IDescriptorProvider<float[]>>()
                          .UsingFactoryMethod((_, context) => SemanticVectorDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))

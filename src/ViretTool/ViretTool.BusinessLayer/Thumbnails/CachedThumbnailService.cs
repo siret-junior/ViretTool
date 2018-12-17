@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.Thumbnails
 {
-    class CachedThumbnailService<T> : IThumbnailService<T>
+    public class CachedThumbnailService<T> : IThumbnailService<T>
     {
         public IThumbnailService<T> BaseThumbnailService;
 
