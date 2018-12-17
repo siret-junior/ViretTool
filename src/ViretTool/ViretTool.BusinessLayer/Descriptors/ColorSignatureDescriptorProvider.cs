@@ -68,9 +68,21 @@ namespace ViretTool.BusinessLayer.Descriptors
             get => Descriptors[index];
         }
 
-        public static float GetDistance(byte[] value1, byte[] value2)
+        public static float GetDistance(byte[] x, byte[] y)
         {
-            throw new NotImplementedException();
+            return (float)L2Distance(x, y);
+        }
+
+
+        private static double L2Distance(byte[] x, byte[] y)
+        {
+            double result = 0, r;
+            for (int i = 0; i < x.Length; i++)
+            {
+                r = x[i] - y[i];
+                result += r * r;
+            }
+            return Math.Sqrt(result);
         }
     }
 }
