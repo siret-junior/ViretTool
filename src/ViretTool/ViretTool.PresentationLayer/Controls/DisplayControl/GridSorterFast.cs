@@ -25,7 +25,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl
                 i =>
                 {
                     distances[i, i] = 0;
-                    for (int j = 0; j < dataCount; j++)
+                    for (int j = i + 1; j < dataCount; j++)
                     {
                         //distances[i, j] = L2(data[i], data[j]);
                         distances[i, j] = DotProductL2Distance(data[i], data[j]);

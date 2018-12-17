@@ -150,6 +150,10 @@
       <Project>{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}</Project>
       <Name>ViretTool.BusinessLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ViretTool.Core\ViretTool.Core.csproj">
+      <Project>{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}</Project>
+      <Name>ViretTool.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViretTool.Resources\ViretTool.Resources.csproj">
       <Project>{5b076c61-e554-4b37-98f0-63169881a426}</Project>
       <Name>ViretTool.Resources</Name>

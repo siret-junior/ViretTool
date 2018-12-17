@@ -18,6 +18,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public KeywordSearchControl()
         {
             InitializeComponent();
+            suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
+            suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
+            suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
+            suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
+
             Loaded += (sender, args) => Initialize = Init;
         }
 
@@ -52,7 +57,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void Init(string datasetDirectory, string[] annotationSources)
         {
+            //unregister previous events
+            foreach (SuggestionProvider suggestionProvider in mSuggestionProviders.Values)
+            {
+                suggestionProvider.SuggestionResultsReadyEvent -= suggestionTextBox.OnSuggestionResultsReady;
+                suggestionProvider.ShowSuggestionMessageEvent -= suggestionTextBox.OnShowSuggestionMessage;
+            }
+            mSuggestionProviders.Clear();
+            mLabelProviders.Clear();
+
             suggestionTextBox.AnnotationSources = annotationSources;
+            suggestionTextBox.AnnotationSource = annotationSources.First();
 
             foreach (string source in annotationSources)
             {
@@ -61,20 +76,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 string labelsFilePath = Directory.GetFiles(datasetDirectory).Where(file => file.EndsWith(".label")).First();
 
 
-                var labelProvider = new LabelProvider(labelsFilePath);
+                LabelProvider labelProvider = new LabelProvider(labelsFilePath);
                 mLabelProviders.Add(source, labelProvider);
 
-                var suggestionProvider = new SuggestionProvider(labelProvider);
+                SuggestionProvider suggestionProvider = new SuggestionProvider(labelProvider);
                 mSuggestionProviders.Add(source, suggestionProvider);
                 suggestionProvider.SuggestionResultsReadyEvent += suggestionTextBox.OnSuggestionResultsReady;
                 suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;
             }
-
-            suggestionTextBox.AnnotationSource = annotationSources.First();
-            suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
-            suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
-            suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
-            suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
         }
 
         private string GetFileNameByExtension(string datasetPath, string extension)
