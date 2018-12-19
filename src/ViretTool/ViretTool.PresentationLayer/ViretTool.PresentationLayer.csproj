@@ -80,7 +80,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\ActualSizeBehavior.cs" />
     <Compile Include="Behaviors\BaseBehavior.cs" />
-    <Compile Include="Behaviors\ScrollToColumnIndexBehavior.cs" />
+    <Compile Include="Behaviors\ScrollToColumnOrRowIndexBehavior.cs" />
     <Compile Include="Controls\Common\BusyIndicator.cs" />
     <Compile Include="Controls\Common\FrameControl.xaml.cs">
       <DependentUpon>FrameControl.xaml</DependentUpon>
@@ -128,8 +128,12 @@
     <Compile Include="Controls\Query\Views\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SubmitControl\ViewModels\SubmitControlViewModel.cs" />
-    <Compile Include="Controls\SubmitControl\Views\SubmitControlView.xaml.cs">
+    <Compile Include="Windows\ViewModels\DetailViewModel.cs" />
+    <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />
+    <Compile Include="Windows\Views\DetailView.xaml.cs">
+      <DependentUpon>DetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Views\SubmitControlView.xaml.cs">
       <DependentUpon>SubmitControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DoubleToStringConverter.cs" />
@@ -137,8 +141,8 @@
     <Compile Include="Converters\RadioEnumToBooleanConverter.cs" />
     <Compile Include="Helpers\VisualHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="Views\MainWindowView.xaml.cs">
+    <Compile Include="Windows\ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Windows\Views\MainWindowView.xaml.cs">
       <DependentUpon>MainWindowView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -200,7 +204,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SubmitControl\Views\SubmitControlView.xaml">
+    <Page Include="Windows\Views\DetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Views\SubmitControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,7 +216,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindowView.xaml">
+    <Page Include="Windows\Views\MainWindowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

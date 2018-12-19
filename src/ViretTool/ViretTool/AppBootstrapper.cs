@@ -16,7 +16,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Services.Logging.NLogIntegration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using ViretTool.PresentationLayer.ViewModels;
+using ViretTool.PresentationLayer.Windows.ViewModels;
 
 namespace ViretTool
 {

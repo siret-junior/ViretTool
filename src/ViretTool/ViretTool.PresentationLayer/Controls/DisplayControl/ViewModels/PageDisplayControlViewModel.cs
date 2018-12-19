@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using Castle.Core.Logging;
-using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
-using ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -15,9 +12,60 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         private int _currentPageNumber;
 
-        public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IWindowManager windowManager, SubmitControlViewModel submitControlViewModel)
-            : base(logger, datasetServicesManager, windowManager, submitControlViewModel)
+        private bool _isLargeDisplayChecked;
+        private bool _isShowFilteredVideosChecked;
+        private bool _isSortDisplayChecked;
+
+        public PageDisplayControlViewModel(
+            ILogger logger,
+            IDatasetServicesManager datasetServicesManager)
+            : base(logger, datasetServicesManager)
         {
+        }
+
+        public bool IsLargeDisplayChecked
+        {
+            get => _isLargeDisplayChecked;
+            set
+            {
+                if (_isLargeDisplayChecked == value)
+                {
+                    return;
+                }
+
+                _isLargeDisplayChecked = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsShowFilteredVideosChecked
+        {
+            get => _isShowFilteredVideosChecked;
+            set
+            {
+                if (_isShowFilteredVideosChecked == value)
+                {
+                    return;
+                }
+
+                _isShowFilteredVideosChecked = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsSortDisplayChecked
+        {
+            get => _isSortDisplayChecked;
+            set
+            {
+                if (_isSortDisplayChecked == value)
+                {
+                    return;
+                }
+
+                _isSortDisplayChecked = value;
+                NotifyOfPropertyChange();
+            }
         }
 
         public int CurrentPageNumber
@@ -63,6 +111,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             CurrentPageNumber--;
             UpdateVisibleFrames();
+        }
+
+        public void FilterVideoButton()
+        {
+            //TODO
         }
 
         public override Task LoadInitialDisplay()

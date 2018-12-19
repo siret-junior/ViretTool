@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Caliburn.Micro;
 using ViretTool.PresentationLayer.Controls.Common;
 
-namespace ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels
+namespace ViretTool.PresentationLayer.Windows.ViewModels
 {
     public class SubmitControlViewModel : Screen
     {
@@ -13,7 +12,7 @@ namespace ViretTool.PresentationLayer.Controls.SubmitControl.ViewModels
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
         }
 
-        public int ImageHeight { get; set; }
+        public int ImageHeight { get; }
 
         public int ImageWidth { get; }
 

@@ -10,5 +10,6 @@
         int GetFrameNumberForFrameId(int frameId);
         bool TryGetFrameIdForFrameNumber(int videoId, int frameNumber, out int frameId);
         int GetFrameIdForFrameNumber(int videoId, int frameNumber);
+        (int StartFrame, int EndFrame)[] GetShotFrameNumbersForVideo(int videoId);
     }
 }

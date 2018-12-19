@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -10,27 +11,37 @@ using Microsoft.Win32;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
-namespace ViretTool.PresentationLayer.ViewModels
+namespace ViretTool.PresentationLayer.Windows.ViewModels
 {
     public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly ILogger _logger;
+        private readonly IWindowManager _windowManager;
+        private readonly DetailViewModel _detailViewModel;
+        private readonly SubmitControlViewModel _submitControlViewModel;
         private bool _isBusy;
         private bool _isFirstQueryPrimary = true;
 
         public MainWindowViewModel(
             ILogger logger,
-            DisplayControlViewModelBase queryResults,
+            IWindowManager windowManager,
+            PageDisplayControlViewModel queryResults,
             ScrollDisplayControlViewModel detailView,
+            DetailViewModel detailViewModel,
+            SubmitControlViewModel submitControlViewModel,
             QueryViewModel query1,
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager)
         {
             _logger = logger;
+            _windowManager = windowManager;
+            _detailViewModel = detailViewModel;
+            _submitControlViewModel = submitControlViewModel;
             _datasetServicesManager = datasetServicesManager;
 
             QueryResults = queryResults;
@@ -41,10 +52,14 @@ namespace ViretTool.PresentationLayer.ViewModels
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
-            QueryResults.SelectedFrameChanged += async (sender, model) => await detailView.LoadVideoForFrame(model);
-            QueryResults.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
-            QueryResults.SortFrames += async (sender, tuple) => await detailView.LoadSortedDisplay(tuple.SelectedFrame, tuple.VisibleFrameIds);
-            DetailView.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
+            DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
+            foreach (var display in displays)
+            {
+                display.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
+                display.SubmittedFramesChanged += (sender, submittedFrames) => OnSubmittedFramesChanged(submittedFrames);
+                display.FrameForSortChanged += async (sender, tuple) => await OnFrameForSortChanged(tuple.SelectedFrame, tuple.TopFrames);
+                display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
+            }
         }
 
         public bool IsBusy
@@ -178,6 +193,43 @@ namespace ViretTool.PresentationLayer.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private void OnSubmittedFramesChanged(IList<FrameViewModel> submittedFrames)
+        {
+            _submitControlViewModel.Initialize(submittedFrames);
+            if (_windowManager.ShowDialog(_submitControlViewModel) != true)
+            {
+                return;
+            }
+
+            _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
+            MessageBox.Show("Frames submitted");
+            //TODO send SubmittedFrames.Select(...) somewhere
+        }
+
+        private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)
+        {
+            IsBusy = true;
+            Task<bool?> showDialogTask = ShowDialogAsync(_detailViewModel);
+            await _detailViewModel.LoadVideoForFrame(selectedFrame);
+            await showDialogTask;
+            IsBusy = false;
+        }
+
+        private async Task OnFrameForSortChanged(FrameViewModel selectedFrame, IList<FrameViewModel> topFrames)
+        {
+            IsBusy = true;
+            Task<bool?> showDialogTask = ShowDialogAsync(_detailViewModel);
+            await _detailViewModel.LoadSortedDisplay(selectedFrame, topFrames);
+            await showDialogTask;
+            IsBusy = false;
+        }
+
+        private async Task<bool?> ShowDialogAsync(object viewModel)
+        {
+            await Task.Yield();
+            return _windowManager.ShowDialog(viewModel);
         }
     }
 }

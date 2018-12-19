@@ -119,7 +119,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     break;
             }
         }
-
+        
         /// <summary>
         /// Measure the children
         /// </summary>
@@ -181,7 +181,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             // Note: this could be deferred to idle time for efficiency
-            CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
+            //CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
 
             if (availableSize.Height.Equals(double.PositiveInfinity))
             {

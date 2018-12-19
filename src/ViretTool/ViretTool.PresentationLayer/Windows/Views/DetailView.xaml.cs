@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ViretTool.PresentationLayer.Views
+namespace ViretTool.PresentationLayer.Windows.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindowView.xaml
+    /// Interaction logic for DetailView.xaml
     /// </summary>
-    public partial class MainWindowView
+    public partial class DetailView : Window
     {
-        public MainWindowView()
+        public DetailView()
         {
             InitializeComponent();
         }

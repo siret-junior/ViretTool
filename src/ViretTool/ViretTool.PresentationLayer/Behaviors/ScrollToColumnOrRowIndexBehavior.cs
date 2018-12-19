@@ -8,18 +8,30 @@ using ViretTool.PresentationLayer.Helpers;
 
 namespace ViretTool.PresentationLayer.Behaviors
 {
-    public class ScrollToColumnIndexBehavior : BaseBehavior<ScrollViewer>
+    public class ScrollToColumnOrRowIndexBehavior : BaseBehavior<ScrollViewer>
     {
         public static readonly DependencyProperty ScrollToColumnProperty = DependencyProperty.Register(
             nameof(ScrollToColumn),
             typeof(Action<int>),
-            typeof(ScrollToColumnIndexBehavior),
+            typeof(ScrollToColumnOrRowIndexBehavior),
+            null);
+
+        public static readonly DependencyProperty ScrollToRowProperty = DependencyProperty.Register(
+            nameof(ScrollToRow),
+            typeof(Action<int>),
+            typeof(ScrollToColumnOrRowIndexBehavior),
             null);
 
         public Action<int> ScrollToColumn
         {
             get => (Action<int>)GetValue(ScrollToColumnProperty);
             set => SetValue(ScrollToColumnProperty, value);
+        }
+
+        public Action<int> ScrollToRow
+        {
+            get => (Action<int>)GetValue(ScrollToRowProperty);
+            set => SetValue(ScrollToRowProperty, value);
         }
 
         protected override void CleanUp()
@@ -30,11 +42,24 @@ namespace ViretTool.PresentationLayer.Behaviors
         protected override void WireUp()
         {
             ScrollToColumn = ScrollToColumnNumber;
+            ScrollToRow = ScrollToRowNumber;
         }
 
         
 
         private async void ScrollToColumnNumber(int columnNumber)
+        {
+            FrameControl frameControl = await GetFrameControl();
+            AssociatedObject.ScrollToHorizontalOffset(columnNumber * frameControl?.ActualWidth ?? 0);
+        }
+
+        private async void ScrollToRowNumber(int rowNumber)
+        {
+            FrameControl frameControl = await GetFrameControl();
+            AssociatedObject.ScrollToVerticalOffset(rowNumber * frameControl?.ActualHeight ?? 0);
+        }
+
+        private async Task<FrameControl> GetFrameControl()
         {
             FrameControl frameControl = AssociatedObject.FindChild<FrameControl>();
             //a bit of hack, we have to wait till the FrameControls are drawn
@@ -44,7 +69,7 @@ namespace ViretTool.PresentationLayer.Behaviors
                 frameControl = AssociatedObject.FindChild<FrameControl>();
             }
 
-            AssociatedObject.ScrollToHorizontalOffset(columnNumber * frameControl?.ActualWidth ?? 0);
+            return frameControl;
         }
     }
 }

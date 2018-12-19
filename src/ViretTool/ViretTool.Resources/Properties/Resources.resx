@@ -193,6 +193,12 @@
     <value>Submit</value>
   </data>
   <data name="MapButtonText" xml:space="preserve">
-    <value>Map</value>
+    <value>M</value>
+  </data>
+  <data name="VideoButtonText" xml:space="preserve">
+    <value>V</value>
+  </data>
+  <data name="SubmitButtonTextShort" xml:space="preserve">
+    <value>S</value>
   </data>
 </root>

@@ -58,7 +58,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <common:VirtualizedUniformGrid Orientation="Horizontal" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" />
+                        <common:VirtualizedUniformGrid Orientation="Horizontal" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.Template>
@@ -69,7 +69,7 @@
                             <ItemsPresenter
                                 SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
                             <i:Interaction.Behaviors>
-                                <behaviors:ScrollToColumnIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}"/>
+                                <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}"/>
                             </i:Interaction.Behaviors>
 
                         </ScrollViewer>

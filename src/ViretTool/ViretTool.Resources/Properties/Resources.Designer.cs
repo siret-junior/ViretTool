@@ -151,7 +151,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Map.
+        ///   Looks up a localized string similar to M.
         /// </summary>
         public static string MapButtonText {
             get {
@@ -259,6 +259,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to S.
+        /// </summary>
+        public static string SubmitButtonTextShort {
+            get {
+                return ResourceManager.GetString("SubmitButtonTextShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Submit.
         /// </summary>
         public static string SubmitWindowTitle {
@@ -282,6 +291,15 @@ namespace ViretTool.Resources.Properties {
         public static string TemporalQuery2Header {
             get {
                 return ResourceManager.GetString("TemporalQuery2Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to V.
+        /// </summary>
+        public static string VideoButtonText {
+            get {
+                return ResourceManager.GetString("VideoButtonText", resourceCulture);
             }
         }
         

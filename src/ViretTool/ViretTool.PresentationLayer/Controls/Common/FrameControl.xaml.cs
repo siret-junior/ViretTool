@@ -38,7 +38,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
-        
+
+        public static readonly RoutedEvent VideoDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(VideoDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
 
         public static readonly DependencyProperty IsMouseOverFrameProperty = DependencyProperty.Register(
             nameof(IsMouseOverFrame),
@@ -63,6 +69,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(int),
             typeof(FrameControl),
             new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
+
+        public static readonly DependencyProperty IsClickedProperty = DependencyProperty.Register(
+            nameof(IsClicked),
+            typeof(bool),
+            typeof(FrameControl),
+            new PropertyMetadata(default(bool)));
 
         public FrameControl()
         {
@@ -97,6 +109,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             set => SetValue(FrameHeightProperty, value);
         }
 
+        public bool IsClicked
+        {
+            get => (bool)GetValue(IsClickedProperty);
+            set => SetValue(IsClickedProperty, value);
+        }
+
         public event RoutedEventHandler AddToQueryClicked
         {
             add => AddHandler(AddToQueryClickedEvent, value);
@@ -127,19 +145,38 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(SortDisplayEvent, value);
         }
 
+        public event RoutedEventHandler VideoDisplay
+        {
+            add => AddHandler(VideoDisplayEvent, value);
+            remove => RemoveHandler(VideoDisplayEvent, value);
+        }
+
 
 
         private void FrameControl_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (IsSelectable)
+            switch (e.ChangedButton)
             {
-                RaiseEvent(new RoutedEventArgs(FrameSelectedEvent));
+                case MouseButton.Left:
+                    IsClicked = true;
+                    break;
+                case MouseButton.Right:
+                    IsClicked = false;
+                    break;
             }
+
+            RaiseEvent(new RoutedEventArgs(FrameSelectedEvent));
         }
 
         private void FrameControl_OnMouseLeave(object sender, MouseEventArgs e)
         {
             IsMouseOverFrame = false;
+        }
+
+        private void Popup_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            FrameControl_OnMouseLeave(sender, e);
+            IsClicked = false;
         }
 
         private void FrameControl_OnMouseMove(object sender, MouseEventArgs e)
@@ -149,19 +186,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void FrameControl_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (!(DataContext is FrameViewModel))
+            if (!(DataContext is FrameViewModel frameViewModel))
             {
                 return;
             }
 
             if (e.Delta > 0)
             {
-                ((FrameViewModel)DataContext).ScrollNext();
+                frameViewModel.ScrollNext();
             }
             else
             {
-                ((FrameViewModel)DataContext).ScrollPrevious();
+                frameViewModel.ScrollPrevious();
             }
+
+            e.Handled = true;
         }
 
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
@@ -182,6 +221,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private void SortedClicked(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
+        }
+
+        private void VideoClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(VideoDisplayEvent));
         }
     }
 }
