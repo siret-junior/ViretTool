@@ -60,30 +60,30 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             if (query != null &&
                 (query.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
                 || query.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off
-                //|| query.ColorSketchFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
-                //|| query.KeywordFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
-                //|| query.SemanticExampleFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.ColorSketchFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.KeywordFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.SemanticExampleFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
                 ))
             {
                 // TODO: filters
                 bool[] colorSaturationMask = ColorSaturationFilter.GetFilterMask(query.ColorSaturationQuery);
                 bool[] percentOfBlackMask = PercentOfBlackColorFilter.GetFilterMask(query.PercentOfBlackQuery);
 
-                //bool[] colorSignatureRankingMask 
-                //    = ColorSignatureRankingFilter.GetFilterMask(query.ColorSketchFilteringQuery, colorSignatureRanking);
-                //bool[] keywordRankingMask 
-                //    = KeywordRankingFilter.GetFilterMask(query.KeywordFilteringQuery, keywordRanking);
-                //bool[] semanticExampleMask 
-                //    = SemanticExampleRankingFilter.GetFilterMask(query.SemanticExampleFilteringQuery, semanticExampleRanking);
+                bool[] colorSignatureRankingMask
+                    = ColorSignatureRankingFilter.GetFilterMask(query.ColorSketchFilteringQuery, colorSignatureRanking);
+                bool[] keywordRankingMask
+                    = KeywordRankingFilter.GetFilterMask(query.KeywordFilteringQuery, keywordRanking);
+                bool[] semanticExampleMask
+                    = SemanticExampleRankingFilter.GetFilterMask(query.SemanticExampleFilteringQuery, semanticExampleRanking);
 
 
                 // aggregate filters
                 List<bool[]> masks = new List<bool[]>(5);
                 if (colorSaturationMask != null) { masks.Add(colorSaturationMask); }
                 if (percentOfBlackMask != null) { masks.Add(percentOfBlackMask); }
-                //if (colorSignatureRankingMask != null) { masks.Add(colorSignatureRankingMask); }
-                //if (keywordRankingMask != null) { masks.Add(keywordRankingMask); }
-                //if (semanticExampleMask != null) { masks.Add(semanticExampleMask); }
+                if (colorSignatureRankingMask != null) { masks.Add(colorSignatureRankingMask); }
+                if (keywordRankingMask != null) { masks.Add(keywordRankingMask); }
+                if (semanticExampleMask != null) { masks.Add(semanticExampleMask); }
                 bool[] aggregatedMask = AggregateMasks(masks);
 
                 // apply filters

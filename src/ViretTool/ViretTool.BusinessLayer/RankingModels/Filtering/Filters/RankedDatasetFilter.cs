@@ -16,8 +16,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 
         private const int SAMPLE_SIZE = 1000;
         private const int RANDOM_SEED = 42;
-        private readonly int[] _sampleIndexes = new int[SAMPLE_SIZE];
-        private readonly double[] _sampleValues = new double[SAMPLE_SIZE];
+        private int[] _sampleIndexes;
+        private double[] _sampleValues;
 
         // TODO: some other way of linking similarity modules to this filtering module
         //public RankingBuffer InputRanking { get; private set; }
@@ -35,6 +35,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // initialize sampling indexes
                 if (_sampleIndexes == null)
                 {
+                    _sampleIndexes = new int[SAMPLE_SIZE];
+                    _sampleValues = new double[SAMPLE_SIZE];
+
                     Random random = new Random(RANDOM_SEED);
                     for (int i = 0; i < SAMPLE_SIZE; i++)
                     {
@@ -78,7 +81,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             // set mask using the threshold
             Parallel.For(0, InputRanking.Ranks.Length, i =>
             {
-                _includeMask[i] = InputRanking.Ranks[i] > threshold;
+                _includeMask[i] = InputRanking.Ranks[i] >= threshold;
                 _excludeMask[i] = !_includeMask[i];
             });
 
@@ -95,10 +98,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             {
                 case ThresholdFilteringQuery.State.IncludeAboveThreshold:
                     Include((float)query.Threshold);
+                    Mask = ExcludeMask;
                     return Mask;
                 case ThresholdFilteringQuery.State.ExcludeAboveThreshold:
                     Include((float)query.Threshold);
-                    Mask = ExcludeMask;
                     return Mask;
                 case ThresholdFilteringQuery.State.Off:
                     return null;
