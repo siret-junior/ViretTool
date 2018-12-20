@@ -95,6 +95,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
                 _isFirstQueryPrimary = value;
                 NotifyOfPropertyChange();
+                OnQuerySettingsChanged();
             }
         }
 
