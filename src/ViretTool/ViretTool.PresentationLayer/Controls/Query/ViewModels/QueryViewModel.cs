@@ -157,7 +157,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                KeywordUseForSorting = _keywordQueryResult?.Query.Any() == true;
+                KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
             }
         }
@@ -273,7 +273,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _sketchQueryResult = value;
-                ColorUseForSorting = SketchQueryResult?.SketchColorPoints.Any() == true;
+                ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
                 NotifyOfPropertyChange();
             }
         }
