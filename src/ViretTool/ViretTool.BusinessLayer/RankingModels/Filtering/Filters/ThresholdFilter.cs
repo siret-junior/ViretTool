@@ -1,57 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.DataLayer.DataIO.FilterIO;
 using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 {
-    public class ThresholdFilter : MaskFilter
+    public class ThresholdFilter : FilterBase, IColorSaturationFilter, IPercentOfBlackFilter
     {
-        // dataset dependency
-        public Dataset Dataset { get; private set; }
+        private readonly float[] _frameAttributes;
+
+        public float Threshold { get; private set; }
 
 
-        public ThresholdFilter(int itemCount) : base(new bool[itemCount])
+        public ThresholdFilter(float[] frameAttributes) : base(new bool[frameAttributes.Length])
         {
-            //if (!System.IO.File.Exists(frameAttributeFileName))
-            //{
-            //    //if (dataset.UseOldDatasetID)
-            //    //    return;
-
-            //    throw new Exception("Filter was not created to " + frameAttributeFileName);
-            //}
-            //using (System.IO.BinaryReader BR = new System.IO.BinaryReader(System.IO.File.OpenRead(frameAttributeFileName)))
-            //{
-            //    if (!mDataset.ReadAndCheckFileHeader(BR))
-            //        throw new Exception("Filter header mismatch. Delete file " + frameAttributeFileName);
-
-            //    int count = BR.ReadInt32();
-            //    if (count < dataset.Frames.Count)
-            //        throw new Exception("Too few filter values in file " + frameAttributeFileName);
-
-            //    count = dataset.Frames.Count;
-
-            //    mFrameAttribute = new float[count];
-            //    for (int i = 0; i < count; i++)
-            //        mFrameAttribute[i] = BR.ReadSingle();
-            //}
+            _frameAttributes = frameAttributes;
         }
 
-        public void SetMaskTo(float threshold)
+        public static ThresholdFilter FromDirectory(string inputDirectory, string extension)
         {
-            //Threshold = threshold;
-            //if (mFrameAttribute == null)
-            //    return;
-
-            //// set mask using the threshold
-            //bool[] mask = Mask;
-            //Parallel.For(0, mask.Length, i =>
-            //    mask[i] = mFrameAttribute[i] > threshold);
-
-            //Mask = mask; // sets also inverted mask
+            string filterFilename = Directory.GetFiles(inputDirectory)
+                .Where(file => file.EndsWith(extension)).First();
+            float[] filterAttributes = MaskFilterReader.ReadFilter(filterFilename);
+            ThresholdFilter thresholdFilter = new ThresholdFilter(filterAttributes);
+            return thresholdFilter;
         }
 
+
+        public void IncludeAbove(float threshold)
+        {
+            Threshold = threshold;
+            
+            // set mask using the threshold
+            Parallel.For(0, _includeMask.Length, i =>
+            {
+                _includeMask[i] = _frameAttributes[i] > threshold;
+                _excludeMask[i] = !_includeMask[i];
+            });
+
+            Mask = IncludeMask;
+        }
+
+        public void ExcludeAbove(float threshold)
+        {
+            Threshold = threshold;
+
+            // set mask using the threshold
+            Parallel.For(0, _includeMask.Length, i =>
+            {
+                _includeMask[i] = _frameAttributes[i] <= threshold;
+                _excludeMask[i] = !_includeMask[i];
+            });
+
+            Mask = IncludeMask;
+        }
+
+
+        public bool[] GetFilterMask(ThresholdFilteringQuery query)
+        {
+            switch (query.FilterState)
+            {
+                case ThresholdFilteringQuery.State.IncludeAboveThreshold:
+                    IncludeAbove((float)query.Threshold);
+                    return Mask;
+                case ThresholdFilteringQuery.State.ExcludeAboveThreshold:
+                    ExcludeAbove((float)query.Threshold);
+                    return Mask;
+                case ThresholdFilteringQuery.State.Off:
+                    return null;
+                default:
+                    throw new NotImplementedException(
+                        $"Filter state {Enum.GetName(typeof(FilterState), query.FilterState)} not expected.");
+            }
+        }
     }
 }

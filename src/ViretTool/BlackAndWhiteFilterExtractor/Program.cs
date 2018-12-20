@@ -21,9 +21,7 @@ namespace BlackAndWhiteFilterExtractor
             string inputFilelist = args[3];
             string outputFilePrefix = args[4];
 
-
-            MaskFilterReader reader = new MaskFilterReader(outputFilePrefix + ".bwfilter");
-
+            
             // load dataset header
             byte[] datasetHeader;
             using (BinaryReader headerReader = new BinaryReader(
@@ -90,7 +88,7 @@ namespace BlackAndWhiteFilterExtractor
             using (MaskFilterWriter pbcfilter =
                 new MaskFilterWriter(outputFilePrefix + ".pbcfilter", datasetHeader, pbValues.Length))
             {
-                pbcfilter.WriteFilter(bwDeltaValues);
+                pbcfilter.WriteFilter(pbValues);
             }
         }
 

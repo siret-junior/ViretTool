@@ -9,14 +9,6 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public class RankingModule : IRankingModule
     {
-        public RankingModule(ISimilarityModule similarityModule, IFilteringModule filteringModule)
-        {
-            SimilarityModule = similarityModule;
-            FilteringModule = filteringModule;
-        }
-
-        public int FrameCount { get; private set; }
-
         public ISimilarityModule SimilarityModule { get; }
         public IFilteringModule FilteringModule { get; }
 
@@ -25,6 +17,14 @@ namespace ViretTool.BusinessLayer.RankingModels
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer IntermediateRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
+
+
+        public RankingModule(ISimilarityModule similarityModule, IFilteringModule filteringModule)
+        {
+            SimilarityModule = similarityModule;
+            FilteringModule = filteringModule;
+        }
+
 
         public void ComputeRanking(Query query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
@@ -50,7 +50,10 @@ namespace ViretTool.BusinessLayer.RankingModels
 
                 // compute partial rankings (if neccessary)
                 SimilarityModule.ComputeRanking(query.SimilarityQuery, InputRanking, IntermediateRanking);
-                FilteringModule.ComputeRanking(query.FilteringQuery, IntermediateRanking, OutputRanking);
+                FilteringModule.ComputeRanking(query.FilteringQuery, IntermediateRanking, OutputRanking,
+                    SimilarityModule.ColorSketchModel.OutputRanking,
+                    SimilarityModule.KeywordModel.OutputRanking,
+                    SimilarityModule.SemanticExampleModel.OutputRanking);
 
                 // cache the query
                 CachedQuery = query;

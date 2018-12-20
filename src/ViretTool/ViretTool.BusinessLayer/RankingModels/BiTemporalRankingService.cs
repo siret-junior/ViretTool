@@ -15,19 +15,8 @@ namespace ViretTool.BusinessLayer.RankingModels
     public class BiTemporalRankingService 
         : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
     {
-        public BiTemporalRankingService(
-            IDatasetService datasetService,
-            IRankingModule primaryRankingModule,
-            IRankingModule secondaryRankingModule,
-            IFilteringModule filteringModule)
-        {
-            DatasetService = datasetService;
-            PrimaryRankingModule = primaryRankingModule;
-            SecondaryRankingModule = secondaryRankingModule;
-            FilteringModule = filteringModule;
-        }
-
         public IDatasetService DatasetService { get; }
+        //public int FrameCount { get; }
 
         public IRankingModule PrimaryRankingModule { get; }
         public IRankingModule SecondaryRankingModule { get; }
@@ -38,6 +27,22 @@ namespace ViretTool.BusinessLayer.RankingModels
 
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
+
+
+        public BiTemporalRankingService(
+            IDatasetService datasetService,
+            //int frameCount,
+            IRankingModule primaryRankingModule,
+            IRankingModule secondaryRankingModule,
+            IFilteringModule filteringModule)
+        {
+            DatasetService = datasetService;
+            //FrameCount = frameCount;
+            PrimaryRankingModule = primaryRankingModule;
+            SecondaryRankingModule = secondaryRankingModule;
+            FilteringModule = filteringModule;
+        }
+        
 
         public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
         {
@@ -52,6 +57,8 @@ namespace ViretTool.BusinessLayer.RankingModels
             {
                 InputRanking = RankingBuffer.Zeros("InitialRanking", DatasetService.FrameCount);
                 OutputRanking = RankingBuffer.Zeros("OutputRanking", DatasetService.FrameCount);
+                //InputRanking = RankingBuffer.Zeros("InitialRanking", FrameCount);
+                //OutputRanking = RankingBuffer.Zeros("OutputRanking", FrameCount);
             }
 
             if (query != null)

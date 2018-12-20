@@ -2,7 +2,7 @@
 {
     public class ThresholdFilteringQuery
     {
-        public enum State { FilterBelowThreshold, FilterAboveThreshold, Off }
+        public enum State { IncludeAboveThreshold, ExcludeAboveThreshold, Off }
 
         public State FilterState { get; private set; }
         public double Threshold { get; private set; }

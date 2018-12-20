@@ -21,20 +21,26 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private readonly IDatasetServicesManager _datasetServicesManager;
 
         public EventHandler QuerySettingsChanged;
-        private FilterControl.FilterState _bwFilterState;
-        private double _bwFilterValue;
-        private bool _colorUseForSorting;
-        private double _colorValue;
+        
+        // TODO: load default values from a settings file
+        private FilterControl.FilterState _bwFilterState = FilterControl.FilterState.Off;
+        private double _bwFilterValue = 90;
+        private FilterControl.FilterState _percentageBlackFilterState = FilterControl.FilterState.Off;
+        private double _percentageBlackFilterValue = 65;
+
+        private double _keywordValue = 50;
+        private bool _keywordUseForSorting = false;
         private KeywordQueryResult _keywordQueryResult;
-        private bool _keywordUseForSorting;
-        private double _keywordValue;
-        private FilterControl.FilterState _percentageBlackFilterState;
-        private double _percentageBlackFilterValue;
-        private bool _semanticUseForSorting;
-        private double _semanticValue;
+
+        private double _colorValue = 90;
+        private bool _colorUseForSorting = false;
         private SketchQueryResult _sketchQueryResult;
         private int _canvasWidth = 240;
         private int _canvasHeight = 320;
+
+        private double _semanticValue = 70;
+        private bool _semanticUseForSorting = false;
+
 
         public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
         {
@@ -337,11 +343,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             FinalQuery = new BusinessLayer.RankingModels.Queries.Query(
                 new SimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),
                 new FilteringQuery(
-                    new ThresholdFilteringQuery(ConvertToFilterState(BwFilterState), BwFilterValue),
-                    new ThresholdFilteringQuery(ConvertToFilterState(PercentageBlackFilterState), PercentageBlackFilterValue),
-                    new ThresholdFilteringQuery(ThresholdFilteringQuery.State.FilterAboveThreshold, ColorValue),
-                    new ThresholdFilteringQuery(ThresholdFilteringQuery.State.FilterAboveThreshold, KeywordValue),
-                    new ThresholdFilteringQuery(ThresholdFilteringQuery.State.FilterAboveThreshold, SemanticValue)));
+                    new ThresholdFilteringQuery(ConvertToFilterState(BwFilterState), BwFilterValue * 0.01),
+                    new ThresholdFilteringQuery(ConvertToFilterState(PercentageBlackFilterState), PercentageBlackFilterValue * 0.01),
+                    new ThresholdFilteringQuery(ThresholdFilteringQuery.State.ExcludeAboveThreshold, ColorValue * 0.01),
+                    new ThresholdFilteringQuery(ThresholdFilteringQuery.State.ExcludeAboveThreshold, KeywordValue * 0.01),
+                    new ThresholdFilteringQuery(ThresholdFilteringQuery.State.ExcludeAboveThreshold, SemanticValue * 0.01)));
 
             QuerySettingsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -351,9 +357,9 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             switch (filterState)
             {
                 case FilterControl.FilterState.Y:
-                    return ThresholdFilteringQuery.State.FilterAboveThreshold;
+                    return ThresholdFilteringQuery.State.ExcludeAboveThreshold;
                 case FilterControl.FilterState.N:
-                    return ThresholdFilteringQuery.State.FilterBelowThreshold;
+                    return ThresholdFilteringQuery.State.IncludeAboveThreshold;
                 case FilterControl.FilterState.Off:
                     return ThresholdFilteringQuery.State.Off;
                 default:

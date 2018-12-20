@@ -27,6 +27,20 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
         }
 
 
+        public override void Dispose()
+        {
+            BaseBlobReader.Dispose();
+        }
+
+        public static float[] ReadFilter(string inputFile)
+        {
+            using (MaskFilterReader reader = new MaskFilterReader(inputFile))
+            {
+                return reader.ReadFilter();
+            }
+        }
+
+
         public float[] ReadFilter()
         {
             // there is only one blob with all filter values
@@ -34,11 +48,6 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
         }
 
         
-        public override void Dispose()
-        {
-            BaseBlobReader.Dispose();
-        }
-
         private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
         {
             string filetype = reader.ReadString();

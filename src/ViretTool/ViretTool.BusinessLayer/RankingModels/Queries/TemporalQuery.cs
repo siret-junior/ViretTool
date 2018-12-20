@@ -5,13 +5,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     public class TemporalQuery
     {
         public Query[] TemporalQueries { get; private set; }
-
         
+
         public TemporalQuery(Query[] temporalQueries)
         {
             TemporalQueries = temporalQueries;
         }
         
+
         public override bool Equals(object obj)
         {
             return obj is TemporalQuery query &&

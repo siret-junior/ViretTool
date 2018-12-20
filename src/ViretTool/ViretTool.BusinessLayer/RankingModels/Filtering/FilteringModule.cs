@@ -3,97 +3,156 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.RankingModels.Filtering.Filters;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Filtering
 {
     public class FilteringModule : IFilteringModule
     {
-
+        // color filters
+        public IColorSaturationFilter ColorSaturationFilter { get; }
+        public IPercentOfBlackFilter PercentOfBlackColorFilter { get; }
+        // ranking model percent of dataset filters
+        public IColorSignatureRankedDatasetFilter ColorSignatureRankingFilter { get; }
+        public IKeywordRankedDatasetFilter KeywordRankingFilter { get; }
+        public ISemanticExampleRankedDatasetFilter SemanticExampleRankingFilter { get; }
 
         public FilteringQuery CachedQuery { get; set; }
+        public RankingBuffer InputRanking { get; private set; }
+        public RankingBuffer OutputRanking { get; private set; }
 
-        public RankingBuffer InputRanking { get; set; }
-        public RankingBuffer OutputRanking { get; set; }
-
-        // TODO: add modules
+        private bool[] _aggregatedFilterMask;
 
 
-        public void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
+        public FilteringModule(
+            IColorSaturationFilter colorSaturationFilter,
+            IPercentOfBlackFilter percentOfBlackColorFilter,
+            IColorSignatureRankedDatasetFilter colorSignatureRankingFilter,
+            IKeywordRankedDatasetFilter keywordRankingFilter,
+            ISemanticExampleRankedDatasetFilter semanticExampleRankingFilter)
+        {
+            ColorSaturationFilter = colorSaturationFilter;
+            PercentOfBlackColorFilter = percentOfBlackColorFilter;
+            ColorSignatureRankingFilter = colorSignatureRankingFilter;
+            KeywordRankingFilter = keywordRankingFilter;
+            SemanticExampleRankingFilter = semanticExampleRankingFilter;
+        }
+
+
+        public void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking,
+            RankingBuffer colorSignatureRanking, 
+            RankingBuffer keywordRanking, 
+            RankingBuffer semanticExampleRanking)
         {
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
             
-            // TODO if all filters are off
             if ((query == null && CachedQuery == null) 
                 || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
             {
                 OutputRanking.IsUpdated = false;
                 return;
             }
+            OutputRanking.IsUpdated = true;
 
-
-            if (query != null)
+            // if not all filters are off
+            if (query != null &&
+                (query.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off
+                //|| query.ColorSketchFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
+                //|| query.KeywordFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
+                //|| query.SemanticExampleFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
+                ))
             {
                 // TODO: filters
+                bool[] colorSaturationMask = ColorSaturationFilter.GetFilterMask(query.ColorSaturationQuery);
+                bool[] percentOfBlackMask = PercentOfBlackColorFilter.GetFilterMask(query.PercentOfBlackQuery);
+
+                //bool[] colorSignatureRankingMask 
+                //    = ColorSignatureRankingFilter.GetFilterMask(query.ColorSketchFilteringQuery, colorSignatureRanking);
+                //bool[] keywordRankingMask 
+                //    = KeywordRankingFilter.GetFilterMask(query.KeywordFilteringQuery, keywordRanking);
+                //bool[] semanticExampleMask 
+                //    = SemanticExampleRankingFilter.GetFilterMask(query.SemanticExampleFilteringQuery, semanticExampleRanking);
+
 
                 // aggregate filters
-                RankingBuffer filteredRanking = null;
-                // TODO:
+                List<bool[]> masks = new List<bool[]>(5);
+                if (colorSaturationMask != null) { masks.Add(colorSaturationMask); }
+                if (percentOfBlackMask != null) { masks.Add(percentOfBlackMask); }
+                //if (colorSignatureRankingMask != null) { masks.Add(colorSignatureRankingMask); }
+                //if (keywordRankingMask != null) { masks.Add(keywordRankingMask); }
+                //if (semanticExampleMask != null) { masks.Add(semanticExampleMask); }
+                bool[] aggregatedMask = AggregateMasks(masks);
 
-                // cache result
+                // apply filters
+                ApplyFilters(aggregatedMask, inputRanking, outputRanking);
+
+                // cache query and result (result is cached in output ranking)
                 CachedQuery = query;
-                //OutputRanking.Ranks = filteredRanking.Ranks;
-                //OutputRanking.IsUpdated = true;
-
-                // TODO: temp fix:
-                OutputRanking.Ranks = InputRanking.Ranks;
-                OutputRanking.IsUpdated = InputRanking.IsUpdated;
             }
             else
             {
-                // TODO just reassign array reference (also in submodels)
-                // null query, set to 0 rank
-                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
-                {
-                    if (InputRanking.Ranks[i] == float.MinValue)
-                    {
-                        OutputRanking.Ranks[i] = float.MinValue;
-                    }
-                    else
-                    {
-                        OutputRanking.Ranks[i] = 0;
-                    }
-                }
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
             }
         }
 
-        public static RankingBuffer ApplyFilters(RankingBuffer ranking, bool[][] masks)
+        
+        private bool[] AggregateMasks(List<bool[]> masks)
         {
-            // TODO:
-            RankingBuffer resultRanking = RankingBuffer.Zeros("TODO", ranking.Ranks.Length);
-
-            Parallel.For(0, ranking.Ranks.Length, itemId =>
+            // check null input
+            if (masks == null || masks.Count == 0)
             {
-                if (ranking.Ranks[itemId] < 0)
-                {
-                    // ignore already filtered ranks
-                    return;
-                }
+                throw new ArgumentException("Input masks are empty!");
+            }
 
-                for (int iMask = 0; iMask < masks.Length; iMask++)
+            // initialize result
+            if (_aggregatedFilterMask == null || _aggregatedFilterMask.Length != masks[0].Length)
+            {
+                _aggregatedFilterMask = new bool[masks[0].Length];
+            }
+            
+            // aggregate masks
+            int masksCount = masks.Count;
+            Parallel.For(0, _aggregatedFilterMask.Length, index =>
+            {
+                for (int iMask = 0; iMask < masksCount; iMask++)
                 {
-                    if (masks[iMask][itemId] == false)
+                    if (masks[iMask][index] == true)
                     {
-                        resultRanking.Ranks[itemId] = -1;
-                        return;
+                        _aggregatedFilterMask[index] = true;
+                    }
+                    else
+                    {
+                        _aggregatedFilterMask[index] = false;
+                        break;
                     }
                 }
-                // not filtered, copy ranking
-                resultRanking.Ranks[itemId] = ranking.Ranks[itemId];
             });
 
-            return resultRanking;
+            return _aggregatedFilterMask;
         }
+
+        private static void ApplyFilters(bool[] mask, RankingBuffer inputRanking, RankingBuffer outputRanking)
+        {
+            // TODO: optimize: just copy the input ranking and then rewrite filtered ranks
+
+            Parallel.For(0, inputRanking.Ranks.Length, itemId =>
+            {
+                if (inputRanking.Ranks[itemId] == float.MinValue
+                    || mask[itemId] == false)
+                {
+                    // ignore already filtered ranks
+                    outputRanking.Ranks[itemId] = float.MinValue;
+                    return;
+                }
+                else
+                {
+                    outputRanking.Ranks[itemId] = inputRanking.Ranks[itemId];
+                }
+            });
+        }
+
     }
 }
