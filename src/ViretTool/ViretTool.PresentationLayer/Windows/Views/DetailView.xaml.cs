@@ -18,7 +18,7 @@ namespace ViretTool.PresentationLayer.Windows.Views
     /// <summary>
     /// Interaction logic for DetailView.xaml
     /// </summary>
-    public partial class DetailView : Window
+    public partial class DetailView
     {
         public DetailView()
         {

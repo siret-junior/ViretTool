@@ -39,6 +39,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
         public event EventHandler<FrameViewModel> FrameForVideoChanged;
+        public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
         public event EventHandler<(FrameViewModel SelectedFrame, IList<FrameViewModel> TopFrames)> FrameForSortChanged;
         public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;
 
@@ -103,6 +104,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameForVideoChanged?.Invoke(this, frameViewModel);
         }
 
+        public void OnScrollVideoDisplay(FrameViewModel frameViewModel)
+        {
+            FrameForScrollVideoChanged?.Invoke(this, frameViewModel.Clone());
+        }
+
         protected virtual void BeforeEventAction()
         {
         }
@@ -122,7 +128,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected FrameViewModel ConvertThumbnailToViewModel(int videoId, int frameNumber)
         {
-            return new FrameViewModel(videoId, frameNumber, _datasetServicesManager.CurrentDataset.ThumbnailService);
+            return new FrameViewModel(videoId, frameNumber, _datasetServicesManager);
         }
 
         private IEnumerable<FrameViewModel> LoadAllThumbnails(int videoId)

@@ -49,8 +49,11 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action AddToQueryClicked($dataContext)];
-                                                                 [Event FramesSubmitted] = [Action FramesSubmitted($dataContext)];" 
+                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
+                                                                 [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
+                                                                 [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
+                                                                 [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
+                                                                 [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
                                              IsSelectable="True"
                                              FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                              FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
@@ -58,18 +61,18 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <common:VirtualizedUniformGrid Orientation="Horizontal" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
+                        <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.Template>
                     <ControlTemplate>
-                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                       Padding="{TemplateBinding Control.Padding}"
                                       Focusable="False">
                             <ItemsPresenter
                                 SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
                             <i:Interaction.Behaviors>
-                                <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}"/>
+                                <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToColumn="{Binding ScrollToColumn, Mode=OneWayToSource}" ScrollToRow="{Binding ScrollToRow, Mode=OneWayToSource}"/>
                             </i:Interaction.Behaviors>
 
                         </ScrollViewer>

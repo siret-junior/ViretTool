@@ -201,4 +201,7 @@
   <data name="SubmitButtonTextShort" xml:space="preserve">
     <value>S</value>
   </data>
+  <data name="DetailWindowTitle" xml:space="preserve">
+    <value>Detail view</value>
+  </data>
 </root>

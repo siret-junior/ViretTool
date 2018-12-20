@@ -97,6 +97,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Detail view.
+        /// </summary>
+        public static string DetailWindowTitle {
+            get {
+                return ResourceManager.GetString("DetailWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         public static string FileHeader {

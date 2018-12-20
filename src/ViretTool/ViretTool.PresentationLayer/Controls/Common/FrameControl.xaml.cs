@@ -45,6 +45,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
+        public static readonly RoutedEvent ScrollVideoDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(ScrollVideoDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
 
         public static readonly DependencyProperty IsMouseOverFrameProperty = DependencyProperty.Register(
             nameof(IsMouseOverFrame),
@@ -151,6 +157,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(VideoDisplayEvent, value);
         }
 
+        public event RoutedEventHandler ScrollVideoDisplay
+        {
+            add => AddHandler(ScrollVideoDisplayEvent, value);
+            remove => RemoveHandler(ScrollVideoDisplayEvent, value);
+        }
+
 
 
         private void FrameControl_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -191,6 +203,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return;
             }
 
+            IsClicked = true;
+            RaiseEvent(new RoutedEventArgs(ScrollVideoDisplayEvent));
             if (e.Delta > 0)
             {
                 frameViewModel.ScrollNext();

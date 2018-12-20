@@ -89,15 +89,15 @@
                 </Grid.RowDefinitions>
 
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="2*" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition Height="80" />
-                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="110" />
+                    </Grid.ColumnDefinitions>
 
-                    <ContentControl Grid.Row="0" x:Name="QueryResults" />
-                    <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
-                    <ContentControl Grid.Row="2" x:Name="DetailView" />
+                    <ContentControl Grid.Column="0" x:Name="QueryResults" />
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                    <ContentControl Grid.Column="2" x:Name="DetailView" />
                 </Grid>
             </Grid>
         </Grid>

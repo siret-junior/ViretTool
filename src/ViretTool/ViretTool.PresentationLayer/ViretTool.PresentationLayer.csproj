@@ -114,6 +114,7 @@
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModelBase.cs" />
     <Compile Include="Controls\Common\FrameViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\PageDisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\ScrollableDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml.cs">
       <DependentUpon>PageDisplayControlView.xaml</DependentUpon>
@@ -128,6 +129,7 @@
     <Compile Include="Controls\Query\Views\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanAndToVisibilityConverter.cs" />
     <Compile Include="Windows\ViewModels\DetailViewModel.cs" />
     <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />
     <Compile Include="Windows\Views\DetailView.xaml.cs">

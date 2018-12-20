@@ -12,10 +12,9 @@ using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 
 namespace ViretTool.PresentationLayer.Windows.ViewModels
 {
-    public class DetailViewModel : DisplayControlViewModelBase
+    public class DetailViewModel : ScrollableDisplayControlViewModel
     {
-        private int _columnCount;
-        private int _rowCount;
+        private bool _isBusy;
 
         public DetailViewModel(
             ILogger logger,
@@ -23,44 +22,29 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             ColumnCount = 10;
             RowCount = 10;
+            DisplayName = Resources.Properties.Resources.DetailWindowTitle;
         }
 
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();
 
-        public int ColumnCount
+        public bool IsBusy
         {
-            get => _columnCount;
+            get => _isBusy;
             set
             {
-                if (_columnCount == value)
+                if (_isBusy == value)
                 {
                     return;
                 }
 
-                _columnCount = value;
+                _isBusy = value;
                 NotifyOfPropertyChange();
             }
         }
-
-        public int RowCount
-        {
-            get => _rowCount;
-            set
-            {
-                if (_rowCount == value)
-                {
-                    return;
-                }
-
-                _rowCount = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public Action<int> ScrollToRow { private get; set; }
 
         public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)
         {
+            IsBusy = true;
             await base.LoadVideoForFrame(selectedFrame);
 
             HashSet<int> shotFrames = _datasetServicesManager.CurrentDataset.DatasetService.GetShotFrameNumbersForVideo(selectedFrame.VideoId)
@@ -71,7 +55,29 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _loadedFrames.Where(f => shotFrames.Contains(f.FrameNumber)).Append(_loadedFrames.Last()).Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber)));
 
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
-            ScrollToFrame(newlySelectedFrame);
+            ScrollToFrameHorizontally(newlySelectedFrame);
+            IsBusy = false;
+        }
+
+        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, IList<FrameViewModel> topFrames)
+        {
+            IsBusy = true;
+            FrameViewModel[] sortedFrameIds = await Task.Run(() => GetSortedFrameIds(topFrames));
+
+            _loadedFrames = sortedFrameIds.Select(f => f.Clone()).ToList();
+            UpdateVisibleFrames();
+
+            const int sampledFramesCount = 10;
+            SampledFrames.Clear();
+            SampledFrames.AddRange(
+                Enumerable.Range(0, sampledFramesCount)
+                          .Select(i => _loadedFrames[_loadedFrames.Count / sampledFramesCount * i])
+                          .Append(_loadedFrames.Last())
+                          .Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber)));
+
+            FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
+            ScrollToFrameHorizontally(newlySelectedFrame);
+            IsBusy = false;
         }
 
         public void OnKeyUp(KeyEventArgs e)
@@ -90,26 +96,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public void OnFrameSelectedSampled(FrameViewModel selectedFrame)
         {
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
-            ScrollToFrame(newlySelectedFrame);
-        }
-
-        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, IList<FrameViewModel> topFrames)
-        {
-            FrameViewModel[] sortedFrameIds = await Task.Run(() => GetSortedFrameIds(topFrames));
-
-            _loadedFrames = sortedFrameIds.Select(f => f.Clone()).ToList();
-            UpdateVisibleFrames();
-
-            const int sampledFramesCount = 10;
-            SampledFrames.Clear();
-            SampledFrames.AddRange(
-                Enumerable.Range(0, sampledFramesCount)
-                          .Select(i => _loadedFrames[_loadedFrames.Count / sampledFramesCount * i])
-                          .Append(_loadedFrames.Last())
-                          .Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber)));
-
-            FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
-            ScrollToFrame(newlySelectedFrame);
+            ScrollToFrameHorizontally(newlySelectedFrame);
         }
 
         private FrameViewModel[] GetSortedFrameIds(IList<FrameViewModel> topFrames)
@@ -137,22 +124,19 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         protected override void UpdateVisibleFrames()
         {
-            VisibleFrames.Clear();
-            VisibleFrames.AddRange(_loadedFrames);
-        }
-
-        private void ScrollToFrame(FrameViewModel frameViewModel)
-        {
-            if (frameViewModel == null || ColumnCount == 0)
+            if (VisibleFrames.Count < _loadedFrames.Count)
             {
-                ScrollToRow(0);
-                return;
+                VisibleFrames.AddRange(_loadedFrames.Skip(VisibleFrames.Count));
+            }
+            else if (VisibleFrames.Count > _loadedFrames.Count)
+            {
+                VisibleFrames.RemoveRange(VisibleFrames.Skip(_loadedFrames.Count).ToList());
             }
 
-            int indexOfFrame = _loadedFrames.IndexOf(frameViewModel);
-            int rowWithFrame = indexOfFrame / ColumnCount;
-            int columnNumberToScroll = Math.Max(0, rowWithFrame - RowCount / 2); //frame should be in the middle
-            ScrollToRow(columnNumberToScroll);
+            for (int i = 0; i < _loadedFrames.Count; i++)
+            {
+                VisibleFrames[i] = _loadedFrames[i];
+            }
         }
         
     }

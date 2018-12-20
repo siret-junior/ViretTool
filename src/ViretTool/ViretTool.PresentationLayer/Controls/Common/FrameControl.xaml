@@ -5,12 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
+             xmlns:converters="clr-namespace:ViretTool.PresentationLayer.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:FrameViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
             <Grid x:Key="CommonControls" x:Shared="False">
                 <Image Name="Image"
                        Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}}" 
@@ -37,8 +39,13 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Name="Add" Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked"
-                                Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Button Name="Add" Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked">
+                            <Button.Visibility>
+                                <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Path="IsSelectable" />
+                                    <Binding Path="CanAddToQuery" />
+                                </MultiBinding>
+                            </Button.Visibility>
                             <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+</TextBlock>
                         </Button>
                         <Button Name="Remove" Grid.Column="1" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked"

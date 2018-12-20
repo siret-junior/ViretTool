@@ -186,4 +186,7 @@
   <data name="SubmitWindowTitle" xml:space="preserve">
     <value>Poslat</value>
   </data>
+  <data name="DetailWindowTitle" xml:space="preserve">
+    <value>Detailní pohled</value>
+  </data>
 </root>

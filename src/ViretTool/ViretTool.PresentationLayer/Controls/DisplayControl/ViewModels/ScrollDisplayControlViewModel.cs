@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -10,11 +9,10 @@ using ViretTool.PresentationLayer.Windows.ViewModels;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
-    public class ScrollDisplayControlViewModel : DisplayControlViewModelBase
+    public class ScrollDisplayControlViewModel : ScrollableDisplayControlViewModel
     {
-        private int _columnCount;
         private bool _isBusy;
-        private int _rowCount;
+        private FrameViewModel _lastSelectedFrame;
 
         public ScrollDisplayControlViewModel(
             ILogger logger,
@@ -23,21 +21,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
         }
 
-        public int ColumnCount
-        {
-            get => _columnCount;
-            set
-            {
-                if (_columnCount == value)
-                {
-                    return;
-                }
-
-                _columnCount = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
+        
         public bool IsBusy
         {
             get => _isBusy;
@@ -53,31 +37,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public int RowCount
-        {
-            get => _rowCount;
-            set
-            {
-                if (_rowCount == value)
-                {
-                    return;
-                }
-
-                _rowCount = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public Action<int> ScrollToColumn { private get; set; }
-
-        
-
         public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)
         {
+            if (_lastSelectedFrame?.VideoId == selectedFrame.VideoId)
+            {
+                return;
+            }
+
+            _lastSelectedFrame = selectedFrame;
             await base.LoadVideoForFrame(selectedFrame);
 
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
-            ScrollToFrame(newlySelectedFrame);
+            ScrollToFrameHorizontally(newlySelectedFrame);
         }
 
         protected override void UpdateVisibleFrames()
@@ -87,20 +58,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             VisibleFrames.Clear();
             VisibleFrames.AddRange(_loadedFrames);
-        }
-
-        private void ScrollToFrame(FrameViewModel frameViewModel)
-        {
-            if (frameViewModel == null || RowCount == 0)
-            {
-                ScrollToColumn(0);
-                return;
-            }
-
-            int indexOfFrame = _loadedFrames.IndexOf(frameViewModel);
-            int columnWithFrame = indexOfFrame / RowCount;
-            int columnNumberToScroll = Math.Max(0, columnWithFrame - ColumnCount / 2); //frame should be in the middle
-            ScrollToColumn(columnNumberToScroll);
         }
     }
 }

@@ -52,6 +52,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
+            queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await detailView.LoadVideoForFrame(selectedFrame);
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (var display in displays)
             {
@@ -229,7 +230,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private async Task<bool?> ShowDialogAsync(object viewModel)
         {
             await Task.Yield();
-            return _windowManager.ShowDialog(viewModel);
+            _windowManager.ShowDialog(viewModel);
+            return true;
         }
     }
 }

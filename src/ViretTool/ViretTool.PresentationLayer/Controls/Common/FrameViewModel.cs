@@ -4,29 +4,30 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
     public class FrameViewModel : PropertyChangedBase
     {
+        private readonly IDatasetServicesManager _servicesManager;
         private bool _isSelectedForQuery;
         private bool _isSelectedForDetail;
-        private readonly IThumbnailService<Thumbnail<byte[]>> _thumbnailService;
         private readonly Lazy<int[]> _framesInTheVideo;
 
-        public FrameViewModel(int videoId, int frameNumber, IThumbnailService<Thumbnail<byte[]>> thumbnailService)
+        public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
         {
-            _thumbnailService = thumbnailService;
+            _servicesManager = servicesManager;
             VideoId = videoId;
             FrameNumber = frameNumber;
 
-            _framesInTheVideo = new Lazy<int[]>(() => _thumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
+            _framesInTheVideo = new Lazy<int[]>(() => servicesManager.CurrentDataset.ThumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
         }
 
         public FrameViewModel Clone()
         {
-            return new FrameViewModel(VideoId, FrameNumber, _thumbnailService);
+            return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
         }
 
         public int FrameNumber { get; private set; }
@@ -37,7 +38,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
-                bitmapImage.StreamSource = new MemoryStream(_thumbnailService.GetThumbnail(VideoId, FrameNumber).Image);
+                bitmapImage.StreamSource = new MemoryStream(_servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image);
                 bitmapImage.EndInit();
                 bitmapImage.Freeze();
 
@@ -75,6 +76,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
+        public bool CanAddToQuery => _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
+
         public int VideoId { get; }
 
         public void ScrollNext()
@@ -99,6 +102,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             FrameNumber = allFrameNumbers[newIndex];
             NotifyOfPropertyChange(nameof(ImageSource));
+            NotifyOfPropertyChange(nameof(CanAddToQuery));
         }
     }
 }
