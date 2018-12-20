@@ -130,9 +130,9 @@
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanAndToVisibilityConverter.cs" />
-    <Compile Include="Windows\ViewModels\DetailViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\DetailViewModel.cs" />
     <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />
-    <Compile Include="Windows\Views\DetailView.xaml.cs">
+    <Compile Include="Controls\DisplayControl\Views\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Views\SubmitControlView.xaml.cs">
@@ -206,7 +206,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Views\DetailView.xaml">
+    <Page Include="Controls\DisplayControl\Views\DetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

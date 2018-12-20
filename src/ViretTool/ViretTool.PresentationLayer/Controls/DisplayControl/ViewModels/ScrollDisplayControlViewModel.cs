@@ -39,16 +39,22 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)
         {
-            if (_lastSelectedFrame?.VideoId == selectedFrame.VideoId)
+            if (_lastSelectedFrame?.VideoId != selectedFrame.VideoId)
             {
-                return;
+                _lastSelectedFrame = selectedFrame;
+                await base.LoadVideoForFrame(selectedFrame);
             }
 
-            _lastSelectedFrame = selectedFrame;
-            await base.LoadVideoForFrame(selectedFrame);
-
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
-            ScrollToFrameHorizontally(newlySelectedFrame);
+            if (newlySelectedFrame != null)
+            {
+                _lastSelectedFrame = newlySelectedFrame;
+                ScrollToFrameHorizontally(newlySelectedFrame);
+            }
+            else
+            {
+                _lastSelectedFrame.IsSelectedForDetail = true;
+            }
         }
 
         protected override void UpdateVisibleFrames()

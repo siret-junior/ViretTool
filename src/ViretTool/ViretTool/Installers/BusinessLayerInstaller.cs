@@ -76,7 +76,7 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(
                              (string)context.AdditionalArguments["datasetDirectory"], ".pbcfilter"))
                          .LifestyleTransient(),
-                Component.For<IColorSignatureRankedDatasetFilter>()
+                Component.For<IRankedDatasetFilter, IColorSignatureRankedDatasetFilter>()
                         .ImplementedBy<RankedDatasetFilter>()
                         .Named("ColorSignatureRankedDatasetFilter")
                         .LifestyleTransient(),

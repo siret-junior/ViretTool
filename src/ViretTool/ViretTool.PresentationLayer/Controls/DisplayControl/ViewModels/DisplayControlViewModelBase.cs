@@ -117,6 +117,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected FrameViewModel SelectFrame(FrameViewModel frame)
         {
+            _loadedFrames.ForEach(f => f.IsSelectedForDetail = false);
             FrameViewModel selectedFrame = _loadedFrames.FirstOrDefault(f => f.VideoId == frame.VideoId && f.FrameNumber == frame.FrameNumber);
             if (selectedFrame != null)
             {

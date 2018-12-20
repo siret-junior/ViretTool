@@ -205,11 +205,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             IsClicked = true;
             RaiseEvent(new RoutedEventArgs(ScrollVideoDisplayEvent));
-            if (e.Delta > 0)
+            if (e.Delta < 0)
             {
                 frameViewModel.ScrollNext();
             }
-            else
+            else if (e.Delta > 0)
             {
                 frameViewModel.ScrollPrevious();
             }

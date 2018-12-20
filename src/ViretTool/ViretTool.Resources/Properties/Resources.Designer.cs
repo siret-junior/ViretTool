@@ -97,6 +97,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Detail:.
+        /// </summary>
+        public static string DetailViewText {
+            get {
+                return ResourceManager.GetString("DetailViewText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detail view.
         /// </summary>
         public static string DetailWindowTitle {
@@ -214,6 +223,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sampled frames:.
+        /// </summary>
+        public static string SampledFramesText {
+            get {
+                return ResourceManager.GetString("SampledFramesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search results:.
         /// </summary>
         public static string SearchResultsText {
@@ -309,6 +327,15 @@ namespace ViretTool.Resources.Properties {
         public static string VideoButtonText {
             get {
                 return ResourceManager.GetString("VideoButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video detail:.
+        /// </summary>
+        public static string VideoDetailText {
+            get {
+                return ResourceManager.GetString("VideoDetailText", resourceCulture);
             }
         }
         

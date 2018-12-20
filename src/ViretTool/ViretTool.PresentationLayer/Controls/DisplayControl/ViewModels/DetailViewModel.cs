@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -7,10 +6,8 @@ using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
-using ViretTool.PresentationLayer.Controls.DisplayControl;
-using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 
-namespace ViretTool.PresentationLayer.Windows.ViewModels
+namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class DetailViewModel : ScrollableDisplayControlViewModel
     {

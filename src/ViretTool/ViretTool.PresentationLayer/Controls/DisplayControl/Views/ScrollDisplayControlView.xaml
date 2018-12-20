@@ -32,7 +32,6 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="1100" />
                 </Grid.ColumnDefinitions>
 
                 <Label 
@@ -40,7 +39,7 @@
                     Background="DarkGray"
                     FontWeight="Bold"
                     FontSize="14"
-                    Content="{x:Static properties:Resources.SearchResultsText}" 
+                    Content="{x:Static properties:Resources.VideoDetailText}" 
                     VerticalAlignment="Center"/>
             </Grid>
 

@@ -189,4 +189,13 @@
   <data name="DetailWindowTitle" xml:space="preserve">
     <value>Detailní pohled</value>
   </data>
+  <data name="VideoDetailText" xml:space="preserve">
+    <value>Detail videa:</value>
+  </data>
+  <data name="SampledFramesText" xml:space="preserve">
+    <value>Vybrané snímky:</value>
+  </data>
+  <data name="DetailViewText" xml:space="preserve">
+    <value>Náhled:</value>
+  </data>
 </root>

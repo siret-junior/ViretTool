@@ -204,4 +204,13 @@
   <data name="DetailWindowTitle" xml:space="preserve">
     <value>Detail view</value>
   </data>
+  <data name="VideoDetailText" xml:space="preserve">
+    <value>Video detail:</value>
+  </data>
+  <data name="SampledFramesText" xml:space="preserve">
+    <value>Sampled frames:</value>
+  </data>
+  <data name="DetailViewText" xml:space="preserve">
+    <value>Detail:</value>
+  </data>
 </root>
