@@ -27,9 +27,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public delegate void ModelSettingChangedHandler(double value, bool useForSorting);
         public event ModelSettingChangedHandler ModelSettingChangedEvent;
-
-        public delegate void ModelClearedHandler();
-        public event ModelClearedHandler ModelClearedEvent;
+        
+        public static readonly RoutedEvent ModelClearedEvent = EventManager.RegisterRoutedEvent(
+            nameof(ModelCleared),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
 
         public static readonly DependencyProperty ModelNameProperty = DependencyProperty.Register(
             "ModelName",
@@ -54,6 +57,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(double),
             typeof(ModelControl),
             new FrameworkPropertyMetadata(0.0d));
+
+
+        public event RoutedEventHandler ModelCleared
+        {
+            add => AddHandler(ModelClearedEvent, value);
+            remove => RemoveHandler(ModelClearedEvent, value);
+        }
 
         public string ModelName
         {
@@ -99,28 +109,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 ModelSettingChangedEvent?.Invoke(Value / 100d, UseForSorting);
             }
-            ModelClearedEvent?.Invoke();
         }
 
         private void Clear(object sender, RoutedEventArgs e)
         {
-            Clear();
-        }
-
-        public void CheckMe()
-        {
-            if (!UseForSorting)
-            {
-                UseForSorting = true;
-            }
-        }
-
-        public void UncheckMe()
-        {
-            if (UseForSorting)
-            {
-                UseForSorting = false;
-            }
+            //Clear();
+            RaiseEvent(new RoutedEventArgs(ModelClearedEvent));
         }
 
         private void CheckBox_Changed(object sender, RoutedEventArgs e)

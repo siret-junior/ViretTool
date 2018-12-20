@@ -28,15 +28,18 @@
         <common:FilterControl Grid.Row="1" FilterName="{x:Static properties:Resources.PercentageBlackFilterText}"  Value="{Binding PercentageBlackFilterValue}" State="{Binding PercentageBlackFilterState}" />
 
         <!-- Keyword -->
-        <common:ModelControl Grid.Row="2" ModelName="{x:Static properties:Resources.KeywordModelName}" Value="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}" />
+        <common:ModelControl Grid.Row="2" ModelName="{x:Static properties:Resources.KeywordModelName}" Value="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}"
+                             cal:Message.Attach="[Event ModelCleared] = [Action OnKeywordsCleared()]"/>
         <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" Initialize="{Binding InitializeKeywordSearchMethod, Mode=OneWayToSource}" />
 
         <!-- Colors -->
-        <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}" Value="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"/>
+        <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}" Value="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"
+                             cal:Message.Attach="[Event ModelCleared] = [Action OnSketchesCleared()]"/>
         <common:SketchCanvas Grid.Row="5" QueryResult="{Binding SketchQueryResult}" CanvasWidth="{Binding CanvasWidth}" CanvasHeight="{Binding CanvasHeight}" />
 
         <!-- Semantic examples -->
-        <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" Value="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"/>
+        <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" Value="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"
+                             cal:Message.Attach="[Event ModelCleared] = [Action OnQueryObjectsCleared()]"/>
         <ItemsControl x:Name="ImagesDisplay" Grid.Row="7" ItemsSource="{Binding QueryObjects}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

@@ -15,14 +15,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private readonly Dictionary<string, LabelProvider> mLabelProviders = new Dictionary<string, LabelProvider>();
         private readonly Dictionary<string, SuggestionProvider> mSuggestionProviders = new Dictionary<string, SuggestionProvider>();
 
+        private bool _initialized;
+
         public KeywordSearchControl()
         {
             InitializeComponent();
-            suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
-            suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
-            suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
-            suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
-
             Loaded += (sender, args) => Initialize = Init;
         }
 
@@ -30,7 +27,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             nameof(QueryResult),
             typeof(KeywordQueryResult),
             typeof(KeywordSearchControl),
-            new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
+            new FrameworkPropertyMetadata(
+                (obj, args) =>
+                {
+                    if (args.NewValue == null)
+                    {
+                        ((KeywordSearchControl)obj).Clear();
+                    }
+                }) { BindsTwoWayByDefault = true });
 
         public KeywordQueryResult QueryResult
         {
@@ -83,6 +87,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 mSuggestionProviders.Add(source, suggestionProvider);
                 suggestionProvider.SuggestionResultsReadyEvent += suggestionTextBox.OnSuggestionResultsReady;
                 suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;
+            }
+
+            if (!_initialized)
+            {
+                suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
+                suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
+                suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
+                suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
+                _initialized = true;
             }
         }
 

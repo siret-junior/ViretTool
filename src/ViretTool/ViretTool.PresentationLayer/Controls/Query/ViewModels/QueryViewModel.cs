@@ -63,6 +63,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                        eventHandler => QueryObjects.CollectionChanged += eventHandler,
                                                        eventHandler => QueryObjects.CollectionChanged -= eventHandler)
                                                    .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
+            onQueriesChanged.Subscribe(_ => SemanticUseForSorting = QueryObjects.Any());
 
             onPropertyChanged.Merge(onQueriesChanged)
                              .Throttle(TimeSpan.FromSeconds(0.1))
@@ -117,6 +118,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _colorUseForSorting = value;
+                if (_colorUseForSorting)
+                {
+                    KeywordUseForSorting = false;
+                    SemanticUseForSorting = false;
+                }
                 NotifyOfPropertyChange();
             }
         }
@@ -151,6 +157,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
+                KeywordUseForSorting = _keywordQueryResult?.Query.Any() == true;
                 NotifyOfPropertyChange();
             }
         }
@@ -166,6 +173,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordUseForSorting = value;
+                if (_keywordUseForSorting)
+                {
+                    ColorUseForSorting = false;
+                    SemanticUseForSorting = false;
+                }
                 NotifyOfPropertyChange();
             }
         }
@@ -226,6 +238,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _semanticUseForSorting = value;
+                if (_semanticUseForSorting)
+                {
+                    ColorUseForSorting = false;
+                    KeywordUseForSorting = false;
+                }
                 NotifyOfPropertyChange();
             }
         }
@@ -256,6 +273,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _sketchQueryResult = value;
+                ColorUseForSorting = SketchQueryResult?.SketchColorPoints.Any() == true;
                 NotifyOfPropertyChange();
             }
         }
@@ -294,6 +312,21 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         {
             frameViewModel.IsSelectedForQuery = false;
             QueryObjects.Remove(frameViewModel);
+        }
+
+        public void OnKeywordsCleared()
+        {
+            KeywordQueryResult = null;
+        }
+
+        public void OnSketchesCleared()
+        {
+            SketchQueryResult = null;
+        }
+
+        public void OnQueryObjectsCleared()
+        {
+            QueryObjects.Clear();
         }
 
         public void UpdateQueryObjects(IList<FrameViewModel> queries)

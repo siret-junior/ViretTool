@@ -37,7 +37,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             nameof(QueryResult),
             typeof(SketchQueryResult),
             typeof(SketchCanvas),
-            new FrameworkPropertyMetadata(null) { BindsTwoWayByDefault = true });
+            new FrameworkPropertyMetadata(
+                (obj, args) =>
+                {
+                    if (args.NewValue == null)
+                    {
+                        ((SketchCanvas)obj).Clear();
+                    }
+                }) { BindsTwoWayByDefault = true });
 
         public static readonly DependencyProperty CanvasWidthProperty = DependencyProperty.Register(
             nameof(CanvasWidth),
