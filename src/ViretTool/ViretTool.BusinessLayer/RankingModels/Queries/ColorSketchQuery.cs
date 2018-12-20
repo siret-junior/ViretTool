@@ -7,14 +7,20 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
         public int CanvasWidth { get; private set; }
         public int CanvasHeight { get; private set; }
         public Ellipse[] ColorSketchEllipses { get; private set; }
+        public bool UseForSorting { get; private set; }
+        public bool UseForFiltering { get; private set; }
 
 
-        public ColorSketchQuery(int canvasWidth, int canvasHeight, Ellipse[] colorSketchEllipses)
+        public ColorSketchQuery(int canvasWidth, int canvasHeight, Ellipse[] colorSketchEllipses, 
+            bool useForSorting = true, bool useForFiltering = false)
         {
             CanvasWidth = canvasWidth;
             CanvasHeight = canvasHeight;
             ColorSketchEllipses = colorSketchEllipses;
+            UseForSorting = useForSorting;
+            UseForFiltering = useForFiltering;
         }
+
 
         public override bool Equals(object obj)
         {

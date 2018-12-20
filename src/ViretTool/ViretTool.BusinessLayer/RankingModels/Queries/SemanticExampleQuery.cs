@@ -6,14 +6,20 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     {
         public int[] PositiveExampleIds { get; private set; }
         public int[] NegativeExampleIds { get; private set; }
+        public bool UseForSorting { get; private set; }
+        public bool UseForFiltering { get; private set; }
 
 
-        public SemanticExampleQuery(int[] positiveExampleIds, int[] negativeExampleIds)
+        public SemanticExampleQuery(int[] positiveExampleIds, int[] negativeExampleIds, 
+            bool useForSorting = true, bool useForFiltering = false)
         {
             PositiveExampleIds = positiveExampleIds;
             NegativeExampleIds = negativeExampleIds;
+            UseForSorting = useForSorting;
+            UseForFiltering = useForFiltering;
         }
         
+
         public override bool Equals(object obj)
         {
             return obj is SemanticExampleQuery query &&

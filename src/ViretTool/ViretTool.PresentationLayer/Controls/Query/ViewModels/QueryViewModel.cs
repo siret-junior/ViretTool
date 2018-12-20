@@ -32,13 +32,13 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private bool _keywordUseForSorting = false;
         private KeywordQueryResult _keywordQueryResult;
 
-        private double _colorValue = 90;
+        private double _colorValue = 10;
         private bool _colorUseForSorting = false;
         private SketchQueryResult _sketchQueryResult;
         private int _canvasWidth = 240;
         private int _canvasHeight = 320;
 
-        private double _semanticValue = 70;
+        private double _semanticValue = 30;
         private bool _semanticUseForSorting = false;
 
 
@@ -317,28 +317,42 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             //TODO a lot of unclear settings
             string keywordAnnotationSource = KeywordQueryResult?.AnnotationSource;
             KeywordQuery keyWordQuery = new KeywordQuery(
-                KeywordQueryResult?.Query?.Select(parts => new SynsetGroup(parts.Select(p => new Synset(keywordAnnotationSource, p)).ToArray())).ToArray() ?? new SynsetGroup[0]);
+                KeywordQueryResult?.Query?.Select(
+                        parts => new SynsetGroup(parts.Select(
+                            p => new Synset(keywordAnnotationSource, p)).ToArray()))
+                        .ToArray() ?? new SynsetGroup[0],
+                KeywordUseForSorting,
+                !KeywordUseForSorting);
 
             ColorSketchQuery colorSketchQuery = new ColorSketchQuery(
                 CanvasWidth,
                 CanvasHeight,
                 SketchQueryResult?.SketchColorPoints?.Select(
-                                     point => new Ellipse(
-                                         point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                         point.Position.X,
-                                         point.Position.Y,
-                                         point.EllipseAxis.X,
-                                         point.EllipseAxis.Y,
-                                         0,
-                                         point.FillColor.R,
-                                         point.FillColor.G,
-                                         point.FillColor.B))
-                                 .ToArray() ?? new Ellipse[0]);
+                        point => new Ellipse(
+                            point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                            point.Position.X,
+                            point.Position.Y,
+                            point.EllipseAxis.X,
+                            point.EllipseAxis.Y,
+                            0,
+                            point.FillColor.R,
+                            point.FillColor.G,
+                            point.FillColor.B))
+                        .ToArray() ?? new Ellipse[0],
+                ColorUseForSorting,
+                !ColorUseForSorting);
 
             //TODO use (e.g. color) for sorting?
             SemanticExampleQuery semanticExampleQuery = new SemanticExampleQuery(
-                QueryObjects.Select(q => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber)).ToArray(),
-                new int[0]);
+                QueryObjects.Select(
+                    q => _datasetServicesManager
+                        .CurrentDataset
+                        .DatasetService
+                        .GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber))
+                        .ToArray(),
+                new int[0],
+                SemanticUseForSorting,
+                !SemanticUseForSorting);
 
             FinalQuery = new BusinessLayer.RankingModels.Queries.Query(
                 new SimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),

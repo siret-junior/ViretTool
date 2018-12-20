@@ -77,7 +77,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             }
             OutputRanking.IsUpdated = true;
 
-            if (query != null)
+            if (query != null && query.PositiveExampleIds.Any())
             {
                 float[] ranking = new float[InputRanking.Ranks.Length];
 

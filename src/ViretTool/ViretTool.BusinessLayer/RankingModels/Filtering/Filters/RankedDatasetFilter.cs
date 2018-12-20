@@ -28,9 +28,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             set
             {
                 _inputRanking = value;
+                if (value == null) return;
 
                 // allocate filter mask
-                base.IncludeMask = new bool[_inputRanking.Ranks.Length];
+                if (base.IncludeMask == null || base.IncludeMask.Length != _inputRanking.Ranks.Length)
+                {
+                    base.IncludeMask = new bool[_inputRanking.Ranks.Length];
+                }
 
                 // initialize sampling indexes
                 if (_sampleIndexes == null)
@@ -74,8 +78,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                     throw new NotImplementedException("RankedDatasetFilter sampling of a previously filtered frame.");
                 }
             });
-            
-            Array.Sort(_sampleValues);
+
+            Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
             double threshold = _sampleValues[(int)((SAMPLE_SIZE - 1) * percentageOfDatabase)];
 
             // set mask using the threshold
@@ -93,6 +97,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         public bool[] GetFilterMask(ThresholdFilteringQuery query, RankingBuffer inputRanking)
         {
             InputRanking = inputRanking;
+            if (inputRanking == null)
+            {
+                return null;
+            }
 
             switch (query.FilterState)
             {

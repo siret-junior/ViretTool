@@ -48,12 +48,26 @@ namespace ViretTool.BusinessLayer.RankingModels
                         = RankingBuffer.Zeros("SimilarityModuleItermediate", InputRanking.Ranks.Length);
                 }
 
-                // compute partial rankings (if neccessary)
                 SimilarityModule.ComputeRanking(query.SimilarityQuery, InputRanking, IntermediateRanking);
+
+                // compute filtering
+                RankingBuffer colorSketchRanking = null;
+                if (query.SimilarityQuery.ColorSketchQuery.UseForFiltering)
+                {
+                    colorSketchRanking = SimilarityModule.ColorSketchModel.OutputRanking;
+                }
+                RankingBuffer keywordRanking = null;
+                if (query.SimilarityQuery.KeywordQuery.UseForFiltering)
+                {
+                    keywordRanking = SimilarityModule.KeywordModel.OutputRanking;
+                }
+                RankingBuffer semanticExampleRanking = null;
+                if (query.SimilarityQuery.SemanticExampleQuery.UseForFiltering)
+                {
+                    semanticExampleRanking = SimilarityModule.SemanticExampleModel.OutputRanking;
+                }
                 FilteringModule.ComputeRanking(query.FilteringQuery, IntermediateRanking, OutputRanking,
-                    SimilarityModule.ColorSketchModel.OutputRanking,
-                    SimilarityModule.KeywordModel.OutputRanking,
-                    SimilarityModule.SemanticExampleModel.OutputRanking);
+                    colorSketchRanking, keywordRanking, semanticExampleRanking);
 
                 // cache the query
                 CachedQuery = query;

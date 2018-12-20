@@ -5,12 +5,17 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     public class KeywordQuery
     {
         public SynsetGroup[] SynsetGroups { get; private set; }
-        
+        public bool UseForSorting { get; private set; }
+        public bool UseForFiltering { get; private set; }
 
-        public KeywordQuery(SynsetGroup[] synsetGroups)
+
+        public KeywordQuery(SynsetGroup[] synsetGroups, bool useForSorting = true, bool useForFiltering = false)
         {
             SynsetGroups = synsetGroups;
+            UseForSorting = useForSorting;
+            UseForFiltering = useForFiltering;
         }
+
 
         public override bool Equals(object obj)
         {

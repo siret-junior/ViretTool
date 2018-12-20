@@ -77,15 +77,21 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
                 SemanticExampleModel.ComputeRanking(query.SemanticExampleQuery, 
                     InputRanking, SemanticExampleIntermediateRanking);
 
-                // perform rank fusion
-                RankFusion.ComputeRanking(
-                    new RankingBuffer[] 
-                    {
-                        KeywordIntermediateRanking,
-                        ColorIntermediateRanking,
-                        SemanticExampleIntermediateRanking
-                    },
-                    OutputRanking);
+                // perform rank fusion (only with models used for sorting)
+                List<RankingBuffer> buffersForFusion = new List<RankingBuffer>(3);
+                if (query.KeywordQuery.UseForSorting)
+                {
+                    buffersForFusion.Add(KeywordIntermediateRanking);
+                }
+                if (query.ColorSketchQuery.UseForSorting)
+                {
+                    buffersForFusion.Add(ColorIntermediateRanking);
+                }
+                if (query.SemanticExampleQuery.UseForSorting)
+                {
+                    buffersForFusion.Add(SemanticExampleIntermediateRanking);
+                }
+                RankFusion.ComputeRanking(buffersForFusion.ToArray(), OutputRanking);
                 
                 // cache the query
                 CachedQuery = query;
