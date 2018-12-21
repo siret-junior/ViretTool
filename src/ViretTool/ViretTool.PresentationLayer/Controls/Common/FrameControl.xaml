@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
             <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
             <Grid x:Key="CommonControls" x:Shared="False">
                 <Image Name="Image"
@@ -20,7 +21,7 @@
                        Stretch="Fill" Source="{Binding ImageSource, Mode=OneWay}"/>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
                            Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <Rectangle Fill="Transparent" Stroke="DeepPink" StrokeThickness="4" StrokeDashArray="4 4"
+                <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"
                            Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <!-- TODO -->
@@ -91,7 +92,8 @@
             </Grid>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseWheel="FrameControl_OnMouseWheel" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave">
+    <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseWheel="FrameControl_OnMouseWheel" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave"
+          Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter }, Mode=OneWay}">
         <ContentControl Content="{StaticResource CommonControls}" />
         <Popup IsOpen="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay}" 
                Placement="Center" MouseLeave="Popup_OnMouseLeave">

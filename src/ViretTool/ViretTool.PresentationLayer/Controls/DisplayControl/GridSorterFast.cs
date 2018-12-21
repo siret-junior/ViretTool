@@ -6,7 +6,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl
 {
     class GridSorterFast
     {
-        private const int Iterations = 100000;
+        private const int Iterations = 500000;
 
         // returns indexes of data organized in a 2D grid
         public int[,] SortItems(List<float[]> data, int width, int height)
@@ -27,8 +27,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl
                     distances[i, i] = 0;
                     for (int j = i + 1; j < dataCount; j++)
                     {
-                        //distances[i, j] = L2(data[i], data[j]);
-                        distances[i, j] = DotProductL2Distance(data[i], data[j]);
+                        distances[i, j] = L2(data[i], data[j]);
+                        //distances[i, j] = DotProductL2Distance(data[i], data[j]);
                         distances[j, i] = distances[i, j];
                     }
                 });

@@ -13,84 +13,88 @@
              mc:Ignorable="d" 
              Height="800" Width="1200"
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance viewModels:DetailViewModel}" cal:Message.Attach="[Event KeyUp] = [Action OnKeyUp($eventArgs)]">
+             d:DataContext="{d:DesignInstance viewModels:DetailViewModel}">
     <!--ResizeMode="NoResize" WindowStartupLocation="CenterOwner"-->
-    <common:BusyIndicator IsBusy="{Binding IsBusy}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="150"/>
-            </Grid.ColumnDefinitions>
+    <Border BorderBrush="White" BorderThickness="4" >
+        <common:BusyIndicator IsBusy="{Binding IsBusy}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SearchResultsText}" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="0" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SearchResultsText}" VerticalAlignment="Center"/>
 
-            <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding VisibleFrames}"
+                <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding VisibleFrames}" Background="White" 
                           ScrollViewer.CanContentScroll="True">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
                                                                  [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                  [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
                                                                  [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
                                              IsSelectable="True"
                                              FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                              FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                       Padding="{TemplateBinding Control.Padding}"
                                       Focusable="False">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                            <i:Interaction.Behaviors>
-                                <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToRow="{Binding ScrollToRow, Mode=OneWayToSource}"/>
-                            </i:Interaction.Behaviors>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                <i:Interaction.Behaviors>
+                                    <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToRow="{Binding ScrollToRow, Mode=OneWayToSource}"/>
+                                </i:Interaction.Behaviors>
 
-                        </ScrollViewer>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-            </ItemsControl>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                </ItemsControl>
 
-            <Label Grid.Row="0" Grid.Column="1" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SampledFramesText}" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="1" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SampledFramesText}" VerticalAlignment="Center"/>
+                <Button x:Name="CloseButton" Grid.Row="0" Grid.Column="1" Background="White" FontWeight="Bold" FontSize="14" Content="X" Width="20" Height="20" 
+                        Margin="4" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
 
-            <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampledFrames}"
+                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampledFrames}"
                           ScrollViewer.CanContentScroll="True">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
                                                                  [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                  [Event FrameSelected] = [Action OnFrameSelectedSampled($dataContext)];
                                                                  [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
                                              IsSelectable="True"
                                              FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                              FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <common:VirtualizedUniformGrid Orientation="Vertical" Rows="10" Columns="1"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="10" Columns="1"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                       Padding="{TemplateBinding Control.Padding}"
                                       Focusable="False">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
-                        </ScrollViewer>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-            </ItemsControl>
-        </Grid>
-    </common:BusyIndicator>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                </ItemsControl>
+            </Grid>
+        </common:BusyIndicator>
+    </Border>
 </UserControl>

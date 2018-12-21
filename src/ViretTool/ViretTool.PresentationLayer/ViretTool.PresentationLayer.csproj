@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Converters\BooleanAndToVisibilityConverter.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DetailViewModel.cs" />
+    <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>

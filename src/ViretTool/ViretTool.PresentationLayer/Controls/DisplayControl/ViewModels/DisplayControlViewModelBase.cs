@@ -94,7 +94,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void OnSortDisplay(FrameViewModel frameViewModel)
         {
             BeforeEventAction();
-            const int topFramesCount = 1000;
+            const int topFramesCount = 2000;
             FrameForSortChanged?.Invoke(this, (frameViewModel, _loadedFrames.Take(topFramesCount).ToList()));
         }
 
@@ -113,7 +113,32 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
         }
 
-        protected abstract void UpdateVisibleFrames();
+        protected virtual void UpdateVisibleFrames()
+        {
+            AddFramesToVisibleItems(_loadedFrames);
+        }
+
+        protected void AddFramesToVisibleItems(IList<FrameViewModel> viewModelsToAdd)
+        {
+            int i = 0;
+            for (; i < VisibleFrames.Count && i < viewModelsToAdd.Count; i++)
+            {
+                VisibleFrames[i] = viewModelsToAdd[i];
+                VisibleFrames[i].IsVisible = true;
+            }
+
+            if (VisibleFrames.Count < viewModelsToAdd.Count)
+            {
+                VisibleFrames.AddRange(viewModelsToAdd.Skip(VisibleFrames.Count));
+            }
+            else if (viewModelsToAdd.Count < VisibleFrames.Count)
+            {
+                for (; i < VisibleFrames.Count; i++)
+                {
+                    VisibleFrames[i].IsVisible = false;
+                }
+            }
+        }
 
         protected FrameViewModel SelectFrame(FrameViewModel frame)
         {

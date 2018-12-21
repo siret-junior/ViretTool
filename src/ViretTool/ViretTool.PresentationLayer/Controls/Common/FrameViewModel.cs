@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Services;
-using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
     public class FrameViewModel : PropertyChangedBase
     {
-        private readonly IDatasetServicesManager _servicesManager;
-        private bool _isSelectedForQuery;
-        private bool _isSelectedForDetail;
         private readonly Lazy<int[]> _framesInTheVideo;
+        private readonly IDatasetServicesManager _servicesManager;
+        private bool _isSelectedForDetail;
+        private bool _isSelectedForQuery;
+        private bool _isVisible = true;
 
         public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
         {
@@ -25,10 +24,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             _framesInTheVideo = new Lazy<int[]>(() => servicesManager.CurrentDataset.ThumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
         }
 
-        public FrameViewModel Clone()
-        {
-            return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
-        }
+        public bool CanAddToQuery => _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
 
         public int FrameNumber { get; private set; }
 
@@ -43,21 +39,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 bitmapImage.Freeze();
 
                 return bitmapImage;
-            }
-        }
-
-        public bool IsSelectedForQuery
-        {
-            get => _isSelectedForQuery;
-            set
-            {
-                if (_isSelectedForQuery == value)
-                {
-                    return;
-                }
-
-                _isSelectedForQuery = value;
-                NotifyOfPropertyChange();
             }
         }
 
@@ -76,9 +57,42 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-        public bool CanAddToQuery => _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
+        public bool IsSelectedForQuery
+        {
+            get => _isSelectedForQuery;
+            set
+            {
+                if (_isSelectedForQuery == value)
+                {
+                    return;
+                }
+
+                _isSelectedForQuery = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                if (_isVisible == value)
+                {
+                    return;
+                }
+
+                _isVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public int VideoId { get; }
+
+        public FrameViewModel Clone()
+        {
+            return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
+        }
 
         public void ScrollNext()
         {

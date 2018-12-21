@@ -12,7 +12,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
 			 Title="{x:Static properties:Resources.AppTitle}"
-             WindowStyle="None" ResizeMode="NoResize"  
+             WindowStyle="None" ResizeMode="NoResize"  cal:Message.Attach="[Event KeyUp] = [Action OnKeyUp($eventArgs)]"
              WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <ResourceDictionary>
@@ -47,65 +47,71 @@
     </Window.Resources>
 
 
-    <common:BusyIndicator IsBusy="{Binding IsBusy}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
+    <Grid>
+        <common:BusyIndicator IsBusy="{Binding IsBusy}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- left panel (models) -->
-            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <Grid >
+                <!-- left panel (models) -->
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Menu Grid.Row="0" Width="Auto" Background="White">
+                            <MenuItem Header="{x:Static properties:Resources.FileHeader}">
+                                <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
+                            </MenuItem>
+                        </Menu>
+
+                        <GroupBox Grid.Row="1" Margin="6">
+                            <GroupBox.Header>
+                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary}" Style="{StaticResource PrimaryCheckBoxStyle}" />
+                            </GroupBox.Header>
+                            <ContentControl x:Name="Query1" />
+                        </GroupBox>
+                        <GroupBox Grid.Row="2" Margin="6">
+                            <GroupBox.Header>
+                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary, Converter={StaticResource InvertedBooleanConverter}}" Style="{StaticResource PrimaryCheckBoxStyle}" />
+                            </GroupBox.Header>
+                            <ContentControl x:Name="Query2" />
+                        </GroupBox>
+
+                    </Grid>
+                </ScrollViewer>
+
+                <GridSplitter  Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+                <!-- result displays -->
+                <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Menu Grid.Row="0" Width="Auto" Background="White">
-                        <MenuItem Header="{x:Static properties:Resources.FileHeader}">
-                            <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
-                        </MenuItem>
-                    </Menu>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="120" />
+                        </Grid.ColumnDefinitions>
 
-                    <GroupBox Grid.Row="1" Margin="6">
-                        <GroupBox.Header>
-                            <CheckBox IsChecked="{Binding IsFirstQueryPrimary}" Style="{StaticResource PrimaryCheckBoxStyle}" />
-                        </GroupBox.Header>
-                        <ContentControl x:Name="Query1" />
-                    </GroupBox>
-                    <GroupBox Grid.Row="2" Margin="6">
-                        <GroupBox.Header>
-                            <CheckBox IsChecked="{Binding IsFirstQueryPrimary, Converter={StaticResource InvertedBooleanConverter}}" Style="{StaticResource PrimaryCheckBoxStyle}" />
-                        </GroupBox.Header>
-                        <ContentControl x:Name="Query2" />
-                    </GroupBox>
-
+                        <ContentControl Grid.Column="0" x:Name="QueryResults" />
+                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                        <ContentControl Grid.Column="2" x:Name="DetailView" />
+                    </Grid>
                 </Grid>
-            </ScrollViewer>
 
-            <GridSplitter  Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-
-            <!-- result displays -->
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="120" />
-                    </Grid.ColumnDefinitions>
-
-                    <ContentControl Grid.Column="0" x:Name="QueryResults" />
-                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-                    <ContentControl Grid.Column="2" x:Name="DetailView" />
-                </Grid>
             </Grid>
-        </Grid>
-    </common:BusyIndicator>
+        </common:BusyIndicator>
+        <Popup IsOpen="{Binding IsDetailVisible}" Placement="Center">
+            <ContentControl cal:View.Model="{Binding DetailViewModel}"/>
+        </Popup>
+    </Grid>
 </Window>

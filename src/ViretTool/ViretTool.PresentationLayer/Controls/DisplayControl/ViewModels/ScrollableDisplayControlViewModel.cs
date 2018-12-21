@@ -53,6 +53,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected void ScrollToFrameHorizontally(FrameViewModel frameViewModel)
         {
+            if (ScrollToRow == null)
+            {
+                return;
+            }
+
             if (frameViewModel == null || ColumnCount == 0)
             {
                 ScrollToRow(0);
@@ -62,11 +67,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             int indexOfFrame = _loadedFrames.IndexOf(frameViewModel);
             int rowWithFrame = indexOfFrame / ColumnCount;
             int columnNumberToScroll = Math.Max(0, rowWithFrame - RowCount / 2); //frame should be in the middle
-            ScrollToRow(columnNumberToScroll);
+            ScrollToRow.Invoke(columnNumberToScroll);
         }
 
         protected void ScrollToFrameVertically(FrameViewModel frameViewModel)
         {
+            if (ScrollToColumn == null)
+            {
+                return;
+            }
+
             if (frameViewModel == null || RowCount == 0)
             {
                 ScrollToColumn(0);

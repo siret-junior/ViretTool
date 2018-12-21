@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -77,17 +78,17 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IsBusy = false;
         }
 
-        public void OnKeyUp(KeyEventArgs e)
+        public event EventHandler Close;
+
+        public void CloseButton()
         {
-            if (e.Key == Key.Escape)
-            {
-                TryClose(false);
-            }
+            TryClose(true);
+            Close?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void BeforeEventAction()
         {
-            TryClose(true);
+            CloseButton();
         }
 
         public void OnFrameSelectedSampled(FrameViewModel selectedFrame)
@@ -98,10 +99,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         private FrameViewModel[] GetSortedFrameIds(IList<FrameViewModel> topFrames)
         {
-            List<float[]> data = topFrames.Select(GetFrameId)
-                                          .Where(id => id.HasValue)
-                                          .Select(id => _datasetServicesManager.CurrentDataset.SemanticVectorProvider.Descriptors[id.Value])
-                                          .ToList();
+            List<FrameViewModel> topFramesWithIds = topFrames.Where(f => GetFrameId(f).HasValue).ToList();
+            List<float[]> data = topFramesWithIds.Select(id => _datasetServicesManager.CurrentDataset.SemanticVectorProvider.Descriptors[GetFrameId(id).Value]).ToList();
             int width = ColumnCount;
             int height = data.Count / ColumnCount;
             //we ignore items out of the grid
@@ -112,29 +111,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 for (int j = 0; j < width; j++)
                 {
-                    result[i * width + j] = topFrames[sortedFrames[j, i]];
+                    result[i * width + j] = topFramesWithIds[sortedFrames[j, i]];
                 }
             }
 
             return result;
         }
-
-        protected override void UpdateVisibleFrames()
-        {
-            if (VisibleFrames.Count < _loadedFrames.Count)
-            {
-                VisibleFrames.AddRange(_loadedFrames.Skip(VisibleFrames.Count));
-            }
-            else if (VisibleFrames.Count > _loadedFrames.Count)
-            {
-                VisibleFrames.RemoveRange(VisibleFrames.Skip(_loadedFrames.Count).ToList());
-            }
-
-            for (int i = 0; i < _loadedFrames.Count; i++)
-            {
-                VisibleFrames[i] = _loadedFrames[i];
-            }
-        }
-        
     }
 }

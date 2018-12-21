@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
@@ -22,9 +23,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly ILogger _logger;
         private readonly IWindowManager _windowManager;
-        private readonly DetailViewModel _detailViewModel;
         private readonly SubmitControlViewModel _submitControlViewModel;
         private bool _isBusy;
+        private bool _isDetailVisible;
         private bool _isFirstQueryPrimary = true;
 
         public MainWindowViewModel(
@@ -40,12 +41,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             _logger = logger;
             _windowManager = windowManager;
-            _detailViewModel = detailViewModel;
             _submitControlViewModel = submitControlViewModel;
             _datasetServicesManager = datasetServicesManager;
 
             QueryResults = queryResults;
             DetailView = detailView;
+            DetailViewModel = detailViewModel;
             Query1 = query1;
             Query2 = query2;
 
@@ -61,6 +62,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 display.FrameForSortChanged += async (sender, tuple) => await OnFrameForSortChanged(tuple.SelectedFrame, tuple.TopFrames);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
             }
+
+            DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
         }
 
         public bool IsBusy
@@ -83,6 +86,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public DisplayControlViewModelBase QueryResults { get; }
         public DisplayControlViewModelBase DetailView { get; }
+        public DetailViewModel DetailViewModel { get; }
 
         public bool IsFirstQueryPrimary
         {
@@ -99,6 +103,21 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        public bool IsDetailVisible
+        {
+            get => _isDetailVisible;
+            set
+            {
+                if (_isDetailVisible == value)
+                {
+                    return;
+                }
+
+                _isDetailVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public async void OpenDatabase()
         {
             string datasetDirectory = GetDatasetDirectory();
@@ -108,6 +127,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             await OpenDataset(datasetDirectory);
+        }
+
+        public void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                CloseDetailViewModel();
+            }
         }
 
         private string GetDatasetDirectory()
@@ -213,26 +240,23 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)
         {
             IsBusy = true;
-            Task<bool?> showDialogTask = ShowDialogAsync(_detailViewModel);
-            await _detailViewModel.LoadVideoForFrame(selectedFrame);
-            await showDialogTask;
-            IsBusy = false;
+            IsDetailVisible = true;
+
+            await DetailViewModel.LoadVideoForFrame(selectedFrame);
         }
 
         private async Task OnFrameForSortChanged(FrameViewModel selectedFrame, IList<FrameViewModel> topFrames)
         {
             IsBusy = true;
-            Task<bool?> showDialogTask = ShowDialogAsync(_detailViewModel);
-            await _detailViewModel.LoadSortedDisplay(selectedFrame, topFrames);
-            await showDialogTask;
-            IsBusy = false;
+            IsDetailVisible = true;
+
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, topFrames);
         }
 
-        private async Task<bool?> ShowDialogAsync(object viewModel)
+        private void CloseDetailViewModel()
         {
-            await Task.Yield();
-            _windowManager.ShowDialog(viewModel);
-            return true;
+            IsBusy = false;
+            IsDetailVisible = false;
         }
     }
 }

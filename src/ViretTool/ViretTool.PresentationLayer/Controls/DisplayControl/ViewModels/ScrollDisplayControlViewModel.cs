@@ -62,8 +62,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
 
-            VisibleFrames.Clear();
-            VisibleFrames.AddRange(_loadedFrames);
+            base.UpdateVisibleFrames();
         }
     }
 }

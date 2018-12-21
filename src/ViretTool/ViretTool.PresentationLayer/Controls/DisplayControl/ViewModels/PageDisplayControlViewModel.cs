@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -140,18 +141,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             int itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
             List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
-            if (VisibleFrames.Count != itemsCount || VisibleFrames.Count != viewModelsToAdd.Count)
-            {
-                VisibleFrames.Clear();
-                VisibleFrames.AddRange(viewModelsToAdd);
-                return;
-            }
 
-            int i = 0;
-            foreach (FrameViewModel frameViewModel in viewModelsToAdd)
-            {
-                VisibleFrames[i++] = frameViewModel;
-            }
+            AddFramesToVisibleItems(viewModelsToAdd);
         }
     }
 }
