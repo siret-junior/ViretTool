@@ -189,6 +189,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             FrameControl_OnMouseLeave(sender, e);
             IsClicked = false;
+
+            if (!(DataContext is FrameViewModel frameViewModel))
+            {
+                return;
+            }
+
+            frameViewModel.ResetFrameNumber();
         }
 
         private void FrameControl_OnMouseMove(object sender, MouseEventArgs e)

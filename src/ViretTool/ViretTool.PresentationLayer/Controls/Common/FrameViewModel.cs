@@ -7,6 +7,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 {
     public class FrameViewModel : PropertyChangedBase
     {
+        private readonly int _originalFrameNumber;
         private readonly Lazy<int[]> _framesInTheVideo;
         private readonly IDatasetServicesManager _servicesManager;
         private bool _isSelectedForDetail;
@@ -17,7 +18,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             _servicesManager = servicesManager;
             VideoId = videoId;
-            FrameNumber = frameNumber;
+            FrameNumber = _originalFrameNumber = frameNumber;
 
             _framesInTheVideo = new Lazy<int[]>(() => servicesManager.CurrentDataset.ThumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
         }
@@ -83,7 +84,19 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public FrameViewModel Clone()
         {
-            return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
+            return new FrameViewModel(VideoId, _originalFrameNumber, _servicesManager);
+        }
+
+        public void ResetFrameNumber()
+        {
+            if (FrameNumber == _originalFrameNumber)
+            {
+                return;
+            }
+
+            FrameNumber = _originalFrameNumber;
+            NotifyOfPropertyChange(nameof(ImageSource));
+            NotifyOfPropertyChange(nameof(CanAddToQuery));
         }
 
         public void ScrollNext()
