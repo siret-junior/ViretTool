@@ -144,7 +144,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             int itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
             List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
 
-            AddFramesToVisibleItems(viewModelsToAdd);
+            AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
         }
     }
 }

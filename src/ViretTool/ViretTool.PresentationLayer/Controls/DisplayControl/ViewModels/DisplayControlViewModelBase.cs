@@ -12,7 +12,7 @@ using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
-    public abstract class DisplayControlViewModelBase : Screen
+    public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         protected readonly IDatasetServicesManager _datasetServicesManager;
         protected readonly ILogger _logger;
@@ -115,27 +115,27 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected virtual void UpdateVisibleFrames()
         {
-            AddFramesToVisibleItems(_loadedFrames);
+            AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
         }
 
-        protected void AddFramesToVisibleItems(IList<FrameViewModel> viewModelsToAdd)
+        protected void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
         {
             int i = 0;
-            for (; i < VisibleFrames.Count && i < viewModelsToAdd.Count; i++)
+            for (; i < collectionToUpdate.Count && i < viewModelsToAdd.Count; i++)
             {
-                VisibleFrames[i] = viewModelsToAdd[i];
-                VisibleFrames[i].IsVisible = true;
+                collectionToUpdate[i] = viewModelsToAdd[i];
+                collectionToUpdate[i].IsVisible = true;
             }
 
-            if (VisibleFrames.Count < viewModelsToAdd.Count)
+            if (collectionToUpdate.Count < viewModelsToAdd.Count)
             {
-                VisibleFrames.AddRange(viewModelsToAdd.Skip(VisibleFrames.Count));
+                collectionToUpdate.AddRange(viewModelsToAdd.Skip(collectionToUpdate.Count));
             }
-            else if (viewModelsToAdd.Count < VisibleFrames.Count)
+            else if (viewModelsToAdd.Count < collectionToUpdate.Count)
             {
-                for (; i < VisibleFrames.Count; i++)
+                for (; i < collectionToUpdate.Count; i++)
                 {
-                    VisibleFrames[i].IsVisible = false;
+                    collectionToUpdate[i].IsVisible = false;
                 }
             }
         }

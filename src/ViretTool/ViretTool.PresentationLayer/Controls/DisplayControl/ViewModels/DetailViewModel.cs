@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Services;
@@ -20,7 +19,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             ColumnCount = 10;
             RowCount = 10;
-            DisplayName = Resources.Properties.Resources.DetailWindowTitle;
         }
 
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();
@@ -48,9 +46,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             HashSet<int> shotFrames = _datasetServicesManager.CurrentDataset.DatasetService.GetShotFrameNumbersForVideo(selectedFrame.VideoId)
                                                              .Select(t => t.StartFrame)
                                                              .ToHashSet();
-            SampledFrames.Clear();
-            SampledFrames.AddRange(
-                _loadedFrames.Where(f => shotFrames.Contains(f.FrameNumber)).Append(_loadedFrames.Last()).Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber)));
+            List<FrameViewModel> viewModelsToAdd = _loadedFrames.Where(f => shotFrames.Contains(f.FrameNumber))
+                                                                .Append(_loadedFrames.Last())
+                                                                .Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber))
+                                                                .ToList();
+            AddFramesToVisibleItems(SampledFrames, viewModelsToAdd);
 
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
@@ -63,13 +63,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             await LoadFramesForIds(sortedFrameIds);
 
-            const int sampledFramesCount = 10;
-            SampledFrames.Clear();
-            SampledFrames.AddRange(
-                Enumerable.Range(0, sampledFramesCount)
-                          .Select(i => _loadedFrames[_loadedFrames.Count / sampledFramesCount * i])
-                          .Append(_loadedFrames.Last())
-                          .Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber)));
+            const int sampledFramesCount = 41;
+            List<FrameViewModel> viewModelsToAdd = Enumerable.Range(0, sampledFramesCount)
+                                                             .Select(i => _loadedFrames[_loadedFrames.Count / sampledFramesCount * i])
+                                                             .Append(_loadedFrames.Last())
+                                                             .Select(f => ConvertThumbnailToViewModel(f.VideoId, f.FrameNumber))
+                                                             .ToList();
+            AddFramesToVisibleItems(SampledFrames, viewModelsToAdd);
 
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
@@ -80,7 +80,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void CloseButton()
         {
-            TryClose(true);
             Close?.Invoke(this, EventArgs.Empty);
         }
 
