@@ -115,12 +115,14 @@
                     Grid.Column="8"
                     Content="{x:Static properties:Resources.PreviousPageButtonText}" />
 
-                <Label
-                    Grid.Column="9"
-                    Background="White"
-                    VerticalContentAlignment="Center"
-                    HorizontalContentAlignment="Left"
-                    Content="{Binding CurrentPageNumber}"/>
+                <TextBlock Grid.Column="9" Background="White" Padding="8">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}/{1}">
+                            <Binding Path="CurrentPageNumber" />
+                            <Binding Path="LastPageNumber" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
 
                 <Button
                     x:Name="NextPageButton"

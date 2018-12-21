@@ -84,6 +84,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
+        public int LastPageNumber => (int)Math.Ceiling(_loadedFrames.Count / (double)(DisplayHeight / ImageHeight * (DisplayWidth / ImageWidth))) - 1;
+
         public void FirstPageButton()
         {
             CurrentPageNumber = 0;
@@ -92,8 +94,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void LastPageButton()
         {
-            var itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
-            CurrentPageNumber = (int)Math.Ceiling(_loadedFrames.Count / (double)itemsCount) - 1;
+            CurrentPageNumber = LastPageNumber;
             UpdateVisibleFrames();
         }
 
@@ -139,6 +140,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected override void UpdateVisibleFrames()
         {
+            NotifyOfPropertyChange(nameof(LastPageNumber));
             int itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
             List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
 
