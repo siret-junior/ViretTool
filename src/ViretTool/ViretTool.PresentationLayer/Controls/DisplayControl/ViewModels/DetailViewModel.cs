@@ -57,13 +57,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IsBusy = false;
         }
 
-        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, IList<FrameViewModel> topFrames)
+        public async Task LoadSortedDisplay(FrameViewModel selectedFrame, int[] sortedFrameIds)
         {
             IsBusy = true;
-            FrameViewModel[] sortedFrameIds = await Task.Run(() => GetSortedFrameIds(topFrames));
 
-            _loadedFrames = sortedFrameIds.Select(f => f.Clone()).ToList();
-            UpdateVisibleFrames();
+            await LoadFramesForIds(sortedFrameIds);
 
             const int sampledFramesCount = 10;
             SampledFrames.Clear();
@@ -95,27 +93,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
-        }
-
-        private FrameViewModel[] GetSortedFrameIds(IList<FrameViewModel> topFrames)
-        {
-            List<FrameViewModel> topFramesWithIds = topFrames.Where(f => GetFrameId(f).HasValue).ToList();
-            List<float[]> data = topFramesWithIds.Select(id => _datasetServicesManager.CurrentDataset.SemanticVectorProvider.Descriptors[GetFrameId(id).Value]).ToList();
-            int width = ColumnCount;
-            int height = data.Count / ColumnCount;
-            //we ignore items out of the grid
-            int[,] sortedFrames = new GridSorterFast().SortItems(data.Take(width * height).ToList(), width, height);
-
-            FrameViewModel[] result = new FrameViewModel[width * height];
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    result[i * width + j] = topFramesWithIds[sortedFrames[j, i]];
-                }
-            }
-
-            return result;
         }
     }
 }

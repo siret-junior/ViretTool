@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Services;
 
@@ -28,17 +26,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public int FrameNumber { get; private set; }
 
-        public BitmapImage ImageSource
+        public byte[] ImageSource
         {
             get
             {
-                BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = new MemoryStream(_servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image);
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
-
-                return bitmapImage;
+                return _servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image;
             }
         }
 

@@ -49,6 +49,9 @@
     <Compile Include="Descriptors\ColorSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\PercentOfBlackDescriptorProvider.cs" />
     <Compile Include="Descriptors\SemanticVectorDescriptorProvider.cs" />
+    <Compile Include="OutputGridSorting\GridSorter.cs" />
+    <Compile Include="OutputGridSorting\GridSorterFast.cs" />
+    <Compile Include="OutputGridSorting\IGridSorter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankingModels\BiTemporalRanking.cs" />
     <Compile Include="RankingModels\Filtering\FilterState.cs" />

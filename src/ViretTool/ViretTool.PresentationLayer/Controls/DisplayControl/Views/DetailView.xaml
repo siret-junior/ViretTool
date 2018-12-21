@@ -15,7 +15,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:DetailViewModel}">
     <!--ResizeMode="NoResize" WindowStartupLocation="CenterOwner"-->
-    <Border BorderBrush="White" BorderThickness="4" >
+    <Border BorderBrush="White" BorderThickness="2" Background="White">
         <common:BusyIndicator IsBusy="{Binding IsBusy}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -29,7 +29,7 @@
 
                 <Label Grid.Row="0" Grid.Column="0" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SearchResultsText}" VerticalAlignment="Center"/>
 
-                <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding VisibleFrames}" Background="White" 
+                <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding VisibleFrames}" 
                           ScrollViewer.CanContentScroll="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

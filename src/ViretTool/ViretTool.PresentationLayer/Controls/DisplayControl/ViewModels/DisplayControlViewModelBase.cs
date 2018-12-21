@@ -40,9 +40,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
         public event EventHandler<FrameViewModel> FrameForVideoChanged;
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
-        public event EventHandler<(FrameViewModel SelectedFrame, IList<FrameViewModel> TopFrames)> FrameForSortChanged;
+        public event EventHandler<FrameViewModel> FrameForSortChanged;
         public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;
 
+        public int[] GetTopFrameIds(int count) => _loadedFrames.Select(GetFrameId).Where(id => id.HasValue).Take(count).Cast<int>().ToArray();
 
         public virtual async Task LoadVideoForFrame(FrameViewModel frameViewModel)
         {
@@ -94,8 +95,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void OnSortDisplay(FrameViewModel frameViewModel)
         {
             BeforeEventAction();
-            const int topFramesCount = 2000;
-            FrameForSortChanged?.Invoke(this, (frameViewModel, _loadedFrames.Take(topFramesCount).ToList()));
+            FrameForSortChanged?.Invoke(this, frameViewModel);
         }
 
         public void OnVideoDisplay(FrameViewModel frameViewModel)

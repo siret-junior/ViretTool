@@ -1,6 +1,8 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using ViretTool.BusinessLayer.OutputGridSorting;
+using ViretTool.PresentationLayer.Controls.DisplayControl;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.DisplayControl.Views;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
@@ -14,6 +16,8 @@ namespace ViretTool.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
+            container.Register(Component.For<IGridSorter>().ImplementedBy<GridSorterFast>());
+
             container.Register(
                 Component.For<MainWindowView>(), //default lifestyle is singleton
                 Component.For<MainWindowViewModel>(),

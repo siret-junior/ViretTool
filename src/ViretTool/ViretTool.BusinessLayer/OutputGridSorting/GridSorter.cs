@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ViretTool.PresentationLayer.Controls.DisplayControl
+namespace ViretTool.BusinessLayer.OutputGridSorting
 {
     class GridSorterGeneral
     {

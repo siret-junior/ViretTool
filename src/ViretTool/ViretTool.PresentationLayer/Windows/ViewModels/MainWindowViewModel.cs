@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
+using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.PresentationLayer.Controls.DisplayControl;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
@@ -20,13 +23,17 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 {
     public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive
     {
+        private const int TopFramesCount = 2000;
         private readonly IDatasetServicesManager _datasetServicesManager;
+        private readonly IGridSorter _gridSorter;
         private readonly ILogger _logger;
         private readonly IWindowManager _windowManager;
         private readonly SubmitControlViewModel _submitControlViewModel;
         private bool _isBusy;
         private bool _isDetailVisible;
         private bool _isFirstQueryPrimary = true;
+        private Task<int[]> _sortingTask;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         public MainWindowViewModel(
             ILogger logger,
@@ -37,12 +44,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             SubmitControlViewModel submitControlViewModel,
             QueryViewModel query1,
             QueryViewModel query2,
-            IDatasetServicesManager datasetServicesManager)
+            IDatasetServicesManager datasetServicesManager,
+            IGridSorter gridSorter)
         {
             _logger = logger;
             _windowManager = windowManager;
             _submitControlViewModel = submitControlViewModel;
             _datasetServicesManager = datasetServicesManager;
+            _gridSorter = gridSorter;
 
             QueryResults = queryResults;
             DetailView = detailView;
@@ -59,7 +68,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 display.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
                 display.SubmittedFramesChanged += (sender, submittedFrames) => OnSubmittedFramesChanged(submittedFrames);
-                display.FrameForSortChanged += async (sender, tuple) => await OnFrameForSortChanged(tuple.SelectedFrame, tuple.TopFrames);
+                display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
             }
 
@@ -174,6 +183,11 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 await QueryResults.LoadInitialDisplay();
 
+                //start async sorting computation
+                _sortingTask = _gridSorter.GetSortedFrameIdsAsync(
+                    QueryResults.GetTopFrameIds(TopFramesCount).Take(TopFramesCount).ToList(),
+                    DetailViewModel.ColumnCount,
+                    _cancellationTokenSource);
             }
             catch (Exception e)
             {
@@ -206,13 +220,21 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IsBusy = true;
             try
             {
+                CancelSortingTaskIfNecessary();
+
                 TemporalRankedResultSet queryResult =
                     await Task.Run(
                         () => _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(
                             new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
 
                 //TODO - combine both results
-                await QueryResults.LoadFramesForIds(queryResult.TemporalResultSets.First().Select(rf => rf.Id));
+                List<int> sortedIds = queryResult.TemporalResultSets.First().Select(rf => rf.Id).ToList();
+
+                _cancellationTokenSource = new CancellationTokenSource();
+                //start async sorting computation
+                _sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
+
+                await QueryResults.LoadFramesForIds(sortedIds);
             }
             catch (Exception e)
             {
@@ -221,6 +243,28 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        private void CancelSortingTaskIfNecessary()
+        {
+            if (!_sortingTask.IsCanceled && !_sortingTask.IsCompleted)
+            {
+                try
+                {
+                    _cancellationTokenSource.Cancel();
+                }
+                catch (OperationCanceledException e)
+                {
+                    //not doing anything
+                }
+                catch (AggregateException e)
+                {
+                    if (!e.InnerExceptions.All(inner => inner is OperationCanceledException))
+                    {
+                        throw;
+                    }
+                }
             }
         }
 
@@ -245,12 +289,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             await DetailViewModel.LoadVideoForFrame(selectedFrame);
         }
 
-        private async Task OnFrameForSortChanged(FrameViewModel selectedFrame, IList<FrameViewModel> topFrames)
+        private async Task OnFrameForSortChanged(FrameViewModel selectedFrame)
         {
             IsBusy = true;
+            int[] sortedIds = await _sortingTask;
             IsDetailVisible = true;
-
-            await DetailViewModel.LoadSortedDisplay(selectedFrame, topFrames);
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
         }
 
         private void CloseDetailViewModel()
