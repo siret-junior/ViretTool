@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThumbnailVisualizationTest"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorSignatureVisualizationTest", "ColorSignatureVisualizationTest\ColorSignatureVisualizationTest.csproj", "{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThumbnailFileCreator", "ThumbnailFileCreator\ThumbnailFileCreator.csproj", "{1830E66E-F3A1-45D0-BE39-3B83ED22E236}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -104,6 +106,10 @@ Global
 		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug|x64.Build.0 = Debug|x64
 		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release|x64.ActiveCfg = Release|x64
 		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release|x64.Build.0 = Release|x64
+		{1830E66E-F3A1-45D0-BE39-3B83ED22E236}.Debug|x64.ActiveCfg = Debug|x64
+		{1830E66E-F3A1-45D0-BE39-3B83ED22E236}.Debug|x64.Build.0 = Debug|x64
+		{1830E66E-F3A1-45D0-BE39-3B83ED22E236}.Release|x64.ActiveCfg = Release|x64
+		{1830E66E-F3A1-45D0-BE39-3B83ED22E236}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +125,7 @@ Global
 		{881D6795-3A96-4AAE-9560-36693EA1D65D} = {E23F79E3-F261-42F2-BA40-803880674AEA}
 		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
 		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
+		{1830E66E-F3A1-45D0-BE39-3B83ED22E236} = {FCA31D4E-6EBB-4928-AABF-02D1E0C67E17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}
