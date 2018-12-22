@@ -11,8 +11,7 @@
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
              mc:Ignorable="d" 
-             Height="800" Width="1200"
-             d:DesignHeight="450" d:DesignWidth="800"
+             Height="780" Width="1550"
              d:DataContext="{d:DesignInstance viewModels:DetailViewModel}">
     <!--ResizeMode="NoResize" WindowStartupLocation="CenterOwner"-->
     <Border BorderBrush="White" BorderThickness="2" Background="White">
@@ -24,7 +23,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="256"/>
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SearchResultsText}" VerticalAlignment="Center"/>

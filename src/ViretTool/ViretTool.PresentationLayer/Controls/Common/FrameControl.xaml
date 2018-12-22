@@ -40,7 +40,8 @@
                 <Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
                 <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />
 
-                <Grid Name="DisplayButtons" Width="100" Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.6"
+                <Grid Name="DisplayButtons" Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}" 
+                      Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.6"
                       Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -80,7 +81,10 @@
                     </Grid>
                 </Grid>
 
-                <Grid Name="ScrollHelper" Width="100" Height="75" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1"
+                <Grid Name="ScrollHelper" 
+                      Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}" 
+                      Height="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1"
                       Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
