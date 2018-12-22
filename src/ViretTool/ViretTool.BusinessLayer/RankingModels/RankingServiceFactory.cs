@@ -13,6 +13,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords;
+using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.DataLayer.DataIO.FilterIO;
 using ViretTool.DataLayer.DataModel;

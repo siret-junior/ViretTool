@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViretTool.BusinessLayer.RankingModels
+namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRanking
     {
