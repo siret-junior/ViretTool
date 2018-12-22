@@ -1,6 +1,6 @@
 ﻿using ViretTool.BusinessLayer.RankingModels.Queries;
 
-namespace ViretTool.BusinessLayer.RankingModels
+namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class TemporalRankedResultSet
     {

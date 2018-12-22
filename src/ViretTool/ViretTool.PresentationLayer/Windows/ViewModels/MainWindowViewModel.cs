@@ -13,6 +13,7 @@ using Microsoft.Win32;
 using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.DisplayControl;

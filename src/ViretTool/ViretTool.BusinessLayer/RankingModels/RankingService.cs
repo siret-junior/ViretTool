@@ -28,6 +28,7 @@ namespace ViretTool.BusinessLayer.RankingModels
         public RankedResultSet ComputeRankedResultSet(Query query)
         {
             // TODO: see BiTemporalRankingService
+            throw new NotImplementedException("Needs an update, see BiTemporalRankingService.");
 
             RankingModule.ComputeRanking(query, InputRanking, OutputRanking);
             float[] ranks = RankingModule.OutputRanking.Ranks;

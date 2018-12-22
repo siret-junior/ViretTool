@@ -14,6 +14,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords;
+using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Thumbnails;
 

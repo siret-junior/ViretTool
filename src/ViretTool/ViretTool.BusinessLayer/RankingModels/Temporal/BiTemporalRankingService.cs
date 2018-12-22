@@ -10,7 +10,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.DataLayer.DataModel;
 
-namespace ViretTool.BusinessLayer.RankingModels
+namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRankingService 
         : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
