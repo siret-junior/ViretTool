@@ -29,7 +29,7 @@
 
                 <Label Grid.Row="0" Grid.Column="0" Background="DarkGray" FontWeight="Bold" FontSize="14" Content="{x:Static properties:Resources.SearchResultsText}" VerticalAlignment="Center"/>
 
-                <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding VisibleFrames}" 
+                <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding VisibleFrames, IsAsync=True}" 
                           ScrollViewer.CanContentScroll="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -66,7 +66,7 @@
                 <Button x:Name="CloseButton" Grid.Row="0" Grid.Column="1" Background="White" FontWeight="Bold" FontSize="14" Content="X" Width="20" Height="20" 
                         Margin="4" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
 
-                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampledFrames}"
+                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampledFrames, IsAsync=True}"
                           ScrollViewer.CanContentScroll="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

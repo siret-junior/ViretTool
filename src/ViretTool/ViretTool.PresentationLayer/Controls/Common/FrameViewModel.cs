@@ -84,7 +84,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public FrameViewModel Clone()
         {
-            return new FrameViewModel(VideoId, _originalFrameNumber, _servicesManager);
+            return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
         }
 
         public void ResetFrameNumber()

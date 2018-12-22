@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,8 @@ namespace ViretTool.BusinessLayer.Thumbnails
     {
         public IThumbnailService<T> BaseThumbnailService;
 
-        private readonly Dictionary<(int videoId, int frameId), T> _cache 
-            = new Dictionary<(int, int), T>();
+        private readonly ConcurrentDictionary<(int videoId, int frameId), T> _cache 
+            = new ConcurrentDictionary<(int, int), T>();
         private readonly LinkedList<(int videoId, int frameId)> _leastRecentlyUsed 
             = new LinkedList<(int videoId, int frameId)>();
         private readonly int _cacheSize;
@@ -32,14 +33,14 @@ namespace ViretTool.BusinessLayer.Thumbnails
         {
             for (int iDropped = _cache.Count; iDropped > count; iDropped--)
             {
-                _cache.Remove(_leastRecentlyUsed.Last.Value);
+                _cache.TryRemove(_leastRecentlyUsed.Last.Value, out _);
                 _leastRecentlyUsed.RemoveLast();
             }
         }
 
         private void CacheThumbnail(int videoId, int frameId, T thumbnail)
         {
-            _cache.Add((videoId, frameId), thumbnail);
+            _cache.TryAdd((videoId, frameId), thumbnail);
             TrimCache(_cacheSize);
         }
 

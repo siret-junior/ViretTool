@@ -155,6 +155,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                          ValidateNames = false,
                                                          CheckFileExists = false,
                                                          CheckPathExists = true,
+                                                         DereferenceLinks = false,
                                                          FileName = Resources.Properties.Resources.SelectDirectoryText
                                                      };
                 if (folderBrowserDialog.ShowDialog() == true)

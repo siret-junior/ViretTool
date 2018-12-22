@@ -75,7 +75,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             frameViewModel.IsSelectedForQuery = true;
             BeforeEventAction();
-            FramesForQueryChanged?.Invoke(this, _loadedFrames.Where(f => f.IsSelectedForQuery).ToList());
+            FramesForQueryChanged?.Invoke(this, _loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList());
         }
 
         public void OnFrameSelected(FrameViewModel frameViewModel)
