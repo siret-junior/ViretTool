@@ -84,20 +84,21 @@
                 <Grid Name="ScrollHelper" 
                       Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}" 
                       Height="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}"
-                      HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1"
-                      Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
+                      HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="4*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Name="LeftScrollHelper" Grid.Column="0" Foreground="Azure" Text="&lt;" Margin="0,0,1,60">
+                    <TextBlock Name="LeftScrollHelper" Grid.Column="0" Foreground="Azure" Text="&lt;" Margin="0,0,1,60"
+                               Visibility="{Binding Path=IsScrollingLeft, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
                         <TextBlock.RenderTransform>
                             <ScaleTransform ScaleX="1" ScaleY="4" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
-                    <TextBlock Name="RightScrollHelper" Grid.Column="2" Foreground="Azure" TextAlignment="Right" Text="&gt;" Margin="0,0,1,60">
+                    <TextBlock Name="RightScrollHelper" Grid.Column="2" Foreground="Azure" TextAlignment="Right" Text="&gt;" Margin="0,0,1,60"
+                               Visibility="{Binding Path=IsScrollingRight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
                         <TextBlock.RenderTransform>
                             <ScaleTransform ScaleX="1" ScaleY="4" />
                         </TextBlock.RenderTransform>

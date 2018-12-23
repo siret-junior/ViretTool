@@ -82,6 +82,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(FrameControl),
             new PropertyMetadata(default(bool)));
 
+        public static readonly DependencyProperty IsScrollingRightProperty = DependencyProperty.Register(
+            nameof(IsScrollingRight),
+            typeof(bool),
+            typeof(FrameControl),
+            new PropertyMetadata(default(bool)));
+
+        public static readonly DependencyProperty IsScrollingLeftProperty = DependencyProperty.Register(
+            nameof(IsScrollingLeft),
+            typeof(bool),
+            typeof(FrameControl),
+            new PropertyMetadata(default(bool)));
+
         public FrameControl()
         {
             InitializeComponent();
@@ -117,6 +129,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get => (bool)GetValue(IsClickedProperty);
             set => SetValue(IsClickedProperty, value);
+        }
+
+        public bool IsScrollingRight
+        {
+            get => (bool)GetValue(IsScrollingRightProperty);
+            set => SetValue(IsScrollingRightProperty, value);
+        }
+
+        public bool IsScrollingLeft
+        {
+            get => (bool)GetValue(IsScrollingLeftProperty);
+            set => SetValue(IsScrollingLeftProperty, value);
         }
 
         public event RoutedEventHandler AddToQueryClicked
@@ -187,6 +211,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             FrameControl_OnMouseLeave(sender, e);
             IsClicked = false;
+            IsScrollingLeft = false;
+            IsScrollingRight = false;
 
             if (!(DataContext is FrameViewModel frameViewModel))
             {
@@ -209,17 +235,23 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             IsClicked = true;
-            RaiseEvent(new RoutedEventArgs(ScrollVideoDisplayEvent));
+            IsScrollingLeft = false;
+            IsScrollingRight = false;
+
             if (e.Delta < 0)
             {
+                IsScrollingRight = true;
                 frameViewModel.ScrollNext();
             }
             else if (e.Delta > 0)
             {
+                IsScrollingLeft = true;
                 frameViewModel.ScrollPrevious();
             }
 
             e.Handled = true;
+
+            RaiseEvent(new RoutedEventArgs(ScrollVideoDisplayEvent));
         }
 
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
