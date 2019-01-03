@@ -213,4 +213,10 @@
   <data name="DetailViewText" xml:space="preserve">
     <value>Detail:</value>
   </data>
+  <data name="Max3FromVideo" xml:space="preserve">
+    <value>Max 3 frames from video</value>
+  </data>
+  <data name="Max1FromShot" xml:space="preserve">
+    <value>Max 1 frame from shot</value>
+  </data>
 </root>

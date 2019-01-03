@@ -44,78 +44,42 @@
 
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
 
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
 
+                    <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <!--<Button 
-                    x:Name="FilterVideoButton"
+                <CheckBox
+                    x:Name="IsMax1FromShotChecked"
                     Grid.Column="0"
-                    Content="Filter video" />
+                    Content="{x:Static properties:Resources.Max1FromShot}"
+                    IsChecked="false"
+                    Margin="5,8,5,8" />
 
                 <CheckBox
-                    x:Name="IsSortDisplayChecked"
+                    x:Name="IsMax3FromVideoChecked"
                     Grid.Column="1"
-                    Content="Sort items"
+                    Content="{x:Static properties:Resources.Max3FromVideo}"
                     IsChecked="false"
                     Margin="5,8,5,8" />
-
-                <CheckBox
-                    x:Name="IsLargeDisplayChecked"
-                    Grid.Column="2"
-                    Content="Large display"
-                    IsChecked="false"
-                    Margin="5,8,5,8" />
-
-                <CheckBox
-                    x:Name="IsShowFilteredVideosChecked"
-                    Grid.Column="3"
-                    Content="Hide filtered videos"
-                    IsChecked="false"
-                    Margin="5,8,5,8" />
-
-                <CheckBox
-                    x:Name="Max3FromVideoCheckbox"
-                    Grid.Column="4"
-                    Content="Max 3 from video"
-                    IsChecked="false"
-                    Margin="5,8,5,8" />-->
-
-
-                <!--<Button
-                    Name="sequentialDisplayButton"
-                    Grid.Column="5"
-                    Click="sequentialDisplayButton_Click"
-                    Content="/ Sequential /" />
-                <Button
-                    Name="randomDisplayButton"
-                    Grid.Column="6"
-                    Click="randomDisplayButton_Click"
-                    Content="# Random #" />-->
 
                 <Button
                     x:Name="FirstPageButton"
-                    Grid.Column="7"
+                    Grid.Column="3"
                     Content="{x:Static properties:Resources.FirstPageButtonText}" />
                 <Button
                     x:Name="PreviousPageButton"
-                    Grid.Column="8"
+                    Grid.Column="4"
                     Content="{x:Static properties:Resources.PreviousPageButtonText}" />
 
-                <TextBlock Grid.Column="9" Background="White" Padding="8">
+                <TextBlock Grid.Column="5" Background="White" Padding="8">
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0}/{1}">
                             <Binding Path="CurrentPageNumber" />
@@ -126,11 +90,11 @@
 
                 <Button
                     x:Name="NextPageButton"
-                    Grid.Column="10"
+                    Grid.Column="6"
                     Content="{x:Static properties:Resources.NextPageButtonText}" />
                 <Button
                     x:Name="LastPageButton"
-                    Grid.Column="11"
+                    Grid.Column="7"
                     Content="{x:Static properties:Resources.LastPageButtonText}" />
 
             </Grid>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -13,58 +12,40 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         private int _currentPageNumber;
 
-        private bool _isLargeDisplayChecked;
-        private bool _isShowFilteredVideosChecked;
-        private bool _isSortDisplayChecked;
+        private bool _isMax1FromShotChecked;
+        private bool _isMax3FromVideoChecked;
 
-        public PageDisplayControlViewModel(
-            ILogger logger,
-            IDatasetServicesManager datasetServicesManager)
+        public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
             : base(logger, datasetServicesManager)
         {
         }
 
-        public bool IsLargeDisplayChecked
+        public bool IsMax1FromShotChecked
         {
-            get => _isLargeDisplayChecked;
+            get => _isMax1FromShotChecked;
             set
             {
-                if (_isLargeDisplayChecked == value)
+                if (_isMax1FromShotChecked == value)
                 {
                     return;
                 }
 
-                _isLargeDisplayChecked = value;
+                _isMax1FromShotChecked = value;
                 NotifyOfPropertyChange();
             }
         }
 
-        public bool IsShowFilteredVideosChecked
+        public bool IsMax3FromVideoChecked
         {
-            get => _isShowFilteredVideosChecked;
+            get => _isMax3FromVideoChecked;
             set
             {
-                if (_isShowFilteredVideosChecked == value)
+                if (_isMax3FromVideoChecked == value)
                 {
                     return;
                 }
 
-                _isShowFilteredVideosChecked = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public bool IsSortDisplayChecked
-        {
-            get => _isSortDisplayChecked;
-            set
-            {
-                if (_isSortDisplayChecked == value)
-                {
-                    return;
-                }
-
-                _isSortDisplayChecked = value;
+                _isMax3FromVideoChecked = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -84,7 +65,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public int LastPageNumber => (int)Math.Ceiling(_loadedFrames.Count / (double)(DisplayHeight / ImageHeight * (DisplayWidth / ImageWidth))) - 1;
+        public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / (double)(DisplayHeight / ImageHeight * (DisplayWidth / ImageWidth))) - 1 : 0;
 
         public void FirstPageButton()
         {
@@ -100,6 +81,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void NextPageButton()
         {
+            if (CurrentPageNumber >= LastPageNumber)
+            {
+                return;
+            }
+
             CurrentPageNumber++;
             UpdateVisibleFrames();
         }
@@ -113,11 +99,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             CurrentPageNumber--;
             UpdateVisibleFrames();
-        }
-
-        public void FilterVideoButton()
-        {
-            //TODO
         }
 
         public override Task LoadInitialDisplay()

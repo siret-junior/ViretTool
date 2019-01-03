@@ -198,4 +198,10 @@
   <data name="DetailViewText" xml:space="preserve">
     <value>Náhled:</value>
   </data>
+  <data name="Max3FromVideo" xml:space="preserve">
+    <value>Max 3 snímky z videa</value>
+  </data>
+  <data name="Max1FromShot" xml:space="preserve">
+    <value>Max 1 snímek ze shotu</value>
+  </data>
 </root>

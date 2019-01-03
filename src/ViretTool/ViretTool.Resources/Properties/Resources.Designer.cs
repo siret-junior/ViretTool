@@ -133,7 +133,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 75.
+        ///   Looks up a localized string similar to 72.
         /// </summary>
         public static string ImageHeight {
             get {
@@ -142,7 +142,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 100.
+        ///   Looks up a localized string similar to 128.
         /// </summary>
         public static string ImageWidth {
             get {
@@ -174,6 +174,24 @@ namespace ViretTool.Resources.Properties {
         public static string MapButtonText {
             get {
                 return ResourceManager.GetString("MapButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max 1 frame from shot.
+        /// </summary>
+        public static string Max1FromShot {
+            get {
+                return ResourceManager.GetString("Max1FromShot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max 3 frames from video.
+        /// </summary>
+        public static string Max3FromVideo {
+            get {
+                return ResourceManager.GetString("Max3FromVideo", resourceCulture);
             }
         }
         
