@@ -219,4 +219,10 @@
   <data name="Max1FromShot" xml:space="preserve">
     <value>Max 1 frame from shot</value>
   </data>
+  <data name="TeamIdText" xml:space="preserve">
+    <value>Team ID:</value>
+  </data>
+  <data name="MemberIdText" xml:space="preserve">
+    <value>Member ID:</value>
+  </data>
 </root>

@@ -369,17 +369,16 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private class ColorPoint : SketchPoint
         {
-            public readonly Color FillColor;
             private readonly Ellipse FillEllipse;
 
             public ColorPoint(Point point, Color color, Canvas canvas) : base(point, color, canvas)
             {
-                FillColor = color;
-
-                FillEllipse = new Ellipse();
-                FillEllipse.Width = 2 * Radius;
-                FillEllipse.Height = 2 * Radius;
-                FillEllipse.Fill = new SolidColorBrush(color);
+                FillEllipse = new Ellipse
+                              {
+                                  Width = 2 * Radius,
+                                  Height = 2 * Radius,
+                                  Fill = new SolidColorBrush(color)
+                              };
                 canvas.Children.Add(FillEllipse);
 
                 UpdatePosition(point);

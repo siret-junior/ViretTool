@@ -196,6 +196,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Member ID:.
+        /// </summary>
+        public static string MemberIdText {
+            get {
+                return ResourceManager.GetString("MemberIdText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next &gt;.
         /// </summary>
         public static string NextPageButtonText {
@@ -318,6 +327,15 @@ namespace ViretTool.Resources.Properties {
         public static string SubmitWindowTitle {
             get {
                 return ResourceManager.GetString("SubmitWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Team ID:.
+        /// </summary>
+        public static string TeamIdText {
+            get {
+                return ResourceManager.GetString("TeamIdText", resourceCulture);
             }
         }
         

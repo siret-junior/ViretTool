@@ -16,6 +16,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.Installers
@@ -55,8 +56,8 @@ namespace ViretTool.Installers
                 );
 
             //singleton services
-            //container.Register(
-            //    Component.For<IRankFusion>().ImplementedBy<RankFusionSum>());
+            container.Register(
+                Component.For<ISubmissionService>().ImplementedBy<SubmissionService>());
 
             //transient services
             container.Register(

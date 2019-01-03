@@ -65,11 +65,28 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Menu Grid.Row="0" Width="Auto" Background="White">
-                            <MenuItem Header="{x:Static properties:Resources.FileHeader}">
-                                <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
-                            </MenuItem>
-                        </Menu>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Menu Grid.Row="0" Width="Auto" Background="White">
+                                <MenuItem Header="{x:Static properties:Resources.FileHeader}">
+                                    <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
+                                </MenuItem>
+                            </Menu>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="4">
+                                <TextBlock Text="{x:Static properties:Resources.TeamIdText}" />
+                                <TextBox x:Name="TeamId" Margin="4,0,0,0" Width="30"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="4" Orientation="Horizontal">
+                                <TextBlock Text="{x:Static properties:Resources.MemberIdText}" />
+                                <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="30"/>
+                            </StackPanel>
+                        </Grid>
 
                         <GroupBox Grid.Row="1" Margin="6">
                             <GroupBox.Header>

@@ -10,11 +10,13 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
+using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.BusinessLayer.Submission;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.DisplayControl;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
@@ -27,11 +29,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private const int TopFramesCount = 2000;
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly IGridSorter _gridSorter;
+        private readonly ISubmissionService _submissionService;
         private readonly ILogger _logger;
         private readonly IWindowManager _windowManager;
         private readonly SubmitControlViewModel _submitControlViewModel;
         private bool _isBusy;
         private bool _isDetailVisible;
+        private int _teamId = 4;    //VIRET
+        private int _memberId = 1;
         private bool _isFirstQueryPrimary = true;
         private Task<int[]> _sortingTask;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -46,13 +51,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             QueryViewModel query1,
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager,
-            IGridSorter gridSorter)
+            IGridSorter gridSorter,
+            ISubmissionService submissionService)
         {
             _logger = logger;
             _windowManager = windowManager;
             _submitControlViewModel = submitControlViewModel;
             _datasetServicesManager = datasetServicesManager;
             _gridSorter = gridSorter;
+            _submissionService = submissionService;
 
             QueryResults = queryResults;
             DetailView = detailView;
@@ -68,13 +75,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             foreach (var display in displays)
             {
                 display.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
-                display.SubmittedFramesChanged += (sender, submittedFrames) => OnSubmittedFramesChanged(submittedFrames);
+                display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
             }
 
             DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
         }
+
+        public QueryViewModel Query1 { get; }
+        public QueryViewModel Query2 { get; }
+
+        public DisplayControlViewModelBase QueryResults { get; }
+        public DisplayControlViewModelBase DetailView { get; }
+        public DetailViewModel DetailViewModel { get; }
 
         public bool IsBusy
         {
@@ -90,13 +104,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
-
-        public QueryViewModel Query1 { get; }
-        public QueryViewModel Query2 { get; }
-
-        public DisplayControlViewModelBase QueryResults { get; }
-        public DisplayControlViewModelBase DetailView { get; }
-        public DetailViewModel DetailViewModel { get; }
 
         public bool IsFirstQueryPrimary
         {
@@ -124,6 +131,36 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
 
                 _isDetailVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int TeamId
+        {
+            get => _teamId;
+            set
+            {
+                if (_teamId == value)
+                {
+                    return;
+                }
+
+                _teamId = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int MemberId
+        {
+            get => _memberId;
+            set
+            {
+                if (_memberId == value)
+                {
+                    return;
+                }
+
+                _memberId = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -256,7 +293,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 {
                     _cancellationTokenSource.Cancel();
                 }
-                catch (OperationCanceledException e)
+                catch (OperationCanceledException)
                 {
                     //not doing anything
                 }
@@ -270,7 +307,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        private void OnSubmittedFramesChanged(IList<FrameViewModel> submittedFrames)
+        private async Task OnSubmittedFramesChanged(IList<FrameViewModel> submittedFrames)
         {
             _submitControlViewModel.Initialize(submittedFrames);
             if (_windowManager.ShowDialog(_submitControlViewModel) != true)
@@ -279,8 +316,31 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
+
+            IsBusy = true;
+            try
+            {
+                IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+                List<FrameToSubmit> framesToSubmit = _submitControlViewModel
+                                                     .SubmittedFrames.Select(
+                                                         f => new FrameToSubmit(f.VideoId + 1, datasetService.GetFrameIdForFrameNumber(f.VideoId, f.FrameNumber), -1))
+                                                     .ToList();
+                foreach (FrameToSubmit frameToSubmit in framesToSubmit)
+                {
+                    string response = await _submissionService.SubmitFramesAsync(TeamId, MemberId, frameToSubmit);
+                    _logger.Info(response);
+                }
+            }
+            catch (Exception e)
+            {
+                LogError(e, "Error while submitting frames");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
             MessageBox.Show("Frames submitted");
-            //TODO send SubmittedFrames.Select(...) somewhere
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)
