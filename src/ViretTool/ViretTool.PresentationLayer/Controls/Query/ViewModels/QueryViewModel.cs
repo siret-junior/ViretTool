@@ -388,7 +388,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 !SemanticUseForSorting);
 
             FinalQuery = new BusinessLayer.RankingModels.Queries.Query(
-                new SimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),
+                new BiTemporalSimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),
                 new FilteringQuery(
                     new ThresholdFilteringQuery(ConvertToFilterState(BwFilterState), BwFilterValue * 0.01),
                     new ThresholdFilteringQuery(ConvertToFilterState(PercentageBlackFilterState), PercentageBlackFilterValue * 0.01),

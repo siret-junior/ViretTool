@@ -10,8 +10,8 @@ namespace ViretTool.BusinessLayer.RankingModels
         ISemanticExampleModel<SemanticExampleQuery> SemanticExampleModel { get; }
         IRankFusion RankFusion { get; }
 
-        SimilarityQuery CachedQuery { get; }
+        BiTemporalSimilarityQuery CachedQuery { get; }
 
-        void ComputeRanking(SimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking);
+        void ComputeRanking(BiTemporalSimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking);
     }
 }

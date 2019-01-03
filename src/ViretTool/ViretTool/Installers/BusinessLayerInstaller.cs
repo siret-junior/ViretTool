@@ -46,7 +46,7 @@ namespace ViretTool.Installers
 
 
 
-                Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>()
+                Component.For<IBiTemporalRankingService<Query, RankedResultSet, BiTemporalQuery, TemporalRankedResultSet>>()
                          .ImplementedBy<BiTemporalRankingService>()
                          .LifestyleBoundTo<DatasetServices>()
                 //Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>()

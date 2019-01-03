@@ -13,7 +13,7 @@ using ViretTool.DataLayer.DataModel;
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRankingService 
-        : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
+        : IBiTemporalRankingService<Query, RankedResultSet, BiTemporalQuery, TemporalRankedResultSet>
     {
         public IDatasetService DatasetService { get; }
         //public int FrameCount { get; }
@@ -22,7 +22,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
         public IRankingModule SecondaryRankingModule { get; }
         public IFilteringModule FilteringModule { get; }
 
-        public TemporalQuery CachedQuery { get; private set; }
+        public BiTemporalQuery CachedQuery { get; private set; }
         public TemporalRankedResultSet CachedResultSet { get; private set; }
 
         public RankingBuffer InputRanking { get; private set; }
@@ -44,7 +44,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
         }
         
 
-        public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
+        public TemporalRankedResultSet ComputeRankedResultSet(BiTemporalQuery query)
         {
             if ((query == null && CachedQuery == null) 
                 || query.Equals(CachedQuery))
@@ -107,7 +107,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 
         public TemporalRankedResultSet ComputeRankedResultSet(Query query)
         {
-            return ComputeRankedResultSet(new TemporalQuery(new Query[2] { query, null }));
+            return ComputeRankedResultSet(new BiTemporalQuery(new Query[2] { query, null }));
         }
     }
 }

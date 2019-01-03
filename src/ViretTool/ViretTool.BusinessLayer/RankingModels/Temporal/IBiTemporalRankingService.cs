@@ -18,6 +18,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
         TTemporalResult CachedResultSet { get; }
 
         TTemporalResult ComputeRankedResultSet(TSimpleQuery query);
-        TTemporalResult ComputeRankedResultSet(TemporalQuery query);
+        TTemporalResult ComputeRankedResultSet(BiTemporalQuery query);
     }
 }

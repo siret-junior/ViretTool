@@ -53,6 +53,11 @@
     <Compile Include="OutputGridSorting\GridSorterFast.cs" />
     <Compile Include="OutputGridSorting\IGridSorter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RankingModels\Queries\BiTemporalRankingQuery.cs" />
+    <Compile Include="RankingModels\Queries\FilteredRankingQuery.cs" />
+    <Compile Include="RankingModels\Queries\IFilteringQuery.cs" />
+    <Compile Include="RankingModels\Queries\IQuery.cs" />
+    <Compile Include="RankingModels\Queries\IRankingQuery.cs" />
     <Compile Include="RankingModels\Temporal\BiTemporalRanking.cs" />
     <Compile Include="RankingModels\Filtering\FilterState.cs" />
     <Compile Include="RankingModels\Filtering\Filters\FilterBase.cs" />
@@ -81,7 +86,7 @@
     <Compile Include="RankingModels\Queries\CountFilteringQuery.cs" />
     <Compile Include="RankingModels\Queries\Synset.cs" />
     <Compile Include="RankingModels\Queries\SynsetGroup.cs" />
-    <Compile Include="RankingModels\Queries\TemporalQuery.cs" />
+    <Compile Include="RankingModels\Queries\BiTemporalQuery.cs" />
     <Compile Include="RankingModels\Queries\ThresholdFilteringQuery.cs" />
     <Compile Include="RankingModels\IRankingModule.cs" />
     <Compile Include="RankingModels\RankedFrame.cs" />
@@ -110,7 +115,7 @@
     <Compile Include="RankingModels\Queries\FilteringQuery.cs" />
     <Compile Include="RankingModels\Queries\KeywordQuery.cs" />
     <Compile Include="RankingModels\Queries\Query.cs" />
-    <Compile Include="RankingModels\Queries\SimilarityQuery.cs" />
+    <Compile Include="RankingModels\Queries\BiTemporalSimilarityQuery.cs" />
     <Compile Include="Descriptors\IDescriptorProvider.cs" />
     <Compile Include="RankingModels\Temporal\TemporalRankedResultSet.cs" />
     <Compile Include="Services\DatasetServicesManager.cs" />

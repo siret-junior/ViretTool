@@ -25,7 +25,7 @@ namespace ViretTool.BusinessLayer.RankingModels
 
     public class RankingServiceFactory
     {
-        public static IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
+        public static IBiTemporalRankingService<Query, RankedResultSet, BiTemporalQuery, TemporalRankedResultSet>
             //Build(IDatasetServicesManager datasetServicesManager)
             Build(string directory)
         {

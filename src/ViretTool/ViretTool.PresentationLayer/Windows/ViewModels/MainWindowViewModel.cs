@@ -227,7 +227,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 TemporalRankedResultSet queryResult =
                     await Task.Run(
                         () => _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(
-                            new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
+                            new BiTemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
 
                 //TODO - combine both results
                 List<int> sortedIds = queryResult.TemporalResultSets.First().Select(rf => rf.Id).ToList();

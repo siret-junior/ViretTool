@@ -16,7 +16,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
 
         public IRankFusion RankFusion { get; }
 
-        public SimilarityQuery CachedQuery { get; private set; }
+        public BiTemporalSimilarityQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer KeywordIntermediateRanking { get; set; }
         public RankingBuffer ColorIntermediateRanking { get; set; }
@@ -37,7 +37,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity
         }
 
 
-        public void ComputeRanking(SimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
+        public void ComputeRanking(BiTemporalSimilarityQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
