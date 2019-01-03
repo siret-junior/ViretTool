@@ -18,7 +18,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IDatasetServicesManager datasetServicesManager) : base(logger, datasetServicesManager)
         {
             ColumnCount = 10;
-            RowCount = 10;
+            RowCount = 12;
         }
 
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();

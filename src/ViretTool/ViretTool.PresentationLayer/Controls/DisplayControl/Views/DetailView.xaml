@@ -11,7 +11,7 @@
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
              mc:Ignorable="d" 
-             Height="780" Width="1550"
+             Height="940" Width="1550"
              d:DataContext="{d:DesignInstance viewModels:DetailViewModel}">
     <!--ResizeMode="NoResize" WindowStartupLocation="CenterOwner"-->
     <Border BorderBrush="White" BorderThickness="2" Background="White">
@@ -86,7 +86,7 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="15" Columns="3"/>
+                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="18" Columns="3"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.Template>
