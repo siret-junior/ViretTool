@@ -33,9 +33,10 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
-                                                                 [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
-                                                                 [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
-                                                                 [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
+                                                                     [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
+                                                                     [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
+                                                                     [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
+                                                                     [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
                                                  IsSelectable="True"
                                                  FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                                  FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
@@ -70,9 +71,10 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
-                                                                 [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
-                                                                 [Event FrameSelected] = [Action OnFrameSelectedSampled($dataContext)];
-                                                                 [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
+                                                                     [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
+                                                                     [Event FrameSelected] = [Action OnFrameSelectedSampled($dataContext)];
+                                                                     [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
+                                                                     [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
                                                  IsSelectable="True"
                                                  FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                                  FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}">

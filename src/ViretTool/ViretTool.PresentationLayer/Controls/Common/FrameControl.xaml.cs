@@ -192,7 +192,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
             switch (e.ChangedButton)
             {
                 case MouseButton.Left:
-                    IsClicked = true;
+                    //disabled for now
+                    //IsClicked = true;
                     break;
                 case MouseButton.Right:
                     IsClicked = false;
