@@ -11,7 +11,7 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel
 {
-    public class ColorSignatureModel : IColorSketchModel<ColorSketchQuery>
+    public class ColorSignatureModel : IColorSignatureModel<ColorSketchQuery>
     {
         public ColorSignatureModel(IRankFusion rankFusion, IDescriptorProvider<byte[]> colorSignatures)
         {

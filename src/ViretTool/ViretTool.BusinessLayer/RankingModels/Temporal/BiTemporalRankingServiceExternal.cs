@@ -12,39 +12,36 @@ using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
-    public class BiTemporalRankingService 
-        : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
+    public class BiTemporalRankingServiceExternal 
+        : IBiTemporalRankingServiceExternal<Query, RankedResultSet, TemporalQuery, BiTemporalRankedResultSet>
     {
         public IDatasetService DatasetService { get; }
-        //public int FrameCount { get; }
 
         public IRankingModule PrimaryRankingModule { get; }
         public IRankingModule SecondaryRankingModule { get; }
         public IFilteringModule FilteringModule { get; }
 
         public TemporalQuery CachedQuery { get; private set; }
-        public TemporalRankedResultSet CachedResultSet { get; private set; }
+        public BiTemporalRankedResultSet CachedResultSet { get; private set; }
 
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
 
 
-        public BiTemporalRankingService(
+        public BiTemporalRankingServiceExternal(
             IDatasetService datasetService,
-            //int frameCount,
             IRankingModule primaryRankingModule,
             IRankingModule secondaryRankingModule,
             IFilteringModule filteringModule)
         {
             DatasetService = datasetService;
-            //FrameCount = frameCount;
             PrimaryRankingModule = primaryRankingModule;
             SecondaryRankingModule = secondaryRankingModule;
             FilteringModule = filteringModule;
         }
         
 
-        public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
+        public BiTemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
         {
             if ((query == null && CachedQuery == null) 
                 || query.Equals(CachedQuery))
@@ -52,13 +49,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
                 return CachedResultSet;
             }
 
-            // create input ranking if neccessary
+            // create ranking buffers if neccessary
             if (InputRanking == null)
             {
                 InputRanking = RankingBuffer.Zeros("InitialRanking", DatasetService.FrameCount);
                 OutputRanking = RankingBuffer.Zeros("OutputRanking", DatasetService.FrameCount);
-                //InputRanking = RankingBuffer.Zeros("InitialRanking", FrameCount);
-                //OutputRanking = RankingBuffer.Zeros("OutputRanking", FrameCount);
             }
 
             if (query != null)
@@ -75,37 +70,40 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 
 
                 // retrieve filtered result
-                List<RankedFrame> accumulator = new List<RankedFrame>(ranks.Length);
+                List<RankedFrame> primaryRankedFrames = new List<RankedFrame>(ranks.Length);
                 for (int itemId = 0; itemId < ranks.Length; itemId++)
                 {
                     if (ranks[itemId] != float.MinValue)
                     {
-                        accumulator.Add(new RankedFrame(itemId, ranks[itemId]));
+                        primaryRankedFrames.Add(new RankedFrame(itemId, ranks[itemId]));
                     }
                 }
-                RankedFrame[] primaryRankedFrames = accumulator.ToArray();
 
                 // sort descending
-                Array.Sort(primaryRankedFrames, (rankedFrame1, rankedFrame2) => rankedFrame2.Rank.CompareTo(rankedFrame1.Rank));
+                primaryRankedFrames.Sort(
+                    (rankedFrame1, rankedFrame2) => rankedFrame2.Rank.CompareTo(rankedFrame1.Rank));
 
-                return new TemporalRankedResultSet(query,
-                    new RankedFrame[][] { primaryRankedFrames, primaryRankedFrames });
+                // TODO:
+                return new BiTemporalRankedResultSet(query,
+                    primaryRankedFrames, primaryRankedFrames, null, null);
             }
             else
             {
+                // default sequential ranking (in reverse order)
                 int itemCount = PrimaryRankingModule.InputRanking.Ranks.Length;
-                RankedFrame[] rankedFrames = new RankedFrame[itemCount];
+                List<RankedFrame> primaryRankedFrames = new List<RankedFrame>(itemCount);
                 for (int i = 0; i < itemCount; i++)
                 {
-                    rankedFrames[i] = new RankedFrame(i, itemCount - i);
+                    primaryRankedFrames.Add(new RankedFrame(i, itemCount - i));
                 }
 
-                return new TemporalRankedResultSet(query,
-                    new RankedFrame[][] { rankedFrames, rankedFrames });
+                // TODO:
+                return new BiTemporalRankedResultSet(query,
+                    primaryRankedFrames, primaryRankedFrames, null, null);
             }
         }
 
-        public TemporalRankedResultSet ComputeRankedResultSet(Query query)
+        public BiTemporalRankedResultSet ComputeRankedResultSet(Query query)
         {
             return ComputeRankedResultSet(new TemporalQuery(new Query[2] { query, null }));
         }

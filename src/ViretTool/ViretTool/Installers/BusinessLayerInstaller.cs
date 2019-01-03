@@ -46,8 +46,8 @@ namespace ViretTool.Installers
 
 
 
-                Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>()
-                         .ImplementedBy<BiTemporalRankingService>()
+                Component.For<IBiTemporalRankingServiceExternal<Query, RankedResultSet, TemporalQuery, BiTemporalRankedResultSet>>()
+                         .ImplementedBy<BiTemporalRankingServiceExternal>()
                          .LifestyleBoundTo<DatasetServices>()
                 //Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>()
                 //         .UsingFactoryMethod((_, context) => RankingServiceFactory.Build((string)context.AdditionalArguments["datasetDirectory"]))
@@ -62,7 +62,7 @@ namespace ViretTool.Installers
             container.Register(
                 Component.For<IRankFusion>().ImplementedBy<RankFusionSum>().LifestyleTransient(),
 
-                Component.For<IColorSketchModel<ColorSketchQuery>>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
+                Component.For<IColorSignatureModel<ColorSketchQuery>>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel<SemanticExampleQuery>>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
                 Component.For<IKeywordModel<KeywordQuery>>() //TODO this is both model and provider - data are loaded each time a ranking module is instantiated
                          .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))

@@ -22,11 +22,7 @@ namespace ColorSignatureDescriptorExtractor
             string inputFilelist = args[4];
 
             string outputFile = args[5];
-
-
-            ColorSignatureReader reader = new ColorSignatureReader(outputFile);
-            byte[] desc = reader.ReadDescriptor(0);
-
+            
 
             // load dataset header
             byte[] datasetHeader;
@@ -55,8 +51,8 @@ namespace ColorSignatureDescriptorExtractor
                         (long)((double)extractionTime.Ticks / percentDone * (100 - percentDone)));
                     Console.WriteLine($"> {percentDone.ToString("00")}% extracted " +
                         $"({(int)(percentDone / 100.0 * inputFiles.Length)}/{inputFiles.Length}). " +
-                        $"{extractionTime.ToString(@"d\d\ hh\d\ mm\m\ ss\s")} elapsed, " +
-                        $"{remainingTime.ToString(@"d\d\ hh\d\ mm\m\ ss\s")} remaining.");
+                        $"{extractionTime.ToString(@"d\d\ hh\h\ mm\m\ ss\s")} elapsed, " +
+                        $"{remainingTime.ToString(@"d\d\ hh\h\ mm\m\ ss\s")} remaining.");
                 });
 
             // store to the outut binary file

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
-    public interface IBiTemporalRankingService<TSimpleQuery, TSimpleResult, TTemporalQuery, TTemporalResult>
+    public interface IBiTemporalRankingServiceExternal<TSimpleQuery, TSimpleResult, TTemporalQuery, TTemporalResult>
     {
+        IDatasetService DatasetService { get; }
+
         IRankingModule PrimaryRankingModule { get; }
         IRankingModule SecondaryRankingModule { get; }
 
@@ -18,6 +21,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
         TTemporalResult CachedResultSet { get; }
 
         TTemporalResult ComputeRankedResultSet(TSimpleQuery query);
-        TTemporalResult ComputeRankedResultSet(TemporalQuery query);
+        TTemporalResult ComputeRankedResultSet(TTemporalQuery query);
     }
 }

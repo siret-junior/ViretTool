@@ -224,7 +224,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CancelSortingTaskIfNecessary();
 
-                TemporalRankedResultSet queryResult =
+                BiTemporalRankedResultSet queryResult =
                     await Task.Run(
                         () => _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(
                             new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
