@@ -11,9 +11,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
 {
     public partial class SketchCanvas : UserControl
     {
-        private readonly List<ColorPoint> mColorPoints;
-        private ColorPoint mSelectedColorPoint;
-        private ColorPoint mSelectedColorPointEllipse;
+        private readonly List<SketchPoint> mColorPoints;
+        private SketchPoint mSelectedColorPoint;
+        private SketchPoint mSelectedColorPointEllipse;
 
         public SketchCanvas()
         {
@@ -26,7 +26,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             sketchCanvas.MouseUp += Canvas_MouseUp;
             sketchCanvas.MouseMove += Canvas_MouseMove;
 
-            mColorPoints = new List<ColorPoint>();
+            mColorPoints = new List<SketchPoint>();
             mSelectedColorPoint = null;
             mSelectedColorPointEllipse = null;
 
@@ -81,7 +81,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         /// </summary>
         public void Clear()
         {
-            foreach (ColorPoint CP in mColorPoints)
+            foreach (SketchPoint CP in mColorPoints)
             {
                 CP.RemoveFromCanvas(sketchCanvas);
             }
@@ -94,7 +94,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public void DeletePoints()
         {
-            foreach (ColorPoint CP in mColorPoints)
+            foreach (SketchPoint CP in mColorPoints)
             {
                 CP.RemoveFromCanvas(sketchCanvas);
             }
@@ -107,8 +107,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             Point p = e.GetPosition(sketchCanvas);
 
-            mSelectedColorPoint = ColorPoint.IsSelected(mColorPoints, p);
-            mSelectedColorPointEllipse = ColorPoint.IsSelectedEllipse(mColorPoints, p);
+            mSelectedColorPoint = SketchPoint.IsSelected(mColorPoints, p);
+            mSelectedColorPointEllipse = SketchPoint.IsSelectedEllipse(mColorPoints, p);
 
             // change circle type
             if (e.RightButton == MouseButtonState.Pressed && mSelectedColorPointEllipse != null)
@@ -137,11 +137,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
             if (mSelectedColorPoint == null && mSelectedColorPointEllipse == null)
             {
                 // once the window is closed it cannot be reopened (consider visibility = hidden)
-                ColorPicker colorPicker = new ColorPicker();
+                SketchColorPicker colorPicker = new SketchColorPicker();
 
                 if (colorPicker.Show(Mouse.GetPosition(Application.Current.MainWindow)))
                 {
-                    mSelectedColorPoint = new ColorPoint(p, colorPicker.SelectedColor, sketchCanvas);
+                    mSelectedColorPoint = colorPicker.SelectedImage == null
+                                              ? (SketchPoint)new ColorPoint(p, colorPicker.SelectedColor, sketchCanvas)
+                                              : new ImagePoint(p, colorPicker.SelectedImage, sketchCanvas);
                     mColorPoints.Add(mSelectedColorPoint);
                     mSelectedColorPoint = null;
                     OnSketchChanged();
@@ -152,12 +154,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             Point p = e.GetPosition(sketchCanvas);
-            if (p.X < ColorPoint.Radius || p.X > sketchCanvas.Width - ColorPoint.Radius)
+            if (p.X < SketchPoint.Radius || p.X > sketchCanvas.Width - SketchPoint.Radius)
             {
                 return;
             }
 
-            if (p.Y < ColorPoint.Radius || p.Y > sketchCanvas.Height - ColorPoint.Radius)
+            if (p.Y < SketchPoint.Radius || p.Y > sketchCanvas.Height - SketchPoint.Radius)
             {
                 return;
             }
@@ -231,45 +233,31 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             List<SketchColorPoint> colorSketches = new List<SketchColorPoint>();
 
-            foreach (ColorPoint CP in mColorPoints)
+            foreach (SketchPoint sketchPoint in mColorPoints)
             {
-                Point position = new Point(CP.Position.X / sketchCanvas.Width, CP.Position.Y / sketchCanvas.Height);
-                Point ellipseAxis = new Point(CP.SearchRadiusX / sketchCanvas.Width, CP.SearchRadiusY / sketchCanvas.Height);
+                Point position = new Point(sketchPoint.Position.X / sketchCanvas.Width, sketchPoint.Position.Y / sketchCanvas.Height);
+                Point ellipseAxis = new Point(sketchPoint.SearchRadiusX / sketchCanvas.Width, sketchPoint.SearchRadiusY / sketchCanvas.Height);
 
-                colorSketches.Add(new SketchColorPoint(position, CP.FillColor, ellipseAxis, CP.Area));
+                colorSketches.Add(new SketchColorPoint(position, sketchPoint.FillColor, ellipseAxis, sketchPoint.SketchType, sketchPoint.Area));
             }
 
             QueryResult = new SketchQueryResult(colorSketches);
 
         }
 
-        private void sketchClearButton_Click(object sender, RoutedEventArgs e)
-        {
-            Clear();
-        }
-
-
-        private class ColorPoint
+        private abstract class SketchPoint
         {
             public const int Radius = 12;
-            public readonly Color FillColor;
-            public readonly Ellipse FillEllipse;
-            public Point Position;
-            public readonly Ellipse SearchRadiusEllipse;
+
+            private readonly Ellipse SearchRadiusEllipse;
             private bool mArea;
             private double mSearchRadiusX = 40;
             private double mSearchRadiusY = 40;
 
-            public ColorPoint(Point p, Color c, Canvas canvas)
+            protected SketchPoint(Point point, Color color, Canvas canvas)
             {
-                Position = p;
-                FillColor = c;
-
-                FillEllipse = new Ellipse();
-                FillEllipse.Width = 2 * Radius;
-                FillEllipse.Height = 2 * Radius;
-                FillEllipse.Fill = new SolidColorBrush(c);
-                canvas.Children.Add(FillEllipse);
+                Position = point;
+                FillColor = color;
 
                 SearchRadiusEllipse = new Ellipse();
                 SearchRadiusEllipse.Width = 2 * mSearchRadiusX;
@@ -277,9 +265,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 SearchRadiusEllipse.Stroke = Brushes.LightGray;
                 canvas.Children.Add(SearchRadiusEllipse);
 
-                UpdatePosition(p);
                 Area = true;
             }
+
+            public Point Position { get; private set; }
+            public Color FillColor { get; }
+            public abstract SketchType SketchType { get; }
 
             public bool Area
             {
@@ -290,7 +281,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
                     if (mArea)
                     {
-                        SearchRadiusEllipse.Stroke = FillEllipse.Fill;
+                        SearchRadiusEllipse.Stroke = new SolidColorBrush(FillColor);
                         SearchRadiusEllipse.StrokeThickness = 3;
                     }
                     else
@@ -313,10 +304,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 set { mSearchRadiusY = value; }
             }
 
-            public static ColorPoint IsSelected(List<ColorPoint> colorPoints, Point p)
+            public static SketchPoint IsSelected(List<SketchPoint> colorPoints, Point p)
             {
-                ColorPoint result = null;
-                foreach (ColorPoint CP in colorPoints)
+                SketchPoint result = null;
+                foreach (SketchPoint CP in colorPoints)
                 {
                     if ((CP.Position.X - p.X) * (CP.Position.X - p.X) + (CP.Position.Y - p.Y) * (CP.Position.Y - p.Y) <= Radius * Radius)
                     {
@@ -327,10 +318,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return result;
             }
 
-            public static ColorPoint IsSelectedEllipse(List<ColorPoint> colorPoints, Point p)
+            public static SketchPoint IsSelectedEllipse(List<SketchPoint> colorPoints, Point p)
             {
-                ColorPoint result = null;
-                foreach (ColorPoint CP in colorPoints)
+                SketchPoint result = null;
+                foreach (SketchPoint CP in colorPoints)
                 {
                     double value = (CP.Position.X - p.X) * (CP.Position.X - p.X) / (CP.SearchRadiusX * CP.SearchRadiusX) +
                                    (CP.Position.Y - p.Y) * (CP.Position.Y - p.Y) / (CP.SearchRadiusY * CP.SearchRadiusY);
@@ -343,9 +334,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return result;
             }
 
-            public void RemoveFromCanvas(Canvas canvas)
+            public virtual void RemoveFromCanvas(Canvas canvas)
             {
-                canvas.Children.Remove(FillEllipse);
                 canvas.Children.Remove(SearchRadiusEllipse);
             }
 
@@ -367,11 +357,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 }
             }
 
-            public void UpdatePosition(Point p)
+            public virtual void UpdatePosition(Point p)
             {
                 Position = p;
-                Canvas.SetTop(FillEllipse, Position.Y - Radius);
-                Canvas.SetLeft(FillEllipse, Position.X - Radius);
 
                 Canvas.SetTop(SearchRadiusEllipse, Position.Y - mSearchRadiusY);
                 Canvas.SetLeft(SearchRadiusEllipse, Position.X - mSearchRadiusX);
@@ -379,169 +367,75 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
 
-        private class ColorPicker : Window
+        private class ColorPoint : SketchPoint
         {
-            public Color SelectedColor = Colors.White;
-            private readonly int mColorButtonWidth = 20;
-            private readonly Canvas mColorPickerPanel;
+            public readonly Color FillColor;
+            private readonly Ellipse FillEllipse;
 
-            private bool mIsColorSelected = false;
-
-
-            public ColorPicker()
+            public ColorPoint(Point point, Color color, Canvas canvas) : base(point, color, canvas)
             {
-                SolidColorBrush[] brushes = CreateBrushes();
-                mColorPickerPanel = new Canvas();
+                FillColor = color;
 
-                Content = mColorPickerPanel;
+                FillEllipse = new Ellipse();
+                FillEllipse.Width = 2 * Radius;
+                FillEllipse.Height = 2 * Radius;
+                FillEllipse.Fill = new SolidColorBrush(color);
+                canvas.Children.Add(FillEllipse);
 
-                int nColorsInRow = 20;
-                int nColorsInColumn = ((brushes.Length - 1) / nColorsInRow) + 1; // assumes brushes are not empty
-                for (int i = 0; i < brushes.Length; i++)
-                {
-                    int nthRow = i / nColorsInRow;
-                    int nthColumn = i % nColorsInRow;
-
-                    double cellBorderLightness = (i > nColorsInRow - 1)
-                                                     ? 1 - (nthRow / (double)(nColorsInColumn))
-                                                     : 1 - (nthColumn / (double)(nColorsInRow));
-                    cellBorderLightness *= cellBorderLightness;
-                    Canvas b = CreateColorCellCanvas(brushes[i], cellBorderLightness);
-                    b.MouseDown += LeftClick;
-
-                    mColorPickerPanel.Children.Add(b);
-                    Canvas.SetLeft(b, nthColumn * mColorButtonWidth);
-                    if (i > nColorsInRow - 1)
-                    {
-                        Canvas.SetTop(b, 20 + (int)Math.Floor(i / (double)nColorsInRow) * mColorButtonWidth);
-                    }
-                    else
-                    {
-                        Canvas.SetTop(b, 10 + (int)Math.Floor(i / (double)nColorsInRow) * mColorButtonWidth);
-                    }
-                }
-
-                this.Width = nColorsInRow * mColorButtonWidth + 15;
-                this.Height = (brushes.Length / nColorsInRow) * mColorButtonWidth + 70;
+                UpdatePosition(point);
             }
 
-            public static Color HSLToRGB(float h, float s, float l)
+            public override void UpdatePosition(Point p)
             {
-                float r, g, b;
-
-                if (s == 0f)
-                {
-                    r = g = b = l;
-                }
-                else
-                {
-                    float q = l < 0.5f ? l * (1 + s) : l + s - l * s;
-                    float p = 2 * l - q;
-                    r = HueToRgb(p, q, h + 1f / 3f);
-                    g = HueToRgb(p, q, h);
-                    b = HueToRgb(p, q, h - 1f / 3f);
-                }
-
-                return Color.FromRgb(Convert.ToByte(r * 255), Convert.ToByte(g * 255), Convert.ToByte(b * 255));
+                base.UpdatePosition(p);
+                Canvas.SetTop(FillEllipse, Position.Y - Radius);
+                Canvas.SetLeft(FillEllipse, Position.X - Radius);
             }
 
-            public bool Show(Point p)
+            public override SketchType SketchType { get; } = SketchType.Color;
+
+            public override void RemoveFromCanvas(Canvas canvas)
             {
-                Left = p.X - 20;
-                Top = p.Y - 20;
-                ShowDialog();
-                return mIsColorSelected;
+                base.RemoveFromCanvas(canvas);
+                canvas.Children.Remove(FillEllipse);
+            }
+        }
+
+        private class ImagePoint : SketchPoint
+        {
+            private readonly double _scalingConstant = Math.Sqrt(2);
+
+            public ImagePoint(Point point, Image image, Canvas canvas) : base(point, Colors.Black, canvas)
+            {
+                Image = new Image
+                        {
+                            Source = image.Source,
+                            Width = Radius * _scalingConstant,
+                            Height = Radius * _scalingConstant
+                        };
+                RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.HighQuality);
+                SketchType = (SketchType)image.Tag;
+                canvas.Children.Add(Image);
+
+                UpdatePosition(point);
             }
 
-            private SolidColorBrush[] CreateBrushes()
+            
+            public Image Image { get; }
+
+            public override void UpdatePosition(Point p)
             {
-                List<SolidColorBrush> brushes = new List<SolidColorBrush>();
-
-                for (int x = 0; x < 255; x += 13)
-                {
-                    brushes.Add(new SolidColorBrush(Color.FromRgb((byte)x, (byte)x, (byte)x)));
-                }
-
-                for (float lightness = 0.1f; lightness <= 1; lightness += 0.1f)
-                for (float hue = 0; hue <= 1; hue += 0.05f)
-                {
-                    brushes.Add(new SolidColorBrush(HSLToRGB(hue, 1, lightness)));
-                }
-
-                return brushes.ToArray();
+                base.UpdatePosition(p);
+                Canvas.SetTop(Image, Position.Y - Radius / _scalingConstant);
+                Canvas.SetLeft(Image, Position.X - Radius / _scalingConstant);
             }
 
-            private Canvas CreateColorCellCanvas(SolidColorBrush color, double borderLightness)
+            public override SketchType SketchType { get; }
+
+            public override void RemoveFromCanvas(Canvas canvas)
             {
-                Canvas canvas = new Canvas();
-                canvas.Width = mColorButtonWidth;
-                canvas.Height = canvas.Width;
-                canvas.Background = color;
-
-                double minLightness = 0.2;
-                double maxLightness = 0.5;
-                double offset = minLightness;
-                double denormalizer = maxLightness - minLightness;
-                borderLightness *= denormalizer;
-                borderLightness += offset;
-
-                byte borderGray = (byte)(borderLightness * 255);
-
-
-                Color borderColor = Color.FromRgb(borderGray, borderGray, borderGray);
-
-                Rectangle rectangle = new Rectangle
-                                      {
-                                          Width = canvas.Width,
-                                          Height = canvas.Height,
-                                          Stroke = new SolidColorBrush(borderColor),
-                                          StrokeThickness = 0.5,
-                                          //Fill = new SolidColorBrush(Colors.Black),
-                                      };
-
-                Canvas.SetLeft(rectangle, 0);
-                Canvas.SetTop(rectangle, 0);
-                canvas.Children.Add(rectangle);
-
-                return canvas;
-            }
-
-            private static float HueToRgb(float p, float q, float t)
-            {
-                if (t < 0f)
-                {
-                    t += 1f;
-                }
-
-                if (t > 1f)
-                {
-                    t -= 1f;
-                }
-
-                if (t < 1f / 6f)
-                {
-                    return p + (q - p) * 6f * t;
-                }
-
-                if (t < 1f / 2f)
-                {
-                    return q;
-                }
-
-                if (t < 2f / 3f)
-                {
-                    return p + (q - p) * (2f / 3f - t) * 6f;
-                }
-
-                return p;
-            }
-
-            private void LeftClick(object sender, RoutedEventArgs e)
-            {
-                //SelectedColor = ((SolidColorBrush)((Button)sender).Background).Color;
-                SelectedColor = ((SolidColorBrush)((Canvas)sender).Background).Color;
-                mIsColorSelected = true;
-                Close();
+                base.RemoveFromCanvas(canvas);
+                canvas.Children.Remove(Image);
             }
         }
     }
