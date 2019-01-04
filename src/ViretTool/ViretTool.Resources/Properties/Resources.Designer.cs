@@ -187,20 +187,20 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max 1 frame from shot.
+        ///   Looks up a localized string similar to Max frame from shot:.
         /// </summary>
-        public static string Max1FromShot {
+        public static string MaxFromShot {
             get {
-                return ResourceManager.GetString("Max1FromShot", resourceCulture);
+                return ResourceManager.GetString("MaxFromShot", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Max 3 frames from video.
+        ///   Looks up a localized string similar to Max frames from video:.
         /// </summary>
-        public static string Max3FromVideo {
+        public static string MaxFromVideo {
             get {
-                return ResourceManager.GetString("Max3FromVideo", resourceCulture);
+                return ResourceManager.GetString("MaxFromVideo", resourceCulture);
             }
         }
         

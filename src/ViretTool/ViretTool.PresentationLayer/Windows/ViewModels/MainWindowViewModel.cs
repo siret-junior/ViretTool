@@ -75,6 +75,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
             queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await detailView.LoadVideoForFrame(selectedFrame);
+            queryResults.MaxFramesChanged += async (sender, args) => await OnQuerySettingsChanged();
+
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (var display in displays)
             {
@@ -90,7 +92,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public QueryViewModel Query1 { get; }
         public QueryViewModel Query2 { get; }
 
-        public DisplayControlViewModelBase QueryResults { get; }
+        public PageDisplayControlViewModel QueryResults { get; }
         public DisplayControlViewModelBase DetailView { get; }
         public DetailViewModel DetailViewModel { get; }
 
@@ -283,7 +285,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 BiTemporalRankedResultSet queryResult = await Task.Run(
                                                             () =>
                                                             {
-                                                                BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(Query1, Query2, IsFirstQueryPrimary);
+                                                                BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(
+                                                                    Query1,
+                                                                    Query2,
+                                                                    IsFirstQueryPrimary,
+                                                                    QueryResults.MaxFramesFromVideo,
+                                                                    QueryResults.MaxFramesFromShot);
                                                                 return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
                                                             });
 
@@ -345,7 +352,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 List<FrameToSubmit> framesToSubmit = _submitControlViewModel.SubmittedFrames.Select(f => new FrameToSubmit(f.VideoId + 1, f.FrameNumber)).ToList();
                 foreach (FrameToSubmit frameToSubmit in framesToSubmit)
                 {
-                    string response = await _submissionService.SubmitFramesAsync(frameToSubmit);
+                    string response = await _submissionService.SubmitFrameAsync(frameToSubmit);
                     _logger.Info(response);
                 }
             }

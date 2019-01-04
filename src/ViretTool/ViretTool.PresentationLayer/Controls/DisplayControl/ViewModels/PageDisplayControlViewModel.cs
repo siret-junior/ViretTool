@@ -12,40 +12,42 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         private int _currentPageNumber;
 
-        private bool _isMax1FromShotChecked;
-        private bool _isMax3FromVideoChecked;
+        private int _maxFramesFromShot = 1;
+        private int _maxFramesFromVideo = 15;
 
         public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
             : base(logger, datasetServicesManager)
         {
         }
 
-        public bool IsMax1FromShotChecked
+        public int MaxFramesFromShot
         {
-            get => _isMax1FromShotChecked;
+            get => _maxFramesFromShot;
             set
             {
-                if (_isMax1FromShotChecked == value)
+                if (_maxFramesFromShot == value)
                 {
                     return;
                 }
 
-                _isMax1FromShotChecked = value;
+                _maxFramesFromShot = value;
+                MaxFramesChanged?.Invoke(this, EventArgs.Empty);
                 NotifyOfPropertyChange();
             }
         }
 
-        public bool IsMax3FromVideoChecked
+        public int MaxFramesFromVideo
         {
-            get => _isMax3FromVideoChecked;
+            get => _maxFramesFromVideo;
             set
             {
-                if (_isMax3FromVideoChecked == value)
+                if (_maxFramesFromVideo == value)
                 {
                     return;
                 }
 
-                _isMax3FromVideoChecked = value;
+                _maxFramesFromVideo = value;
+                MaxFramesChanged?.Invoke(this, EventArgs.Empty);
                 NotifyOfPropertyChange();
             }
         }
@@ -66,6 +68,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / (double)(DisplayHeight / ImageHeight * (DisplayWidth / ImageWidth))) - 1 : 0;
+
+        public event EventHandler MaxFramesChanged;
 
         public void FirstPageButton()
         {

@@ -17,7 +17,7 @@ namespace ViretTool.PresentationLayer.Helpers
             _datasetServicesManager = datasetServicesManager;
         }
 
-        public BiTemporalQuery BuildQuery(QueryViewModel query1, QueryViewModel query2, bool isFirstQueryPrimary)
+        public BiTemporalQuery BuildQuery(QueryViewModel query1, QueryViewModel query2, bool isFirstQueryPrimary, int maxFramesFromVideo, int maxFramesFromShot)
         {
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
@@ -246,14 +246,12 @@ namespace ViretTool.PresentationLayer.Helpers
             FilteringQuery formerFilteringQuery = new FilteringQuery(
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query1.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query1.PercentageBlackFilterValue * 0.01),
-                // TODO:
-                new CountFilteringQuery(CountFilteringQuery.State.Enabled, 15, 1, -1));
+                new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1));
 
             FilteringQuery latterFilteringQuery = new FilteringQuery(
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query2.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query2.PercentageBlackFilterValue * 0.01),
-                // TODO:
-                new CountFilteringQuery(CountFilteringQuery.State.Enabled, 15, 1, -1));
+                new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1));
 
 
             BiTemporalQuery biTemporalQuery =
