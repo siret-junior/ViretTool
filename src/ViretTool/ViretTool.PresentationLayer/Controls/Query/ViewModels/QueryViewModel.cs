@@ -7,7 +7,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using Caliburn.Micro;
 using Castle.Core.Logging;
-using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
@@ -65,12 +64,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                    .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
             onQueriesChanged.Subscribe(_ => SemanticUseForSorting = QueryObjects.Any());
 
-            // TODO: remove? Query is now build one level higher in MainWindow
             onPropertyChanged.Merge(onQueriesChanged)
                              .Throttle(TimeSpan.FromSeconds(0.1))
                              .Where(_ => datasetServicesManager.IsDatasetOpened)
                              .ObserveOn(SynchronizationContext.Current)
-                             .Subscribe(BuildQuerySettings);
+                             .Subscribe(NotifyQuerySettingsChange);
         }
 
         public int ImageHeight { get; }
@@ -142,8 +140,6 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 NotifyOfPropertyChange();
             }
         }
-
-        public BusinessLayer.RankingModels.Queries.Query FinalQuery { get; private set; }
 
         public Action<string, string[]> InitializeKeywordSearchMethod { private get; set; }
 
@@ -343,70 +339,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QueryObjects.AddRange(queriesToInsert);
         }
 
-        private void BuildQuerySettings(string change)
+        private void NotifyQuerySettingsChange(string change)
         {
             _logger.Info(change);
-            //MessageBox.Show(change);
-
-            //TODO a lot of unclear settings
-            //string keywordAnnotationSource = KeywordQueryResult?.AnnotationSource;
-            //KeywordQuery keyWordQuery = new KeywordQuery(
-            //    KeywordQueryResult?.Query?.Select(
-            //            parts => new SynsetGroup(parts.Select(
-            //                p => new Synset(keywordAnnotationSource, p)).ToArray()))
-            //            .ToArray() ?? new SynsetGroup[0]);
-
-            //ColorSketchQuery colorSketchQuery = new ColorSketchQuery(
-            //    CanvasWidth,
-            //    CanvasHeight,
-            //    SketchQueryResult?.SketchColorPoints?.Select(
-            //            point => new Ellipse(
-            //                point.Area ? Ellipse.State.All : Ellipse.State.Any,
-            //                point.Position.X,
-            //                point.Position.Y,
-            //                point.EllipseAxis.X,
-            //                point.EllipseAxis.Y,
-            //                0,
-            //                point.FillColor.R,
-            //                point.FillColor.G,
-            //                point.FillColor.B))
-            //            .ToArray() ?? new Ellipse[0]);
-
-            ////TODO use (e.g. color) for sorting?
-            //SemanticExampleQuery semanticExampleQuery = new SemanticExampleQuery(
-            //    QueryObjects.Select(
-            //        q => _datasetServicesManager
-            //            .CurrentDataset
-            //            .DatasetService
-            //            .GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber))
-            //            .ToArray(),
-            //    new int[0]);
-
-            //FinalQuery = new BusinessLayer.RankingModels.Queries.Query(
-            //    new BiTemporalSimilarityQuery(keyWordQuery, colorSketchQuery, semanticExampleQuery),
-            //    new FilteringQuery(
-            //        new ThresholdFilteringQuery(ConvertToFilterState(BwFilterState), BwFilterValue * 0.01),
-            //        new ThresholdFilteringQuery(ConvertToFilterState(PercentageBlackFilterState), PercentageBlackFilterValue * 0.01),
-            //        new ThresholdFilteringQuery(ThresholdFilteringQuery.State.ExcludeAboveThreshold, ColorValue * 0.01),
-            //        new ThresholdFilteringQuery(ThresholdFilteringQuery.State.ExcludeAboveThreshold, KeywordValue * 0.01),
-            //        new ThresholdFilteringQuery(ThresholdFilteringQuery.State.ExcludeAboveThreshold, SemanticValue * 0.01)));
-
             QuerySettingsChanged?.Invoke(this, EventArgs.Empty);
         }
-
-        //private ThresholdFilteringQuery.State ConvertToFilterState(FilterControl.FilterState filterState)
-        //{
-        //    switch (filterState)
-        //    {
-        //        case FilterControl.FilterState.Y:
-        //            return ThresholdFilteringQuery.State.ExcludeAboveThreshold;
-        //        case FilterControl.FilterState.N:
-        //            return ThresholdFilteringQuery.State.IncludeAboveThreshold;
-        //        case FilterControl.FilterState.Off:
-        //            return ThresholdFilteringQuery.State.Off;
-        //        default:
-        //            throw new ArgumentOutOfRangeException(nameof(filterState), filterState, "Uknown filtering state.");
-        //    }
-        //}
     }
 }
