@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public interface IFilteringQuery : IRankingQuery
+    public interface IFilteringQuery : ISimilarityQuery
     {
     }
 }

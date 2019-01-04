@@ -2,7 +2,7 @@
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class ColorSketchQuery : IRankingQuery
+    public class ColorSketchQuery : ISimilarityQuery
     {
         public int CanvasWidth { get; private set; }
         public int CanvasHeight { get; private set; }

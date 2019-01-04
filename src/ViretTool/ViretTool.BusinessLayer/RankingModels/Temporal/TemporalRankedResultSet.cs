@@ -1,4 +1,5 @@
 ﻿using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {

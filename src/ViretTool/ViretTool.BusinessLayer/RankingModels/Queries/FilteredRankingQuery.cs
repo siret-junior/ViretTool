@@ -4,8 +4,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
     public class FilteredRankingQuery<TQuery> 
         : IEquatable<FilteredRankingQuery<TQuery>> 
-        where TQuery : IRankingQuery
+        where TQuery : IQuery
     {
+        enum State { Include, Exclude, Off }
+
         TQuery RankingQuery { get; }
         float IncludeTopKPercentage { get; }
 

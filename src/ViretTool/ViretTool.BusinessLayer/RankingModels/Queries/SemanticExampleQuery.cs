@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class SemanticExampleQuery : IRankingQuery
+    public class SemanticExampleQuery : ISimilarityQuery
     {
         public int[] PositiveExampleIds { get; private set; }
         public int[] NegativeExampleIds { get; private set; }

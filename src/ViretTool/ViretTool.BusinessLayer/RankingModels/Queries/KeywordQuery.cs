@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class KeywordQuery : IRankingQuery
+    public class KeywordQuery : ISimilarityQuery
     {
         public SynsetGroup[] SynsetGroups { get; private set; }
 
