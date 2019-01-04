@@ -17,6 +17,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
 
         public FilteringQuery CachedQuery { get; set; }
         public RankingBuffer InputRanking { get; private set; }
+        public RankingBuffer MaskIntermediateRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
         
         private bool[] _aggregatedFilterMask;
@@ -37,7 +38,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         {
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
-            //InitializeIntermediateBuffers();
+            InitializeIntermediateBuffers();
 
             if (!HasQueryOrInputChanged(query, inputRanking))
             {
@@ -58,22 +59,42 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 return;
             }
 
-            
-            // TODO: filters
+            // mask filters
             bool[] colorSaturationMask = ColorSaturationFilter.GetFilterMask(query.ColorSaturationQuery);
             bool[] percentOfBlackMask = PercentOfBlackColorFilter.GetFilterMask(query.PercentOfBlackQuery);
-
             
             // aggregate filters
-            List<bool[]> masks = new List<bool[]>(5);
+            List<bool[]> masks = new List<bool[]>(2);
             if (colorSaturationMask != null) { masks.Add(colorSaturationMask); }
             if (percentOfBlackMask != null) { masks.Add(percentOfBlackMask); }
             bool[] aggregatedMask = AggregateMasks(masks);
 
-            // apply filters
-            ApplyFilters(aggregatedMask, inputRanking, outputRanking);
+            // apply mask filters
+            if (aggregatedMask != null)
+            {
+                ApplyMaskFilters(aggregatedMask, InputRanking, MaskIntermediateRanking);
+                CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery,
+                    MaskIntermediateRanking, OutputRanking);
+            }
+            else
+            {
+                // mask filters are not applied, we skip MaskIntermediateRanking
+                CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery,
+                    InputRanking, OutputRanking);
+            }
         }
-        
+
+        private void InitializeIntermediateBuffers()
+        {
+            // create itermediate rankings if neccessary
+            if (MaskIntermediateRanking == null
+                || MaskIntermediateRanking.Ranks.Length != InputRanking.Ranks.Length)
+            {
+                MaskIntermediateRanking = RankingBuffer.Zeros(
+                    "MaskIntermediateRanking", InputRanking.Ranks.Length);
+            }
+        }
+
         private bool HasQueryOrInputChanged(FilteringQuery query, RankingBuffer inputRanking)
         {
             return (query == null && CachedQuery != null)
@@ -87,7 +108,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             return query == null ||
                 (
                     query.ColorSaturationQuery.FilterState == ThresholdFilteringQuery.State.Off
-                 && query.PercentOfBlackQuery.FilterState == ThresholdFilteringQuery.State.Off
+                    && query.PercentOfBlackQuery.FilterState == ThresholdFilteringQuery.State.Off
+                    && (query.CountFilteringQuery.FilterState == CountFilteringQuery.State.Disabled
+                        || (query.CountFilteringQuery.MaxPerVideo <= 0
+                            && query.CountFilteringQuery.MaxPerShot <= 0
+                            && query.CountFilteringQuery.MaxPerGroup <= 0
+                        )
+                    )
                 );
         }
 
@@ -96,7 +123,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             // check null input
             if (masks == null || masks.Count == 0)
             {
-                throw new ArgumentException("Input masks are empty!");
+                return null;
+                //throw new ArgumentException("Input masks are empty!");
             }
 
             // initialize result
@@ -126,9 +154,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             return _aggregatedFilterMask;
         }
 
-        private static void ApplyFilters(bool[] mask, RankingBuffer inputRanking, RankingBuffer outputRanking)
+        private static void ApplyMaskFilters(bool[] mask, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
-            // TODO: optimize: just copy the input ranking and then rewrite filtered ranks
+            // TODO: optimize: just copy the input ranking and then rewrite filtered ranks?
 
             Parallel.For(0, inputRanking.Ranks.Length, itemId =>
             {

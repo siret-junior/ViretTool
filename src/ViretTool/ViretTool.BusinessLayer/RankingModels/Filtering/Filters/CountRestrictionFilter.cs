@@ -16,7 +16,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 
         // cache
         public CountFilteringQuery CachedQuery { get; private set; }
-        public RankingBuffer CachedResultRanking { get; private set; }
+        
+        public RankingBuffer InputRanking { get; private set; }
+        public RankingBuffer OutputRanking { get; private set; }
 
 
         public CountRestrictionFilter(IDatasetService datasetService)
@@ -25,29 +27,51 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         }
 
 
-        public RankingBuffer ComputeRanking(CountFilteringQuery query, RankingBuffer initialRanking)
+        public void ComputeFiltering(CountFilteringQuery query, 
+            RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
-            // TODO if all filters are off
-            if (query.Equals(CachedQuery) && !initialRanking.IsUpdated)
+            InputRanking = inputRanking;
+            OutputRanking = outputRanking;
+
+            if (!HasQueryOrInputChanged(query, inputRanking))
             {
-                // not query, nor ranking has changed, return cached ranking
-                CachedResultRanking.IsUpdated = false; // just to be sure
-                return CachedResultRanking;
+                // nothing changed, OutputRanking contains cached data from previous computation
+                OutputRanking.IsUpdated = false;
+                return;
             }
+            else
+            {
+                CachedQuery = query;
+                OutputRanking.IsUpdated = true;
+            }
+
+            if (IsQueryEmpty(query))
+            {
+                // no query, output is the same as input
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                return;
+            }
+
+            // prepare data
+            int[] indexes = new int[inputRanking.Ranks.Length];
+            float[] ranks = new float[inputRanking.Ranks.Length];
+            Parallel.For(0, indexes.Length, index =>
+            {
+                indexes[index] = index;
+                ranks[index] = inputRanking.Ranks[index];
+            });
+            // sort ranks in descending order
+            Array.Sort(ranks, indexes, Comparer<float>.Create((x, y) => y.CompareTo(x)));
             
             int[] groupHitCounter = new int[DatasetService.Dataset.Groups.Count];
             int[] shotHitCounter = new int[DatasetService.Dataset.Shots.Count];
             int[] videoHitCounter = new int[DatasetService.Dataset.Videos.Count];
-
-            // copy initial ranking
-
-            // TODO:
-            RankingBuffer resultRanking = new RankingBuffer("TODO", initialRanking.Ranks);
-
+            
             // single thread execution is required
-            for (int i = 0; i < resultRanking.Ranks.Length; i++)
+            for (int index = 0; index < indexes.Length; index++)
             {
-                if (resultRanking.Ranks[i] == float.MinValue)
+                int i = indexes[index];
+                if (inputRanking.Ranks[i] == float.MinValue)
                 {
                     // ignore already filtered items
                     continue;
@@ -61,7 +85,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // video
                 if (query.MaxPerVideo > 0 && videoHitCounter[videoId] >= query.MaxPerVideo)
                 {
-                    resultRanking.Ranks[i] = -1;
+                    outputRanking.Ranks[i] = float.MinValue;
                     continue;
                 }
                 else
@@ -72,7 +96,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // shot
                 if (query.MaxPerShot > 0 && shotHitCounter[shotId] >= query.MaxPerShot)
                 {
-                    resultRanking.Ranks[i] = -1;
+                    outputRanking.Ranks[i] = float.MinValue;
                     continue;
                 }
                 else
@@ -83,46 +107,37 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // group
                 if (query.MaxPerGroup > 0 && groupHitCounter[groupId] >= query.MaxPerGroup)
                 {
-                    resultRanking.Ranks[i] = -1;
+                    outputRanking.Ranks[i] = float.MinValue;
                     continue;
                 }
                 else
                 {
                     groupHitCounter[shotId]++;
                 }
+
+                outputRanking.Ranks[i] = inputRanking.Ranks[i];
             }
-            
-            // cache result
-            CachedQuery = query;
-            // TODO
-            CachedResultRanking = new RankingBuffer("TODO", resultRanking.Ranks, false);
-            return resultRanking;
         }
 
+        
+        private bool HasQueryOrInputChanged(CountFilteringQuery query, RankingBuffer inputRanking)
+        {
+            return (query == null && CachedQuery != null)
+                || (CachedQuery == null && query != null)
+                || !query.Equals(CachedQuery)
+                || inputRanking.IsUpdated;
+        }
 
-        //public void AddVideoToFilterList(int videoId)
-        //{
-        //    mVideoFilterHashset.Add(videoId);
-        //}
+        private bool IsQueryEmpty(CountFilteringQuery query)
+        {
+            return query == null ||
+                ( 
+                    query.MaxPerVideo <= 0
+                    && query.MaxPerShot <= 0
+                    && query.MaxPerGroup <= 0
+                );
+        }
 
-        //public void AddVideoToFilterList(Video video)
-        //{
-        //    mVideoFilterHashset.Add(video.Id);
-        //}
-
-        //public void EnableVideoFilter()
-        //{
-        //    mVideoFilterEnabled = true;
-        //}
-        //public void DisableVideoFilter()
-        //{
-        //    mVideoFilterEnabled = false;
-        //}
-
-        //public void ResetVideoFilter()
-        //{
-        //    mVideoFilterHashset.Clear();
-        //}
 
     }
 }
