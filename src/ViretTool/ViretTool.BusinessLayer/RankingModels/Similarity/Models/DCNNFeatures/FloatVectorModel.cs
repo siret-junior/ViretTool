@@ -10,7 +10,7 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 {
-    public class FloatVectorModel : ISemanticExampleModel<SemanticExampleQuery>
+    public class FloatVectorModel : ISemanticExampleModel
     {
         public FloatVectorModel(IRankFusion rankFusion, IDescriptorProvider<float[]> semanticDescriptorProvider)
         {
@@ -68,56 +68,61 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
 
-            if ((query == null && CachedQuery == null) 
-                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
+            if (!HasQueryOrInputChanged(query, inputRanking))
             {
-                // query and input ranking are the same as before, return cached result
+                // nothing changed, OutputRanking contains cached data from previous computation
                 OutputRanking.IsUpdated = false;
                 return;
             }
-            OutputRanking.IsUpdated = true;
-
-            if (query != null && query.PositiveExampleIds.Any())
-            {
-                float[] ranking = new float[InputRanking.Ranks.Length];
-
-                foreach (int positiveQueryId in query.PositiveExampleIds)
-                {
-                    float[] partialResults = AddQueryResultsToCache(positiveQueryId, true);
-                    Parallel.For(0, InputRanking.Ranks.Length, i =>
-                    {
-                        ranking[i] += partialResults[i];
-                    });
-                }
-
-                if (query.NegativeExampleIds != null)
-                {
-                    foreach (int negativeQueryId in query.NegativeExampleIds)
-                    {
-                        float[] partialResults = AddQueryResultsToCache(negativeQueryId, false);
-                        Parallel.For(0, InputRanking.Ranks.Length, i =>
-                        {
-                            ranking[i] -= partialResults[i];
-                        });
-                    }
-                }
-                OutputRanking.Ranks = ranking;
-            }
             else
             {
-                // null query, set to 0 rank
-                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                CachedQuery = query;
+                OutputRanking.IsUpdated = true;
+            }
+
+            if (IsQueryEmpty(query))
+            {
+                // no query, output is the same as input
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                return;
+            }
+
+            float[] ranking = new float[InputRanking.Ranks.Length];
+
+            foreach (int positiveQueryId in query.PositiveExampleIds)
+            {
+                float[] partialResults = AddQueryResultsToCache(positiveQueryId, true);
+                Parallel.For(0, InputRanking.Ranks.Length, i =>
                 {
-                    if (InputRanking.Ranks[i] == float.MinValue)
+                    ranking[i] += partialResults[i];
+                });
+            }
+
+            if (query.NegativeExampleIds != null)
+            {
+                foreach (int negativeQueryId in query.NegativeExampleIds)
+                {
+                    float[] partialResults = AddQueryResultsToCache(negativeQueryId, false);
+                    Parallel.For(0, InputRanking.Ranks.Length, i =>
                     {
-                        OutputRanking.Ranks[i] = float.MinValue;
-                    }
-                    else
-                    {
-                        OutputRanking.Ranks[i] = 0;
-                    }
+                        ranking[i] -= partialResults[i];
+                    });
                 }
             }
+            OutputRanking.Ranks = ranking;
+        }
+
+        private bool HasQueryOrInputChanged(SemanticExampleQuery query, RankingBuffer inputRanking)
+        {
+            return (query == null && CachedQuery != null)
+                || (CachedQuery == null && query != null)
+                || !query.Equals(CachedQuery)
+                || inputRanking.IsUpdated;
+        }
+
+        private bool IsQueryEmpty(SemanticExampleQuery query)
+        {
+            return query == null || !query.PositiveExampleIds.Any();
         }
 
         public float[] GetFrameSemanticVector(int frameId)

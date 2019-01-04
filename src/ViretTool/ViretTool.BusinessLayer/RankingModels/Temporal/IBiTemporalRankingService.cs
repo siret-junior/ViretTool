@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ViretTool.BusinessLayer.RankingModels.Filtering;
-using ViretTool.BusinessLayer.RankingModels.Queries;
-using ViretTool.BusinessLayer.RankingModels.Similarity;
+﻿using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
-    public interface IBiTemporalRankingService<TSimpleQuery, TSimpleResult, TTemporalQuery, TTemporalResult>
+    public interface IBiTemporalRankingService
     {
-        IRankingModule PrimaryRankingModule { get; }
-        IRankingModule SecondaryRankingModule { get; }
+        IBiTemporalRankingModule BiTemporalRankingModule { get; }
 
-        TTemporalQuery CachedQuery { get; }
-        TTemporalResult CachedResultSet { get; }
+        BiTemporalQuery CachedQuery { get; }
+        BiTemporalRankedResultSet CachedResultSet { get; }
 
-        TTemporalResult ComputeRankedResultSet(TSimpleQuery query);
-        TTemporalResult ComputeRankedResultSet(TemporalQuery query);
+        RankingBuffer InputRanking { get; }
+        BiTemporalRankingBuffer OutputRanking { get; }
+        
+        BiTemporalRankedResultSet ComputeRankedResultSet(BiTemporalQuery query);
     }
 }

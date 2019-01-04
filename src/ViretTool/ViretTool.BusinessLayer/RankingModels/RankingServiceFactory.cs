@@ -25,76 +25,78 @@ namespace ViretTool.BusinessLayer.RankingModels
 
     public class RankingServiceFactory
     {
-        public static IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
-            //Build(IDatasetServicesManager datasetServicesManager)
-            Build(string directory)
-        {
-            // load dataset(TODO: verify all files against the dataset header)
-            //string directory = datasetServicesManager.CurrentDatasetFolder;
-            Dataset dataset = new DatasetProvider().FromDirectory(directory);
-            int frameCount = dataset.Frames.Count;
+        // OBSOLETE:
 
-            // load descriptor providers (done in installer)
-            ColorSignatureDescriptorProvider colorSignatureProvider
-                = ColorSignatureDescriptorProvider.FromDirectory(directory);
-            SemanticVectorDescriptorProvider semanticVectorProvider
-                = SemanticVectorDescriptorProvider.FromDirectory(directory);
+        //public static IBiTemporalRankingServiceExternal<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
+        //    //Build(IDatasetServicesManager datasetServicesManager)
+        //    Build(string directory)
+        //{
+        //    // load dataset(TODO: verify all files against the dataset header)
+        //    //string directory = datasetServicesManager.CurrentDatasetFolder;
+        //    Dataset dataset = new DatasetProvider().FromDirectory(directory);
+        //    int frameCount = dataset.Frames.Count;
+
+        //    // load descriptor providers (done in installer)
+        //    ColorSignatureDescriptorProvider colorSignatureProvider
+        //        = ColorSignatureDescriptorProvider.FromDirectory(directory);
+        //    SemanticVectorDescriptorProvider semanticVectorProvider
+        //        = SemanticVectorDescriptorProvider.FromDirectory(directory);
 
 
-            // load similarity models
-            //ColorSignatureModel colorSignatureModel = new ColorSignatureModel(new RankFusionSum(), datasetServicesManager.CurrentDataset.ColorSignatureProvider);
-            //FloatVectorModel floatVectorModel = new FloatVectorModel(new RankFusionSum(), datasetServicesManager.CurrentDataset.SemanticVectorProvider);
-            ColorSignatureModel colorSignatureModel = new ColorSignatureModel(new RankFusionSum(),colorSignatureProvider);
-            FloatVectorModel floatVectorModel = new FloatVectorModel(new RankFusionSum(), semanticVectorProvider);
-            KeywordSubModel keywordModel = KeywordSubModel.FromDirectory(directory);
+        //    // load similarity models
+        //    //ColorSignatureModel colorSignatureModel = new ColorSignatureModel(new RankFusionSum(), datasetServicesManager.CurrentDataset.ColorSignatureProvider);
+        //    //FloatVectorModel floatVectorModel = new FloatVectorModel(new RankFusionSum(), datasetServicesManager.CurrentDataset.SemanticVectorProvider);
+        //    ColorSignatureModel colorSignatureModel = new ColorSignatureModel(new RankFusionSum(),colorSignatureProvider);
+        //    FloatVectorModel floatVectorModel = new FloatVectorModel(new RankFusionSum(), semanticVectorProvider);
+        //    KeywordSubModel keywordModel = KeywordSubModel.FromDirectory(directory);
             
-            SimilarityModule similarityModule = new SimilarityModule(
-                keywordModel, 
-                colorSignatureModel, 
-                floatVectorModel, 
-                new RankFusionSum());
+        //    SimilarityModule similarityModule = new SimilarityModule(
+        //        keywordModel, 
+        //        colorSignatureModel, 
+        //        floatVectorModel, 
+        //        new RankFusionSum());
 
 
-            // load filtering models
-            // TODO: move to a provider?
-            string colorSaturationFilterFilename = Directory.GetFiles(directory)
-                .Where(file => file.EndsWith(".bwfilter")).First();
-            float[] colorSaturationFrameAttributes = MaskFilterReader.ReadFilter(colorSaturationFilterFilename);
-            ThresholdFilter colorSaturationFilter = new ThresholdFilter(colorSaturationFrameAttributes);
+        //    // load filtering models
+        //    // TODO: move to a provider?
+        //    string colorSaturationFilterFilename = Directory.GetFiles(directory)
+        //        .Where(file => file.EndsWith(".bwfilter")).First();
+        //    float[] colorSaturationFrameAttributes = MaskFilterReader.ReadFilter(colorSaturationFilterFilename);
+        //    ThresholdFilter colorSaturationFilter = new ThresholdFilter(colorSaturationFrameAttributes);
 
-            string percentOfBlackFilterFilename = Directory.GetFiles(directory)
-                .Where(file => file.EndsWith(".pbcfilter")).First();
-            float[] percentOfBlackFrameAttributes = MaskFilterReader.ReadFilter(percentOfBlackFilterFilename);
-            ThresholdFilter percentOfBlackFilter = new ThresholdFilter(percentOfBlackFrameAttributes);
+        //    string percentOfBlackFilterFilename = Directory.GetFiles(directory)
+        //        .Where(file => file.EndsWith(".pbcfilter")).First();
+        //    float[] percentOfBlackFrameAttributes = MaskFilterReader.ReadFilter(percentOfBlackFilterFilename);
+        //    ThresholdFilter percentOfBlackFilter = new ThresholdFilter(percentOfBlackFrameAttributes);
 
-            // TODO: temporary [similarity model - filter model] linking
-            //int frameCount = datasetServicesManager.CurrentDataset.DatasetService.FrameCount;
-            RankedDatasetFilter colorSketchFilter = new RankedDatasetFilter();
-            RankedDatasetFilter keywordFilter = new RankedDatasetFilter();
-            RankedDatasetFilter semanticExampleFilter = new RankedDatasetFilter();
+        //    // TODO: temporary [similarity model - filter model] linking
+        //    //int frameCount = datasetServicesManager.CurrentDataset.DatasetService.FrameCount;
+        //    RankedDatasetFilter colorSketchFilter = new RankedDatasetFilter();
+        //    RankedDatasetFilter keywordFilter = new RankedDatasetFilter();
+        //    RankedDatasetFilter semanticExampleFilter = new RankedDatasetFilter();
 
-            FilteringModule filteringModule = new FilteringModule(
-                colorSaturationFilter,
-                percentOfBlackFilter,
-                colorSketchFilter,
-                keywordFilter,
-                semanticExampleFilter
-                );
-            
-
-            // load ranking service
-            RankingModule primaryRankingModule = new RankingModule(similarityModule, filteringModule);
-            BiTemporalRankingService rankingService = new BiTemporalRankingService(
-                //datasetServicesManager.CurrentDataset.DatasetService,
-                //frameCount,
-                null,
-                primaryRankingModule,
-                null,
-                filteringModule);
-            // TODO: secondary service
+        //    FilteringModule filteringModule = new FilteringModule(
+        //        colorSaturationFilter,
+        //        percentOfBlackFilter,
+        //        colorSketchFilter,
+        //        keywordFilter,
+        //        semanticExampleFilter
+        //        );
             
 
-            return rankingService;
-        }
+        //    // load ranking service
+        //    RankingModule primaryRankingModule = new RankingModule(similarityModule, filteringModule);
+        //    BiTemporalRankingServiceExternal rankingService = new BiTemporalRankingServiceExternal(
+        //        //datasetServicesManager.CurrentDataset.DatasetService,
+        //        //frameCount,
+        //        null,
+        //        primaryRankingModule,
+        //        null,
+        //        filteringModule);
+        //    // TODO: secondary service
+            
+
+        //    return rankingService;
+        //}
     }
 }

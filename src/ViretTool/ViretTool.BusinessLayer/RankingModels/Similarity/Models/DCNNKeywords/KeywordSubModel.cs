@@ -11,7 +11,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
     /// <summary>
     /// Searches an index file and displays results
     /// </summary>
-    public class KeywordSubModel : IKeywordModel<KeywordQuery>
+    public class KeywordSubModel : IKeywordModel
     {
         private const string KEYWORD_MODEL_EXTENSION = ".keyword";
 
@@ -73,35 +73,40 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
 
-            if ((query == null && CachedQuery == null) 
-                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
+            if (!HasQueryOrInputChanged(query, inputRanking))
             {
-                // query and input ranking are the same as before, return cached result
+                // nothing changed, OutputRanking contains cached data from previous computation
                 OutputRanking.IsUpdated = false;
                 return;
             }
-            OutputRanking.IsUpdated = true;
-
-            if (query != null && query.SynsetGroups.Any())
-            {
-                Tuple<int, RankingBuffer> result = ComputeRankedFrames(query);
-                OutputRanking.Ranks = result.Item2.Ranks;
-            }
             else
             {
-                // null query, set to 0 rank
-                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
-                {
-                    if (InputRanking.Ranks[i] == float.MinValue)
-                    {
-                        OutputRanking.Ranks[i] = float.MinValue;
-                    }
-                    else
-                    {
-                        OutputRanking.Ranks[i] = 0;
-                    }
-                }
+                CachedQuery = query;
+                OutputRanking.IsUpdated = true;
             }
+
+            if (IsQueryEmpty(query))
+            {
+                // no query, output is the same as input
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                return;
+            }
+
+            Tuple<int, RankingBuffer> result = ComputeRankedFrames(query);
+            OutputRanking.Ranks = result.Item2.Ranks;
+        }
+
+        private bool HasQueryOrInputChanged(KeywordQuery query, RankingBuffer inputRanking)
+        {
+            return (query == null && CachedQuery != null)
+                || (CachedQuery == null && query != null)
+                || !query.Equals(CachedQuery)
+                || inputRanking.IsUpdated;
+        }
+
+        private bool IsQueryEmpty(KeywordQuery query)
+        {
+            return query == null || !query.SynsetGroups.Any();
         }
 
         #endregion

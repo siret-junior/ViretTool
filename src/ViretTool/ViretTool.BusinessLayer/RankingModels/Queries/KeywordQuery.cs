@@ -1,26 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class KeywordQuery
+    public class KeywordQuery : ISimilarityQuery
     {
         public SynsetGroup[] SynsetGroups { get; private set; }
-        public bool UseForSorting { get; private set; }
-        public bool UseForFiltering { get; private set; }
 
-
-        public KeywordQuery(SynsetGroup[] synsetGroups, bool useForSorting = true, bool useForFiltering = false)
+        public KeywordQuery(SynsetGroup[] synsetGroups)
         {
             SynsetGroups = synsetGroups;
-            UseForSorting = useForSorting;
-            UseForFiltering = useForFiltering;
         }
 
 
         public override bool Equals(object obj)
         {
             return obj is KeywordQuery query &&
-                   EqualityComparer<SynsetGroup[]>.Default.Equals(SynsetGroups, query.SynsetGroups);
+                   SynsetGroups.SequenceEqual(query.SynsetGroups);
         }
 
         public override int GetHashCode()

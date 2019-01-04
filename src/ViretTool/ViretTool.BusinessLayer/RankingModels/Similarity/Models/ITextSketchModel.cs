@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
-    public interface IColorSketchModel<TQuery> : ISimilarityModel<TQuery>
+    public interface ITextSketchModel : IBoolSketchModel
     {
     }
 }

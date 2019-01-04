@@ -1,113 +1,119 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ViretTool.BusinessLayer.Datasets;
-using ViretTool.BusinessLayer.RankingModels.Filtering;
-using ViretTool.BusinessLayer.RankingModels.Queries;
-using ViretTool.BusinessLayer.RankingModels.Similarity;
-using ViretTool.BusinessLayer.Services;
-using ViretTool.DataLayer.DataModel;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
-    public class BiTemporalRankingService 
-        : IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>
+    public class BiTemporalRankingService : IBiTemporalRankingService
     {
-        public IDatasetService DatasetService { get; }
-        //public int FrameCount { get; }
+        public IDatasetService DatasetService { get; private set; }
 
-        public IRankingModule PrimaryRankingModule { get; }
-        public IRankingModule SecondaryRankingModule { get; }
-        public IFilteringModule FilteringModule { get; }
+        public IBiTemporalRankingModule BiTemporalRankingModule { get; private set; }
 
-        public TemporalQuery CachedQuery { get; private set; }
-        public TemporalRankedResultSet CachedResultSet { get; private set; }
+        public BiTemporalQuery CachedQuery { get; private set; }
+        public BiTemporalRankedResultSet CachedResultSet { get; private set; }
 
         public RankingBuffer InputRanking { get; private set; }
-        public RankingBuffer OutputRanking { get; private set; }
+        public BiTemporalRankingBuffer OutputRanking { get; private set; }
 
 
         public BiTemporalRankingService(
-            IDatasetService datasetService,
-            //int frameCount,
-            IRankingModule primaryRankingModule,
-            IRankingModule secondaryRankingModule,
-            IFilteringModule filteringModule)
+            IDatasetService datasetService, 
+            IBiTemporalRankingModule biTemporalRankingModule)
         {
             DatasetService = datasetService;
-            //FrameCount = frameCount;
-            PrimaryRankingModule = primaryRankingModule;
-            SecondaryRankingModule = secondaryRankingModule;
-            FilteringModule = filteringModule;
+            BiTemporalRankingModule = biTemporalRankingModule;
         }
-        
 
-        public TemporalRankedResultSet ComputeRankedResultSet(TemporalQuery query)
+
+        public BiTemporalRankedResultSet ComputeRankedResultSet(BiTemporalQuery query)
         {
-            if ((query == null && CachedQuery == null) 
-                || query.Equals(CachedQuery))
+            // TODO: restriction to only a half of the dataset -> HasInputChanged (+InputRanking)
+            if (!HasQueryChanged(query))
             {
                 return CachedResultSet;
             }
-
-            // create input ranking if neccessary
-            if (InputRanking == null)
-            {
-                InputRanking = RankingBuffer.Zeros("InitialRanking", DatasetService.FrameCount);
-                OutputRanking = RankingBuffer.Zeros("OutputRanking", DatasetService.FrameCount);
-                //InputRanking = RankingBuffer.Zeros("InitialRanking", FrameCount);
-                //OutputRanking = RankingBuffer.Zeros("OutputRanking", FrameCount);
-            }
-
-            if (query != null)
-            {
-                // compute partial rankings
-                PrimaryRankingModule.ComputeRanking(query.TemporalQueries[0], InputRanking, OutputRanking);
-                // TODO:
-                //SecondaryRankingModule.ComputeRanking(query.TemporalQueries[1]);
-
-                float[] ranks = OutputRanking.Ranks;
-
-                // aggregate temporal rankings
-                // TODO: secondary temporal query
-
-
-                // retrieve filtered result
-                List<RankedFrame> accumulator = new List<RankedFrame>(ranks.Length);
-                for (int itemId = 0; itemId < ranks.Length; itemId++)
-                {
-                    if (ranks[itemId] != float.MinValue)
-                    {
-                        accumulator.Add(new RankedFrame(itemId, ranks[itemId]));
-                    }
-                }
-                RankedFrame[] primaryRankedFrames = accumulator.ToArray();
-
-                // sort descending
-                Array.Sort(primaryRankedFrames, (rankedFrame1, rankedFrame2) => rankedFrame2.Rank.CompareTo(rankedFrame1.Rank));
-
-                return new TemporalRankedResultSet(query,
-                    new RankedFrame[][] { primaryRankedFrames, primaryRankedFrames });
-            }
             else
             {
-                int itemCount = PrimaryRankingModule.InputRanking.Ranks.Length;
-                RankedFrame[] rankedFrames = new RankedFrame[itemCount];
-                for (int i = 0; i < itemCount; i++)
-                {
-                    rankedFrames[i] = new RankedFrame(i, itemCount - i);
-                }
+                CachedQuery = query;
+            }
 
-                return new TemporalRankedResultSet(query,
-                    new RankedFrame[][] { rankedFrames, rankedFrames });
+            InitializeRankingBuffers();
+
+            if (IsQueryEmpty(query))
+            {
+                return GenerateSequentialRanking();
+            }
+
+            // the main computation
+            BiTemporalRankingModule.ComputeRanking(query, InputRanking, OutputRanking);
+
+            // aggregate partial temporal result sets
+            List<PairedRankedFrame> formerResultSet = RetrieveRankedResultSet(
+                OutputRanking.FormerRankingBuffer.Ranks, OutputRanking.FormerTemporalPairs);
+            List<PairedRankedFrame> latterResultSet = RetrieveRankedResultSet(
+                OutputRanking.LatterRankingBuffer.Ranks, OutputRanking.LatterTemporalPairs);
+
+            // cache result
+            CachedResultSet = new BiTemporalRankedResultSet(query, formerResultSet, latterResultSet);
+            return CachedResultSet;
+        }
+
+
+        private BiTemporalRankedResultSet GenerateSequentialRanking()
+        {
+            // TODO: restriction to only a half of the dataset
+            int itemCount = DatasetService.FrameCount;
+            List<PairedRankedFrame> rankedFrames = new List<PairedRankedFrame>(itemCount);
+            for (int i = 0; i < itemCount; i++)
+            {
+                rankedFrames.Add(new PairedRankedFrame(i, itemCount - i, -1));
+            }
+
+            return new BiTemporalRankedResultSet(null, rankedFrames, rankedFrames);
+        }
+
+        private bool HasQueryChanged(BiTemporalQuery query)
+        {
+            return (query == null && CachedQuery != null)
+                || (CachedQuery == null && query != null)
+                || !query.Equals(CachedQuery);
+        }
+
+        private void InitializeRankingBuffers()
+        {
+            // create input ranking if neccessary
+            if (InputRanking == null 
+                || InputRanking.Ranks.Length != DatasetService.FrameCount)
+            {
+                InputRanking = RankingBuffer.Zeros(
+                    "BiTemporalRankingService-InputRanking", DatasetService.FrameCount);
+                OutputRanking = BiTemporalRankingBuffer.Zeros(
+                    "BiTemporalRankingService-OutputRanking", DatasetService.FrameCount);
             }
         }
 
-        public TemporalRankedResultSet ComputeRankedResultSet(Query query)
+        private bool IsQueryEmpty(BiTemporalQuery query)
         {
-            return ComputeRankedResultSet(new TemporalQuery(new Query[2] { query, null }));
+            return query == null;
+        }
+
+        private static List<PairedRankedFrame> RetrieveRankedResultSet(float[] primaryRanks, int[] primaryTemporalPairs)
+        {
+            // retrieve filtered result set
+            List<PairedRankedFrame> resultSet = new List<PairedRankedFrame>(primaryRanks.Length);
+            for (int itemId = 0; itemId < primaryRanks.Length; itemId++)
+            {
+                if (primaryRanks[itemId] != float.MinValue)
+                {
+                    resultSet.Add(new PairedRankedFrame(itemId, primaryRanks[itemId], primaryTemporalPairs[itemId]));
+                }
+            }
+
+            // sort descending
+            resultSet.Sort((rankedFrame1, rankedFrame2) => rankedFrame2.CompareTo(rankedFrame1));
+
+            return resultSet;
         }
     }
 }

@@ -13,92 +13,84 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         // color filters
         public IColorSaturationFilter ColorSaturationFilter { get; }
         public IPercentOfBlackFilter PercentOfBlackColorFilter { get; }
-        // ranking model percent of dataset filters
-        public IColorSignatureRankedDatasetFilter ColorSignatureRankingFilter { get; }
-        public IKeywordRankedDatasetFilter KeywordRankingFilter { get; }
-        public ISemanticExampleRankedDatasetFilter SemanticExampleRankingFilter { get; }
+        public ICountRestrictionFilter CountRestrictionFilter { get; }
 
         public FilteringQuery CachedQuery { get; set; }
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
-
+        
         private bool[] _aggregatedFilterMask;
 
 
         public FilteringModule(
             IColorSaturationFilter colorSaturationFilter,
             IPercentOfBlackFilter percentOfBlackColorFilter,
-            IColorSignatureRankedDatasetFilter colorSignatureRankingFilter,
-            IKeywordRankedDatasetFilter keywordRankingFilter,
-            ISemanticExampleRankedDatasetFilter semanticExampleRankingFilter)
+            ICountRestrictionFilter countRestrictionFilter)
         {
             ColorSaturationFilter = colorSaturationFilter;
             PercentOfBlackColorFilter = percentOfBlackColorFilter;
-            ColorSignatureRankingFilter = colorSignatureRankingFilter;
-            KeywordRankingFilter = keywordRankingFilter;
-            SemanticExampleRankingFilter = semanticExampleRankingFilter;
+            CountRestrictionFilter = countRestrictionFilter;
         }
 
 
-        public void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking,
-            RankingBuffer colorSignatureRanking, 
-            RankingBuffer keywordRanking, 
-            RankingBuffer semanticExampleRanking)
+        public void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
-            
-            if ((query == null && CachedQuery == null) 
-                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
+            //InitializeIntermediateBuffers();
+
+            if (!HasQueryOrInputChanged(query, inputRanking))
             {
+                // nothing changed, OutputRanking contains cached data from previous computation
                 OutputRanking.IsUpdated = false;
                 return;
             }
-            OutputRanking.IsUpdated = true;
-
-            // if not all filters are off
-            if (query != null &&
-                (query.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.ColorSketchFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.KeywordFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.SemanticExampleFilteringQuery.FilterState != ThresholdFilteringQuery.State.Off
-                ))
-            {
-                // TODO: filters
-                bool[] colorSaturationMask = ColorSaturationFilter.GetFilterMask(query.ColorSaturationQuery);
-                bool[] percentOfBlackMask = PercentOfBlackColorFilter.GetFilterMask(query.PercentOfBlackQuery);
-
-                bool[] colorSignatureRankingMask
-                    = ColorSignatureRankingFilter.GetFilterMask(query.ColorSketchFilteringQuery, colorSignatureRanking);
-                bool[] keywordRankingMask
-                    = KeywordRankingFilter.GetFilterMask(query.KeywordFilteringQuery, keywordRanking);
-                bool[] semanticExampleMask
-                    = SemanticExampleRankingFilter.GetFilterMask(query.SemanticExampleFilteringQuery, semanticExampleRanking);
-
-
-                // aggregate filters
-                List<bool[]> masks = new List<bool[]>(5);
-                if (colorSaturationMask != null) { masks.Add(colorSaturationMask); }
-                if (percentOfBlackMask != null) { masks.Add(percentOfBlackMask); }
-                if (colorSignatureRankingMask != null) { masks.Add(colorSignatureRankingMask); }
-                if (keywordRankingMask != null) { masks.Add(keywordRankingMask); }
-                if (semanticExampleMask != null) { masks.Add(semanticExampleMask); }
-                bool[] aggregatedMask = AggregateMasks(masks);
-
-                // apply filters
-                ApplyFilters(aggregatedMask, inputRanking, outputRanking);
-
-                // cache query and result (result is cached in output ranking)
-                CachedQuery = query;
-            }
             else
             {
-                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                CachedQuery = query;
+                OutputRanking.IsUpdated = true;
             }
+
+            if (IsQueryEmpty(query))
+            {
+                // no query, output is the same as input
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                return;
+            }
+
+            
+            // TODO: filters
+            bool[] colorSaturationMask = ColorSaturationFilter.GetFilterMask(query.ColorSaturationQuery);
+            bool[] percentOfBlackMask = PercentOfBlackColorFilter.GetFilterMask(query.PercentOfBlackQuery);
+
+            
+            // aggregate filters
+            List<bool[]> masks = new List<bool[]>(5);
+            if (colorSaturationMask != null) { masks.Add(colorSaturationMask); }
+            if (percentOfBlackMask != null) { masks.Add(percentOfBlackMask); }
+            bool[] aggregatedMask = AggregateMasks(masks);
+
+            // apply filters
+            ApplyFilters(aggregatedMask, inputRanking, outputRanking);
+        }
+        
+        private bool HasQueryOrInputChanged(FilteringQuery query, RankingBuffer inputRanking)
+        {
+            return (query == null && CachedQuery != null)
+                || (CachedQuery == null && query != null)
+                || !query.Equals(CachedQuery)
+                || inputRanking.IsUpdated;
         }
 
-        
+        private bool IsQueryEmpty(FilteringQuery query)
+        {
+            return query == null ||
+                (
+                    query.ColorSaturationQuery.FilterState == ThresholdFilteringQuery.State.Off
+                 && query.PercentOfBlackQuery.FilterState == ThresholdFilteringQuery.State.Off
+                );
+        }
+
         private bool[] AggregateMasks(List<bool[]> masks)
         {
             // check null input

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define PARALLEL
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -43,25 +44,34 @@ namespace BlackAndWhiteFilterExtractor
 
             // run extraction
             float maxRGBDelta = 0;
+#if PARALLEL
+            Parallel.For(0, itemCount, i =>
+#else
             for (int i = 0; i < itemCount; i++)
+#endif
             {
                 if (i % 100 == 0)
                 {
                     Console.WriteLine($"Extracting filters {i + 1}/{itemCount}.");
                 }
+
                 // TODO: parallel
-                Bitmap bitmap = new Bitmap(inputFiles[i]);
-
-                // TODO: refactoring tuples
-                Tuple<float, float> statistics = ComputeColorStatistics(bitmap, threshold);
-                if (statistics.Item1 > maxRGBDelta)
+                using (Bitmap bitmap = new Bitmap(inputFiles[i]))
                 {
-                    maxRGBDelta = statistics.Item1;
-                }
+                    // TODO: refactoring tuples
+                    Tuple<float, float> statistics = ComputeColorStatistics(bitmap, threshold);
+                    if (statistics.Item1 > maxRGBDelta)
+                    {
+                        maxRGBDelta = statistics.Item1;
+                    }
 
-                bwDeltaValues[i] = statistics.Item1;
-                pbValues[i] = statistics.Item2;
+                    bwDeltaValues[i] = statistics.Item1;
+                    pbValues[i] = statistics.Item2;
+                }
             }
+#if PARALLEL
+            );
+#endif
 
             // Normalization to 0 - 1
             // Inversion to stay consistent with idea "bigger number -> more black"

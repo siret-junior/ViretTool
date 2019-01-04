@@ -1,6 +1,8 @@
-﻿namespace ViretTool.BusinessLayer.RankingModels.Queries
+﻿using System;
+
+namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class ThresholdFilteringQuery
+    public class ThresholdFilteringQuery : IEquatable<ThresholdFilteringQuery>
     {
         public enum State { IncludeAboveThreshold, ExcludeAboveThreshold, Off }
 
@@ -14,19 +16,11 @@
             Threshold = threshold;
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is ThresholdFilteringQuery query &&
-                   FilterState == query.FilterState &&
-                   Threshold == query.Threshold;
-        }
 
-        public override int GetHashCode()
+        public bool Equals(ThresholdFilteringQuery other)
         {
-            int hashCode = -1488501104;
-            hashCode = hashCode * -1521134295 + FilterState.GetHashCode();
-            hashCode = hashCode * -1521134295 + Threshold.GetHashCode();
-            return hashCode;
+            return FilterState.Equals(other.FilterState) &&
+                Threshold.Equals(other.Threshold);
         }
     }
 }
