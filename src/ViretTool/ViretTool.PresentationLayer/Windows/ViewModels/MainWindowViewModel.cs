@@ -280,16 +280,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CancelSortingTaskIfNecessary();
 
-                BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(
-                    Query1,
-                    Query2,
-                    IsFirstQueryPrimary ? BiTemporalQuery.TemporalQueries.Former : BiTemporalQuery.TemporalQueries.Latter);
+                BiTemporalRankedResultSet queryResult = await Task.Run(
+                                                            () =>
+                                                            {
+                                                                BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(Query1, Query2, IsFirstQueryPrimary);
+                                                                return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
+                                                            });
 
-                BiTemporalRankedResultSet queryResult = await Task.Run(() => _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery));
-                
-                //TODO - combine both results
-                // TODO: switch between primary and secondary (flag is in the queryResult.TemporalQuery)
-                List<int> sortedIds = queryResult.FormerTemporalResultSet.Select(rf => rf.Id).ToList();
+                List<int> sortedIds = (queryResult.TemporalQuery.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former
+                                           ? queryResult.FormerTemporalResultSet
+                                           : queryResult.LatterTemporalResultSet).Select(rf => rf.Id).ToList();
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation

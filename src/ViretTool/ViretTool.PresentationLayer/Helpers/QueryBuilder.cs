@@ -17,7 +17,7 @@ namespace ViretTool.PresentationLayer.Helpers
             _datasetServicesManager = datasetServicesManager;
         }
 
-        public BiTemporalQuery BuildQuery(QueryViewModel query1, QueryViewModel query2, BiTemporalQuery.TemporalQueries primaryTemporalQuery)
+        public BiTemporalQuery BuildQuery(QueryViewModel query1, QueryViewModel query2, bool isFirstQueryPrimary)
         {
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
@@ -258,7 +258,7 @@ namespace ViretTool.PresentationLayer.Helpers
 
             BiTemporalQuery biTemporalQuery =
                 new BiTemporalQuery(
-                    primaryTemporalQuery,
+                    isFirstQueryPrimary ? BiTemporalQuery.TemporalQueries.Former : BiTemporalQuery.TemporalQueries.Latter,
                     new BiTemporalSimilarityQuery(
                         biTemporalKeywordQuery,
                         biTemporalColorSketchQuery,
