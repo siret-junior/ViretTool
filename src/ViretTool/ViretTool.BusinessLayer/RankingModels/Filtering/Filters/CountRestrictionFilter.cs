@@ -68,16 +68,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             int[] videoHitCounter = new int[DatasetService.Dataset.Videos.Count];
             
             // single thread execution is required
-            for (int index = 0; index < indexes.Length; index++)
+            for (int i = 0; i < ranks.Length; i++)
             {
-                int i = indexes[index];
-                if (inputRanking.Ranks[i] == float.MinValue)
+                if (ranks[i] == float.MinValue)
                 {
                     // ignore already filtered items
+                    outputRanking.Ranks[indexes[i]] = float.MinValue;
                     continue;
                 }
 
-                Frame frame = DatasetService.Dataset.Frames[i];
+                Frame frame = DatasetService.Dataset.Frames[indexes[i]];
                 int groupId = frame.ParentGroup.Id;
                 int shotId = frame.ParentShot.Id;
                 int videoId = frame.ParentVideo.Id;
@@ -85,7 +85,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // video
                 if (query.MaxPerVideo > 0 && videoHitCounter[videoId] >= query.MaxPerVideo)
                 {
-                    outputRanking.Ranks[i] = float.MinValue;
+                    outputRanking.Ranks[indexes[i]] = float.MinValue;
                     continue;
                 }
                 else
@@ -96,7 +96,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // shot
                 if (query.MaxPerShot > 0 && shotHitCounter[shotId] >= query.MaxPerShot)
                 {
-                    outputRanking.Ranks[i] = float.MinValue;
+                    outputRanking.Ranks[indexes[i]] = float.MinValue;
                     continue;
                 }
                 else
@@ -107,7 +107,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 // group
                 if (query.MaxPerGroup > 0 && groupHitCounter[groupId] >= query.MaxPerGroup)
                 {
-                    outputRanking.Ranks[i] = float.MinValue;
+                    outputRanking.Ranks[indexes[i]] = float.MinValue;
                     continue;
                 }
                 else
@@ -115,7 +115,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                     groupHitCounter[shotId]++;
                 }
 
-                outputRanking.Ranks[i] = inputRanking.Ranks[i];
+                outputRanking.Ranks[indexes[i]] = ranks[i];
             }
         }
 

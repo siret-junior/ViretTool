@@ -127,6 +127,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 //throw new ArgumentException("Input masks are empty!");
             }
 
+            if (masks.Count == 1)
+            {
+                return masks[0];
+            }
+
             // initialize result
             if (_aggregatedFilterMask == null || _aggregatedFilterMask.Length != masks[0].Length)
             {
