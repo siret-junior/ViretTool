@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ViretTool.BusinessLayer.ActionLogging
 {
@@ -8,22 +7,8 @@ namespace ViretTool.BusinessLayer.ActionLogging
         private const int TimeDelayMiliseconds = 1000;
 
         private readonly object _lockObject = new object();
-        private readonly List<Event> _events = new List<Event>();
 
-        public int MemberId { get; set; } = 1;
-        public int TeamId { get; set; } = 4;
-        public string TeamName { get; set; } = "VIRET";
-
-        public IReadOnlyList<Event> Events
-        {
-            get
-            {
-                lock (_lockObject)
-                {
-                    return _events;
-                }
-            }
-        }
+		public InteractionLog Log { get; } = new InteractionLog();
 
         public void LogInteraction(string category, string type = null, string value = null, string attributes = null)
         {
@@ -34,9 +19,9 @@ namespace ViretTool.BusinessLayer.ActionLogging
 
             lock (_lockObject)
             {
-                if (_events.Count > 0)
+                if (Log.Events.Count > 0)
                 {
-                    long lastEventTime = _events[_events.Count - 1].Timestamp;
+                    long lastEventTime = Log.Events[Log.Events.Count - 1].Timestamp;
                     long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
                     if (Math.Abs(lastEventTime - currentTime) < TimeDelayMiliseconds)
@@ -45,7 +30,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
                     }
                 }
 
-                _events.Add(interactionEvent);
+                Log.Events.Add(interactionEvent);
             }
         }
 
@@ -53,7 +38,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
         {
             lock (_lockObject)
             {
-                _events.Clear();
+                Log.Events.Clear();
             }
         }
     }

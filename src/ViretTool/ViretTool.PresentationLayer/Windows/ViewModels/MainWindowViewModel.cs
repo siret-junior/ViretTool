@@ -141,45 +141,45 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public int TeamId
         {
-            get => _interactionLogger.TeamId;
+            get => _interactionLogger.Log.TeamId;
             set
             {
-                if (_interactionLogger.TeamId == value)
+                if (_interactionLogger.Log.TeamId == value)
                 {
                     return;
                 }
 
-                _interactionLogger.TeamId = value;
+                _interactionLogger.Log.TeamId = value;
                 NotifyOfPropertyChange();
             }
         }
 
         public string TeamName
         {
-            get => _interactionLogger.TeamName;
+            get => _interactionLogger.Log.TeamName;
             set
             {
-                if (_interactionLogger.TeamName == value)
+                if (_interactionLogger.Log.TeamName == value)
                 {
                     return;
                 }
 
-                _interactionLogger.TeamName = value;
+                _interactionLogger.Log.TeamName = value;
                 NotifyOfPropertyChange();
             }
         }
 
         public int MemberId
         {
-            get => _interactionLogger.MemberId;
+            get => _interactionLogger.Log.MemberId;
             set
             {
-                if (_interactionLogger.MemberId == value)
+                if (_interactionLogger.Log.MemberId == value)
                 {
                     return;
                 }
 
-                _interactionLogger.MemberId = value;
+                _interactionLogger.Log.MemberId = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -342,11 +342,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IsBusy = true;
             try
             {
-                IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-                List<FrameToSubmit> framesToSubmit = _submitControlViewModel
-                                                     .SubmittedFrames.Select(
-                                                         f => new FrameToSubmit(f.VideoId + 1, datasetService.GetFrameIdForFrameNumber(f.VideoId, f.FrameNumber), -1))
-                                                     .ToList();
+                List<FrameToSubmit> framesToSubmit = _submitControlViewModel.SubmittedFrames.Select(f => new FrameToSubmit(f.VideoId + 1, f.FrameNumber)).ToList();
                 foreach (FrameToSubmit frameToSubmit in framesToSubmit)
                 {
                     string response = await _submissionService.SubmitFramesAsync(frameToSubmit);

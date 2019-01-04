@@ -6,9 +6,6 @@ namespace ViretTool.BusinessLayer.ActionLogging
     {
         void LogInteraction(string category, string type = null, string value = null, string attributes = null);
         void ResetLog();
-        int MemberId { get; set; }
-        int TeamId { get; set; }
-        string TeamName { get; set; }
-        IReadOnlyList<Event> Events { get; }
+        InteractionLog Log { get; }
     }
 }

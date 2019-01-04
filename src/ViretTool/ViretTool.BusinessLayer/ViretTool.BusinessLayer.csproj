@@ -49,6 +49,7 @@
     <Compile Include="ActionLogging\Action.cs" />
     <Compile Include="ActionLogging\Event.cs" />
     <Compile Include="ActionLogging\IInteractionLogger.cs" />
+    <Compile Include="ActionLogging\InteractionLog.cs" />
     <Compile Include="ActionLogging\InteractionLogger.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />

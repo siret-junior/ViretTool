@@ -2,15 +2,13 @@
 {
     public class FrameToSubmit
     {
-        public FrameToSubmit(int videoId, int frameId, int shotId)
+        public FrameToSubmit(int videoId, int frameNumber)
         {
             VideoId = videoId;
-            FrameId = frameId;
-            ShotId = shotId;
+            FrameNumber = frameNumber;
         }
 
         public int VideoId { get; }
-        public int FrameId { get; }
-        public int ShotId { get; }
+        public int FrameNumber { get; }
     }
 }

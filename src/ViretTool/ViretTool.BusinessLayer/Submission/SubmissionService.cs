@@ -18,7 +18,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         public async Task<string> SubmitFramesAsync(FrameToSubmit frameToSubmit)
         {
-            string url = GetUrl(_interactionLogger.TeamId, _interactionLogger.MemberId, frameToSubmit);
+            string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
             StringContent content = new StringContent(GetContent(), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PostAsync(url, content);
             if (response.IsSuccessStatusCode)
@@ -31,7 +31,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         public async Task<string> SubmitLog()
         {
-            string url = GetUrl(_interactionLogger.TeamId, _interactionLogger.MemberId);
+            string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId);
             StringContent content = new StringContent(GetContent(), Encoding.UTF8, "application/json");
             HttpResponseMessage response = await _client.PostAsync(url, content);
             if (response.IsSuccessStatusCode)
@@ -44,7 +44,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         private static string GetUrl(int teamId, int memberId, FrameToSubmit frameToSubmit)
         {
-            return $"{BaseUrl}?team={teamId}&member={memberId}&video={frameToSubmit.VideoId}&frame={frameToSubmit.FrameId}&shot={frameToSubmit.ShotId}";
+            return $"{BaseUrl}?team={teamId}&member={memberId}&video={frameToSubmit.VideoId}&frame={frameToSubmit.FrameNumber}";
         }
 
         private static string GetUrl(int teamId, int memberId)
@@ -54,7 +54,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         private string GetContent()
         {
-            return LowercaseJsonSerializer.SerializeObject(_interactionLogger.Events);
+            return LowercaseJsonSerializer.SerializeObject(_interactionLogger.Log);
         }
     }
 }
