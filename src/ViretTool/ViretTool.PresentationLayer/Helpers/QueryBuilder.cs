@@ -247,13 +247,13 @@ namespace ViretTool.PresentationLayer.Helpers
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query1.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query1.PercentageBlackFilterValue * 0.01),
                 // TODO:
-                new CountFilteringQuery(CountFilteringQuery.State.Enabled, 15, 1, 3));
+                new CountFilteringQuery(CountFilteringQuery.State.Enabled, 15, 1, -1));
 
             FilteringQuery latterFilteringQuery = new FilteringQuery(
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query2.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query2.PercentageBlackFilterValue * 0.01),
                 // TODO:
-                new CountFilteringQuery(CountFilteringQuery.State.Enabled, 15, 1, 3));
+                new CountFilteringQuery(CountFilteringQuery.State.Enabled, 15, 1, -1));
 
 
             BiTemporalQuery biTemporalQuery =

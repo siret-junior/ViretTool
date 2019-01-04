@@ -19,7 +19,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 
         public BiTemporalRankFusionSum(
             IDatasetServicesManager datasetServicesManager, 
-            int temporalContextLength = 10)
+            int temporalContextLength = 5)
         {
             DatasetServicesManager = datasetServicesManager;
             _temporalContextLength = temporalContextLength;
