@@ -16,7 +16,7 @@ namespace ViretTool.BusinessLayer.Submission
             _interactionLogger = interactionLogger;
         }
 
-        public async Task<string> SubmitFramesAsync(FrameToSubmit frameToSubmit)
+        public async Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit)
         {
             string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
             StringContent content = new StringContent(GetContent(), Encoding.UTF8, "application/json");
