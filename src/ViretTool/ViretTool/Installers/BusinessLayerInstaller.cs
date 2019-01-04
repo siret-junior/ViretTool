@@ -2,6 +2,7 @@
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels;
@@ -57,7 +58,8 @@ namespace ViretTool.Installers
 
             //singleton services
             container.Register(
-                Component.For<ISubmissionService>().ImplementedBy<SubmissionService>());
+                Component.For<ISubmissionService>().ImplementedBy<SubmissionService>(),
+                Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>());
 
             //transient services
             container.Register(

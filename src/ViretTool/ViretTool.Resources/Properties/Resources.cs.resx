@@ -210,4 +210,10 @@
   <data name="MemberIdText" xml:space="preserve">
     <value>ID člena:</value>
   </data>
+  <data name="TeamNameText" xml:space="preserve">
+    <value>Jméno týmu:</value>
+  </data>
+  <data name="FramesSentSuccessText" xml:space="preserve">
+    <value>Snímky byly poslány.</value>
+  </data>
 </root>

@@ -225,4 +225,10 @@
   <data name="MemberIdText" xml:space="preserve">
     <value>Member ID:</value>
   </data>
+  <data name="TeamNameText" xml:space="preserve">
+    <value>Team name:</value>
+  </data>
+  <data name="FramesSentSuccessText" xml:space="preserve">
+    <value>Frames were submitted.</value>
+  </data>
 </root>

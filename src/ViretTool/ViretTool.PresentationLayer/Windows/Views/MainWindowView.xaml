@@ -70,6 +70,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <Menu Grid.Row="0" Width="Auto" Background="White">
@@ -78,13 +79,17 @@
                                 </MenuItem>
                             </Menu>
 
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="4">
-                                <TextBlock Text="{x:Static properties:Resources.TeamIdText}" />
-                                <TextBox x:Name="TeamId" Margin="4,0,0,0" Width="30"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="4,4,4,0">
+                                <TextBlock Text="{x:Static properties:Resources.TeamNameText}" />
+                                <TextBox x:Name="TeamName" Margin="4,0,0,0" Width="50"/>
                             </StackPanel>
-                            <StackPanel Grid.Column="2" Margin="4" Orientation="Horizontal">
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="4,4,4,0">
+                                <TextBlock Text="{x:Static properties:Resources.TeamIdText}" />
+                                <TextBox x:Name="TeamId" Margin="4,0,0,0" Width="20"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="4,4,4,0">
                                 <TextBlock Text="{x:Static properties:Resources.MemberIdText}" />
-                                <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="30"/>
+                                <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="20"/>
                             </StackPanel>
                         </Grid>
 
@@ -104,7 +109,7 @@
                     </Grid>
                 </ScrollViewer>
 
-                <GridSplitter  Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                <GridSplitter  Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
 
                 <!-- result displays -->
                 <Grid Grid.Column="2">
@@ -120,7 +125,7 @@
                         </Grid.ColumnDefinitions>
 
                         <ContentControl Grid.Column="0" x:Name="QueryResults" />
-                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
                         <ContentControl Grid.Column="2" x:Name="DetailView" />
                     </Grid>
                 </Grid>

@@ -4,6 +4,7 @@ namespace ViretTool.BusinessLayer.Submission
 {
     public interface ISubmissionService
     {
-        Task<string> SubmitFramesAsync(int teamId, int memberId, FrameToSubmit frameToSubmit);
+        Task<string> SubmitFramesAsync(FrameToSubmit frameToSubmit);
+        Task<string> SubmitLog();
     }
 }

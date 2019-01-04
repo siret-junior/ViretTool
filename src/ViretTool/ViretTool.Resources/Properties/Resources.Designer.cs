@@ -133,6 +133,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Frames were submitted..
+        /// </summary>
+        public static string FramesSentSuccessText {
+            get {
+                return ResourceManager.GetString("FramesSentSuccessText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 72.
         /// </summary>
         public static string ImageHeight {
@@ -336,6 +345,15 @@ namespace ViretTool.Resources.Properties {
         public static string TeamIdText {
             get {
                 return ResourceManager.GetString("TeamIdText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Team name:.
+        /// </summary>
+        public static string TeamNameText {
+            get {
+                return ResourceManager.GetString("TeamNameText", resourceCulture);
             }
         }
         

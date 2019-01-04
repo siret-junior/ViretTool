@@ -10,15 +10,14 @@ using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.OutputGridSorting;
-using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
 using ViretTool.PresentationLayer.Controls.Common;
-using ViretTool.PresentationLayer.Controls.DisplayControl;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
@@ -30,13 +29,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly IGridSorter _gridSorter;
         private readonly ISubmissionService _submissionService;
+        private readonly IInteractionLogger _interactionLogger;
         private readonly ILogger _logger;
         private readonly IWindowManager _windowManager;
         private readonly SubmitControlViewModel _submitControlViewModel;
         private bool _isBusy;
         private bool _isDetailVisible;
-        private int _teamId = 4;    //VIRET
-        private int _memberId = 1;
         private bool _isFirstQueryPrimary = true;
         private Task<int[]> _sortingTask;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -52,7 +50,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager,
             IGridSorter gridSorter,
-            ISubmissionService submissionService)
+            ISubmissionService submissionService,
+            IInteractionLogger interactionLogger)
         {
             _logger = logger;
             _windowManager = windowManager;
@@ -60,6 +59,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _datasetServicesManager = datasetServicesManager;
             _gridSorter = gridSorter;
             _submissionService = submissionService;
+            _interactionLogger = interactionLogger;
 
             QueryResults = queryResults;
             DetailView = detailView;
@@ -137,30 +137,45 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public int TeamId
         {
-            get => _teamId;
+            get => _interactionLogger.TeamId;
             set
             {
-                if (_teamId == value)
+                if (_interactionLogger.TeamId == value)
                 {
                     return;
                 }
 
-                _teamId = value;
+                _interactionLogger.TeamId = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public string TeamName
+        {
+            get => _interactionLogger.TeamName;
+            set
+            {
+                if (_interactionLogger.TeamName == value)
+                {
+                    return;
+                }
+
+                _interactionLogger.TeamName = value;
                 NotifyOfPropertyChange();
             }
         }
 
         public int MemberId
         {
-            get => _memberId;
+            get => _interactionLogger.MemberId;
             set
             {
-                if (_memberId == value)
+                if (_interactionLogger.MemberId == value)
                 {
                     return;
                 }
 
-                _memberId = value;
+                _interactionLogger.MemberId = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -327,20 +342,21 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                      .ToList();
                 foreach (FrameToSubmit frameToSubmit in framesToSubmit)
                 {
-                    string response = await _submissionService.SubmitFramesAsync(TeamId, MemberId, frameToSubmit);
+                    string response = await _submissionService.SubmitFramesAsync(frameToSubmit);
                     _logger.Info(response);
                 }
             }
             catch (Exception e)
             {
                 LogError(e, "Error while submitting frames");
+                return;
             }
             finally
             {
                 IsBusy = false;
             }
 
-            MessageBox.Show("Frames submitted");
+            MessageBox.Show(Resources.Properties.Resources.FramesSentSuccessText);
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)
