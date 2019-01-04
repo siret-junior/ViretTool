@@ -1,14 +1,15 @@
 ﻿using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class TemporalRankedResultSet
     {
-        public TemporalQuery TemporalQuery { get; private set; }
+        public BiTemporalQuery TemporalQuery { get; private set; }
         public RankedFrame[][] TemporalResultSets { get; private set; }
 
 
-        public TemporalRankedResultSet(TemporalQuery temporalQuery, RankedFrame[][] temporalResultSets)
+        public TemporalRankedResultSet(BiTemporalQuery temporalQuery, RankedFrame[][] temporalResultSets)
         {
             TemporalQuery = temporalQuery;
             TemporalResultSets = temporalResultSets;

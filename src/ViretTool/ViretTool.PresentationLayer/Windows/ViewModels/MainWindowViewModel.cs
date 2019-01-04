@@ -15,6 +15,7 @@ using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -276,13 +277,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CancelSortingTaskIfNecessary();
 
-                TemporalRankedResultSet queryResult =
+                BiTemporalQuery biTemporalQuery = BuildQuery();
+
+                BiTemporalRankedResultSet queryResult =
                     await Task.Run(
                         () => _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(
-                            new TemporalQuery(IsFirstQueryPrimary ? new[] { Query1.FinalQuery, Query2.FinalQuery } : new[] { Query2.FinalQuery, Query1.FinalQuery })));
-
+                            biTemporalQuery
+                        )
+                    );
+                
                 //TODO - combine both results
-                List<int> sortedIds = queryResult.TemporalResultSets.First().Select(rf => rf.Id).ToList();
+                // TODO: switch between primary and secondary (flag is in the queryResult.TemporalQuery)
+                List<int> sortedIds = queryResult.FormerTemporalResultSet.Select(rf => rf.Id).ToList();
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation
@@ -298,6 +304,325 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private ThresholdFilteringQuery.State ConvertToFilterState(FilterControl.FilterState filterState)
+        {
+            switch (filterState)
+            {
+                case FilterControl.FilterState.Y:
+                    return ThresholdFilteringQuery.State.ExcludeAboveThreshold;
+                case FilterControl.FilterState.N:
+                    return ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                case FilterControl.FilterState.Off:
+                    return ThresholdFilteringQuery.State.Off;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(filterState), filterState, "Uknown filtering state.");
+            }
+        }
+
+        private BiTemporalQuery BuildQuery()
+        {
+            BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
+                 new BiTemporalModelQuery<KeywordQuery>(
+                    new KeywordQuery(Query1.KeywordQueryResult?.Query?.Select(
+                        parts => new SynsetGroup(parts.Select(
+                            p => new Synset(Query1.KeywordQueryResult?.AnnotationSource, p))
+                            .ToArray()))
+                        .ToArray() ?? new SynsetGroup[0]),
+                    new KeywordQuery(Query1.KeywordQueryResult?.Query?.Select(
+                        parts => new SynsetGroup(parts.Select(
+                            p => new Synset(Query1.KeywordQueryResult?.AnnotationSource, p))
+                            .ToArray()))
+                        .ToArray() ?? new SynsetGroup[0])
+                );
+
+            BiTemporalModelQuery<ColorSketchQuery> biTemporalColorSketchQuery =
+                new BiTemporalModelQuery<ColorSketchQuery>(
+                    new ColorSketchQuery(
+                        Query1.CanvasWidth,
+                        Query1.CanvasHeight,
+                        Query1.SketchQueryResult?.SketchColorPoints?.Select(
+                                point => new Ellipse(
+                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                    point.Position.X,
+                                    point.Position.Y,
+                                    point.EllipseAxis.X,
+                                    point.EllipseAxis.Y,
+                                    0,
+                                    point.FillColor.R,
+                                    point.FillColor.G,
+                                    point.FillColor.B))
+                                .ToArray() ?? new Ellipse[0]
+                    ),
+                    new ColorSketchQuery(
+                        Query2.CanvasWidth,
+                        Query2.CanvasHeight,
+                        Query2.SketchQueryResult?.SketchColorPoints?.Select(
+                                point => new Ellipse(
+                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                    point.Position.X,
+                                    point.Position.Y,
+                                    point.EllipseAxis.X,
+                                    point.EllipseAxis.Y,
+                                    0,
+                                    point.FillColor.R,
+                                    point.FillColor.G,
+                                    point.FillColor.B))
+                                .ToArray() ?? new Ellipse[0]
+                    )
+                );
+
+            BiTemporalModelQuery<ColorSketchQuery> biTemporalFaceSketchQuery =
+                new BiTemporalModelQuery<ColorSketchQuery>(
+                    new ColorSketchQuery(
+                        Query1.CanvasWidth,
+                        Query1.CanvasHeight,
+                        Query1.SketchQueryResult?.SketchColorPoints?.Select(
+                                point => new Ellipse(
+                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                    point.Position.X,
+                                    point.Position.Y,
+                                    point.EllipseAxis.X,
+                                    point.EllipseAxis.Y,
+                                    0,
+                                    point.FillColor.R,
+                                    point.FillColor.G,
+                                    point.FillColor.B))
+                                .ToArray() ?? new Ellipse[0]
+                    ),
+                    new ColorSketchQuery(
+                        Query2.CanvasWidth,
+                        Query2.CanvasHeight,
+                        Query2.SketchQueryResult?.SketchColorPoints?.Select(
+                                point => new Ellipse(
+                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                    point.Position.X,
+                                    point.Position.Y,
+                                    point.EllipseAxis.X,
+                                    point.EllipseAxis.Y,
+                                    0,
+                                    point.FillColor.R,
+                                    point.FillColor.G,
+                                    point.FillColor.B))
+                                .ToArray() ?? new Ellipse[0]
+                    )
+                );
+
+            BiTemporalModelQuery<ColorSketchQuery> biTemporalTextSketchQuery =
+                new BiTemporalModelQuery<ColorSketchQuery>(
+                    new ColorSketchQuery(
+                        Query1.CanvasWidth,
+                        Query1.CanvasHeight,
+                        Query1.SketchQueryResult?.SketchColorPoints?.Select(
+                                point => new Ellipse(
+                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                    point.Position.X,
+                                    point.Position.Y,
+                                    point.EllipseAxis.X,
+                                    point.EllipseAxis.Y,
+                                    0,
+                                    point.FillColor.R,
+                                    point.FillColor.G,
+                                    point.FillColor.B))
+                                .ToArray() ?? new Ellipse[0]
+                    ),
+                    new ColorSketchQuery(
+                        Query2.CanvasWidth,
+                        Query2.CanvasHeight,
+                        Query2.SketchQueryResult?.SketchColorPoints?.Select(
+                                point => new Ellipse(
+                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                    point.Position.X,
+                                    point.Position.Y,
+                                    point.EllipseAxis.X,
+                                    point.EllipseAxis.Y,
+                                    0,
+                                    point.FillColor.R,
+                                    point.FillColor.G,
+                                    point.FillColor.B))
+                                .ToArray() ?? new Ellipse[0]
+                    )
+                );
+
+            BiTemporalModelQuery<SemanticExampleQuery> biTemporalSemanticExampleQuery =
+                new BiTemporalModelQuery<SemanticExampleQuery>(
+                    new SemanticExampleQuery(
+                        Query1.QueryObjects.Select(
+                            q => _datasetServicesManager
+                                .CurrentDataset
+                                .DatasetService
+                                .GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber))
+                                .ToArray(),
+                        new int[0]
+                    ),
+                    new SemanticExampleQuery(
+                        Query2.QueryObjects.Select(
+                            q => _datasetServicesManager
+                                .CurrentDataset
+                                .DatasetService
+                                .GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber))
+                                .ToArray(),
+                        new int[0]
+                    )
+                );
+
+
+            FusionQuery formerFusionQuery =
+                new FusionQuery(
+                        Query1.KeywordUseForSorting
+                            ? FusionQuery.SimilarityModels.Keyword
+                        : Query1.ColorUseForSorting
+                            ? FusionQuery.SimilarityModels.ColorSketch
+                        //: Query1.Face
+                        //    ? FusionQuery.SimilarityModels.FaceSketch
+                        //: Query1.Text
+                        //    ? FusionQuery.SimilarityModels.TextSketch
+                        : Query1.SemanticUseForSorting
+                            ? FusionQuery.SimilarityModels.SemanticExample
+                        : FusionQuery.SimilarityModels.FaceSketch // throw new ArgumentException("No model is selected for sorting.")
+                    ,
+
+                    new ThresholdFilteringQuery(
+                        biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() 
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        Query1.KeywordValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            :  ThresholdFilteringQuery.State.Off,
+                        Query1.ColorValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        //biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                        //    :  ThresholdFilteringQuery.State.Off,
+                        ThresholdFilteringQuery.State.Off,
+                        0 ),//Query1.FaceValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        //biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                        //    :  ThresholdFilteringQuery.State.Off,
+                        ThresholdFilteringQuery.State.Off,
+                        0 ),//Query1.TextValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            :  ThresholdFilteringQuery.State.Off,
+                        Query1.SemanticValue * 0.01)
+                );
+
+            FusionQuery latterFusionQuery =
+                new FusionQuery(
+                        Query2.KeywordUseForSorting
+                            ? FusionQuery.SimilarityModels.Keyword
+                        : Query2.ColorUseForSorting
+                            ? FusionQuery.SimilarityModels.ColorSketch
+                        //: Query1.Face
+                        //    ? FusionQuery.SimilarityModels.FaceSketch
+                        //: Query1.Text
+                        //    ? FusionQuery.SimilarityModels.TextSketch
+                        : Query2.SemanticUseForSorting
+                            ? FusionQuery.SimilarityModels.SemanticExample
+                        : FusionQuery.SimilarityModels.FaceSketch//throw new ArgumentException("No model is selected for sorting.")
+                    ,
+                    new ThresholdFilteringQuery(
+                        biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any()
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        Query2.KeywordValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        Query2.ColorValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        //biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                        //    : ThresholdFilteringQuery.State.Off,
+                        ThresholdFilteringQuery.State.Off,
+                        0),//Query2.FaceValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        //biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                        //    : ThresholdFilteringQuery.State.Off,
+                        ThresholdFilteringQuery.State.Off,
+                        0),//Query2.TextValue * 0.01),
+
+                    new ThresholdFilteringQuery(
+                        biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        Query2.SemanticValue * 0.01)
+                );
+
+            
+            FilteringQuery formerFilteringQuery =
+                new FilteringQuery(
+                    new ThresholdFilteringQuery(
+                        ConvertToFilterState(Query1.BwFilterState),
+                        Query1.BwFilterValue * 0.01
+                    ),
+                    new ThresholdFilteringQuery(
+                        ConvertToFilterState(Query1.PercentageBlackFilterState),
+                        Query1.PercentageBlackFilterValue * 0.01
+                    ),
+                    // TODO:
+                    new CountFilteringQuery(
+                        CountFilteringQuery.State.Enabled,
+                        15,
+                        1,
+                        3
+                    )
+                );
+            
+            FilteringQuery latterFilteringQuery =
+                new FilteringQuery(
+                    new ThresholdFilteringQuery(
+                        ConvertToFilterState(Query1.BwFilterState),
+                        Query2.BwFilterValue * 0.01
+                    ),
+                    new ThresholdFilteringQuery(
+                        ConvertToFilterState(Query1.PercentageBlackFilterState),
+                        Query2.PercentageBlackFilterValue * 0.01
+                    ),
+                    // TODO:
+                    new CountFilteringQuery(
+                        CountFilteringQuery.State.Enabled,
+                        15,
+                        1,
+                        3
+                    )
+                );
+
+            
+            BiTemporalQuery biTemporalQuery =
+                new BiTemporalQuery(
+                    IsFirstQueryPrimary
+                        ? BiTemporalQuery.TemporalQueries.Former
+                        : BiTemporalQuery.TemporalQueries.Latter,
+                    new BiTemporalSimilarityQuery(
+                        biTemporalKeywordQuery,
+                        biTemporalColorSketchQuery,
+                        biTemporalFaceSketchQuery,
+                        biTemporalTextSketchQuery,
+                        biTemporalSemanticExampleQuery
+                    ),
+                    formerFusionQuery,
+                    latterFusionQuery,
+                    formerFilteringQuery,
+                    latterFilteringQuery
+                );
+
+
+            return biTemporalQuery;
         }
 
         private void CancelSortingTaskIfNecessary()

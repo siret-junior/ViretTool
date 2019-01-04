@@ -16,6 +16,8 @@ using ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureMode
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Fusion;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Similarity;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.Thumbnails;
@@ -48,13 +50,11 @@ namespace ViretTool.Installers
 
 
 
-                Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>()
+                Component.For<IBiTemporalRankingService>()
                          .ImplementedBy<BiTemporalRankingService>()
                          .LifestyleBoundTo<DatasetServices>()
-                //Component.For<IBiTemporalRankingService<Query, RankedResultSet, TemporalQuery, TemporalRankedResultSet>>()
-                //         .UsingFactoryMethod((_, context) => RankingServiceFactory.Build((string)context.AdditionalArguments["datasetDirectory"]))
-                //         .LifestyleBoundTo<DatasetServices>()
-                );
+            );
+                
 
             //singleton services
             container.Register(
@@ -65,36 +65,65 @@ namespace ViretTool.Installers
             container.Register(
                 Component.For<IRankFusion>().ImplementedBy<RankFusionSum>().LifestyleTransient(),
 
-                Component.For<IColorSketchModel<ColorSketchQuery>>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
-                Component.For<ISemanticExampleModel<SemanticExampleQuery>>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
-                Component.For<IKeywordModel<KeywordQuery>>() //TODO this is both model and provider - data are loaded each time a ranking module is instantiated
-                         .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
-                         .LifestyleTransient(),
-                Component.For<ISimilarityModule>().ImplementedBy<SimilarityModule>().LifestyleTransient(),
+                // similarity used by IBiTemporalSimilarityModel
+                Component.For<IKeywordModel>() //TODO this is both model and provider - data are loaded each time a ranking module is instantiated
+                    .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                    .LifestyleTransient(),
+                Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
+                Component.For<IFaceSketchModel>()
+                    //.UsingFactoryMethod((_, context) => BoolSketchModel
+                    //.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".facesketch")),
+                    .ImplementedBy<FaceSketchModel>().LifestyleTransient(),
+                Component.For<ITextSketchModel>()
+                    //.UsingFactoryMethod((_, context) => BoolSketchModel
+                    //.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".textsketch")),
+                    .ImplementedBy<TextSketchModel>().LifestyleTransient(),
+                Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
                 
+                // fusion used by IBiTemporalSimilarityModel
+                Component.For<IBiTemporalRankFusion>()
+                    .ImplementedBy<BiTemporalRankFusionSum>().LifestyleTransient(),
+                
+                // used by IBiTemporalSimilarityModule
+                Component.For<IBiTemporalSimilarityModel<
+                    KeywordQuery, IKeywordModel>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<KeywordQuery, IKeywordModel>>().LifestyleTransient(),
+                Component.For<IBiTemporalSimilarityModel<
+                    ColorSketchQuery, IColorSketchModel>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, IColorSketchModel>>().LifestyleTransient(),
+                Component.For<IBiTemporalSimilarityModel<
+                    ColorSketchQuery, IFaceSketchModel>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel>>().LifestyleTransient(),
+                Component.For<IBiTemporalSimilarityModel<
+                    ColorSketchQuery, ITextSketchModel>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel>>().LifestyleTransient(),
+                Component.For<IBiTemporalSimilarityModel<
+                    SemanticExampleQuery, ISemanticExampleModel>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<SemanticExampleQuery, ISemanticExampleModel>>().LifestyleTransient(),
+
+                // used by IFusionModule
+                Component.For<IRankFilteringModule>().ImplementedBy<RankFilteringModule>().LifestyleTransient(),
+
+                // used by IFilteringModule
                 Component.For<IColorSaturationFilter>()
-                         .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(
-                             (string)context.AdditionalArguments["datasetDirectory"], ".bwfilter"))
-                         .LifestyleTransient(),
+                    .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(
+                        (string)context.AdditionalArguments["datasetDirectory"], ".bwfilter"))
+                    .LifestyleTransient(),
                 Component.For<IPercentOfBlackFilter>()
-                         .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(
-                             (string)context.AdditionalArguments["datasetDirectory"], ".pbcfilter"))
-                         .LifestyleTransient(),
-                Component.For<IRankedDatasetFilter, IColorSignatureRankedDatasetFilter>()
-                        .ImplementedBy<RankedDatasetFilter>()
-                        .Named("ColorSignatureRankedDatasetFilter")
-                        .LifestyleTransient(),
-                Component.For<IKeywordRankedDatasetFilter>()
-                        .ImplementedBy<RankedDatasetFilter>()
-                        .Named("KeywordRankedDatasetFilter")
-                        .LifestyleTransient(),
-                Component.For<ISemanticExampleRankedDatasetFilter>()
-                        .ImplementedBy<RankedDatasetFilter>()
-                        .Named("SemanticExampleRankedDatasetFilter")
-                        .LifestyleTransient(),
+                    .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(
+                        (string)context.AdditionalArguments["datasetDirectory"], ".pbcfilter"))
+                    .LifestyleTransient(),
+                Component.For<ICountRestrictionFilter>()
+                    .ImplementedBy<CountRestrictionFilter>().LifestyleTransient(),
+
+                // used by IBiTemporalRankingModule
+                Component.For<IBiTemporalSimilarityModule>().ImplementedBy<BiTemporalSimilarityModule>().LifestyleTransient(),
+                Component.For<IFusionModule>().ImplementedBy<FusionModule>().LifestyleTransient(),
                 Component.For<IFilteringModule>().ImplementedBy<FilteringModule>().LifestyleTransient(),
 
-                Component.For<IRankingModule>().ImplementedBy<RankingModule>().LifestyleTransient());
+                //Component.For<IRankingModule>().ImplementedBy<RankingModule>().LifestyleTransient(),
+                Component.For<IBiTemporalRankingModule>().ImplementedBy<BiTemporalRankingModule>().LifestyleTransient()
+            );
         }
     }
 }

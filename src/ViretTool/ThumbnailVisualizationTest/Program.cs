@@ -20,7 +20,7 @@ namespace ThumbnailVisualizationTest
             string outputDirectory = args[1];
             int videoId = int.Parse(args[2]);
 
-            Dataset dataset = new DatasetProvider().FromDirectory(inputDirectory);
+            //Dataset dataset = new DatasetProvider().FromDirectory(inputDirectory);
             JpegThumbnailService thumbnailService = new JpegThumbnailService(inputDirectory);
             outputDirectory = Path.Combine(outputDirectory, videoId.ToString("00000"));
             Directory.CreateDirectory(outputDirectory);

@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 {
-    public class CountRestrictionFilter
+    public class CountRestrictionFilter : ICountRestrictionFilter
     {
         // dataset dependency
-        public Dataset Dataset { get; private set; }
+        public IDatasetService DatasetService { get; private set; }
 
         // cache
         public CountFilteringQuery CachedQuery { get; private set; }
         public RankingBuffer CachedResultRanking { get; private set; }
+
+
+        public CountRestrictionFilter(IDatasetService datasetService)
+        {
+            DatasetService = datasetService;
+        }
 
 
         public RankingBuffer ComputeRanking(CountFilteringQuery query, RankingBuffer initialRanking)
@@ -28,9 +35,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 return CachedResultRanking;
             }
             
-            int[] groupHitCounter = new int[Dataset.Groups.Count];
-            int[] shotHitCounter = new int[Dataset.Shots.Count];
-            int[] videoHitCounter = new int[Dataset.Videos.Count];
+            int[] groupHitCounter = new int[DatasetService.Dataset.Groups.Count];
+            int[] shotHitCounter = new int[DatasetService.Dataset.Shots.Count];
+            int[] videoHitCounter = new int[DatasetService.Dataset.Videos.Count];
 
             // copy initial ranking
 
@@ -46,7 +53,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                     continue;
                 }
 
-                Frame frame = Dataset.Frames[i];
+                Frame frame = DatasetService.Dataset.Frames[i];
                 int groupId = frame.ParentGroup.Id;
                 int shotId = frame.ParentShot.Id;
                 int videoId = frame.ParentVideo.Id;

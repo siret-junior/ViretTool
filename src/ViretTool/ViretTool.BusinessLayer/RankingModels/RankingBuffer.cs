@@ -8,7 +8,7 @@ namespace ViretTool.BusinessLayer.RankingModels
 {
     public class RankingBuffer
     {
-        public string Name { get; private set; }
+        public string Name { get; }
         public float[] Ranks { get; set; }
         public bool IsUpdated { get; set; }
 
@@ -50,21 +50,6 @@ namespace ViretTool.BusinessLayer.RankingModels
             }
 
             return new RankingBuffer(name, ranks);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is RankingBuffer ranking &&
-                    IsUpdated == ranking.IsUpdated &&
-                    EqualityComparer<float[]>.Default.Equals(Ranks, ranking.Ranks);
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = 1733532412;
-            hashCode = hashCode * -1521134295 + EqualityComparer<float[]>.Default.GetHashCode(Ranks);
-            hashCode = hashCode * -1521134295 + IsUpdated.GetHashCode();
-            return hashCode;
         }
     }
 }

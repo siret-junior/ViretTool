@@ -11,14 +11,8 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel
 {
-    public class ColorSignatureModel : IColorSketchModel<ColorSketchQuery>
+    public class ColorSignatureModel : IColorSketchModel
     {
-        public ColorSignatureModel(IRankFusion rankFusion, IDescriptorProvider<byte[]> colorSignatures)
-        {
-            RankFusion = rankFusion;
-            _colorSignatures = colorSignatures.Descriptors;
-        }
-
         public ColorSketchQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
@@ -32,6 +26,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         private int _signatureHeight = 15;
 
         private Dictionary<Ellipse, RankingBuffer> _partialRankingCache = new Dictionary<Ellipse, RankingBuffer>();
+
+
+        public ColorSignatureModel(IRankFusion rankFusion, IDescriptorProvider<byte[]> colorSignatures)
+        {
+            RankFusion = rankFusion;
+            _colorSignatures = colorSignatures.Descriptors;
+        }
+
 
         public void Clear()
         {

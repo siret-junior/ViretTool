@@ -1,30 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class SemanticExampleQuery
+    public class SemanticExampleQuery : ISimilarityQuery
     {
         public int[] PositiveExampleIds { get; private set; }
         public int[] NegativeExampleIds { get; private set; }
-        public bool UseForSorting { get; private set; }
-        public bool UseForFiltering { get; private set; }
 
 
-        public SemanticExampleQuery(int[] positiveExampleIds, int[] negativeExampleIds, 
-            bool useForSorting = true, bool useForFiltering = false)
+        public SemanticExampleQuery(int[] positiveExampleIds, int[] negativeExampleIds)
         {
             PositiveExampleIds = positiveExampleIds;
             NegativeExampleIds = negativeExampleIds;
-            UseForSorting = useForSorting;
-            UseForFiltering = useForFiltering;
         }
         
 
         public override bool Equals(object obj)
         {
             return obj is SemanticExampleQuery query &&
-                   EqualityComparer<int[]>.Default.Equals(PositiveExampleIds, query.PositiveExampleIds) &&
-                   EqualityComparer<int[]>.Default.Equals(NegativeExampleIds, query.NegativeExampleIds);
+                   PositiveExampleIds.SequenceEqual(query.PositiveExampleIds) &&
+                   NegativeExampleIds.SequenceEqual(query.NegativeExampleIds);
         }
 
         public override int GetHashCode()
