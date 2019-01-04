@@ -30,12 +30,9 @@ namespace ViretTool.BusinessLayer.Datasets
             _videoIdForFrameId = new Lazy<IReadOnlyDictionary<int, int>>(() => _dataset.Frames.ToDictionary(f => f.Id, f => f.ParentVideo.Id));
             _shotFrameNumbersForVideoIds = new Lazy<IReadOnlyDictionary<int, (int, int)[]>>(
                 () => _dataset.Videos.ToDictionary(v => v.Id, v => v.Shots.Select(s => (s.StartFrameNumber, s.EndFrameNumber)).ToArray()));
-            _lastFrameIdForVideoId = new Lazy<IReadOnlyDictionary<int, int>>(() 
-                => _dataset.Videos.ToDictionary(video => video.Id, video => video.Frames.Select(f => f.Id).Last()));
-            _lastFrameIdsInVideoForFrameId = new Lazy<int[]>(()
-                => _dataset.Frames.Select(frame => frame.ParentVideo.Frames.Select(f => f.Id).Last()).ToArray());
-            _firstFrameIdsInVideoForFrameId = new Lazy<int[]>(()
-                => _dataset.Frames.Select(frame => frame.ParentVideo.Frames.Select(f => f.Id).First()).ToArray());
+            _lastFrameIdForVideoId = new Lazy<IReadOnlyDictionary<int, int>>(() => _dataset.Videos.ToDictionary(video => video.Id, video => video.Frames.Last().Id));
+            _lastFrameIdsInVideoForFrameId = new Lazy<int[]>(() => _dataset.Frames.Select(frame => frame.ParentVideo.Frames.Last().Id).ToArray());
+            _firstFrameIdsInVideoForFrameId = new Lazy<int[]>(() => _dataset.Frames.Select(frame => frame.ParentVideo.Frames.First().Id).ToArray());
         }
 
         public Dataset Dataset => _dataset;
