@@ -5,6 +5,7 @@ using Castle.Windsor;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
 using ViretTool.BusinessLayer.RankingModels.Filtering.Filters;
@@ -59,7 +60,13 @@ namespace ViretTool.Installers
             //singleton services
             container.Register(
                 Component.For<ISubmissionService>().ImplementedBy<SubmissionService>(),
-                Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>());
+                Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>(),
+                Component.For<NasNetScorer>()
+                         .Instance(
+                             new NasNetScorer(
+                                 "Data\\NasNetMobile-retrained.pb",
+                                 "Data\\VBS2019_NasNetMobile-128PCA.pca_components",
+                                 "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")));
 
             //transient services
             container.Register(

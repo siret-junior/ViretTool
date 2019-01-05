@@ -176,6 +176,10 @@
     <Compile Include="TextSearch\AhoCorasick.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj">
+      <Project>{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}</Project>
+      <Name>ViretTool.BusinessLayer.ExternalDescriptors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViretTool.DataLayer\ViretTool.DataLayer.csproj">
       <Project>{F7058311-7616-4EA5-B2D2-35E502782537}</Project>
       <Name>ViretTool.DataLayer</Name>
@@ -184,5 +188,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,14 +6,18 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 {
     public class FloatVectorModel : ISemanticExampleModel
     {
-        public FloatVectorModel(/*IRankFusion rankFusion, */IDescriptorProvider<float[]> semanticDescriptorProvider)
+        private readonly NasNetScorer _nasNetScorer;
+
+        public FloatVectorModel(/*IRankFusion rankFusion, */IDescriptorProvider<float[]> semanticDescriptorProvider, NasNetScorer nasNetScorer)
         {
+            _nasNetScorer = nasNetScorer;
             mFloatVectors = semanticDescriptorProvider.Descriptors;
             //RankFusion = rankFusion;
         }
