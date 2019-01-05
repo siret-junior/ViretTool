@@ -13,12 +13,17 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
 
         FusionQuery CachedQuery { get; }
         
-        // TODO: add intermediate rankings if neccessary
         RankingBuffer KeywordRanking { get; }
         RankingBuffer ColorSketchRanking { get; }
         RankingBuffer FaceSketchRanking { get; }
         RankingBuffer TextSketchRanking { get; }
         RankingBuffer SemanticExampleRanking { get; }
+        
+        RankingBuffer KeywordIntermediateRanking { get; }
+        RankingBuffer ColorSketchIntermediateRanking { get; }
+        RankingBuffer FaceSketchIntermediateRanking { get; }
+        RankingBuffer TextSketchIntermediateRanking { get; }
+        RankingBuffer SemanticExampleIntermediateRanking { get; }
 
         RankingBuffer OutputRanking { get; }
 

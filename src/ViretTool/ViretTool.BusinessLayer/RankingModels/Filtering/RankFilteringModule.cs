@@ -143,8 +143,5 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             double threshold = _sampleValues[(int)((SAMPLE_SIZE - 1) * percentageOfDatabase)];
             return threshold;
         }
-
-        
-
     }
 }

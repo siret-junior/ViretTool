@@ -137,7 +137,5 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                     && query.MaxPerGroup <= 0
                 );
         }
-
-
     }
 }

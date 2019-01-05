@@ -92,13 +92,9 @@
     <Compile Include="RankingModels\Filtering\Filters\FilterBase.cs" />
     <Compile Include="RankingModels\Filtering\Filters\CountRestrictionFilter.cs" />
     <Compile Include="RankingModels\Filtering\Filters\IColorSaturationFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\IColorSignatureRankedDatasetFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\IKeywordRankedDatasetFilter.cs" />
     <Compile Include="RankingModels\Filtering\Filters\IPercentOfBlackFilter.cs" />
     <Compile Include="RankingModels\Filtering\Filters\IRankedDatasetFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\ISemanticExampleRankedDatasetFilter.cs" />
     <Compile Include="RankingModels\Filtering\Filters\IThresholdFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\RankedDatasetFilter.cs" />
     <Compile Include="RankingModels\Filtering\Filters\ThresholdFilter.cs" />
     <Compile Include="RankingModels\Filtering\IFilter.cs" />
     <Compile Include="RankingModels\FusionObsolete\RankFusionArithmeticMean.cs" />
@@ -118,7 +114,6 @@
     <Compile Include="RankingModels\Temporal\BiTemporalSimilarityModule.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionSum.cs" />
     <Compile Include="RankingModels\Temporal\IBiTemporalRankFusion.cs" />
-    <Compile Include="RankingModels\Temporal\IBiTemporalRankingServiceExternal.cs" />
     <Compile Include="RankingModels\Queries\CountFilteringQuery.cs" />
     <Compile Include="RankingModels\Queries\Synset.cs" />
     <Compile Include="RankingModels\Queries\SynsetGroup.cs" />
@@ -153,7 +148,6 @@
     <Compile Include="RankingModels\Queries\Query.cs" />
     <Compile Include="RankingModels\Temporal\Queries\BiTemporalSimilarityQuery.cs" />
     <Compile Include="Descriptors\IDescriptorProvider.cs" />
-    <Compile Include="RankingModels\Temporal\IBiTemporalRankingServiceInternal.cs" />
     <Compile Include="RankingModels\Temporal\IBiTemporalSimilarityModule.cs" />
     <Compile Include="RankingModels\Temporal\PairedRankedFrame.cs" />
     <Compile Include="RankingModels\Temporal\Similarity\BiTemporalSimilarityModel.cs" />

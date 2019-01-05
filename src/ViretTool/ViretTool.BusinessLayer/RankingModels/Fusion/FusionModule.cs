@@ -30,8 +30,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
         public RankingBuffer FaceSketchIntermediateRanking { get; private set; }
         public RankingBuffer TextSketchIntermediateRanking { get; private set; }
         public RankingBuffer SemanticExampleIntermediateRanking { get; private set; }
-
-
+        
         public RankingBuffer OutputRanking { get; private set; }
 
 
@@ -122,7 +121,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                     sortingRanks = SemanticExampleIntermediateRanking.Ranks;
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException(
+                        "Model for rank sorting " +
+                        Enum.GetName(typeof(FilterState), query.SortingSimilarityModel) +
+                        " not expected.");
             }
 
             // filter/rank aggregation (float.MinValue means that the rank it is filtered)
@@ -160,31 +162,20 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                 || SemanticExampleRanking.IsUpdated;
         }
 
-
         private void ComputeFusion(float[][] filteringRanks, float[] sortingRanks, RankingBuffer outputRanking)
         {
             Parallel.For(0, outputRanking.Ranks.Length, itemId =>
             {
-                // check in all filtering ranks whether item is filtered
-                bool isFiltered = false;
+                // return sorting ranks, but only if they are not filtered
                 for (int iRanking = 0; iRanking < filteringRanks.Length; iRanking++)
                 {
                     if (filteringRanks[iRanking][itemId] == float.MinValue)
                     {
-                        isFiltered = true;
-                        break;
+                        outputRanking.Ranks[itemId] = float.MinValue;
+                        return;
                     }
                 }
-
-                // copy sorting rank if the item is not filtered
-                if (!isFiltered)
-                {
-                    outputRanking.Ranks[itemId] = sortingRanks[itemId];
-                }
-                else
-                {
-                    outputRanking.Ranks[itemId] = float.MinValue;
-                }
+                outputRanking.Ranks[itemId] = sortingRanks[itemId];
             });
         }
     }
