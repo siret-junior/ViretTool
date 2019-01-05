@@ -79,11 +79,13 @@ namespace ViretTool.Installers
                     //.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".textsketch")),
                     .ImplementedBy<TextSketchModel>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
-                
+
                 // fusion used by IBiTemporalSimilarityModel
-                Component.For<IBiTemporalRankFusion>()
+                Component.For<IBiTemporalRankFusionSum>()
                     .ImplementedBy<BiTemporalRankFusionSum>().LifestyleTransient(),
-                
+                Component.For<IBiTemporalRankFusionProduct>()
+                    .ImplementedBy<BiTemporalRankFusionProduct>().LifestyleTransient(),
+
                 // used by IBiTemporalSimilarityModule
                 Component.For<IBiTemporalSimilarityModel<
                     KeywordQuery, IKeywordModel, IBiTemporalRankFusionProduct>>()
