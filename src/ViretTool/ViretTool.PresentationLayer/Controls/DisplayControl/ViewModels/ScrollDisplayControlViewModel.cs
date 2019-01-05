@@ -63,7 +63,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             ColumnCount = DisplayWidth / ImageWidth;
 
             base.UpdateVisibleFrames();
-            VisibleFrames.RemoveRange(VisibleFrames.Where(f => !f.IsVisible).ToList());
+            //VisibleFrames.RemoveRange(VisibleFrames.Where(f => !f.IsVisible).ToList());
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private int _currentPageNumber;
 
         private int _maxFramesFromShot = 1;
-        private int _maxFramesFromVideo = 15;
+        private int _maxFramesFromVideo = 3;
 
         public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
             : base(logger, datasetServicesManager)
