@@ -235,6 +235,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return;
             }
 
+            RaiseEvent(new RoutedEventArgs(ScrollVideoDisplayEvent));
+
             IsClicked = true;
             IsScrollingLeft = false;
             IsScrollingRight = false;
@@ -251,8 +253,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             e.Handled = true;
-
-            RaiseEvent(new RoutedEventArgs(ScrollVideoDisplayEvent));
         }
 
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
