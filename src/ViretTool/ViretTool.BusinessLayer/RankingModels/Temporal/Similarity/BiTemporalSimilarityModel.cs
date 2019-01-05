@@ -14,10 +14,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Similarity
         where TQuery : IQuery
         where TSimilarityModel : ISimilarityModel<TQuery>
         where TRankFusion : IBiTemporalRankFusion
+
     {
         public TSimilarityModel FormerSimilarityModel { get; }
         public TSimilarityModel LatterSimilarityModel { get; }
-        public IBiTemporalRankFusion BiTemporalRankFusion { get; private set; }
+        public TRankFusion BiTemporalRankFusion { get; private set; }
 
         public BiTemporalModelQuery<TQuery> CachedQuery { get; private set; }
 
@@ -30,7 +31,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Similarity
         public BiTemporalSimilarityModel(
             TSimilarityModel formerSimilarityModel, 
             TSimilarityModel latterSimilarityModel,
-            IBiTemporalRankFusion biTemporalRankFusion)
+            TRankFusion biTemporalRankFusion)
         {
             FormerSimilarityModel = formerSimilarityModel;
             LatterSimilarityModel = latterSimilarityModel;

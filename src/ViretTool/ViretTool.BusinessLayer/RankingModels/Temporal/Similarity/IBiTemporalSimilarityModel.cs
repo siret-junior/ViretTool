@@ -11,7 +11,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Similarity
     {
         TSimilarityModel FormerSimilarityModel { get; }
         TSimilarityModel LatterSimilarityModel { get; }
-        IBiTemporalRankFusion BiTemporalRankFusion { get; }
+        TRankFusion BiTemporalRankFusion { get; }
 
         BiTemporalModelQuery<TQuery> CachedQuery { get; }
 
