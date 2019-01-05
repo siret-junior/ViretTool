@@ -376,6 +376,24 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test.
+        /// </summary>
+        public static string TestButtonText {
+            get {
+                return ResourceManager.GetString("TestButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test.
+        /// </summary>
+        public static string TestWindowTitle {
+            get {
+                return ResourceManager.GetString("TestWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to V.
         /// </summary>
         public static string VideoButtonText {

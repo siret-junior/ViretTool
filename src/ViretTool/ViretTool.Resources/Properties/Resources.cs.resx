@@ -216,4 +216,10 @@
   <data name="FramesSentSuccessText" xml:space="preserve">
     <value>Snímky byly poslány.</value>
   </data>
+  <data name="TestWindowTitle" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="TestButtonText" xml:space="preserve">
+    <value>Test</value>
+  </data>
 </root>

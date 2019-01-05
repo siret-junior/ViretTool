@@ -34,7 +34,9 @@ namespace ViretTool.Installers
                 Component.For<SubmitControlView>().LifestyleTransient(),
                 Component.For<SubmitControlViewModel>().LifestyleTransient(),
                 Component.For<DetailView>().LifestyleTransient(),
-                Component.For<DetailViewModel>().LifestyleTransient());
+                Component.For<DetailViewModel>().LifestyleTransient(),
+                Component.For<TestControlView>().LifestyleTransient(),
+                Component.For<TestControlViewModel>().LifestyleTransient());
         }
     }
 }

@@ -35,7 +35,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly ILogger _logger;
         private readonly IWindowManager _windowManager;
         private readonly SubmitControlViewModel _submitControlViewModel;
+        private readonly TestControlViewModel _testControlViewModel;
         private bool _isBusy;
+        private string _testFramesPosition;
         private bool _isDetailVisible;
         private bool _isFirstQueryPrimary = true;
         private Task<int[]> _sortingTask;
@@ -48,6 +50,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             ScrollDisplayControlViewModel detailView,
             DetailViewModel detailViewModel,
             SubmitControlViewModel submitControlViewModel,
+            TestControlViewModel testControlViewModel,
             QueryViewModel query1,
             QueryViewModel query2,
             IDatasetServicesManager datasetServicesManager,
@@ -59,6 +62,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _logger = logger;
             _windowManager = windowManager;
             _submitControlViewModel = submitControlViewModel;
+            _testControlViewModel = testControlViewModel;
             _datasetServicesManager = datasetServicesManager;
             _gridSorter = gridSorter;
             _submissionService = submissionService;
@@ -87,6 +91,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
+            _testControlViewModel.Deactivated += (sender, args) => TestFramesPosition = string.Empty;
         }
 
         public QueryViewModel Query1 { get; }
@@ -186,6 +191,21 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        public string TestFramesPosition
+        {
+            get => _testFramesPosition;
+            set
+            {
+                if (_testFramesPosition == value)
+                {
+                    return;
+                }
+
+                _testFramesPosition = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public async void OpenDatabase()
         {
             string datasetDirectory = GetDatasetDirectory();
@@ -195,6 +215,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             await OpenDataset(datasetDirectory);
+        }
+
+        public void OpenTestWindow()
+        {
+            if (!_datasetServicesManager.IsDatasetOpened)
+            {
+                return;
+            }
+
+            _testControlViewModel.TryClose();
+            _testControlViewModel.InitializeFramesRandomly();
+            _windowManager.ShowWindow(_testControlViewModel);
         }
 
         public void OnKeyUp(KeyEventArgs e)
@@ -270,6 +302,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _logger.Debug("Main window activated");
         }
 
+        protected override void OnDeactivate(bool close)
+        {
+            if (close)
+            {
+                _testControlViewModel.TryClose();
+            }
+        }
+
         private async Task OnQuerySettingsChanged()
         {
             if (!_datasetServicesManager.IsDatasetOpened)
@@ -298,6 +338,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                            ? queryResult.FormerTemporalResultSet
                                            : queryResult.LatterTemporalResultSet).Select(rf => rf.Id).ToList();
 
+                UpdateTestFramesPositionIfActive(sortedIds);
+
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation
                 _sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
@@ -312,6 +354,37 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private void UpdateTestFramesPositionIfActive(List<int> sortedIds)
+        {
+            if (!_testControlViewModel.IsActive)
+            {
+                return;
+            }
+
+            int videoId = _testControlViewModel.FirstFrame.VideoId;
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            int firstFrameId = datasetService.GetFrameIdForFrameNumber(videoId, _testControlViewModel.FirstFrame.FrameNumber);
+            int secondFrameId = datasetService.GetFrameIdForFrameNumber(videoId, _testControlViewModel.SecondFrame.FrameNumber);
+            int videoOrder = -1, firstFrameOrder = -1, secondFrameOrder = -1;
+            for (int i = 0; i < sortedIds.Count; i++)
+            {
+                if (datasetService.GetVideoIdForFrameId(sortedIds[i]) == videoId && videoOrder == -1)
+                {
+                    videoOrder = i;
+                }
+                if (sortedIds[i] == firstFrameId)
+                {
+                    firstFrameOrder = i;
+                }
+                if (sortedIds[i] == secondFrameId)
+                {
+                    secondFrameOrder = i;
+                }
+            }
+
+            TestFramesPosition = $"{videoOrder}|{firstFrameOrder}|{secondFrameOrder}";
         }
 
         private void CancelSortingTaskIfNecessary()

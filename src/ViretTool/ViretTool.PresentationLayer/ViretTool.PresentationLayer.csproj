@@ -140,6 +140,10 @@
     <Compile Include="Controls\DisplayControl\Views\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ViewModels\TestControlViewModel.cs" />
+    <Compile Include="Windows\Views\TestControlView.xaml.cs">
+      <DependentUpon>TestControlView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Views\SubmitControlView.xaml.cs">
       <DependentUpon>SubmitControlView.xaml</DependentUpon>
     </Compile>
@@ -218,6 +222,10 @@
     <Page Include="Controls\DisplayControl\Views\DetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Views\TestControlView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Views\SubmitControlView.xaml">
       <SubType>Designer</SubType>
