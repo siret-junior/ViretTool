@@ -9,6 +9,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 {
     public class BiTemporalRankFusionProduct : IBiTemporalRankFusionProduct
     {
+        private const float NO_PAIR_RANK_MULTIPLIER = 0.00001f;
+
         public IDatasetServicesManager DatasetServicesManager { get; }
 
         public RankingBuffer PrimaryInputRanking { get; private set; }
@@ -66,10 +68,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                         maxPairRankId = iPairFrame;
                     }
                 }
-                // ranks without any pair rank will not be improved, nor degraded
+
+                // ranks without any pair are penalized proportionally
                 if (maxPairRankId == -1)
                 {
-                    maxPairRank = secondaryInputRanking.Ranks[frameId];
+                    // we can not use this, because it could be filtered out (float.MinValue)
+                    //maxPairRank = secondaryInputRanking.Ranks[frameId];
+                    maxPairRank = NO_PAIR_RANK_MULTIPLIER;
                 }
 
                 // compute result
@@ -103,10 +108,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                         maxPairRankId = iPairFrame;
                     }
                 }
-                // ranks without any pair rank will not be improved, nor degraded
+
+                // ranks without any pair are penalized proportionally
                 if (maxPairRankId == -1)
                 {
-                    maxPairRank = secondaryInputRanking.Ranks[frameId];
+                    // we can not use this, because it could be filtered out (float.MinValue)
+                    //maxPairRank = secondaryInputRanking.Ranks[frameId];
+                    maxPairRank = NO_PAIR_RANK_MULTIPLIER;
                 }
 
                 // compute result

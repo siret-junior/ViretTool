@@ -8,7 +8,6 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Filtering
 {
-    // TODO: sample just unfiltered part of the input ranking
     public class RankFilteringModule : IRankFilteringModule
     {
         private const int SAMPLE_SIZE = 1000;
@@ -16,6 +15,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         private Random _random = new Random(RANDOM_SEED);
         private int[] _sampleIndexes;
         private double[] _sampleValues;
+        List<float> notFilteredRanks;
 
         public ThresholdFilteringQuery CachedQuery { get; private set; }
 
@@ -126,22 +126,65 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         private double EstimateRankValueThreshold(RankingBuffer inputRanking, float percentageOfDatabase)
         {
             // TODO: parallel for optimization for small loop bodies using range partitioner
-            
+
             // estimate a rank value threshold for a given percentageOfDatabase
-            Parallel.For(0, SAMPLE_SIZE, i =>
+            //Parallel.For(0, SAMPLE_SIZE, i =>
+            //{
+            //    _sampleValues[i] = InputRanking.Ranks[_sampleIndexes[i]];
+
+            //    // TODO: are we sampling in the entire dataset or just in the active subset (first half of dataset)
+            //    if (_sampleValues[i] == float.MinValue)
+            //    {
+            //        throw new NotImplementedException("RankedDatasetFilter sampling of a previously filtered frame.");
+            //    }
+            //});
+
+            // prepare list for not filtered ranks
+            if (notFilteredRanks == null || notFilteredRanks.Capacity < InputRanking.Ranks.Length)
             {
-                _sampleValues[i] = InputRanking.Ranks[_sampleIndexes[i]];
+                notFilteredRanks = new List<float>(InputRanking.Ranks.Length);
+            }
+            else
+            {
+                notFilteredRanks.Clear();
+            }
 
-                // TODO: are we sampling in the entire dataset or just in the active subset (first half of dataset)
-                if (_sampleValues[i] == float.MinValue)
+            // extract not filtered ranks
+            for (int i = 0; i < InputRanking.Ranks.Length; i++)
+            {
+                float rank = InputRanking.Ranks[i];
+                if (rank != float.MinValue)
                 {
-                    throw new NotImplementedException("RankedDatasetFilter sampling of a previously filtered frame.");
+                    notFilteredRanks.Add(rank);
                 }
-            });
+            }
 
-            Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
-            double threshold = _sampleValues[(int)((SAMPLE_SIZE - 1) * percentageOfDatabase)];
-            return threshold;
+            float nonFilteredPercentage = ((float)notFilteredRanks.Count()) / InputRanking.Ranks.Length;
+            if (nonFilteredPercentage > percentageOfDatabase)
+            {
+                // too much results, sample
+                for (int i = 0; i < SAMPLE_SIZE; i++)
+                {
+                    _sampleValues[i] = notFilteredRanks[_random.Next(SAMPLE_SIZE)];
+                }
+                float percentageInSubset = percentageOfDatabase / nonFilteredPercentage;
+                Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
+                double threshold = _sampleValues[(int)((SAMPLE_SIZE - 1) * percentageInSubset)];
+                return threshold;
+            }
+            else
+            {
+                // too few results, return all (set threshold to the smallest value)
+                float minValue = float.MaxValue;
+                for (int i = 0; i < SAMPLE_SIZE; i++)
+                {
+                    if (notFilteredRanks[i] != float.MinValue && notFilteredRanks[i] < minValue)
+                    {
+                        minValue = notFilteredRanks[i];
+                    }
+                }
+                return minValue;
+            }
         }
     }
 }

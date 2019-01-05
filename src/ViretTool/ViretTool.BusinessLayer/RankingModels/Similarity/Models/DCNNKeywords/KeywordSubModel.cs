@@ -205,7 +205,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         private Tuple<int, RankingBuffer> ComputeRankedFrames(KeywordQuery query)//List<List<int>> query) 
         {
             // TODO
-            RankingBuffer result = RankingBuffer.Zeros("TODO", InputRanking.Ranks.Length);
+            RankingBuffer result = RankingBuffer.AllFiltered("TODO", InputRanking.Ranks.Length);
             
             List<Dictionary<int, float>> clauses = ResolveClauses(query.SynsetGroups);
             Dictionary<int, float> queryClause = UniteClauses(clauses);

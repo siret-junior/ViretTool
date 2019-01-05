@@ -20,16 +20,6 @@ namespace ViretTool.BusinessLayer.RankingModels
             IsUpdated = isUpdated;
         }
 
-        //public RankingBuffer(RankingBuffer ranking, bool isUpdated = true)
-        //{
-        //    Ranks = new float[ranking.Ranks.Length];
-        //    for (int i = 0; i < Ranks.Length; i++)
-        //    {
-        //        Ranks[i] = ranking.Ranks[i];
-        //    }
-        //    IsUpdated = isUpdated;
-        //}
-
 
         public static RankingBuffer Zeros(string name, int itemCount)
         {
@@ -41,6 +31,11 @@ namespace ViretTool.BusinessLayer.RankingModels
             return Value(name, itemCount, 1);
         }
 
+        public static RankingBuffer AllFiltered(string name, int itemCount)
+        {
+            return Value(name, itemCount, float.MinValue);
+        }
+        
         public static RankingBuffer Value(string name, int itemCount, float value)
         {
             float[] ranks = new float[itemCount];

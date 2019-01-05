@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
@@ -45,8 +46,15 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
                 return GenerateSequentialRanking();
             }
 
-            // the main computation
-            BiTemporalRankingModule.ComputeRanking(query, InputRanking, OutputRanking);
+            try
+            {
+                // the main computation
+                BiTemporalRankingModule.ComputeRanking(query, InputRanking, OutputRanking);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
             // aggregate partial temporal result sets
             List<PairedRankedFrame> formerResultSet = RetrieveRankedResultSet(
