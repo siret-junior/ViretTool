@@ -69,7 +69,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 // ranks without any pair rank will not be improved, nor degraded
                 if (maxPairRankId == -1)
                 {
-                    maxPairRank = 0;
+                    maxPairRank = secondaryInputRanking.Ranks[frameId];
                 }
 
                 // compute result
@@ -106,7 +106,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 // ranks without any pair rank will not be improved, nor degraded
                 if (maxPairRankId == -1)
                 {
-                    maxPairRank = 0;
+                    maxPairRank = secondaryInputRanking.Ranks[frameId];
                 }
 
                 // compute result
