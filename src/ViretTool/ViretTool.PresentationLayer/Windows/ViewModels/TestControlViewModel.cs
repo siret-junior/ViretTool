@@ -61,9 +61,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
             int videoId = datasetService.VideoIds[_random.Next(datasetService.VideoIds.Length)];
 
-            List<int> randomizedFrames = datasetService.GetFrameNumbersForVideo(videoId).OrderBy(_ => _random.Next()).Take(2).OrderBy(n => n).ToList();
-            FirstFrame = new FrameViewModel(videoId, randomizedFrames[0], _datasetServicesManager);
-            SecondFrame = new FrameViewModel(videoId, randomizedFrames[1], _datasetServicesManager);
+            int[] frameNumbersForVideo = datasetService.GetFrameNumbersForVideo(videoId);
+            int randomIndex = _random.Next(Math.Max(frameNumbersForVideo.Length - 5, 0));
+            FirstFrame = new FrameViewModel(videoId, frameNumbersForVideo[randomIndex], _datasetServicesManager);
+            SecondFrame = new FrameViewModel(videoId, frameNumbersForVideo[Math.Min(randomIndex + 4, frameNumbersForVideo.Length - 1)], _datasetServicesManager);
         }
 
     }
