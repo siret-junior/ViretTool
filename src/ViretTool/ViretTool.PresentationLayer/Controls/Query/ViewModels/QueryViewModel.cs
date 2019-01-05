@@ -326,6 +326,12 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QueryObjects.Clear();
         }
 
+        public void UpdateQueryObjects(DownloadedFrameViewModel downloadedFrame)
+        {
+            QueryObjects.Clear();
+            QueryObjects.Add(downloadedFrame);
+        }
+
         public void UpdateQueryObjects(IList<FrameViewModel> queries)
         {
             //maybe get some feedback, what changed?

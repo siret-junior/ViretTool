@@ -6,14 +6,18 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 {
     public class FloatVectorModel : ISemanticExampleModel
     {
-        public FloatVectorModel(/*IRankFusion rankFusion, */IDescriptorProvider<float[]> semanticDescriptorProvider)
+        private readonly NasNetScorer _nasNetScorer;
+
+        public FloatVectorModel(/*IRankFusion rankFusion, */IDescriptorProvider<float[]> semanticDescriptorProvider, NasNetScorer nasNetScorer)
         {
+            _nasNetScorer = nasNetScorer;
             mFloatVectors = semanticDescriptorProvider.Descriptors;
             //RankFusion = rankFusion;
         }
@@ -44,23 +48,31 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             if (mCache.ContainsKey(queryId))
                 return mCache[queryId];
 
-            float[] results = new float[InputRanking.Ranks.Length];
-
             float[] queryData = mFloatVectors[queryId];
 
-            Parallel.For(0, results.Length, i =>
-            {
-                if (InputRanking.Ranks[i] == float.MinValue)
-                {
-                    // ignore filtered frames
-                    return;
-                }
-
-                results[i] = CosineSimilarity(mFloatVectors[i], queryData);
-            });
+            float[] results = ComputeSimilarity(queryData);
 
             mCache.Add(queryId, results);
             return mCache[queryId];
+        }
+
+        private float[] ComputeSimilarity(float[] queryData)
+        {
+            float[] results = new float[InputRanking.Ranks.Length];
+            Parallel.For(
+                0,
+                results.Length,
+                i =>
+                {
+                    if (InputRanking.Ranks[i] == float.MinValue)
+                    {
+                        // ignore filtered frames
+                        return;
+                    }
+
+                    results[i] = CosineSimilarity(mFloatVectors[i], queryData);
+                });
+            return results;
         }
 
         public void ComputeRanking(SemanticExampleQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
@@ -98,6 +110,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
                 });
             }
 
+            foreach (string externalImageRotated in query.ExternalImages)
+            {
+                float[] reducedFeatures = _nasNetScorer.GetReducedFeatures(externalImageRotated);
+                float[] partialResults = ComputeSimilarity(reducedFeatures);
+                Parallel.For(0, InputRanking.Ranks.Length, i =>
+                                                           {
+                                                               ranking[i] += partialResults[i];
+                                                           });
+            }
+
             if (query.NegativeExampleIds != null)
             {
                 foreach (int negativeQueryId in query.NegativeExampleIds)
@@ -122,7 +144,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 
         private bool IsQueryEmpty(SemanticExampleQuery query)
         {
-            return query == null || !query.PositiveExampleIds.Any();
+            return query == null || !query.PositiveExampleIds.Any() && !query.ExternalImages.Any();
         }
 
         public float[] GetFrameSemanticVector(int frameId)

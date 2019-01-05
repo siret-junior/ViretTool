@@ -141,38 +141,42 @@ namespace ViretTool.PresentationLayer.Helpers
             BiTemporalModelQuery<SemanticExampleQuery> biTemporalSemanticExampleQuery =
                 new BiTemporalModelQuery<SemanticExampleQuery>(
                     new SemanticExampleQuery(
-                        query1.QueryObjects.Select(q => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber)).ToArray(),
-                        new int[0]),
+                        query1.QueryObjects.Where(q => !(q is DownloadedFrameViewModel))
+                              .Select(q => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber))
+                              .ToArray(),
+                        new int[0],
+                        query1.QueryObjects.OfType<DownloadedFrameViewModel>().Select(q => q.ImageForExtractionPath).ToArray()),
                     new SemanticExampleQuery(
-                        query2.QueryObjects.Select(q => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber)).ToArray(),
-                        new int[0]));
+                        query2.QueryObjects.Where(q => !(q is DownloadedFrameViewModel))
+                              .Select(q => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(q.VideoId, q.FrameNumber))
+                              .ToArray(),
+                        new int[0],
+                        query2.QueryObjects.OfType<DownloadedFrameViewModel>().Select(q => q.ImageForExtractionPath).ToArray()));
 
 
             FusionQuery formerFusionQuery =
                 new FusionQuery(
-                        query1.KeywordUseForSorting
-                            ? FusionQuery.SimilarityModels.Keyword
+                    query1.KeywordUseForSorting
+                        ? FusionQuery.SimilarityModels.Keyword
                         : query1.ColorUseForSorting
                             ? FusionQuery.SimilarityModels.ColorSketch
-                        //: Query1.Face
-                        //    ? FusionQuery.SimilarityModels.FaceSketch
-                        //: Query1.Text
-                        //    ? FusionQuery.SimilarityModels.TextSketch
-                        : query1.SemanticUseForSorting
-                            ? FusionQuery.SimilarityModels.SemanticExample
-                        : FusionQuery.SimilarityModels.FaceSketch // throw new ArgumentException("No model is selected for sorting.")
+                            //: Query1.Face
+                            //    ? FusionQuery.SimilarityModels.FaceSketch
+                            //: Query1.Text
+                            //    ? FusionQuery.SimilarityModels.TextSketch
+                            : query1.SemanticUseForSorting
+                                ? FusionQuery.SimilarityModels.SemanticExample
+                                : FusionQuery.SimilarityModels.FaceSketch // throw new ArgumentException("No model is selected for sorting.")
                     ,
 
                     new ThresholdFilteringQuery(
-                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() 
-                        || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
+                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.KeywordValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any() 
-                        || biTemporalColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                        (biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any() || biTemporalColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.ColorValue * 0.01),
@@ -183,7 +187,7 @@ namespace ViretTool.PresentationLayer.Helpers
                         //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                         //    :  ThresholdFilteringQuery.State.Off,
                         ThresholdFilteringQuery.State.Off,
-                        0),//Query1.FaceValue * 0.01),
+                        0), //Query1.FaceValue * 0.01),
 
                     new ThresholdFilteringQuery(
                         //(biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
@@ -191,11 +195,13 @@ namespace ViretTool.PresentationLayer.Helpers
                         //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                         //    :  ThresholdFilteringQuery.State.Off,
                         ThresholdFilteringQuery.State.Off,
-                        0),//Query1.TextValue * 0.01),
+                        0), //Query1.TextValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
-                        || biTemporalSemanticExampleQuery.LatterQuery.PositiveExampleIds.Any())
+                        biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any() ||
+                        biTemporalSemanticExampleQuery.FormerQuery.ExternalImages.Any() ||
+                        biTemporalSemanticExampleQuery.LatterQuery.PositiveExampleIds.Any() ||
+                        biTemporalSemanticExampleQuery.LatterQuery.ExternalImages.Any()
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.SemanticValue * 0.01)
@@ -216,15 +222,13 @@ namespace ViretTool.PresentationLayer.Helpers
                                 : FusionQuery.SimilarityModels.FaceSketch //throw new ArgumentException("No model is selected for sorting.")
                     ,
                     new ThresholdFilteringQuery(
-                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any()
-                        || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
+                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.KeywordValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        || biTemporalColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                        (biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any() || biTemporalColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.ColorValue * 0.01),
@@ -246,8 +250,10 @@ namespace ViretTool.PresentationLayer.Helpers
                         0), //Query2.TextValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
-                        || biTemporalSemanticExampleQuery.LatterQuery.PositiveExampleIds.Any())
+                        biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any() ||
+                        biTemporalSemanticExampleQuery.FormerQuery.ExternalImages.Any() ||
+                        biTemporalSemanticExampleQuery.LatterQuery.PositiveExampleIds.Any() ||
+                        biTemporalSemanticExampleQuery.LatterQuery.ExternalImages.Any()
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.SemanticValue * 0.01));
