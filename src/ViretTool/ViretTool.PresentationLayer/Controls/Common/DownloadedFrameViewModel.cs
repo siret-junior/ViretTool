@@ -13,6 +13,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public string ImagePath { get; }
 
+        public string ImageForExtractionPath => ImagePath.Replace(".png", "_rotated.png");
+
         public override byte[] ImageSource { get; }
     }
 }

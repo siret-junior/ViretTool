@@ -48,9 +48,16 @@ namespace ViretTool.BusinessLayer.ExternalDescriptors
                     {
                         using (Image resizedImage = ResizeImage(image, 255, 255))
                         {
-                            string imagePath = Path.Combine(ImageDirectory, $"{GetCurrentDateTimeString()}.png");
-                            resizedImage.Save(imagePath, ImageFormat.Png);
-                            return imagePath;
+                            string fileName = GetCurrentDateTimeString();
+                            string imageFullPath = Path.Combine(ImageDirectory, $"{fileName}.png");
+                            resizedImage.Save(imageFullPath, ImageFormat.Png);
+
+                            using (Image rotatedImage = RotateImage(resizedImage))
+                            {
+                                rotatedImage.Save(Path.Combine(ImageDirectory, $"{fileName}_rotated.png"), ImageFormat.Png);
+                            }
+
+                            return imageFullPath;
                         }
                     }
                 }
@@ -85,6 +92,20 @@ namespace ViretTool.BusinessLayer.ExternalDescriptors
             }
 
             return destinationImage;
+        }
+
+        private static Image RotateImage(Image image)
+        {
+            Bitmap bmp = new Bitmap(image);
+
+            using (Graphics gfx = Graphics.FromImage(bmp))
+            {
+                gfx.Clear(Color.White);
+                gfx.DrawImage(image, 0, 0, image.Width, image.Height);
+            }
+
+            bmp.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            return bmp;
         }
     }
 }

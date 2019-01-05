@@ -243,11 +243,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public async void OnDrop(DragEventArgs e)
         {
-            //MessageBox.Show(string.Join(Environment.NewLine, (string[])e.Data.GetData(DataFormats.FileDrop)));
-            //MessageBox.Show(string.Join(Environment.NewLine, e.Data.GetFormats()));
-
-            //TODO throttle
-
+            //maybe throttle? sometimes it drops 2x
             IsBusy = true;
             try
             {

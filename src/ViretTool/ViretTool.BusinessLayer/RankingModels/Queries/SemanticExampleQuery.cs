@@ -7,12 +7,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     {
         public int[] PositiveExampleIds { get; private set; }
         public int[] NegativeExampleIds { get; private set; }
+        public string[] ExternalImages { get; }
 
 
-        public SemanticExampleQuery(int[] positiveExampleIds, int[] negativeExampleIds)
+        public SemanticExampleQuery(int[] positiveExampleIds, int[] negativeExampleIds, string[] externalImages)
         {
             PositiveExampleIds = positiveExampleIds;
             NegativeExampleIds = negativeExampleIds;
+            ExternalImages = externalImages;
         }
         
 
@@ -20,7 +22,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
         {
             return obj is SemanticExampleQuery query &&
                    PositiveExampleIds.SequenceEqual(query.PositiveExampleIds) &&
-                   NegativeExampleIds.SequenceEqual(query.NegativeExampleIds);
+                   NegativeExampleIds.SequenceEqual(query.NegativeExampleIds) &&
+                   ExternalImages.SequenceEqual(query.ExternalImages);
         }
 
         public override int GetHashCode()
@@ -28,6 +31,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
             int hashCode = 952631468;
             hashCode = hashCode * -1521134295 + EqualityComparer<int[]>.Default.GetHashCode(PositiveExampleIds);
             hashCode = hashCode * -1521134295 + EqualityComparer<int[]>.Default.GetHashCode(NegativeExampleIds);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string[]>.Default.GetHashCode(ExternalImages);
             return hashCode;
         }
     }
