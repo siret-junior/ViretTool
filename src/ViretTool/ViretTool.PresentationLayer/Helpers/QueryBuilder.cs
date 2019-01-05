@@ -164,33 +164,38 @@ namespace ViretTool.PresentationLayer.Helpers
                     ,
 
                     new ThresholdFilteringQuery(
-                        biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any()
+                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() 
+                        || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.KeywordValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        (biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any() 
+                        || biTemporalColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //(biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //|| biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                         //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                         //    :  ThresholdFilteringQuery.State.Off,
                         ThresholdFilteringQuery.State.Off,
                         0),//Query1.FaceValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //(biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //||biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any())
                         //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                         //    :  ThresholdFilteringQuery.State.Off,
                         ThresholdFilteringQuery.State.Off,
                         0),//Query1.TextValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
+                        (biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
+                        || biTemporalSemanticExampleQuery.LatterQuery.PositiveExampleIds.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.SemanticValue * 0.01)
@@ -211,33 +216,38 @@ namespace ViretTool.PresentationLayer.Helpers
                                 : FusionQuery.SimilarityModels.FaceSketch //throw new ArgumentException("No model is selected for sorting.")
                     ,
                     new ThresholdFilteringQuery(
-                        biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any()
+                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any()
+                        || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.KeywordValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        (biTemporalColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        || biTemporalColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //(biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //|| biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                         //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                         //    : ThresholdFilteringQuery.State.Off,
                         ThresholdFilteringQuery.State.Off,
                         0), //Query2.FaceValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //(biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        //|| biTemporalTextSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                         //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                         //    : ThresholdFilteringQuery.State.Off,
                         ThresholdFilteringQuery.State.Off,
                         0), //Query2.TextValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
+                        (biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
+                        || biTemporalSemanticExampleQuery.LatterQuery.PositiveExampleIds.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.SemanticValue * 0.01));
