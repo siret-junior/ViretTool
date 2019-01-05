@@ -12,16 +12,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 {
     public class FloatVectorModel : ISemanticExampleModel
     {
-        public FloatVectorModel(IRankFusion rankFusion, IDescriptorProvider<float[]> semanticDescriptorProvider)
+        public FloatVectorModel(/*IRankFusion rankFusion, */IDescriptorProvider<float[]> semanticDescriptorProvider)
         {
             mFloatVectors = semanticDescriptorProvider.Descriptors;
-            RankFusion = rankFusion;
+            //RankFusion = rankFusion;
         }
 
         public SemanticExampleQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
-        public IRankFusion RankFusion { get; }
+        //public IRankFusion RankFusion { get; }
 
         /// <summary>
         /// Extracted features from DCNN, normalized to |v| = 1 and each dimension globally quantized to byte

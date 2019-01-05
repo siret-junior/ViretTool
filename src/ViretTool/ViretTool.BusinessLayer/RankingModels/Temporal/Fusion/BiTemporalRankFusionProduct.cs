@@ -7,7 +7,7 @@ using ViretTool.BusinessLayer.Services;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 {
-    public class BiTemporalRankFusionSum : IBiTemporalRankFusionSum
+    public class BiTemporalRankFusionProduct : IBiTemporalRankFusionProduct
     {
         public IDatasetServicesManager DatasetServicesManager { get; }
 
@@ -17,8 +17,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 
         private readonly int _temporalContextLength;
 
-        public BiTemporalRankFusionSum(
-            IDatasetServicesManager datasetServicesManager, 
+        public BiTemporalRankFusionProduct(
+            IDatasetServicesManager datasetServicesManager,
             int temporalContextLength = 5)
         {
             DatasetServicesManager = datasetServicesManager;
@@ -27,12 +27,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 
 
         public void ComputeRanking(
-            RankingBuffer primaryInputRanking, RankingBuffer secondaryInputRanking, 
+            RankingBuffer primaryInputRanking, RankingBuffer secondaryInputRanking,
             BiTemporalRankingBuffer outputRanking)
         {
             PrimaryInputRanking = primaryInputRanking;
             SecondaryInputRanking = secondaryInputRanking;
             OutputRanking = outputRanking;
+
+            // TODO: translate negative ranks
+            // removed: translation is performed in the model
+            //TranslateRanks();
 
             ComputeSingleRankingForward(PrimaryInputRanking, SecondaryInputRanking,
                 OutputRanking.FormerRankingBuffer, OutputRanking.FormerTemporalPairs);
@@ -40,13 +44,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
             ComputeSingleRankingBackward(SecondaryInputRanking, PrimaryInputRanking,
                 OutputRanking.LatterRankingBuffer, OutputRanking.LatterTemporalPairs);
         }
-        
+
 
         private void ComputeSingleRankingForward(
             RankingBuffer primaryInputRanking, RankingBuffer secondaryInputRanking,
             RankingBuffer singleOutputRanking, int[] singleOutputPairs)
         {
-            int[] lastFrameIdsInVideoForFrameId = 
+            int[] lastFrameIdsInVideoForFrameId =
                 DatasetServicesManager.CurrentDataset.DatasetService.GetLastFrameIdsInVideoForFrameId();
 
             Parallel.For(0, primaryInputRanking.Ranks.Length, frameId =>
@@ -54,11 +58,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 // find the highest secondary rank in the temporal context
                 float maxPairRank = float.MinValue;
                 int maxPairRankId = -1;
-                for (int iContext = 1; iContext <= _temporalContextLength; iContext++)
+                for (int iPairFrame = frameId + 1; iPairFrame <= lastFrameIdsInVideoForFrameId[frameId]; iPairFrame++)
                 {
-                    int iPairFrame = frameId + iContext;
-                    if (iPairFrame > lastFrameIdsInVideoForFrameId[frameId]) break;
-
                     float pairRank = secondaryInputRanking.Ranks[iPairFrame];
                     if (pairRank > maxPairRank)
                     {
@@ -73,7 +74,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 }
 
                 // compute result
-                singleOutputRanking.Ranks[frameId] = primaryInputRanking.Ranks[frameId] + maxPairRank;
+                singleOutputRanking.Ranks[frameId] = primaryInputRanking.Ranks[frameId] * maxPairRank;
                 singleOutputPairs[frameId] = maxPairRankId;
             });
             singleOutputRanking.IsUpdated = true;
@@ -91,11 +92,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 // find the highest secondary rank in the temporal context
                 float maxPairRank = float.MinValue;
                 int maxPairRankId = -1;
-                for (int iContext = 1; iContext <= _temporalContextLength; iContext++)
+                for (int iPairFrame = frameId - 1; iPairFrame >= firstFrameIdsInVideoForFrameId[frameId]; iPairFrame--)
                 {
-                    int iPairFrame = frameId - iContext;
-                    if (iPairFrame < firstFrameIdsInVideoForFrameId[frameId]) break;
-
                     float pairRank = secondaryInputRanking.Ranks[iPairFrame];
                     if (pairRank > maxPairRank)
                     {
@@ -110,7 +108,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 }
 
                 // compute result
-                singleOutputRanking.Ranks[frameId] = primaryInputRanking.Ranks[frameId] + maxPairRank;
+                singleOutputRanking.Ranks[frameId] = primaryInputRanking.Ranks[frameId] * maxPairRank;
                 singleOutputPairs[frameId] = maxPairRankId;
             });
             singleOutputRanking.IsUpdated = true;

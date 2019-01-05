@@ -51,6 +51,9 @@
     <Compile Include="ActionLogging\IInteractionLogger.cs" />
     <Compile Include="ActionLogging\InteractionLog.cs" />
     <Compile Include="ActionLogging\InteractionLogger.cs" />
+    <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionProduct.cs" />
+    <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
+    <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />

@@ -9,10 +9,11 @@ using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal.Similarity
 {
-    public class BiTemporalSimilarityModel<TQuery, TSimilarityModel>
-        : IBiTemporalSimilarityModel<TQuery, TSimilarityModel>
+    public class BiTemporalSimilarityModel<TQuery, TSimilarityModel, TRankFusion>
+        : IBiTemporalSimilarityModel<TQuery, TSimilarityModel, TRankFusion>
         where TQuery : IQuery
         where TSimilarityModel : ISimilarityModel<TQuery>
+        where TRankFusion : IBiTemporalRankFusion
     {
         public TSimilarityModel FormerSimilarityModel { get; }
         public TSimilarityModel LatterSimilarityModel { get; }

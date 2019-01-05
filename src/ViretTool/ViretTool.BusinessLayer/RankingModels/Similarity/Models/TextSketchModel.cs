@@ -8,14 +8,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
     public class TextSketchModel : BoolSketchModel
     {
-        public TextSketchModel(IRankFusion rankFusion, bool[][] boolSignatures) 
-            : base(rankFusion, boolSignatures)
+        public TextSketchModel(/*IRankFusion rankFusion, */bool[][] boolSignatures) 
+            : base(/*rankFusion, */boolSignatures)
         {
         }
 
 
         public TextSketchModel()
-            : base(null, null)
+            : base(/*null, */null)
         {
         }
     }

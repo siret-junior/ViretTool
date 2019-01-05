@@ -12,7 +12,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
     public class BoolSketchModel : IBoolSketchModel, IFaceSketchModel, ITextSketchModel
     {
-        public IRankFusion RankFusion { get; }
+        //public IRankFusion RankFusion { get; }
 
         public ColorSketchQuery CachedQuery { get; private set; }
 
@@ -21,9 +21,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 
         public bool[][] Descriptors { get; }
 
-        public BoolSketchModel(IRankFusion rankFusion, bool[][] boolSignatures)
+        public BoolSketchModel(/*IRankFusion rankFusion, */bool[][] boolSignatures)
         {
-            RankFusion = rankFusion;
+            //RankFusion = rankFusion;
             Descriptors = boolSignatures;
         }
 

@@ -4,9 +4,10 @@ using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal.Similarity
 {
-    public interface IBiTemporalSimilarityModel<TQuery, TSimilarityModel>
+    public interface IBiTemporalSimilarityModel<TQuery, TSimilarityModel, TRankFusion>
         where TQuery : IQuery
         where TSimilarityModel : ISimilarityModel<TQuery>
+        where TRankFusion : IBiTemporalRankFusion
     {
         TSimilarityModel FormerSimilarityModel { get; }
         TSimilarityModel LatterSimilarityModel { get; }

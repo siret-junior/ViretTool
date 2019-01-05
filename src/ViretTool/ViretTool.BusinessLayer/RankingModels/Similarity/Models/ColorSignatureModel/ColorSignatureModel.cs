@@ -16,7 +16,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         public ColorSketchQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
-        public IRankFusion RankFusion { get; }
+        //public IRankFusion RankFusion { get; }
 
         /// <summary>
         /// A thumbnail based signature in RGB format, stored as a 1D byte array.
@@ -25,12 +25,12 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         private int _signatureWidth = 26;     // TODO: load dynamically from provided initializer file
         private int _signatureHeight = 15;
 
-        private Dictionary<Ellipse, RankingBuffer> _partialRankingCache = new Dictionary<Ellipse, RankingBuffer>();
+        private Dictionary<Ellipse, float[]> _partialRankingCache = new Dictionary<Ellipse, float[]>();
 
 
-        public ColorSignatureModel(IRankFusion rankFusion, IDescriptorProvider<byte[]> colorSignatures)
+        public ColorSignatureModel(/*IRankFusion rankFusion, */IDescriptorProvider<byte[]> colorSignatures)
         {
-            RankFusion = rankFusion;
+            //RankFusion = rankFusion;
             _colorSignatures = colorSignatures.Descriptors;
         }
 
@@ -46,57 +46,82 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         {
             InputRanking = inputRanking;
             OutputRanking = outputRanking;
-
-            if ((query == null && CachedQuery == null) 
-                || (query.Equals(CachedQuery) && !InputRanking.IsUpdated))
+            
+            if (!HasQueryOrInputChanged(query, inputRanking))
             {
-                // query and input ranking are the same as before, return cached result
+                // nothing changed, OutputRanking contains cached data from previous computation
                 OutputRanking.IsUpdated = false;
                 return;
             }
-            OutputRanking.IsUpdated = true;
-
-            if (query != null && query.ColorSketchEllipses.Any())
-            {
-                // remove old not used ellipse cache entires
-                foreach (Ellipse key in _partialRankingCache.Keys.ToList())
-                {
-                    if (!query.ColorSketchEllipses.Contains(key))
-                    {
-                        _partialRankingCache.Remove(key);
-                    }
-                }
-
-                // add new ellipse partial ranking entries
-                foreach (Ellipse ellipse in query.ColorSketchEllipses)
-                {
-                    if (!_partialRankingCache.ContainsKey(ellipse))
-                    {
-                        _partialRankingCache.Add(ellipse, EvaluateOneQueryCentroid(ellipse));
-                    }
-                }
-
-                // perform fusion of partial rankings
-                RankFusion.ComputeRanking(_partialRankingCache.Values.ToArray(), OutputRanking);
-            }
             else
             {
-                // null query, set to 0 rank
-                for (int i = 0; i < OutputRanking.Ranks.Length; i++)
+                CachedQuery = query;
+                OutputRanking.IsUpdated = true;
+            }
+
+            if (IsQueryEmpty(query))
+            {
+                // no query, output is the same as input
+                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                return;
+            }
+
+            // remove old not used ellipse cache entires
+            foreach (Ellipse key in _partialRankingCache.Keys.ToList())
+            {
+                if (!query.ColorSketchEllipses.Contains(key))
                 {
-                    if (InputRanking.Ranks[i] == float.MinValue)
-                    {
-                        OutputRanking.Ranks[i] = float.MinValue;
-                    }
-                    else
-                    {
-                        OutputRanking.Ranks[i] = 0;
-                    }
+                    _partialRankingCache.Remove(key);
                 }
             }
+
+            // add new ellipse partial ranking entries
+            foreach (Ellipse ellipse in query.ColorSketchEllipses)
+            {
+                if (!_partialRankingCache.ContainsKey(ellipse))
+                {
+                    _partialRankingCache.Add(ellipse, EvaluateOneQueryCentroid(ellipse));
+                }
+            }
+
+            // perform fusion of partial rankings
+            float[][] distances = _partialRankingCache.Values.ToArray();
+            Parallel.For(0, inputRanking.Ranks.Length, itemId =>
+            {
+                if (InputRanking.Ranks[itemId] == float.MinValue)
+                {
+                    // ignore filtered frames
+                    OutputRanking.Ranks[itemId] = float.MinValue;
+                    return;
+                }
+
+                float centroidSum = 0;
+                for (int iCentroid = 0; iCentroid < distances.Length; iCentroid++)
+                {
+                    centroidSum += distances[iCentroid][itemId];
+                }
+
+                OutputRanking.Ranks[itemId] = centroidSum;
+            });
+
         }
 
-        private RankingBuffer EvaluateOneQueryCentroid(Ellipse ellipse)//Tuple<Point, Color, Point, bool> qc)
+        private bool HasQueryOrInputChanged(ColorSketchQuery query, RankingBuffer inputRanking)
+        {
+            return (query == null && CachedQuery != null)
+                || (CachedQuery == null && query != null)
+                || !query.Equals(CachedQuery)
+                || inputRanking.IsUpdated;
+        }
+
+        private bool IsQueryEmpty(ColorSketchQuery query)
+        {
+            return query == null 
+                || query.ColorSketchEllipses == null
+                || !query.ColorSketchEllipses.Any();
+        }
+
+        private float[] EvaluateOneQueryCentroid(Ellipse ellipse)//Tuple<Point, Color, Point, bool> qc)
         {
             float[] distances = new float[InputRanking.Ranks.Length];
 
@@ -163,7 +188,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
             });
 
             // TODO
-            return new RankingBuffer("TODO", distances);
+            return distances;
         }
 
 

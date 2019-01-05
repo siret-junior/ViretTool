@@ -7,16 +7,22 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Similarity;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Fusion;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalSimilarityModule : IBiTemporalSimilarityModule
     {
-        public IBiTemporalSimilarityModel<KeywordQuery, IKeywordModel> KeywordModel { get; }
-        public IBiTemporalSimilarityModel<ColorSketchQuery, IColorSketchModel> ColorSketchModel { get; }
-        public IBiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel> FaceSketchModel { get; }
-        public IBiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel> TextSketchModel { get; }
-        public IBiTemporalSimilarityModel<SemanticExampleQuery, ISemanticExampleModel> SemanticExampleModel { get; }
+        public IBiTemporalSimilarityModel<KeywordQuery, IKeywordModel, IBiTemporalRankFusionProduct> 
+            KeywordModel { get; }
+        public IBiTemporalSimilarityModel<ColorSketchQuery, IColorSketchModel, IBiTemporalRankFusionSum> 
+            ColorSketchModel { get; }
+        public IBiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionSum> 
+            FaceSketchModel { get; }
+        public IBiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionSum> 
+            TextSketchModel { get; }
+        public IBiTemporalSimilarityModel<SemanticExampleQuery, ISemanticExampleModel, IBiTemporalRankFusionSum> 
+            SemanticExampleModel { get; }
         
         public BiTemporalSimilarityQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; private set; }
@@ -28,11 +34,21 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 
 
         public BiTemporalSimilarityModule(
-            IBiTemporalSimilarityModel<KeywordQuery, IKeywordModel> keywordModel, 
-            IBiTemporalSimilarityModel<ColorSketchQuery, IColorSketchModel> colorSketchModel, 
-            IBiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel> faceSketchModel, 
-            IBiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel> textSketchModel, 
-            IBiTemporalSimilarityModel<SemanticExampleQuery, ISemanticExampleModel> semanticExampleModel)
+            IBiTemporalSimilarityModel
+            <KeywordQuery, IKeywordModel, IBiTemporalRankFusionProduct> 
+            keywordModel, 
+            IBiTemporalSimilarityModel
+            <ColorSketchQuery, IColorSketchModel, IBiTemporalRankFusionSum> 
+            colorSketchModel, 
+            IBiTemporalSimilarityModel
+            <ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionSum> 
+            faceSketchModel, 
+            IBiTemporalSimilarityModel
+            <ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionSum> 
+            textSketchModel, 
+            IBiTemporalSimilarityModel
+            <SemanticExampleQuery, ISemanticExampleModel, IBiTemporalRankFusionSum> 
+            semanticExampleModel)
         {
             KeywordModel = keywordModel;
             ColorSketchModel = colorSketchModel;

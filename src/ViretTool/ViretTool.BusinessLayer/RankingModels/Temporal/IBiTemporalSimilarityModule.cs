@@ -2,16 +2,27 @@
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Similarity;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Fusion;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public interface IBiTemporalSimilarityModule
     {
-        IBiTemporalSimilarityModel<KeywordQuery, IKeywordModel> KeywordModel { get; }
-        IBiTemporalSimilarityModel<ColorSketchQuery, IColorSketchModel> ColorSketchModel { get; }
-        IBiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel> FaceSketchModel { get; }
-        IBiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel> TextSketchModel { get; }
-        IBiTemporalSimilarityModel<SemanticExampleQuery, ISemanticExampleModel> SemanticExampleModel { get; }
+        IBiTemporalSimilarityModel
+            <KeywordQuery, IKeywordModel, IBiTemporalRankFusionProduct> 
+            KeywordModel { get; }
+        IBiTemporalSimilarityModel
+            <ColorSketchQuery, IColorSketchModel, IBiTemporalRankFusionSum> 
+            ColorSketchModel { get; }
+        IBiTemporalSimilarityModel
+            <ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionSum> 
+            FaceSketchModel { get; }
+        IBiTemporalSimilarityModel
+            <ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionSum> 
+            TextSketchModel { get; }
+        IBiTemporalSimilarityModel
+            <SemanticExampleQuery, ISemanticExampleModel, IBiTemporalRankFusionSum> 
+            SemanticExampleModel { get; }
         
         BiTemporalSimilarityQuery CachedQuery { get; }
 
