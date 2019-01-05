@@ -26,7 +26,7 @@ namespace ViretTool.PresentationLayer.Helpers
                               .ToArray() ??
                         new SynsetGroup[0]),
                     new KeywordQuery(
-                        query1.KeywordQueryResult?.Query?.Select(parts => new SynsetGroup(parts.Select(p => new Synset(query1.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
+                        query2.KeywordQueryResult?.Query?.Select(parts => new SynsetGroup(parts.Select(p => new Synset(query2.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
                               .ToArray() ??
                         new SynsetGroup[0]));
 
