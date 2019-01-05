@@ -88,7 +88,19 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             if (IsQueryEmpty(query))
             {
                 // no query, output is the same as input
-                Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                //Array.Copy(InputRanking.Ranks, OutputRanking.Ranks, InputRanking.Ranks.Length);
+                // initialize empty keyword model to 1
+                Parallel.For(0, inputRanking.Ranks.Length, i =>
+                {
+                    if (inputRanking.Ranks[i] != float.MinValue)
+                    {
+                        OutputRanking.Ranks[i] = 1;
+                    }
+                    else
+                    {
+                        OutputRanking.Ranks[i] = float.MinValue;
+                    }
+                });
                 return;
             }
 
