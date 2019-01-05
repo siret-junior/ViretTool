@@ -237,4 +237,7 @@
   <data name="TestButtonText" xml:space="preserve">
     <value>Test</value>
   </data>
+  <data name="MapNotAvailableText" xml:space="preserve">
+    <value>Map is not available - to few frames were returned.</value>
+  </data>
 </root>

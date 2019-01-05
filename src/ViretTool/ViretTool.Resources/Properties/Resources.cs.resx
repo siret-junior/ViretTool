@@ -222,4 +222,7 @@
   <data name="TestButtonText" xml:space="preserve">
     <value>Test</value>
   </data>
+  <data name="MapNotAvailableText" xml:space="preserve">
+    <value>Mapa není dostupná - nebylo vráceno dostatečné množství snímků.</value>
+  </data>
 </root>

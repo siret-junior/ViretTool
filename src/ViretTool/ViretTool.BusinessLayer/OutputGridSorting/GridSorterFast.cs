@@ -95,7 +95,7 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
         private int[,] SortItems(List<float[]> data, int width, int height, CancellationToken cancellationToken)
         {
             int dataCount = data.Count;
-            if (dataCount != width * height)
+            if (dataCount != width * height || dataCount == 0)
             {
                 return null;
             }

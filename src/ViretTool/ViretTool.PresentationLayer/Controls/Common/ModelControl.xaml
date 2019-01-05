@@ -25,7 +25,8 @@
                FontWeight="Bold"
                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Path=ModelName}" />
 
-        <Slider Grid.Column="1"
+        <Slider x:Name="ValueSlider"
+                Grid.Column="1"
                 Margin="10, 0, 0, 0"
                 VerticalAlignment="Center"
                 Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Mode=TwoWay, Path=Value}"

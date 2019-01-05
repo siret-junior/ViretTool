@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -52,6 +53,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(ModelControl),
             new FrameworkPropertyMetadata(0.0d) { BindsTwoWayByDefault = true });
 
+        public static readonly DependencyProperty OutputValueProperty = DependencyProperty.Register(
+            nameof(OutputValue),
+            typeof(double),
+            typeof(ModelControl),
+            new FrameworkPropertyMetadata(0.0d, (obj, args) => ((ModelControl)obj).Value = (double)args.NewValue) { BindsTwoWayByDefault = true });
+
         public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register(
             "DefaultValue",
             typeof(double),
@@ -83,6 +90,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             set { SetValue(ValueProperty, value); }
         }
 
+        public double OutputValue
+        {
+            get { return (double)GetValue(OutputValueProperty); }
+            set { SetValue(OutputValueProperty, value); }
+        }
+
         public double DefaultValue
         {
             get { return (double)GetValue(DefaultValueProperty); }
@@ -90,12 +103,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 SetValue(DefaultValueProperty, value);
                 Value = value;
+                OutputValue = value;
             }
         }
 
         private void Slider_MouseUp(object sender, MouseButtonEventArgs e)
         {
             ModelSettingChangedEvent?.Invoke(Value / 100d, UseForSorting);
+            OutputValue = Value;
         }
 
         public void Clear()

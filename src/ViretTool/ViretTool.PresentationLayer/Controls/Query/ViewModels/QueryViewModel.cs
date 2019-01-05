@@ -65,7 +65,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             onQueriesChanged.Subscribe(_ => SemanticUseForSorting = QueryObjects.Any());
 
             onPropertyChanged.Merge(onQueriesChanged)
-                             .Throttle(TimeSpan.FromSeconds(0.1))
+                             .Throttle(TimeSpan.FromMilliseconds(50))
                              .Where(_ => datasetServicesManager.IsDatasetOpened)
                              .ObserveOn(SynchronizationContext.Current)
                              .Subscribe(NotifyQuerySettingsChange);

@@ -454,6 +454,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             IsBusy = true;
             int[] sortedIds = await _sortingTask;
+            if (!sortedIds.Any())
+            {
+                MessageBox.Show(Resources.Properties.Resources.MapNotAvailableText);
+                IsBusy = false;
+                return;
+            }
+
             IsDetailVisible = true;
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
         }

@@ -43,6 +43,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(FilterControl),
             new FrameworkPropertyMetadata(0.0d) { BindsTwoWayByDefault = true });
 
+        public static readonly DependencyProperty OutputValueProperty = DependencyProperty.Register(
+            nameof(OutputValue),
+            typeof(double),
+            typeof(FilterControl),
+            new FrameworkPropertyMetadata(0.0d, (obj, args) => ((FilterControl)obj).Value = (double)args.NewValue) { BindsTwoWayByDefault = true });
+
         public FilterControl()
         {
             InitializeComponent();
@@ -55,6 +61,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 SetValue(DefaultValueProperty, value);
                 Value = value;
+                OutputValue = value;
             }
         }
 
@@ -74,6 +81,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get { return (double)GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
+        }
+
+        public double OutputValue
+        {
+            get { return (double)GetValue(OutputValueProperty); }
+            set { SetValue(OutputValueProperty, value); }
         }
 
         public event FilterChangedHandler FilterChangedEvent;
@@ -97,6 +110,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             FilterChangedEvent?.Invoke(State, Value / 100d);
+            OutputValue = Value;
         }
     }
 }

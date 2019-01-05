@@ -187,6 +187,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map is not available - to few frames were returned..
+        /// </summary>
+        public static string MapNotAvailableText {
+            get {
+                return ResourceManager.GetString("MapNotAvailableText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max frame from shot:.
         /// </summary>
         public static string MaxFromShot {
