@@ -280,6 +280,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         /// <param name="finalSize"></param>
         private void ArrangeChild(int index, UIElement child, Size finalSize)
         {
+            if (Rows <= 0 || Columns <= 0)
+            {
+                return;
+            }
+
             int row = Orientation == Orientation.Vertical ? index / Columns : index % Rows;
             int column = Orientation == Orientation.Vertical ? index % Columns : index / Rows;
 
