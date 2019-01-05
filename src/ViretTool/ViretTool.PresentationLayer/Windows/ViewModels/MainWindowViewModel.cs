@@ -12,6 +12,7 @@ using Castle.Core.Logging;
 using Microsoft.Win32;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
+using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
@@ -32,6 +33,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly ISubmissionService _submissionService;
         private readonly IInteractionLogger _interactionLogger;
         private readonly QueryBuilder _queryBuilder;
+        private readonly ExternalImageProvider _externalImageProvider;
         private readonly ILogger _logger;
         private readonly IWindowManager _windowManager;
         private readonly SubmitControlViewModel _submitControlViewModel;
@@ -57,7 +59,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IGridSorter gridSorter,
             ISubmissionService submissionService,
             IInteractionLogger interactionLogger,
-            QueryBuilder queryBuilder)
+            QueryBuilder queryBuilder,
+            ExternalImageProvider externalImageProvider)
         {
             _logger = logger;
             _windowManager = windowManager;
@@ -68,6 +71,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _submissionService = submissionService;
             _interactionLogger = interactionLogger;
             _queryBuilder = queryBuilder;
+            _externalImageProvider = externalImageProvider;
 
             QueryResults = queryResults;
             DetailView = detailView;
@@ -234,6 +238,29 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (e.Key == Key.Escape)
             {
                 CloseDetailViewModel();
+            }
+        }
+
+        public async void OnDrop(DragEventArgs e)
+        {
+            //MessageBox.Show(string.Join(Environment.NewLine, (string[])e.Data.GetData(DataFormats.FileDrop)));
+            //MessageBox.Show(string.Join(Environment.NewLine, e.Data.GetFormats()));
+
+            //TODO throttle
+
+            IsBusy = true;
+            try
+            {
+                string imagePath = await Task.Run(() => _externalImageProvider.ParseAndDownloadImage((string)e.Data.GetData(DataFormats.Text)));
+                (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(new DownloadedFrameViewModel(_datasetServicesManager, imagePath));
+            }
+            catch (Exception exception)
+            {
+                LogError(exception, "Error while dropping image");
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 

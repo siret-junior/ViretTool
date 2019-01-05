@@ -23,17 +23,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
             _framesInTheVideo = new Lazy<int[]>(() => servicesManager.CurrentDataset.ThumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
         }
 
-        public bool CanAddToQuery => _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
+        public bool CanAddToQuery => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
 
         public int FrameNumber { get; private set; }
 
-        public byte[] ImageSource
-        {
-            get
-            {
-                return _servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image;
-            }
-        }
+        public virtual byte[] ImageSource => _servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image;
 
         public bool IsSelectedForDetail
         {

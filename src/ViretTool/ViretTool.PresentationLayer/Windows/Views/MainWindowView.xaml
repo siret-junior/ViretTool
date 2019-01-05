@@ -12,7 +12,8 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
 			 Title="{x:Static properties:Resources.AppTitle}"
-             WindowStyle="None" ResizeMode="NoResize"  cal:Message.Attach="[Event KeyUp] = [Action OnKeyUp($eventArgs)]"
+             WindowStyle="None" ResizeMode="NoResize" AllowDrop="True"
+             cal:Message.Attach="[Event KeyUp] = [Action OnKeyUp($eventArgs)]; [Event Drop] = [Action OnDrop($eventArgs)]"
              WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <ResourceDictionary>

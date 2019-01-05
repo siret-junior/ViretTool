@@ -83,6 +83,7 @@
     <Compile Include="Behaviors\ScrollToColumnOrRowIndexBehavior.cs" />
     <Compile Include="Behaviors\TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="Controls\Common\BusyIndicator.cs" />
+    <Compile Include="Controls\Common\DownloadedFrameViewModel.cs" />
     <Compile Include="Controls\Common\FrameControl.xaml.cs">
       <DependentUpon>FrameControl.xaml</DependentUpon>
     </Compile>
@@ -161,6 +162,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj">
+      <Project>{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}</Project>
+      <Name>ViretTool.BusinessLayer.ExternalDescriptors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj">
       <Project>{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}</Project>
       <Name>ViretTool.BusinessLayer</Name>

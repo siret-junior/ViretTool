@@ -66,7 +66,8 @@ namespace ViretTool.Installers
                              new NasNetScorer(
                                  "Data\\NasNetMobile-retrained.pb",
                                  "Data\\VBS2019_NasNetMobile-128PCA.pca_components",
-                                 "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")));
+                                 "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")),
+                Component.For<ExternalImageProvider>());
 
             //transient services
             container.Register(
