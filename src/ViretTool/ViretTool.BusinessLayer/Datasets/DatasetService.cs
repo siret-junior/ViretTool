@@ -16,6 +16,7 @@ namespace ViretTool.BusinessLayer.Datasets
         private readonly Lazy<IReadOnlyDictionary<int, int>> _videoIdForFrameId;
         private readonly Lazy<IReadOnlyDictionary<int, (int StartFrame, int EndFrame)[]>> _shotFrameNumbersForVideoIds;
         private readonly Lazy<IReadOnlyDictionary<int, int>> _lastFrameIdForVideoId;
+        private readonly Lazy<IReadOnlyDictionary<int, int>> _shotNumberForFrameId;
         private readonly Lazy<int[]> _lastFrameIdsInVideoForFrameId;
         private readonly Lazy<int[]> _firstFrameIdsInVideoForFrameId;
 
@@ -30,7 +31,10 @@ namespace ViretTool.BusinessLayer.Datasets
             _videoIdForFrameId = new Lazy<IReadOnlyDictionary<int, int>>(() => _dataset.Frames.ToDictionary(f => f.Id, f => f.ParentVideo.Id));
             _shotFrameNumbersForVideoIds = new Lazy<IReadOnlyDictionary<int, (int, int)[]>>(
                 () => _dataset.Videos.Where(v => v.Shots.Any())
-                              .ToDictionary(v => v.Id, v => v.Shots.Select(s => (s.Frames.First().FrameNumber, s.Frames.Last().FrameNumber)).ToArray()));
+                              .ToDictionary(
+                                  v => v.Id,
+                                  v => v.Shots.Where(s => s.Frames.Any()).Select(s => (s.Frames.First().FrameNumber, s.Frames.Last().FrameNumber)).ToArray()));
+            _shotNumberForFrameId = new Lazy<IReadOnlyDictionary<int, int>>(() => _dataset.Frames.ToDictionary(f => f.Id, f => f.ParentShot.Id));
             _lastFrameIdForVideoId = new Lazy<IReadOnlyDictionary<int, int>>(() => _dataset.Videos.ToDictionary(video => video.Id, video => video.Frames.Last().Id));
             _lastFrameIdsInVideoForFrameId = new Lazy<int[]>(() => _dataset.Frames.Select(frame => frame.ParentVideo.Frames.Last().Id).ToArray());
             _firstFrameIdsInVideoForFrameId = new Lazy<int[]>(() => _dataset.Frames.Select(frame => frame.ParentVideo.Frames.First().Id).ToArray());
@@ -49,6 +53,8 @@ namespace ViretTool.BusinessLayer.Datasets
         public int[] GetFrameNumbersForVideo(int videoId) => _frameNumbersForVideoId.Value[videoId];
 
         public int GetVideoIdForFrameId(int frameId) => _videoIdForFrameId.Value[frameId];
+
+        public int GetShotNumberForFrameId(int frameId) => _shotNumberForFrameId.Value[frameId];
 
         public (int StartFrame, int EndFrame)[] GetShotFrameNumbersForVideo(int videoId) => _shotFrameNumbersForVideoIds.Value[videoId];
 

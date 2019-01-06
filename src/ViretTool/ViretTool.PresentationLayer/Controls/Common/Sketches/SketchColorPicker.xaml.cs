@@ -55,7 +55,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
             }
 
             this.Width = nColorsInRow * mColorButtonWidth + 15;
-            this.Height = (brushes.Length / nColorsInRow) * mColorButtonWidth + 70;
+            this.Height = (brushes.Length / nColorsInRow) * mColorButtonWidth + 120;
         }
 
         public Color SelectedColor { get; private set; }

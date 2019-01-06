@@ -6,13 +6,13 @@
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Windows.ViewModels"
              mc:Ignorable="d" 
-             Height="300" Width="220" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+             Height="345" Width="220" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
              Title="{x:Static properties:Resources.TestWindowTitle}"
              d:DataContext="{d:DesignInstance viewModels:TestControlViewModel}">
     <Grid x:Name="TestGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Image Grid.Row="0" Source="{Binding FirstFrame.ImageSource}"

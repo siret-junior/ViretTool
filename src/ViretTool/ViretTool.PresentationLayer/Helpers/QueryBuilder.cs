@@ -265,8 +265,8 @@ namespace ViretTool.PresentationLayer.Helpers
                 new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1));
 
             FilteringQuery latterFilteringQuery = new FilteringQuery(
-                new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query2.BwFilterValue * 0.01),
-                new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query2.PercentageBlackFilterValue * 0.01),
+                new ThresholdFilteringQuery(ConvertToFilterState(query2.BwFilterState), query2.BwFilterValue * 0.01),
+                new ThresholdFilteringQuery(ConvertToFilterState(query2.PercentageBlackFilterState), query2.PercentageBlackFilterValue * 0.01),
                 new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1));
 
 

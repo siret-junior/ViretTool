@@ -20,7 +20,7 @@ namespace ViretTool.BusinessLayer.ExternalDescriptors
             }
         }
 
-        public string ParseAndDownloadImage(string wholeUrl)
+        public string ParseAndDownloadImageFromGoogle(string wholeUrl)
         {
             int imageUrlStart = wholeUrl.IndexOf(ImageUrlPrefix, StringComparison.InvariantCultureIgnoreCase);
             if (imageUrlStart == -1)

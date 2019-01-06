@@ -17,5 +17,6 @@ namespace ViretTool.BusinessLayer.Datasets
         int GetLastFrameIdForVideo(int videoId);
         int[] GetLastFrameIdsInVideoForFrameId();
         int[] GetFirstFrameIdsInVideoForFrameId();
+        int GetShotNumberForFrameId(int frameId);
     }
 }

@@ -247,7 +247,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IsBusy = true;
             try
             {
-                string imagePath = await Task.Run(() => _externalImageProvider.ParseAndDownloadImage((string)e.Data.GetData(DataFormats.Text)));
+                string imagePath = await Task.Run(() => _externalImageProvider.ParseAndDownloadImageFromGoogle((string)e.Data.GetData(DataFormats.Text)));
                 (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(new DownloadedFrameViewModel(_datasetServicesManager, imagePath));
             }
             catch (Exception exception)
@@ -389,13 +389,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             int videoId = _testControlViewModel.FirstFrame.VideoId;
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
             int firstFrameId = datasetService.GetFrameIdForFrameNumber(videoId, _testControlViewModel.FirstFrame.FrameNumber);
+            int firstFrameShotNumber = datasetService.GetShotNumberForFrameId(firstFrameId);
             int secondFrameId = datasetService.GetFrameIdForFrameNumber(videoId, _testControlViewModel.SecondFrame.FrameNumber);
-            int videoOrder = -1, firstFrameOrder = -1, secondFrameOrder = -1;
+            int videoOrder = -1, firstFrameShotOrder = -1, firstFrameOrder = -1, secondFrameOrder = -1;
             for (int i = 0; i < sortedIds.Count; i++)
             {
                 if (datasetService.GetVideoIdForFrameId(sortedIds[i]) == videoId && videoOrder == -1)
                 {
                     videoOrder = i;
+                }
+                if (datasetService.GetShotNumberForFrameId(sortedIds[i]) == firstFrameShotNumber && firstFrameShotOrder == -1)
+                {
+                    firstFrameShotOrder = i;
                 }
                 if (sortedIds[i] == firstFrameId)
                 {
@@ -407,7 +412,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
             }
 
-            TestFramesPosition = $"{videoOrder}|{firstFrameOrder}|{secondFrameOrder}";
+            TestFramesPosition = $"{videoOrder}|{firstFrameShotOrder}|{firstFrameOrder}";
         }
 
         private void CancelSortingTaskIfNecessary()
