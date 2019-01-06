@@ -6,7 +6,7 @@
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Windows.ViewModels"
              mc:Ignorable="d" 
-             Height="345" Width="280" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+             Height="800" Width="280" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
              Title="{x:Static properties:Resources.TestWindowTitle}"
              d:DataContext="{d:DesignInstance viewModels:TestControlViewModel}">
     <Grid x:Name="TestGrid">
@@ -15,15 +15,15 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0" Source="{Binding FirstFrame.ImageSource}"
-               Width="{Binding DataContext.ImageWidth, ElementName=TestGrid, Mode=OneWay}"
-               Height="{Binding DataContext.ImageHeight, ElementName=TestGrid, Mode=OneWay}">
-        </Image>
-
-        <Image Grid.Row="1" Margin="0,10,0,2" Source="{Binding SecondFrame.ImageSource}"
-               Width="{Binding DataContext.ImageWidth, ElementName=TestGrid, Mode=OneWay}"
-               Height="{Binding DataContext.ImageHeight, ElementName=TestGrid, Mode=OneWay}">
-        </Image>
-
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding Frames}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Image Source="{Binding ImageSource}" Margin="0,10,0,2"
+                           Width="{Binding DataContext.ImageWidth, ElementName=TestGrid, Mode=OneWay}"
+                           Height="{Binding DataContext.ImageHeight, ElementName=TestGrid, Mode=OneWay}">
+                    </Image>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Window>

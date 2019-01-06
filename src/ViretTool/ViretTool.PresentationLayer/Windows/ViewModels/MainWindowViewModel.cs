@@ -237,6 +237,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             foreach (QueryViewModel queryViewModel in new[] { Query1, Query2 })
             {
+                queryViewModel.BwFilterState = FilterControl.FilterState.Off;
+                queryViewModel.PercentageBlackFilterState = FilterControl.FilterState.Off;
                 queryViewModel.OnKeywordsCleared();
                 queryViewModel.OnQueryObjectsCleared();
                 queryViewModel.OnSketchesCleared();
@@ -405,33 +407,28 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 return;
             }
 
-            int videoId = _testControlViewModel.FirstFrame.VideoId;
+            int videoId = _testControlViewModel.Frames.First().VideoId;
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-            int firstFrameId = datasetService.GetFrameIdForFrameNumber(videoId, _testControlViewModel.FirstFrame.FrameNumber);
-            int firstFrameShotNumber = datasetService.GetShotNumberForFrameId(firstFrameId);
-            int secondFrameId = datasetService.GetFrameIdForFrameNumber(videoId, _testControlViewModel.SecondFrame.FrameNumber);
-            int videoOrder = -1, firstFrameShotOrder = -1, firstFrameOrder = -1, secondFrameOrder = -1;
+            HashSet<int> frameIds = _testControlViewModel.Frames.Select(f => datasetService.GetFrameIdForFrameNumber(videoId, f.FrameNumber)).ToHashSet();
+            HashSet<int> shots = frameIds.Select(id => datasetService.GetShotNumberForFrameId(id)).ToHashSet();
+            int videoOrder = -1, shotOrder = -1, frameOrder = -1;
             for (int i = 0; i < sortedIds.Count; i++)
             {
-                if (datasetService.GetVideoIdForFrameId(sortedIds[i]) == videoId && videoOrder == -1)
+                if (videoOrder == -1 && datasetService.GetVideoIdForFrameId(sortedIds[i]) == videoId)
                 {
                     videoOrder = i;
                 }
-                if (datasetService.GetShotNumberForFrameId(sortedIds[i]) == firstFrameShotNumber && firstFrameShotOrder == -1)
+                if (shotOrder == -1 && shots.Contains(datasetService.GetShotNumberForFrameId(sortedIds[i])))
                 {
-                    firstFrameShotOrder = i;
+                    shotOrder = i;
                 }
-                if (sortedIds[i] == firstFrameId)
+                if (frameOrder == -1 && frameIds.Contains(sortedIds[i]))
                 {
-                    firstFrameOrder = i;
-                }
-                if (sortedIds[i] == secondFrameId)
-                {
-                    secondFrameOrder = i;
+                    frameOrder = i;
                 }
             }
 
-            TestFramesPosition = $"{videoOrder}|{firstFrameShotOrder}|{firstFrameOrder}";
+            TestFramesPosition = $"{videoOrder}|{shotOrder}|{frameOrder}";
         }
 
         private void CancelSortingTaskIfNecessary()

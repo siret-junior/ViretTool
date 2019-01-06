@@ -26,35 +26,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public int ImageWidth { get; }
 
-        public FrameViewModel FirstFrame
-        {
-            get => _firstFrame;
-            private set
-            {
-                if (_firstFrame == value)
-                {
-                    return;
-                }
-
-                _firstFrame = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public FrameViewModel SecondFrame
-        {
-            get => _secondFrame;
-            private set
-            {
-                if (_secondFrame == value)
-                {
-                    return;
-                }
-
-                _secondFrame = value;
-                NotifyOfPropertyChange();
-            }
-        }
+        public BindableCollection<FrameViewModel> Frames { get; } = new BindableCollection<FrameViewModel>();
 
         public void InitializeFramesRandomly()
         {
@@ -63,8 +35,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             int[] frameNumbersForVideo = datasetService.GetFrameNumbersForVideo(videoId);
             int randomIndex = _random.Next(Math.Max(frameNumbersForVideo.Length - 5, 0));
-            FirstFrame = new FrameViewModel(videoId, frameNumbersForVideo[randomIndex], _datasetServicesManager);
-            SecondFrame = new FrameViewModel(videoId, frameNumbersForVideo[Math.Min(randomIndex + 4, frameNumbersForVideo.Length - 1)], _datasetServicesManager);
+
+
+            Frames.Clear();
+            Frames.AddRange(frameNumbersForVideo.Skip(randomIndex).Take(5).Select(fn => new FrameViewModel(videoId, fn, _datasetServicesManager)));
         }
 
     }
