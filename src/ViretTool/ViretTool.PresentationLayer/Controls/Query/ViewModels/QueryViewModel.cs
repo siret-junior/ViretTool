@@ -314,16 +314,22 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         public void OnKeywordsCleared()
         {
             KeywordQueryResult = null;
+            SemanticUseForSorting = QueryObjects.Any();
+            ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
         }
 
         public void OnSketchesCleared()
         {
             SketchQueryResult = null;
+            SemanticUseForSorting = QueryObjects.Any();
+            KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
         }
 
         public void OnQueryObjectsCleared()
         {
             QueryObjects.Clear();
+            ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
+            KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
         }
 
         public void UpdateQueryObjects(DownloadedFrameViewModel downloadedFrame)
