@@ -243,4 +243,7 @@
   <data name="ClearAllText" xml:space="preserve">
     <value>Clear all</value>
   </data>
+  <data name="HideBwFilterText" xml:space="preserve">
+    <value>Show/hide BW filters</value>
+  </data>
 </root>

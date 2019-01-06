@@ -228,4 +228,7 @@
   <data name="ClearAllText" xml:space="preserve">
     <value>Smazat vše</value>
   </data>
+  <data name="HideBwFilterText" xml:space="preserve">
+    <value>Zobrazit/schovat ČB filtry</value>
+  </data>
 </root>

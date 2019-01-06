@@ -39,6 +39,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
         private double _semanticValue = 30;
         private bool _semanticUseForSorting = false;
+        private bool _isBwFilterVisible;
 
 
         public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
@@ -301,6 +302,21 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _canvasHeight = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsBwFilterVisible
+        {
+            get => _isBwFilterVisible;
+            set
+            {
+                if (_isBwFilterVisible == value)
+                {
+                    return;
+                }
+
+                _isBwFilterVisible = value;
                 NotifyOfPropertyChange();
             }
         }

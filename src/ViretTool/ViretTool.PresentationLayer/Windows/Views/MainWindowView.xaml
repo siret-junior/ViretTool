@@ -78,6 +78,7 @@
                                 <MenuItem Header="{x:Static properties:Resources.FileHeader}">
                                     <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
                                     <MenuItem Header="{x:Static properties:Resources.ClearAllText}" cal:Message.Attach="[Event Click] = [Action ClearAll]"/>
+                                    <MenuItem Header="{x:Static properties:Resources.HideBwFilterText}" cal:Message.Attach="[Event Click] = [Action ShowHideBwFilters]"/>
                                 </MenuItem>
                                 <MenuItem Header="{x:Static properties:Resources.TestButtonText}" cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"></MenuItem>
                             </Menu>

@@ -151,6 +151,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show/hide BW filters.
+        /// </summary>
+        public static string HideBwFilterText {
+            get {
+                return ResourceManager.GetString("HideBwFilterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 72.
         /// </summary>
         public static string ImageHeight {

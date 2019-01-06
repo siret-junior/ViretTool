@@ -244,6 +244,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        public void ShowHideBwFilters()
+        {
+            foreach (QueryViewModel queryViewModel in new[] { Query1, Query2 })
+            {
+                queryViewModel.IsBwFilterVisible = !queryViewModel.IsBwFilterVisible;
+            }
+        }
+
         public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
