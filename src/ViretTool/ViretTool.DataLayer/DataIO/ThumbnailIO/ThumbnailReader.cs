@@ -31,7 +31,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public int[] VideoFrameCounts { get; private set; }
 
         private readonly (int videoId, int frameNumber)[] _globalIdToVideoFramenumber;
-        private Dictionary<(int videoId, int frameId), int> _videoFramenumberToGlobalId;
+        private Dictionary<int, Dictionary<int,int>> _videoFramenumberToGlobalId;
         
         
         public ThumbnailReader(string filePath)
@@ -63,14 +63,19 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
                 // load globalId <-> (videoId, frameId) mappings
                 _globalIdToVideoFramenumber = new (int videoId, int frameNumber)[ThumbnailCount];
-                _videoFramenumberToGlobalId = new Dictionary<(int videoId, int frameId), int>();
+                _videoFramenumberToGlobalId = new Dictionary<int, Dictionary<int, int>>();
                 for (int iThumb = 0; iThumb < ThumbnailCount; iThumb++)
                 {
                     int globalId = reader.ReadInt32();
                     int videoId = reader.ReadInt32();
                     int frameNumber = reader.ReadInt32();
 
-                    _videoFramenumberToGlobalId.Add((videoId, frameNumber), globalId);
+                    if (!_videoFramenumberToGlobalId.ContainsKey(videoId))
+                    {
+                        _videoFramenumberToGlobalId.Add(videoId, new Dictionary<int, int>());
+                    }
+
+                    _videoFramenumberToGlobalId[videoId].Add(frameNumber, globalId);
                     _globalIdToVideoFramenumber[globalId] = (videoId, frameNumber);
                 }
             }
@@ -112,21 +117,19 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
         public ThumbnailRaw ReadVideoThumbnail(int videoId, int frameNumber)
         {
-            if (_videoFramenumberToGlobalId.TryGetValue((videoId, frameNumber), out int globalId))
+            if (_videoFramenumberToGlobalId.TryGetValue(videoId, out var dict) && dict.TryGetValue(frameNumber, out int globalId))
             {
                 return ReadVideoThumbnail(globalId);
             }
-            else
+
+            // TODO: seek closest frame
+            // (this should not happen though)
+            int firstFrameGlobalId = _videoFramenumberToGlobalId[videoId][0];
+            for (int i = 0; i < VideoFrameCounts[videoId]; i++)
             {
-                // TODO: seek closest frame
-                // (this should not happen though)
-                int firstFrameGlobalId = _videoFramenumberToGlobalId[(videoId, 0)];
-                for (int i = 0; i < VideoFrameCounts[videoId]; i++)
+                if (_globalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
                 {
-                    if (_globalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
-                    {
-                        return ReadVideoThumbnail(firstFrameGlobalId + i);
-                    }
+                    return ReadVideoThumbnail(firstFrameGlobalId + i);
                 }
             }
 
