@@ -26,36 +26,35 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
         {
             InitializeComponent();
 
-            SolidColorBrush[] brushes = CreateBrushes();
-            
+            //top B/W colors
+            FillColorCanvas(CreateBwBrushes(), 14, BwCanvas);
+
+            //bottom color picker
+            SolidColorBrush[] colorBrushes = CreateColorBrushes();
             int nColorsInRow = 20;
+            FillColorCanvas(colorBrushes, nColorsInRow, ColorPickerPanel);
+
+            Width = nColorsInRow * mColorButtonWidth + 15;
+            Height = (colorBrushes.Length / nColorsInRow) * mColorButtonWidth + 103;
+        }
+
+        private void FillColorCanvas(SolidColorBrush[] brushes, int nColorsInRow, Canvas canvas)
+        {
             int nColorsInColumn = ((brushes.Length - 1) / nColorsInRow) + 1; // assumes brushes are not empty
             for (int i = 0; i < brushes.Length; i++)
             {
                 int nthRow = i / nColorsInRow;
                 int nthColumn = i % nColorsInRow;
 
-                double cellBorderLightness = (i > nColorsInRow - 1)
-                                                 ? 1 - (nthRow / (double)(nColorsInColumn))
-                                                 : 1 - (nthColumn / (double)(nColorsInRow));
+                double cellBorderLightness = 1 - nthRow / (double)nColorsInColumn;
                 cellBorderLightness *= cellBorderLightness;
                 Canvas b = CreateColorCellCanvas(brushes[i], cellBorderLightness);
                 b.MouseDown += LeftClick;
 
-                ColorPickerPanel.Children.Add(b);
+                canvas.Children.Add(b);
                 Canvas.SetLeft(b, nthColumn * mColorButtonWidth);
-                if (i > nColorsInRow - 1)
-                {
-                    Canvas.SetTop(b, 20 + (int)Math.Floor(i / (double)nColorsInRow) * mColorButtonWidth);
-                }
-                else
-                {
-                    Canvas.SetTop(b, 10 + (int)Math.Floor(i / (double)nColorsInRow) * mColorButtonWidth);
-                }
+                Canvas.SetTop(b, 6 + (int)Math.Floor(i / (double)nColorsInRow) * mColorButtonWidth);
             }
-
-            this.Width = nColorsInRow * mColorButtonWidth + 15;
-            this.Height = (brushes.Length / nColorsInRow) * mColorButtonWidth + 120;
         }
 
         public Color SelectedColor { get; private set; }
@@ -89,20 +88,29 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
             return ShowDialog() == true;
         }
 
-        private SolidColorBrush[] CreateBrushes()
+        private SolidColorBrush[] CreateColorBrushes()
         {
             List<SolidColorBrush> brushes = new List<SolidColorBrush>();
-
-            for (int x = 0; x < 255; x += 13)
-            {
-                brushes.Add(new SolidColorBrush(Color.FromRgb((byte)x, (byte)x, (byte)x)));
-            }
 
             for (float lightness = 0.1f; lightness <= 1; lightness += 0.1f)
                 for (float hue = 0; hue <= 1; hue += 0.05f)
                 {
                     brushes.Add(new SolidColorBrush(HSLToRGB(hue, 1, lightness)));
                 }
+
+            return brushes.ToArray();
+        }
+
+        private SolidColorBrush[] CreateBwBrushes()
+        {
+            List<SolidColorBrush> brushes = new List<SolidColorBrush>();
+
+            for (double x = 0; x < 255; x += 9.5)
+            {
+                brushes.Add(new SolidColorBrush(Color.FromRgb((byte)x, (byte)x, (byte)x)));
+            }
+
+            brushes.Add(new SolidColorBrush(Color.FromRgb(255, 255, 255)));
 
             return brushes.ToArray();
         }

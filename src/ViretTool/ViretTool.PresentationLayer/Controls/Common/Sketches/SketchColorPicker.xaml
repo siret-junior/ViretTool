@@ -19,6 +19,7 @@
             <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/text.png" Width="50" Height="50" Margin="4"
                    RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"
                    MouseDown="LeftClick" Tag="{x:Static local:SketchType.Text}"></Image>
+            <Canvas x:Name="BwCanvas" Margin="4"></Canvas>
         </StackPanel>
 
         <Canvas x:Name="ColorPickerPanel" Grid.Row="1">
