@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <Viewbox Grid.Row="0" Stretch = "Uniform">
-            <Canvas x:Name="sketchCanvas" Width="320" Height="240" >
+            <Canvas x:Name="sketchCanvas" Width="384" Height="216" >
                 <!-- Currently not doing anything, ViewBox only zooms Canvas -->
                 <i:Interaction.Behaviors>
                     <behaviors:ActualSizeBehavior ActualHeight="{Binding Path=CanvasWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:SketchCanvas}}, Mode=OneWayToSource}"
