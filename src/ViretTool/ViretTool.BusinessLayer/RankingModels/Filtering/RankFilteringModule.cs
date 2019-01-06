@@ -107,7 +107,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             // set mask using the threshold
             Parallel.For(0, InputRanking.Ranks.Length, i =>
             {
-                if (InputRanking.Ranks[i] > threshold)
+                if (InputRanking.Ranks[i] >= threshold)
                 {
                     OutputRanking.Ranks[i] = InputRanking.Ranks[i];
                 }
