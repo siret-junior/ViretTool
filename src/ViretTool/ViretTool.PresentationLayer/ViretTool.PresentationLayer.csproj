@@ -108,6 +108,7 @@
     <Compile Include="Controls\Common\SketchCanvas.xaml.cs">
       <DependentUpon>SketchCanvas.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Common\Sketches\ImageType.cs" />
     <Compile Include="Controls\Common\Sketches\SketchType.cs" />
     <Compile Include="Controls\Common\Sketches\SketchColorPicker.xaml.cs">
       <DependentUpon>SketchColorPicker.xaml</DependentUpon>

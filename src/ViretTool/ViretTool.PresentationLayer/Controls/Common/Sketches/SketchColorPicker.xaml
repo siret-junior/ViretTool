@@ -15,10 +15,32 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/smile.png" Width="50" Height="50" Margin="4"
                    RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"
-                   MouseDown="LeftClick" Tag="{x:Static local:SketchType.Face}"></Image>
+                   MouseDown="LeftClick">
+                <Image.Tag>
+                    <local:ImageType SketchType="Face" IsPositive="True" />
+                </Image.Tag>
+            </Image>
+            <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/smile_no.png" Width="50" Height="50" Margin="4"
+                   RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"
+                   MouseDown="LeftClick">
+                <Image.Tag>
+                    <local:ImageType SketchType="Face" IsPositive="False" />
+                </Image.Tag>
+            </Image>
             <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/text.png" Width="50" Height="50" Margin="4"
                    RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"
-                   MouseDown="LeftClick" Tag="{x:Static local:SketchType.Text}"></Image>
+                   MouseDown="LeftClick">
+                <Image.Tag>
+                    <local:ImageType SketchType="Text" IsPositive="True" />
+                </Image.Tag>
+            </Image>
+            <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/text_no.png" Width="50" Height="50" Margin="4"
+                   RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased"
+                   MouseDown="LeftClick">
+                <Image.Tag>
+                    <local:ImageType SketchType="Text" IsPositive="False" />
+                </Image.Tag>
+            </Image>
             <Canvas x:Name="BwCanvas" Margin="4"></Canvas>
         </StackPanel>
 

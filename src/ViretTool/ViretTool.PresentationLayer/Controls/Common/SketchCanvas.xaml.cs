@@ -404,7 +404,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             private readonly double _scalingConstant = Math.Sqrt(2);
 
-            public ImagePoint(Point point, Image image, Canvas canvas) : base(point, Colors.SlateGray, canvas)
+            public ImagePoint(Point point, Image image, Canvas canvas) : base(point, ((ImageType)image.Tag).IsPositive ? Colors.SlateGray : Colors.Black, canvas)
             {
                 Image = new Image
                         {
@@ -413,7 +413,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                             Height = Radius * _scalingConstant
                         };
                 RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.HighQuality);
-                SketchType = (SketchType)image.Tag;
+                SketchType = ((ImageType)image.Tag).SketchType;
                 canvas.Children.Add(Image);
 
                 UpdatePosition(point);

@@ -27,7 +27,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
             InitializeComponent();
 
             //top B/W colors
-            FillColorCanvas(CreateBwBrushes(), 14, BwCanvas);
+            FillColorCanvas(CreateBwBrushes(), 8, BwCanvas);
 
             //bottom color picker
             SolidColorBrush[] colorBrushes = CreateColorBrushes();
@@ -93,10 +93,12 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
             List<SolidColorBrush> brushes = new List<SolidColorBrush>();
 
             for (float lightness = 0.1f; lightness <= 1; lightness += 0.1f)
+            {
                 for (float hue = 0; hue <= 1; hue += 0.05f)
                 {
                     brushes.Add(new SolidColorBrush(HSLToRGB(hue, 1, lightness)));
                 }
+            }
 
             return brushes.ToArray();
         }
@@ -105,7 +107,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
         {
             List<SolidColorBrush> brushes = new List<SolidColorBrush>();
 
-            for (double x = 0; x < 255; x += 9.5)
+            for (double x = 0; x < 255; x += 17)
             {
                 brushes.Add(new SolidColorBrush(Color.FromRgb((byte)x, (byte)x, (byte)x)));
             }
@@ -135,13 +137,13 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
             Color borderColor = Color.FromRgb(borderGray, borderGray, borderGray);
 
             Rectangle rectangle = new Rectangle
-            {
-                Width = canvas.Width,
-                Height = canvas.Height,
-                Stroke = new SolidColorBrush(borderColor),
-                StrokeThickness = 0.5,
-                //Fill = new SolidColorBrush(Colors.Black),
-            };
+                                  {
+                                      Width = canvas.Width,
+                                      Height = canvas.Height,
+                                      Stroke = new SolidColorBrush(borderColor),
+                                      StrokeThickness = 0.5,
+                                      //Fill = new SolidColorBrush(Colors.Black),
+                                  };
 
             Canvas.SetLeft(rectangle, 0);
             Canvas.SetTop(rectangle, 0);
