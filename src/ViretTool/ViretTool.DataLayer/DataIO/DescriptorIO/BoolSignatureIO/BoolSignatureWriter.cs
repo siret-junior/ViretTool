@@ -28,11 +28,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
 
                 writer.Write(signatureWidth);
                 writer.Write(signatureHeight);
-
-                //writer.Write(signatureCount);
-                //writer.Write(blobLength);
-
-
+                
                 // reserve space
                 writer.Write(new byte[METADATA_RESERVE_SPACE_SIZE]);
 
@@ -43,11 +39,16 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
                 outputFile, datasetHeader, signatureCount, blobLength, signaturesMetadata);
         }
 
+
         public override void Dispose()
         {
             BaseBlobWriter.Dispose();
         }
 
+        public void WriteDescriptor(bool[] signatureData)
+        {
+            BaseBlobWriter.WriteBlob(DataConversionUtilities.TranslateToByteArray(signatureData));
+        }
 
         public void WriteDescriptor(byte[] signatureData)
         {

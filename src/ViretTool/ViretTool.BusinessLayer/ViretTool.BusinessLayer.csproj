@@ -51,6 +51,14 @@
     <Compile Include="ActionLogging\IInteractionLogger.cs" />
     <Compile Include="ActionLogging\InteractionLog.cs" />
     <Compile Include="ActionLogging\InteractionLogger.cs" />
+    <Compile Include="Descriptors\BoolSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\FaceSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\IBoolSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\IFaceSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\ITextSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\TextSignatureDescriptorProvider.cs" />
+    <Compile Include="RankingModels\Similarity\Models\FaceSketchModel.cs" />
+    <Compile Include="RankingModels\Similarity\Models\TextSketchModel.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionProduct.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
@@ -74,11 +82,9 @@
     <Compile Include="RankingModels\Queries\IFusionQuery.cs" />
     <Compile Include="RankingModels\Similarity\IFilteredSimilarityModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\BoolSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\FaceSketchModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\IBoolSketchModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\IFaceSketchModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\ITextSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\TextSketchModel.cs" />
     <Compile Include="RankingModels\Temporal\IBiTemporalRankingModule.cs" />
     <Compile Include="RankingModels\Temporal\IBiTemporalRankingService.cs" />
     <Compile Include="RankingModels\Temporal\Similarity\IBiTemporalSimilarityModel.cs" />

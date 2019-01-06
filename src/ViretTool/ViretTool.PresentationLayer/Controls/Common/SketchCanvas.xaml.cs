@@ -193,7 +193,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void DrawGrid()
         {
-            double WX = 20, WY = 15;
+            double WX = 26, WY = 15;
             double wx = sketchCanvas.Width / WX, wy = sketchCanvas.Height / WY;
 
             for (int i = 0; i <= WX; i++)
@@ -404,7 +404,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             private readonly double _scalingConstant = Math.Sqrt(2);
 
-            public ImagePoint(Point point, Image image, Canvas canvas) : base(point, Colors.Black, canvas)
+            public ImagePoint(Point point, Image image, Canvas canvas) : base(point, Colors.SlateGray, canvas)
             {
                 Image = new Image
                         {

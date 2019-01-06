@@ -49,6 +49,11 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
             return DataConversionUtilities.TranslateToFloatArray(ReadByteBlob(blobId));
         }
 
+        public bool[] ReadBoolBlob(int blobId)
+        {
+            return DataConversionUtilities.TranslateToBoolArray(ReadByteBlob(blobId));
+        }
+
         private void SeekIfNeccessary(long position)
         {
             if (position != BaseBinaryReader.BaseStream.Position)

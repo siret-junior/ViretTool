@@ -99,8 +99,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 
             KeywordModel.ComputeRanking(query.KeywordQuery, InputRanking, KeywordOutputRanking);
             ColorSketchModel.ComputeRanking(query.ColorSketchQuery, InputRanking, ColorSketchOutputRanking);
-            //FaceSketchModel.ComputeRanking(query.FaceSketchQuery, InputRanking, FaceSketchOutputRanking);
-            //TextSketchModel.ComputeRanking(query.TextSketchQuery, InputRanking, TextSketchOutputRanking);
+            FaceSketchModel.ComputeRanking(query.FaceSketchQuery, InputRanking, FaceSketchOutputRanking);
+            TextSketchModel.ComputeRanking(query.TextSketchQuery, InputRanking, TextSketchOutputRanking);
             SemanticExampleModel.ComputeRanking(query.SemanticExampleQuery, InputRanking, SemanticExampleOutputRanking);
         }
 

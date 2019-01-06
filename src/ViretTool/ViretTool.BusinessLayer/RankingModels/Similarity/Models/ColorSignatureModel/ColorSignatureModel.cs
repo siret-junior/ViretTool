@@ -28,20 +28,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         private Dictionary<Ellipse, float[]> _partialRankingCache = new Dictionary<Ellipse, float[]>();
 
 
-        public ColorSignatureModel(/*IRankFusion rankFusion, */IDescriptorProvider<byte[]> colorSignatures)
+        public ColorSignatureModel(IDescriptorProvider<byte[]> colorSignatures)
         {
             //RankFusion = rankFusion;
             _colorSignatures = colorSignatures.Descriptors;
         }
 
-
-        public void Clear()
-        {
-            // TODO: make it work with new query model
-            _partialRankingCache.Clear();
-        }
-
-
+        
         public void ComputeRanking(ColorSketchQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
             InputRanking = inputRanking;
@@ -94,13 +87,12 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                     OutputRanking.Ranks[itemId] = float.MinValue;
                     return;
                 }
-
+                
                 float centroidSum = 0;
                 for (int iCentroid = 0; iCentroid < distances.Length; iCentroid++)
                 {
                     centroidSum += distances[iCentroid][itemId];
                 }
-
                 OutputRanking.Ranks[itemId] = centroidSum;
             });
 

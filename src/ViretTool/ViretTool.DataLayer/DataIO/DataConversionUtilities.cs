@@ -32,7 +32,21 @@ namespace ViretTool.DataLayer.DataIO
         public static byte[] TranslateToByteArray(float[] floatArray)
         {
             byte[] bytes = new byte[floatArray.Length * sizeof(float)];
-            Buffer.BlockCopy(floatArray, 0, bytes, 0, bytes.Length);
+            Buffer.BlockCopy(floatArray, 0, bytes, 0, floatArray.Length);
+            return bytes;
+        }
+
+        public static bool[] TranslateToBoolArray(byte[] byteBuffer)
+        {
+            bool[] bools = new bool[byteBuffer.Length / sizeof(bool)];
+            Buffer.BlockCopy(byteBuffer, 0, bools, 0, byteBuffer.Length);
+            return bools;
+        }
+
+        public static byte[] TranslateToByteArray(bool[] boolArray)
+        {
+            byte[] bytes = new byte[boolArray.Length * sizeof(bool)];
+            Buffer.BlockCopy(boolArray, 0, bytes, 0, boolArray.Length);
             return bytes;
         }
     }

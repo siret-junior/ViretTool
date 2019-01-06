@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.Descriptors;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
-    public class TextSketchModel : BoolSketchModel
+    public class TextSketchModel : BoolSketchModel, ITextSketchModel
     {
-        public TextSketchModel(/*IRankFusion rankFusion, */bool[][] boolSignatures) 
-            : base(/*rankFusion, */boolSignatures)
-        {
-        }
-
-
-        public TextSketchModel()
-            : base(/*null, */null)
+        public TextSketchModel(ITextSignatureDescriptorProvider textSignatureDescriptorProvider)
+            : base(textSignatureDescriptorProvider)
         {
         }
     }

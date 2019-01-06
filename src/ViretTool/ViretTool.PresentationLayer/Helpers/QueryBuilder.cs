@@ -35,7 +35,9 @@ namespace ViretTool.PresentationLayer.Helpers
                     new ColorSketchQuery(
                         query1.CanvasWidth,
                         query1.CanvasHeight,
-                        query1.SketchQueryResult?.SketchColorPoints?.Select(
+                        query1.SketchQueryResult?.SketchColorPoints?
+                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Color)
+                            .Select(
                                 point => new Ellipse(
                                     point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                     point.Position.X,
@@ -51,7 +53,9 @@ namespace ViretTool.PresentationLayer.Helpers
                     new ColorSketchQuery(
                         query2.CanvasWidth,
                         query2.CanvasHeight,
-                        query2.SketchQueryResult?.SketchColorPoints?.Select(
+                        query2.SketchQueryResult?.SketchColorPoints?
+                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Color)
+                            .Select(
                                 point => new Ellipse(
                                     point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                     point.Position.X,
@@ -71,7 +75,9 @@ namespace ViretTool.PresentationLayer.Helpers
                     new ColorSketchQuery(
                         query1.CanvasWidth,
                         query1.CanvasHeight,
-                        query1.SketchQueryResult?.SketchColorPoints?.Select(
+                        query1.SketchQueryResult?.SketchColorPoints?
+                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Face)
+                            .Select(
                                 point => new Ellipse(
                                     point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                     point.Position.X,
@@ -87,7 +93,9 @@ namespace ViretTool.PresentationLayer.Helpers
                     new ColorSketchQuery(
                         query2.CanvasWidth,
                         query2.CanvasHeight,
-                        query2.SketchQueryResult?.SketchColorPoints?.Select(
+                        query2.SketchQueryResult?.SketchColorPoints?
+                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Face)
+                            .Select(
                                 point => new Ellipse(
                                     point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                     point.Position.X,
@@ -107,7 +115,9 @@ namespace ViretTool.PresentationLayer.Helpers
                     new ColorSketchQuery(
                         query1.CanvasWidth,
                         query1.CanvasHeight,
-                        query1.SketchQueryResult?.SketchColorPoints?.Select(
+                        query1.SketchQueryResult?.SketchColorPoints?
+                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Text)
+                            .Select(
                                 point => new Ellipse(
                                     point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                     point.Position.X,
@@ -123,7 +133,9 @@ namespace ViretTool.PresentationLayer.Helpers
                     new ColorSketchQuery(
                         query2.CanvasWidth,
                         query2.CanvasHeight,
-                        query2.SketchQueryResult?.SketchColorPoints?.Select(
+                        query2.SketchQueryResult?.SketchColorPoints?
+                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Text)
+                            .Select(
                                 point => new Ellipse(
                                     point.Area ? Ellipse.State.All : Ellipse.State.Any,
                                     point.Position.X,
@@ -182,20 +194,18 @@ namespace ViretTool.PresentationLayer.Helpers
                         query1.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //(biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        //|| biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
-                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
-                        //    :  ThresholdFilteringQuery.State.Off,
-                        ThresholdFilteringQuery.State.Off,
-                        0), //Query1.FaceValue * 0.01),
+                        (biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        || biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        query1.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //(biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        //||biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any())
-                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
-                        //    :  ThresholdFilteringQuery.State.Off,
-                        ThresholdFilteringQuery.State.Off,
-                        0), //Query1.TextValue * 0.01),
+                        (biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        || biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any())
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        query1.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
                         biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any() ||
@@ -234,20 +244,18 @@ namespace ViretTool.PresentationLayer.Helpers
                         query2.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //(biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        //|| biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
-                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
-                        //    : ThresholdFilteringQuery.State.Off,
-                        ThresholdFilteringQuery.State.Off,
-                        0), //Query2.FaceValue * 0.01),
+                        (biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        || biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        query2.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        //(biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        //|| biTemporalTextSketchQuery.LatterQuery.ColorSketchEllipses.Any())
-                        //    ? ThresholdFilteringQuery.State.IncludeAboveThreshold
-                        //    : ThresholdFilteringQuery.State.Off,
-                        ThresholdFilteringQuery.State.Off,
-                        0), //Query2.TextValue * 0.01),
+                        (biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                        || biTemporalTextSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                            ? ThresholdFilteringQuery.State.IncludeAboveThreshold
+                            : ThresholdFilteringQuery.State.Off,
+                        query2.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
                         biTemporalSemanticExampleQuery.FormerQuery.PositiveExampleIds.Any() ||

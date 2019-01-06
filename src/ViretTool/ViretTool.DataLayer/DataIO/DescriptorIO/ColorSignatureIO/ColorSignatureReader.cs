@@ -33,22 +33,6 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
 
                 SignatureWidth = reader.ReadInt32();
                 SignatureHeight = reader.ReadInt32();
-
-                //int descriptorCount = reader.ReadInt32();
-                //if (descriptorCount != DescriptorCount)
-                //{
-                //    throw new IOException(
-                //        $"Descriptor count mismatch between ColorSignatureReader ({descriptorCount})" +
-                //        $" and underlying BlobReader ({DescriptorCount})");
-                //}
-
-                //int descriptorLength = reader.ReadInt32();
-                //if (descriptorLength != DescriptorLength)
-                //{
-                //    throw new IOException(
-                //        $"Descriptor length mismatch between ColorSignatureReader ({descriptorLength})" +
-                //        $" and underlying BlobReader ({DescriptorLength})");
-                //}
             }
         }
 
