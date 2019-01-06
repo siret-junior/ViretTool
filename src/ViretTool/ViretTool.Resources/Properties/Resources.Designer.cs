@@ -88,6 +88,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear all.
+        /// </summary>
+        public static string ClearAllText {
+            get {
+                return ResourceManager.GetString("ClearAllText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string ClearButtonText {

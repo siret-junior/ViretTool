@@ -233,6 +233,17 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _windowManager.ShowWindow(_testControlViewModel);
         }
 
+        public void ClearAll()
+        {
+            foreach (QueryViewModel queryViewModel in new[] { Query1, Query2 })
+            {
+                queryViewModel.OnKeywordsCleared();
+                queryViewModel.OnQueryObjectsCleared();
+                queryViewModel.OnSketchesCleared();
+                queryViewModel.QueryObjects.Clear();
+            }
+        }
+
         public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)

@@ -240,4 +240,7 @@
   <data name="MapNotAvailableText" xml:space="preserve">
     <value>Map is not available - to few frames were returned.</value>
   </data>
+  <data name="ClearAllText" xml:space="preserve">
+    <value>Clear all</value>
+  </data>
 </root>
