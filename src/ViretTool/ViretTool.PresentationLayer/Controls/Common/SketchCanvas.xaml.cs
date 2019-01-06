@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 using ViretTool.PresentationLayer.Controls.Common.Sketches;
 
@@ -259,10 +260,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 Position = point;
                 FillColor = color;
 
-                SearchRadiusEllipse = new Ellipse();
-                SearchRadiusEllipse.Width = 2 * mSearchRadiusX;
-                SearchRadiusEllipse.Height = 2 * mSearchRadiusY;
-                SearchRadiusEllipse.Stroke = Brushes.LightGray;
+                SearchRadiusEllipse = new Ellipse
+                                      {
+                                          Width = 2 * mSearchRadiusX,
+                                          Height = 2 * mSearchRadiusY,
+                                          Stroke = Brushes.LightGray,
+                                          Effect = new DropShadowEffect() { ShadowDepth = 0.5 }
+                                      };
                 canvas.Children.Add(SearchRadiusEllipse);
 
                 Area = true;
@@ -377,7 +381,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                               {
                                   Width = 2 * Radius,
                                   Height = 2 * Radius,
-                                  Fill = new SolidColorBrush(color)
+                                  Fill = new SolidColorBrush(color),
+                                  Effect = new DropShadowEffect { ShadowDepth = 0.5 }
                               };
                 canvas.Children.Add(FillEllipse);
 
