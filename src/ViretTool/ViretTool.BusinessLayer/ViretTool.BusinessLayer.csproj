@@ -60,8 +60,10 @@
     <Compile Include="RankingModels\Similarity\Models\FaceSketchModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\TextSketchModel.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionProduct.cs" />
+    <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionFilters.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
+    <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionFilters.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />

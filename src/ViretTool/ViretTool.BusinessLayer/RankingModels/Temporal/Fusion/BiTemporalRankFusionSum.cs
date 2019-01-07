@@ -51,6 +51,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 
             Parallel.For(0, primaryInputRanking.Ranks.Length, frameId =>
             {
+                // skip already filtered frames
+                if (primaryInputRanking.Ranks[frameId] == float.MinValue)
+                {
+                    singleOutputRanking.Ranks[frameId] = float.MinValue;
+                    singleOutputPairs[frameId] = -1;
+                    return;
+                }
+
                 // find the highest secondary rank in the temporal context
                 float maxPairRank = float.MinValue;
                 int maxPairRankId = -1;
@@ -60,7 +68,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                     if (iPairFrame > lastFrameIdsInVideoForFrameId[frameId]) break;
 
                     float pairRank = secondaryInputRanking.Ranks[iPairFrame];
-                    if (pairRank > maxPairRank)
+                    if (pairRank != float.MinValue && pairRank > maxPairRank)
                     {
                         maxPairRank = pairRank;
                         maxPairRankId = iPairFrame;
@@ -88,6 +96,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
 
             Parallel.For(0, primaryInputRanking.Ranks.Length, frameId =>
             {
+                // skip already filtered frames
+                if (primaryInputRanking.Ranks[frameId] == float.MinValue)
+                {
+                    singleOutputRanking.Ranks[frameId] = float.MinValue;
+                    singleOutputPairs[frameId] = -1;
+                    return;
+                }
+
                 // find the highest secondary rank in the temporal context
                 float maxPairRank = float.MinValue;
                 int maxPairRankId = -1;
@@ -97,7 +113,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                     if (iPairFrame < firstFrameIdsInVideoForFrameId[frameId]) break;
 
                     float pairRank = secondaryInputRanking.Ranks[iPairFrame];
-                    if (pairRank > maxPairRank)
+                    if (pairRank != float.MinValue && pairRank > maxPairRank)
                     {
                         maxPairRank = pairRank;
                         maxPairRankId = iPairFrame;

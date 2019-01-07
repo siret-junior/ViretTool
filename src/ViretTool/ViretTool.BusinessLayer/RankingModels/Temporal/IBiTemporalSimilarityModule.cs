@@ -15,10 +15,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
             <ColorSketchQuery, IColorSketchModel, IBiTemporalRankFusionSum> 
             ColorSketchModel { get; }
         IBiTemporalSimilarityModel
-            <ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionSum> 
+            <ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionFilters> 
             FaceSketchModel { get; }
         IBiTemporalSimilarityModel
-            <ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionSum> 
+            <ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionFilters> 
             TextSketchModel { get; }
         IBiTemporalSimilarityModel
             <SemanticExampleQuery, ISemanticExampleModel, IBiTemporalRankFusionSum> 

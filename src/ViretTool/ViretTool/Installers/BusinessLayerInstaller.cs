@@ -94,6 +94,8 @@ namespace ViretTool.Installers
                     .ImplementedBy<BiTemporalRankFusionSum>().LifestyleTransient(),
                 Component.For<IBiTemporalRankFusionProduct>()
                     .ImplementedBy<BiTemporalRankFusionProduct>().LifestyleTransient(),
+                Component.For<IBiTemporalRankFusionFilters>()
+                    .ImplementedBy<BiTemporalRankFusionFilters>().LifestyleTransient(),
 
                 // used by IBiTemporalSimilarityModule
                 Component.For<IBiTemporalSimilarityModel<
@@ -105,12 +107,12 @@ namespace ViretTool.Installers
                     .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, IColorSketchModel, IBiTemporalRankFusionSum>>()
                     .LifestyleTransient(),
                 Component.For<IBiTemporalSimilarityModel<
-                    ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionSum>>()
-                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionSum>>()
+                    ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionFilters>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, IFaceSketchModel, IBiTemporalRankFusionFilters>>()
                     .LifestyleTransient(),
                 Component.For<IBiTemporalSimilarityModel<
-                    ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionSum>>()
-                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionSum>>()
+                    ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionFilters>>()
+                    .ImplementedBy<BiTemporalSimilarityModel<ColorSketchQuery, ITextSketchModel, IBiTemporalRankFusionFilters>>()
                     .LifestyleTransient(),
                 Component.For<IBiTemporalSimilarityModel<
                     SemanticExampleQuery, ISemanticExampleModel, IBiTemporalRankFusionSum>>()
