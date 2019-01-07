@@ -91,7 +91,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
                 {
                     centroidSum += distances[iCentroid][itemId];
                 }
-                OutputRanking.Ranks[itemId] = centroidSum;
+
+
+                if (centroidSum != 0)
+                {
+                    OutputRanking.Ranks[itemId] = float.MinValue;
+                }
+                else
+                {
+                    OutputRanking.Ranks[itemId] = 0;
+                }
             });
 
         }
@@ -131,23 +140,32 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
                 switch (ellipse.EllipseState)
                 {
                     case Ellipse.State.All:
-                        double avgRank = 0;
+                        // are all matching?
+                        distances[i] = 0;
                         foreach (int offset in offsets)
                         {
-                            double colorDistance = color ^ signature[offset] ? 1 : 0;
-                            avgRank += colorDistance;
+                            if (color != signature[offset])
+                            {
+                                // not all are matching
+                                distances[i] = float.MinValue;
+                                break;
+                            }
                         }
-                        distances[i] -= Convert.ToSingle(avgRank / offsets.Length);
+                        // all are matching
+                        
                         break;
 
                     case Ellipse.State.Any:
-                        double minRank = int.MaxValue;
+                        distances[i] = float.MinValue;
                         foreach (int offset in offsets)
                         {
-                            double colorDistance = color ^ signature[offset] ? 1 : 0;
-                            minRank = Math.Min(minRank, colorDistance);
+                            if (color == signature[offset])
+                            {
+                                // not all are matching
+                                distances[i] = 0;
+                                break;
+                            }
                         }
-                        distances[i] -= Convert.ToSingle(Math.Sqrt(minRank));
                         break;
 
                     default:
