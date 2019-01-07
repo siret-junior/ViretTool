@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
@@ -32,6 +33,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly IGridSorter _gridSorter;
         private readonly ISubmissionService _submissionService;
         private readonly IInteractionLogger _interactionLogger;
+        private readonly IQueryPersistingService _queryPersistingService;
         private readonly QueryBuilder _queryBuilder;
         private readonly ExternalImageProvider _externalImageProvider;
         private readonly ILogger _logger;
@@ -59,6 +61,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IGridSorter gridSorter,
             ISubmissionService submissionService,
             IInteractionLogger interactionLogger,
+            IQueryPersistingService queryPersistingService,
             QueryBuilder queryBuilder,
             ExternalImageProvider externalImageProvider)
         {
@@ -70,6 +73,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _gridSorter = gridSorter;
             _submissionService = submissionService;
             _interactionLogger = interactionLogger;
+            _queryPersistingService = queryPersistingService;
             _queryBuilder = queryBuilder;
             _externalImageProvider = externalImageProvider;
 
@@ -82,9 +86,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
-            queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await detailView.LoadVideoForFrame(selectedFrame);
+            queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             queryResults.MaxFramesChanged += async (sender, args) => await OnQuerySettingsChanged();
-
+            
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (var display in displays)
             {
@@ -244,6 +248,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 queryViewModel.OnSketchesCleared();
                 queryViewModel.QueryObjects.Clear();
             }
+
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ResetAll);
         }
 
         public void ShowHideBwFilters()
@@ -382,6 +388,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                                     IsFirstQueryPrimary,
                                                                     QueryResults.MaxFramesFromVideo,
                                                                     QueryResults.MaxFramesFromShot);
+                                                                Task.Run(() => _queryPersistingService.SaveQuery(biTemporalQuery));
                                                                 return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
                                                             });
 
@@ -497,6 +504,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             IsBusy = true;
             IsDetailVisible = true;
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
 
             await DetailViewModel.LoadVideoForFrame(selectedFrame);
         }
@@ -512,8 +520,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 return;
             }
 
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
             IsDetailVisible = true;
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
+        }
+
+        private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)
+        {
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.TemporalContext, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            await DetailView.LoadVideoForFrame(selectedFrame);
         }
 
         private void CloseDetailViewModel()

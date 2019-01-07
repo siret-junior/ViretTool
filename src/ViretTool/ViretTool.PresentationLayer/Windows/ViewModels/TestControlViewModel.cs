@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Datasets;
@@ -12,8 +11,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
     {
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly Random _random = new Random();
-        private FrameViewModel _firstFrame;
-        private FrameViewModel _secondFrame;
 
         public TestControlViewModel(IDatasetServicesManager datasetServicesManager)
         {

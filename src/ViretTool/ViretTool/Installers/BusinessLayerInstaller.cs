@@ -74,7 +74,8 @@ namespace ViretTool.Installers
                                  "Data\\NasNetMobile-retrained.pb",
                                  "Data\\VBS2019_NasNetMobile-128PCA.pca_components",
                                  "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")),
-                Component.For<ExternalImageProvider>());
+                Component.For<ExternalImageProvider>(),
+                Component.For<IQueryPersistingService>().ImplementedBy<QueryPersistingService>());
 
             //transient services
             container.Register(

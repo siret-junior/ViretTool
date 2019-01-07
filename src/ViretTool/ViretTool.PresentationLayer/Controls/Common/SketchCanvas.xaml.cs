@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -87,10 +88,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 CP.RemoveFromCanvas(sketchCanvas);
             }
 
+            SketchType[] types = mColorPoints.Select(p => p.SketchType).Distinct().ToArray();
             mColorPoints.Clear();
             mSelectedColorPoint = null;
 
-            OnSketchChanged();
+            OnSketchChanged(types);
         }
 
         public void DeletePoints()
@@ -116,7 +118,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 mSelectedColorPointEllipse.Area = !mSelectedColorPointEllipse.Area;
 
-                OnSketchChanged();
+                OnSketchChanged(new[] { mSelectedColorPointEllipse.SketchType });
 
                 mSelectedColorPointEllipse = null;
                 return;
@@ -128,7 +130,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 mColorPoints.Remove(mSelectedColorPoint);
                 mSelectedColorPoint.RemoveFromCanvas(sketchCanvas);
 
-                OnSketchChanged();
+                OnSketchChanged(new[] { mSelectedColorPointEllipse.SketchType });
 
                 mSelectedColorPoint = null;
                 return;
@@ -147,7 +149,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                                               : new ImagePoint(p, colorPicker.SelectedImage, sketchCanvas);
                     mColorPoints.Add(mSelectedColorPoint);
                     mSelectedColorPoint = null;
-                    OnSketchChanged();
+                    OnSketchChanged(new[] { mColorPoints.Last().SketchType });
                 }
             }
         }
@@ -180,12 +182,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             if (mSelectedColorPoint != null)
             {
-                OnSketchChanged();
+                OnSketchChanged(new[] { mSelectedColorPoint.SketchType });
             }
 
             if (mSelectedColorPointEllipse != null)
             {
-                OnSketchChanged();
+                OnSketchChanged(new SketchType[0]);
             }
 
             mSelectedColorPoint = null;
@@ -230,7 +232,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-        private void OnSketchChanged()
+        private void OnSketchChanged(SketchType[] changedSketchTypes)
         {
             List<SketchColorPoint> colorSketches = new List<SketchColorPoint>();
 
@@ -242,7 +244,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 colorSketches.Add(new SketchColorPoint(position, sketchPoint.FillColor, ellipseAxis, sketchPoint.SketchType, sketchPoint.Area));
             }
 
-            QueryResult = new SketchQueryResult(colorSketches);
+            QueryResult = new SketchQueryResult(colorSketches, changedSketchTypes);
 
         }
 

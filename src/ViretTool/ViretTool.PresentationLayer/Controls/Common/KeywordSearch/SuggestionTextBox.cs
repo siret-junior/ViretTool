@@ -304,7 +304,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         }
 
         #endregion
-        
+
         public void ClearQuery() {
             RasultStack_.Children.Clear();
             Query_.Clear();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 
@@ -10,14 +11,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class PageDisplayControlViewModel : DisplayControlViewModelBase
     {
+        private readonly IInteractionLogger _iterationLogger;
         private int _currentPageNumber;
 
         private int _maxFramesFromShot = 1;
         private int _maxFramesFromVideo = 3;
 
-        public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
+        public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger iterationLogger)
             : base(logger, datasetServicesManager)
         {
+            _iterationLogger = iterationLogger;
         }
 
         public int MaxFramesFromShot
@@ -31,6 +34,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _maxFramesFromShot = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
                 MaxFramesChanged?.Invoke(this, EventArgs.Empty);
                 NotifyOfPropertyChange();
             }
@@ -47,6 +51,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _maxFramesFromVideo = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
                 MaxFramesChanged?.Invoke(this, EventArgs.Empty);
                 NotifyOfPropertyChange();
             }
@@ -63,6 +68,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _currentPageNumber = value;
+                _iterationLogger.LogInteraction(LogCategory.Browsing, LogType.RankedList, $"CurrentPage:{value}");
                 NotifyOfPropertyChange();
             }
         }

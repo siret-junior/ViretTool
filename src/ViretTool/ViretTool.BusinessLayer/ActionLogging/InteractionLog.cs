@@ -6,10 +6,10 @@ namespace ViretTool.BusinessLayer.ActionLogging
     {
         public InteractionLog()
         {
-            Events = new List<Event>();
+            Events = new List<Action>();
         }
 
-        public List<Event> Events { get; }
+        public List<Action> Events { get; }
         public int MemberId { get; set; } = 1;
         public int TeamId { get; set; } = 4;
 

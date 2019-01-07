@@ -16,6 +16,11 @@ namespace ViretTool.BusinessLayer.Submission
             return JsonConvert.SerializeObject(obj, Formatting.Indented, Settings);
         }
 
+        public static T DeserializeObject<T>(string objectData)
+        {
+            return JsonConvert.DeserializeObject<T>(objectData, Settings);
+        }
+
         private class LowercaseContractResolver : DefaultContractResolver
         {
             protected override string ResolvePropertyName(string propertyName)

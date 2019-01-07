@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Runtime.Api;
 using Microsoft.ML.Runtime.Data;
@@ -42,12 +43,25 @@ namespace ViretTool.BusinessLayer.ExternalDescriptors
                 r[i] = sum;
             }
 
+            r = NormalizeVector(r);
             return r;
         }
 
         private float[] GetFullFeatures(string inputFileLocation)
         {
             return Model.Predict(new NasNetInputData() { ImagePath = inputFileLocation }).Features;
+        }
+
+        private static float[] NormalizeVector(float[] originalVector)
+        {
+            float sum = (float)Math.Sqrt(originalVector.Sum(v => v * v));
+
+            for (int i = 0; i < 128; i++)
+            {
+                originalVector[i] /= sum;
+            }
+
+            return originalVector;
         }
 
         private PredictionFunction<NasNetInputData, NasNetPrediction> LoadModel(string modelLocation)

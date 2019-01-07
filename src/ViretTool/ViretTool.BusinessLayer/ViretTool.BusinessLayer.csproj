@@ -176,6 +176,7 @@
     <Compile Include="Services\IDatasetServicesManager.cs" />
     <Compile Include="Submission\FrameToSubmit.cs" />
     <Compile Include="Submission\ISubmissionService.cs" />
+    <Compile Include="Submission\QueryPersistingService.cs" />
     <Compile Include="Submission\SubmissionService.cs" />
     <Compile Include="Thumbnails\CachedThumbnailService.cs" />
     <Compile Include="Thumbnails\IThumbnailService.cs" />
