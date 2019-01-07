@@ -231,4 +231,10 @@
   <data name="HideBwFilterText" xml:space="preserve">
     <value>Zobrazit/schovat ČB filtry</value>
   </data>
+  <data name="SendLogsText" xml:space="preserve">
+    <value>Poslat logy</value>
+  </data>
+  <data name="LogsWereSentText" xml:space="preserve">
+    <value>Logy byly poslány.</value>
+  </data>
 </root>

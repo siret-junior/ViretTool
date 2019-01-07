@@ -254,6 +254,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        public async void SendLogs()
+        {
+            string response = await _submissionService.SubmitLog();
+            _logger.Info($"Sending logs: {response}");
+            MessageBox.Show(Resources.Properties.Resources.LogsWereSentText);
+        }
+
         public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)

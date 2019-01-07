@@ -77,24 +77,28 @@
                             <Menu Grid.Row="0" Width="Auto" Background="White">
                                 <MenuItem Header="{x:Static properties:Resources.FileHeader}">
                                     <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
-                                    <MenuItem Header="{x:Static properties:Resources.ClearAllText}" cal:Message.Attach="[Event Click] = [Action ClearAll]"/>
+                                    <Separator />
                                     <MenuItem Header="{x:Static properties:Resources.HideBwFilterText}" cal:Message.Attach="[Event Click] = [Action ShowHideBwFilters]"/>
+                                    <Separator />
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static properties:Resources.TeamNameText}" />
+                                        <TextBox x:Name="TeamName" Margin="4,0,0,0" Width="50"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static properties:Resources.TeamIdText}" />
+                                        <TextBox x:Name="TeamId" Margin="4,0,0,0" Width="20"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Static properties:Resources.MemberIdText}" />
+                                        <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="20"/>
+                                    </StackPanel>
                                 </MenuItem>
                                 <MenuItem Header="{x:Static properties:Resources.TestButtonText}" cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"></MenuItem>
                             </Menu>
 
-                            <!--<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="4,4,4,0">
-                                <TextBlock Text="{x:Static properties:Resources.TeamNameText}" />
-                                <TextBox x:Name="TeamName" Margin="4,0,0,0" Width="50"/>
-                            </StackPanel>-->
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="4,4,4,0">
-                                <TextBlock Text="{x:Static properties:Resources.TeamIdText}" />
-                                <TextBox x:Name="TeamId" Margin="4,0,0,0" Width="20"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="4,4,4,0">
-                                <TextBlock Text="{x:Static properties:Resources.MemberIdText}" />
-                                <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="20"/>
-                            </StackPanel>
+                            <Button x:Name="ClearAll" Grid.Column="1" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
+                            <Button x:Name="SendLogs" Grid.Column="2" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" />
+
                         </Grid>
 
                         <GroupBox Grid.Row="1" Margin="6">

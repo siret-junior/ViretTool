@@ -246,4 +246,10 @@
   <data name="HideBwFilterText" xml:space="preserve">
     <value>Show/hide BW filters</value>
   </data>
+  <data name="SendLogsText" xml:space="preserve">
+    <value>Send logs</value>
+  </data>
+  <data name="LogsWereSentText" xml:space="preserve">
+    <value>Logs were sent.</value>
+  </data>
 </root>

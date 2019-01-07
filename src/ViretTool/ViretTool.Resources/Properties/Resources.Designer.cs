@@ -196,6 +196,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logs were sent..
+        /// </summary>
+        public static string LogsWereSentText {
+            get {
+                return ResourceManager.GetString("LogsWereSentText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to M.
         /// </summary>
         public static string MapButtonText {
@@ -318,6 +327,15 @@ namespace ViretTool.Resources.Properties {
         public static string SemanticModelName {
             get {
                 return ResourceManager.GetString("SemanticModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send logs.
+        /// </summary>
+        public static string SendLogsText {
+            get {
+                return ResourceManager.GetString("SendLogsText", resourceCulture);
             }
         }
         
