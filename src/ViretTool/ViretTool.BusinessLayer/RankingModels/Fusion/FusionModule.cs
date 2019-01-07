@@ -84,10 +84,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                 query.KeywordFilteringQuery, KeywordRanking, KeywordIntermediateRanking);
             ColorSketchRankFilteringModule.ComputeFiltering(
                query.ColorSketchFilteringQuery, ColorSketchRanking, ColorSketchIntermediateRanking);
-            FaceSketchRankFilteringModule.ComputeFiltering(
-               query.FaceSketchFilteringQuery, FaceSketchRanking, FaceSketchIntermediateRanking);
-            TextSketchRankFilteringModule.ComputeFiltering(
-               query.TextSketchFilteringQuery, TextSketchRanking, TextSketchIntermediateRanking);
+            //FaceSketchRankFilteringModule.ComputeFiltering(
+            //   query.FaceSketchFilteringQuery, FaceSketchRanking, FaceSketchIntermediateRanking);
+            //TextSketchRankFilteringModule.ComputeFiltering(
+            //   query.TextSketchFilteringQuery, TextSketchRanking, TextSketchIntermediateRanking);
             SemanticExampleRankFilteringModule.ComputeFiltering(
                query.SemanticExampleFilteringQuery, SemanticExampleRanking, SemanticExampleIntermediateRanking);
 
@@ -96,8 +96,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
             {
                 KeywordIntermediateRanking.Ranks,
                 ColorSketchIntermediateRanking.Ranks,
-                FaceSketchIntermediateRanking.Ranks,
-                TextSketchIntermediateRanking.Ranks,
+                //FaceSketchIntermediateRanking.Ranks,
+                //TextSketchIntermediateRanking.Ranks,
+                FaceSketchRanking.Ranks,
+                TextSketchRanking.Ranks,
                 SemanticExampleIntermediateRanking.Ranks
             };
 
@@ -111,24 +113,34 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                 case FusionQuery.SimilarityModels.ColorSketch:
                     sortingRanks = ColorSketchIntermediateRanking.Ranks;
                     break;
-                case FusionQuery.SimilarityModels.FaceSketch:
-                    sortingRanks = FaceSketchIntermediateRanking.Ranks;
-                    break;
-                case FusionQuery.SimilarityModels.TextSketch:
-                    sortingRanks = TextSketchIntermediateRanking.Ranks;
-                    break;
+                //case FusionQuery.SimilarityModels.FaceSketch:
+                //    sortingRanks = FaceSketchIntermediateRanking.Ranks;
+                //    break;
+                //case FusionQuery.SimilarityModels.TextSketch:
+                //    sortingRanks = TextSketchIntermediateRanking.Ranks;
+                //    break;
                 case FusionQuery.SimilarityModels.SemanticExample:
                     sortingRanks = SemanticExampleIntermediateRanking.Ranks;
                     break;
                 default:
-                    throw new NotImplementedException(
-                        "Model for rank sorting " +
-                        Enum.GetName(typeof(FilterState), query.SortingSimilarityModel) +
-                        " not expected.");
+                    // no model for sorting is selected, just filter results
+                    sortingRanks = null;
+                    break;
+                    //throw new NotImplementedException(
+                    //    "Model for rank sorting " +
+                    //    Enum.GetName(typeof(FilterState), query.SortingSimilarityModel) +
+                    //    " not expected.");
             }
 
             // filter/rank aggregation (float.MinValue means that the rank it is filtered)
-            ComputeFusion(filteringRanks, sortingRanks, OutputRanking);
+            if (sortingRanks != null)
+            {
+                ComputeFusion(filteringRanks, sortingRanks, OutputRanking);
+            }
+            else
+            {
+                ComputeFilteringOnly(filteringRanks, OutputRanking);
+            }
         }
 
         private void InitializeIntermediateBuffers()
@@ -176,6 +188,23 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                     }
                 }
                 outputRanking.Ranks[itemId] = sortingRanks[itemId];
+            });
+        }
+
+        private void ComputeFilteringOnly(float[][] filteringRanks, RankingBuffer outputRanking)
+        {
+            Parallel.For(0, outputRanking.Ranks.Length, itemId =>
+            {
+                // return sorting ranks, but only if they are not filtered
+                for (int iRanking = 0; iRanking < filteringRanks.Length; iRanking++)
+                {
+                    if (filteringRanks[iRanking][itemId] == float.MinValue)
+                    {
+                        outputRanking.Ranks[itemId] = float.MinValue;
+                        return;
+                    }
+                }
+                outputRanking.Ranks[itemId] = 0;
             });
         }
     }

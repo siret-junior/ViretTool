@@ -178,7 +178,7 @@ namespace ViretTool.PresentationLayer.Helpers
                             //    ? FusionQuery.SimilarityModels.TextSketch
                             : query1.SemanticUseForSorting
                                 ? FusionQuery.SimilarityModels.SemanticExample
-                                : FusionQuery.SimilarityModels.FaceSketch // throw new ArgumentException("No model is selected for sorting.")
+                                : FusionQuery.SimilarityModels.None
                     ,
 
                     new ThresholdFilteringQuery(
@@ -229,7 +229,7 @@ namespace ViretTool.PresentationLayer.Helpers
                             //    ? FusionQuery.SimilarityModels.TextSketch
                             : query2.SemanticUseForSorting
                                 ? FusionQuery.SimilarityModels.SemanticExample
-                                : FusionQuery.SimilarityModels.FaceSketch //throw new ArgumentException("No model is selected for sorting.")
+                                : FusionQuery.SimilarityModels.None
                     ,
                     new ThresholdFilteringQuery(
                         (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())

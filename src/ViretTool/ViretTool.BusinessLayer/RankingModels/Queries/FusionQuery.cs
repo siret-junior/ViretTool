@@ -4,7 +4,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
     public class FusionQuery : IFusionQuery, IEquatable<FusionQuery>
     {
-        public enum SimilarityModels { Keyword, ColorSketch, FaceSketch, TextSketch, SemanticExample }
+        public enum SimilarityModels { Keyword, ColorSketch, FaceSketch, TextSketch, SemanticExample, None }
 
         public SimilarityModels SortingSimilarityModel { get; }
 
