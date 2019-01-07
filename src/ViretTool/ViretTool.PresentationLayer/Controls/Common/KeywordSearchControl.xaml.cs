@@ -120,35 +120,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return;
             }
 
-            var sb = new StringBuilder();
-            sb.Append("QueryChangedEvent {source:");
-            sb.Append(annotationSource);
-            sb.Append(",wordnet_query:");
-            foreach (IQueryPart q in query)
-            {
-                switch (q.Type)
-                {
-                    case TextBlockType.Class:
-                        sb.Append(q.Id);
-                        sb.Append(q.UseChildren ? ",1" : ",0");
-                        break;
-                    case TextBlockType.OR:
-                        sb.Append("or");
-                        break;
-                    case TextBlockType.AND:
-                        sb.Append("and");
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            sb.Append("}");
-
-            //TODO log somewhere
-
             List<List<int>> expanded = ExpandQuery(query, mLabelProviders[annotationSource]);
-            QueryResult = new KeywordQueryResult(expanded, suggestionTextBox.GetFullText(), annotationSource);
+            QueryResult = new KeywordQueryResult(expanded, string.Join(" ", query.Cast<TextBlock>().Select(t => t.Text)), annotationSource);
         }
 
         private void SuggestionTextBox_SuggestionFilterChangedEvent(string filter, string annotationSource)

@@ -66,7 +66,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                        eventHandler => QueryObjects.CollectionChanged += eventHandler,
                                                        eventHandler => QueryObjects.CollectionChanged -= eventHandler)
                                                    .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
-            onQueriesChanged.Throttle(TimeSpan.FromMilliseconds(50))
+            onQueriesChanged.Throttle(TimeSpan.FromMilliseconds(20))
                             .ObserveOn(SynchronizationContext.Current)
                             .Subscribe(
                                 _ =>
@@ -294,12 +294,12 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _sketchQueryResult = value;
-                bool colorPoints = value.ChangedSketchTypes.Any(type => type == SketchType.Color);
+                bool colorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
                 if (colorPoints)
                 {
                     _iterationLogger.LogInteraction(LogCategory.Sketch, LogType.Color, /*TODO*/"", $"{ColorValue}|{ColorUseForSorting}");
                 }
-                bool otherPoints = value.ChangedSketchTypes.Any(type => type != SketchType.Color);
+                bool otherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
                 if (otherPoints)
                 {
                     _iterationLogger.LogInteraction(LogCategory.Text, LogType.LocalizedObject, /*TODO*/"", $"{ColorValue}|{ColorUseForSorting}");

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
@@ -32,6 +33,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly IGridSorter _gridSorter;
         private readonly ISubmissionService _submissionService;
         private readonly IInteractionLogger _interactionLogger;
+        private readonly IQueryPersistingService _queryPersistingService;
         private readonly QueryBuilder _queryBuilder;
         private readonly ExternalImageProvider _externalImageProvider;
         private readonly ILogger _logger;
@@ -59,6 +61,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IGridSorter gridSorter,
             ISubmissionService submissionService,
             IInteractionLogger interactionLogger,
+            IQueryPersistingService queryPersistingService,
             QueryBuilder queryBuilder,
             ExternalImageProvider externalImageProvider)
         {
@@ -70,6 +73,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _gridSorter = gridSorter;
             _submissionService = submissionService;
             _interactionLogger = interactionLogger;
+            _queryPersistingService = queryPersistingService;
             _queryBuilder = queryBuilder;
             _externalImageProvider = externalImageProvider;
 
@@ -377,6 +381,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                                     IsFirstQueryPrimary,
                                                                     QueryResults.MaxFramesFromVideo,
                                                                     QueryResults.MaxFramesFromShot);
+                                                                Task.Run(() => _queryPersistingService.SaveQuery(biTemporalQuery));
                                                                 return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
                                                             });
 
