@@ -82,9 +82,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
 
-            queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await detailView.LoadVideoForFrame(selectedFrame);
+            queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             queryResults.MaxFramesChanged += async (sender, args) => await OnQuerySettingsChanged();
-
+            
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (var display in displays)
             {
@@ -244,6 +244,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 queryViewModel.OnSketchesCleared();
                 queryViewModel.QueryObjects.Clear();
             }
+
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ResetAll);
         }
 
         public void ShowHideBwFilters()
@@ -490,6 +492,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             IsBusy = true;
             IsDetailVisible = true;
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
 
             await DetailViewModel.LoadVideoForFrame(selectedFrame);
         }
@@ -505,8 +508,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 return;
             }
 
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
             IsDetailVisible = true;
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
+        }
+
+        private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)
+        {
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.TemporalContext, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            await DetailView.LoadVideoForFrame(selectedFrame);
         }
 
         private void CloseDetailViewModel()

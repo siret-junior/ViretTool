@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace ViretTool.BusinessLayer.ActionLogging
 {
@@ -10,27 +11,23 @@ namespace ViretTool.BusinessLayer.ActionLogging
 
 		public InteractionLog Log { get; } = new InteractionLog();
 
-        public void LogInteraction(string category, string type = null, string value = null, string attributes = null)
+        public void LogInteraction(LogCategory category, LogType type, string value = null, string attributes = null)
         {
             // TODO: considering events with only a single action for now
-            Event interactionEvent = new Event();
-            Action action = new Action(category, type, value, attributes);
-            interactionEvent.Actions.Add(action);
-
             lock (_lockObject)
             {
-                if (Log.Events.Count > 0)
+                long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                if (Log.Events.Count > 0 && Log.Events.Last().Category == category && Log.Events.Last().Type == type)
                 {
-                    long lastEventTime = Log.Events[Log.Events.Count - 1].Timestamp;
-                    long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
+                    long lastEventTime = Log.Events[Log.Events.Count - 1].TimeStamp;
                     if (Math.Abs(lastEventTime - currentTime) < TimeDelayMiliseconds)
                     {
                         return;
                     }
                 }
 
-                Log.Events.Add(interactionEvent);
+                Action action = new Action(currentTime, category, type, value, attributes);
+                Log.Events.Add(action);
             }
         }
 

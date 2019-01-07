@@ -148,7 +148,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             //TODO log somewhere
 
             List<List<int>> expanded = ExpandQuery(query, mLabelProviders[annotationSource]);
-            QueryResult = new KeywordQueryResult(expanded, annotationSource);
+            QueryResult = new KeywordQueryResult(expanded, suggestionTextBox.GetFullText(), annotationSource);
         }
 
         private void SuggestionTextBox_SuggestionFilterChangedEvent(string filter, string annotationSource)

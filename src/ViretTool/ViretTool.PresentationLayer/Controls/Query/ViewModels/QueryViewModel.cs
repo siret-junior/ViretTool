@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
@@ -18,6 +19,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
     {
         private readonly ILogger _logger;
         private readonly IDatasetServicesManager _datasetServicesManager;
+        private readonly IInteractionLogger _iterationLogger;
 
         public EventHandler QuerySettingsChanged;
         
@@ -42,10 +44,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private bool _isBwFilterVisible;
 
 
-        public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager)
+        public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger iterationLogger)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
+            _iterationLogger = iterationLogger;
             _datasetServicesManager.DatasetOpened += (sender, services) => InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
 
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
@@ -63,7 +66,18 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                        eventHandler => QueryObjects.CollectionChanged += eventHandler,
                                                        eventHandler => QueryObjects.CollectionChanged -= eventHandler)
                                                    .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
-            onQueriesChanged.Subscribe(_ => SemanticUseForSorting = QueryObjects.Any());
+            onQueriesChanged.Throttle(TimeSpan.FromMilliseconds(50))
+                            .ObserveOn(SynchronizationContext.Current)
+                            .Subscribe(
+                                _ =>
+                                {
+                                    _iterationLogger.LogInteraction(
+                                        LogCategory.Image,
+                                        LogType.GlobalFeatures,
+                                        string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
+                                        $"{SemanticValue}|{SemanticUseForSorting}");
+                                    SemanticUseForSorting = QueryObjects.Any();
+                                });
 
             onPropertyChanged.Merge(onQueriesChanged)
                              .Throttle(TimeSpan.FromMilliseconds(50))
@@ -88,6 +102,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterState = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -103,6 +118,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterValue = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -155,6 +171,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
+                if (!string.IsNullOrEmpty(value.FullQuery))
+                {
+                    _iterationLogger.LogInteraction(LogCategory.Text, LogType.Concept, value.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
+                }
+
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
             }
@@ -206,6 +227,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterState = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -221,6 +243,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterValue = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -271,6 +294,17 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _sketchQueryResult = value;
+                bool colorPoints = value.ChangedSketchTypes.Any(type => type == SketchType.Color);
+                if (colorPoints)
+                {
+                    _iterationLogger.LogInteraction(LogCategory.Sketch, LogType.Color, /*TODO*/"", $"{ColorValue}|{ColorUseForSorting}");
+                }
+                bool otherPoints = value.ChangedSketchTypes.Any(type => type != SketchType.Color);
+                if (otherPoints)
+                {
+                    _iterationLogger.LogInteraction(LogCategory.Text, LogType.LocalizedObject, /*TODO*/"", $"{ColorValue}|{ColorUseForSorting}");
+                }
+
                 ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
                 NotifyOfPropertyChange();
             }

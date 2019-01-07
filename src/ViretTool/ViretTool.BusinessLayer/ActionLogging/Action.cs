@@ -2,8 +2,9 @@
 {
     public class Action
     {
-        public Action(string category, string type = null, string value = null, string attributes = null)
+        public Action(long timeStamp, LogCategory category, LogType type, string value = null, string attributes = null)
         {
+            TimeStamp = timeStamp;
             Category = category;
             Type = type;
             Value = value;
@@ -11,8 +12,9 @@
         }
 
         public string Attributes { get; }
-        public string Category { get; }
-        public string Type { get; }
+        public LogCategory Category { get; }
+        public long TimeStamp { get; }
+        public LogType Type { get; }
         public string Value { get; }
     }
 }
