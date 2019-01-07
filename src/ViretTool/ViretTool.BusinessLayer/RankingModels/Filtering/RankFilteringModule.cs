@@ -139,6 +139,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             //    }
             //});
 
+            _random = new Random(RANDOM_SEED);
+
             // prepare list for not filtered ranks
             if (notFilteredRanks == null || notFilteredRanks.Capacity < InputRanking.Ranks.Length)
             {
