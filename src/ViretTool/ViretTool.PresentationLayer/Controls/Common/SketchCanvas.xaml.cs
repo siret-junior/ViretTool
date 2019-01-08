@@ -288,11 +288,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     if (mArea)
                     {
                         SearchRadiusEllipse.Stroke = new SolidColorBrush(FillColor);
-                        SearchRadiusEllipse.StrokeThickness = 3;
+                        SearchRadiusEllipse.StrokeDashArray = null;
+                        SearchRadiusEllipse.StrokeThickness = 1;
                     }
                     else
                     {
                         SearchRadiusEllipse.Stroke = Brushes.LightGray;
+                        SearchRadiusEllipse.StrokeDashArray = new DoubleCollection(new[] { 4d, 4 });
                         SearchRadiusEllipse.StrokeThickness = 1;
                     }
                 }
@@ -420,10 +422,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
                             Height = Radius * _scalingConstant
                         };
                 RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.HighQuality);
-                SketchType = ((ImageType)image.Tag).SketchType;
+                ImageType imageType = ((ImageType)image.Tag);
+                SketchType = imageType.SketchType;
                 canvas.Children.Add(Image);
 
                 UpdatePosition(point);
+                Area = !imageType.IsPositive;
             }
 
             
