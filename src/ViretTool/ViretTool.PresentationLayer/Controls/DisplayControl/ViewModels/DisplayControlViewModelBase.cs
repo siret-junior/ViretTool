@@ -89,7 +89,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void OnFramesSubmitted(FrameViewModel frameViewModel)
         {
             BeforeEventAction();
-            SubmittedFramesChanged?.Invoke(this, _loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList());
+            SubmittedFramesChanged?.Invoke(
+                this,
+                _loadedFrames.Where(f => f.IsSelectedForQuery)
+                             .Append(frameViewModel)
+                             .Distinct()
+                             .Select(f => new FrameViewModel(f.VideoId, f.FrameNumber, _datasetServicesManager))
+                             .ToList());
         }
 
         public void OnSortDisplay(FrameViewModel frameViewModel)
