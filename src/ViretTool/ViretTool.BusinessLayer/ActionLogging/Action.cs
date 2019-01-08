@@ -1,4 +1,7 @@
-﻿namespace ViretTool.BusinessLayer.ActionLogging
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace ViretTool.BusinessLayer.ActionLogging
 {
     public class Action
     {
@@ -12,8 +15,10 @@
         }
 
         public string Attributes { get; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public LogCategory Category { get; }
         public long TimeStamp { get; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public LogType Type { get; }
         public string Value { get; }
     }
