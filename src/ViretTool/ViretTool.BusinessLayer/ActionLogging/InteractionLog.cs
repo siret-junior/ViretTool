@@ -9,10 +9,12 @@ namespace ViretTool.BusinessLayer.ActionLogging
             Events = new List<Action>();
         }
 
-        public List<Action> Events { get; }
-        public int MemberId { get; set; } = 1;
-        public int TeamId { get; set; } = 4;
-
         public string TeamName { get; set; } = "VIRET";
+        public int TeamId { get; set; } = 4;
+        public int MemberId { get; set; } = 1;
+
+        public List<Action> Events { get; }
+        
+        
     }
 }
