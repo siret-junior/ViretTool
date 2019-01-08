@@ -22,6 +22,8 @@ namespace ViretTool.BusinessLayer.Submission
             _logger = logger;
         }
 
+        public string SubmissionUrl { get; set; } = BaseUrl;
+
         public async Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit)
         {
             _interactionLogger.Log.Type = SubmissionType.Submit;
@@ -77,14 +79,14 @@ namespace ViretTool.BusinessLayer.Submission
             }
         }
 
-        private static string GetUrl(int teamId, int memberId, FrameToSubmit frameToSubmit)
+        private string GetUrl(int teamId, int memberId, FrameToSubmit frameToSubmit)
         {
-            return $"{BaseUrl}?team={teamId}&member={memberId}&video={frameToSubmit.VideoId}&frame={frameToSubmit.FrameNumber}";
+            return $"{SubmissionUrl}?team={teamId}&member={memberId}&video={frameToSubmit.VideoId}&frame={frameToSubmit.FrameNumber}";
         }
 
-        private static string GetUrl(int teamId, int memberId)
+        private string GetUrl(int teamId, int memberId)
         {
-            return $"{BaseUrl}?team={teamId}&member={memberId}";
+            return $"{SubmissionUrl}?team={teamId}&member={memberId}";
         }
 
         private string GetContent()

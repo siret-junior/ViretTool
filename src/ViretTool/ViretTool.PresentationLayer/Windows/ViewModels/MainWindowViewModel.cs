@@ -169,6 +169,21 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        public string SubmissionUrl
+        {
+            get => _submissionService.SubmissionUrl;
+            set
+            {
+                if (_submissionService.SubmissionUrl == value)
+                {
+                    return;
+                }
+
+                _submissionService.SubmissionUrl = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public string TeamName
         {
             get => _interactionLogger.Log.TeamName;

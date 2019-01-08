@@ -92,6 +92,10 @@
                                         <TextBlock Text="{x:Static properties:Resources.MemberIdText}" />
                                         <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="20"/>
                                     </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Submission URL" />
+                                        <TextBox x:Name="SubmissionUrl" Margin="4,0,0,0" Width="120"/>
+                                    </StackPanel>
                                 </MenuItem>
                                 <MenuItem Header="{x:Static properties:Resources.TestButtonText}" cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"></MenuItem>
                             </Menu>
