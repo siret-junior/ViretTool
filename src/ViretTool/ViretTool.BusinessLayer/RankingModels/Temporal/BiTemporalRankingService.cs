@@ -7,6 +7,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRankingService : IBiTemporalRankingService
     {
+        private object _lock = new object();
+
         public IDatasetService DatasetService { get; private set; }
 
         public IBiTemporalRankingModule BiTemporalRankingModule { get; private set; }
@@ -29,42 +31,45 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 
         public BiTemporalRankedResultSet ComputeRankedResultSet(BiTemporalQuery query)
         {
-            // TODO: restriction to only a half of the dataset -> HasInputChanged (+InputRanking)
-            if (!HasQueryChanged(query))
+            lock (_lock)
             {
+                // TODO: restriction to only a half of the dataset -> HasInputChanged (+InputRanking)
+                if (!HasQueryChanged(query))
+                {
+                    return CachedResultSet;
+                }
+                else
+                {
+                    CachedQuery = query;
+                }
+
+                InitializeRankingBuffers();
+
+                if (IsQueryEmpty(query))
+                {
+                    return GenerateSequentialRanking();
+                }
+
+                try
+                {
+                    // the main computation
+                    BiTemporalRankingModule.ComputeRanking(query, InputRanking, OutputRanking);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+                // aggregate partial temporal result sets
+                List<PairedRankedFrame> formerResultSet = RetrieveRankedResultSet(
+                    OutputRanking.FormerRankingBuffer.Ranks, OutputRanking.FormerTemporalPairs);
+                List<PairedRankedFrame> latterResultSet = RetrieveRankedResultSet(
+                    OutputRanking.LatterRankingBuffer.Ranks, OutputRanking.LatterTemporalPairs);
+
+                // cache result
+                CachedResultSet = new BiTemporalRankedResultSet(query, formerResultSet, latterResultSet);
                 return CachedResultSet;
             }
-            else
-            {
-                CachedQuery = query;
-            }
-
-            InitializeRankingBuffers();
-
-            if (IsQueryEmpty(query))
-            {
-                return GenerateSequentialRanking();
-            }
-
-            try
-            {
-                // the main computation
-                BiTemporalRankingModule.ComputeRanking(query, InputRanking, OutputRanking);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
-            // aggregate partial temporal result sets
-            List<PairedRankedFrame> formerResultSet = RetrieveRankedResultSet(
-                OutputRanking.FormerRankingBuffer.Ranks, OutputRanking.FormerTemporalPairs);
-            List<PairedRankedFrame> latterResultSet = RetrieveRankedResultSet(
-                OutputRanking.LatterRankingBuffer.Ranks, OutputRanking.LatterTemporalPairs);
-
-            // cache result
-            CachedResultSet = new BiTemporalRankedResultSet(query, formerResultSet, latterResultSet);
-            return CachedResultSet;
         }
 
 
