@@ -9,6 +9,7 @@ using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
+using EnumerableExtensions = ViretTool.Core.EnumerableExtensions;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -84,6 +85,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 frameViewModel.IsSelectedForQuery = !frameViewModel.IsSelectedForQuery;
             }
+            else if (Mouse.RightButton == MouseButtonState.Pressed)
+            {
+                EnumerableExtensions.ForEach(_loadedFrames, f => f.IsSelectedForQuery = false);
+            }
+            
         }
 
         public void OnFramesSubmitted(FrameViewModel frameViewModel)
