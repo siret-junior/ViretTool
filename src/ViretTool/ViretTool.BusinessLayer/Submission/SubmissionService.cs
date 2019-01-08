@@ -24,6 +24,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         public async Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit)
         {
+            _interactionLogger.Log.Type = SubmissionType.Submit;
             string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
             string jsonInteractionLog = GetContent();
             StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
@@ -42,6 +43,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         public async Task<string> SubmitLog()
         {
+            _interactionLogger.Log.Type = SubmissionType.Flush;
             string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId);
             string jsonInteractionLog = GetContent();
             StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
@@ -87,6 +89,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         private string GetContent()
         {
+            _interactionLogger.Log.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             return LowercaseJsonSerializer.SerializeObject(_interactionLogger.Log);
         }
     }

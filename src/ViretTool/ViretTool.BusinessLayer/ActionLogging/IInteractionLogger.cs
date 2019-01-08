@@ -20,6 +20,11 @@
 
     }
 
+    public enum SubmissionType
+    {
+        Submit, Flush
+    }
+
     public interface IInteractionLogger
     {
         void LogInteraction(LogCategory category, LogType type, string value = null, string attributes = null);
