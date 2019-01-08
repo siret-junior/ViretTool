@@ -130,7 +130,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 mColorPoints.Remove(mSelectedColorPoint);
                 mSelectedColorPoint.RemoveFromCanvas(sketchCanvas);
 
-                OnSketchChanged(new[] { mSelectedColorPointEllipse.SketchType });
+                OnSketchChanged(new[] { mSelectedColorPoint.SketchType });
 
                 mSelectedColorPoint = null;
                 return;

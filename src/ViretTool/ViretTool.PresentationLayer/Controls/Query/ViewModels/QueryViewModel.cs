@@ -171,11 +171,8 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                if (!string.IsNullOrEmpty(value.FullQuery))
-                {
-                    _iterationLogger.LogInteraction(LogCategory.Text, LogType.Concept, value.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
-                }
-
+                _iterationLogger.LogInteraction(LogCategory.Text, LogType.Concept, _keywordQueryResult?.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
+                
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
             }
