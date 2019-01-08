@@ -44,7 +44,8 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
+                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"
+                                                           cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('Exploration', 'DetailScroll')]"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.Template>
@@ -86,7 +87,8 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="18" Columns="3"/>
+                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="18" Columns="3"
+                                                           cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('Exploration', 'SampledScroll')]"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.Template>

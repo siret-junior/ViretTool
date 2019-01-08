@@ -60,7 +60,8 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling" />
+                        <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"
+                                                       cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('VideoSummary','')]"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.Template>

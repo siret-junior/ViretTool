@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Windows.ViewModels;
@@ -16,8 +17,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public ScrollDisplayControlViewModel(
             ILogger logger,
-            IDatasetServicesManager datasetServicesManager)
-            : base(logger, datasetServicesManager)
+            IDatasetServicesManager datasetServicesManager,
+            IInteractionLogger interactionLogger)
+            : base(logger, datasetServicesManager, interactionLogger)
         {
         }
 

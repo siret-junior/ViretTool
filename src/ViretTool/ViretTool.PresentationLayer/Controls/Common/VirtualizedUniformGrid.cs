@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -54,6 +55,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(VirtualizedUniformGrid),
             new FrameworkPropertyMetadata(Orientation.Vertical, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
+        public static readonly RoutedEvent ScrollChangedEvent = EventManager.RegisterRoutedEvent(
+            nameof(ScrollChanged),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(VirtualizedUniformGrid));
+
         #endregion Dependency Properties
 
 
@@ -90,6 +97,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get { return (Orientation)this.GetValue(OrientationProperty); }
             set { this.SetValue(OrientationProperty, value); }
+        }
+
+        public event RoutedEventHandler ScrollChanged
+        {
+            add => AddHandler(ScrollChangedEvent, value);
+            remove => RemoveHandler(ScrollChangedEvent, value);
         }
 
         #endregion Public Properties
@@ -405,7 +418,23 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public ScrollViewer ScrollOwner
         {
             get { return this._owner; }
-            set { this._owner = value; }
+            set
+            {
+                if (_owner != null)
+                {
+                    _owner.ScrollChanged -= OwnerOnScrollChanged;
+                }
+                this._owner = value;
+                _owner.ScrollChanged += OwnerOnScrollChanged;
+            }
+        }
+        
+        private void OwnerOnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.VerticalChange != 0)
+            {
+                RaiseEvent(new RoutedEventArgs(ScrollChangedEvent));
+            }
         }
 
         /// <summary>
