@@ -511,8 +511,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 IsBusy = false;
             }
-
-            MessageBox.Show(Resources.Properties.Resources.FramesSentSuccessText);
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)
