@@ -27,10 +27,13 @@ namespace ViretTool.BusinessLayer.Submission
 
         public void SaveQuery(BiTemporalQuery query)
         {
-            long lastTimeStamp = _interactionLogger.Log.Events.Last(e => e.Category != LogCategory.Browsing).TimeStamp;
-            string jsonQuery = LowercaseJsonSerializer.SerializeObject(query);
+            lock (this)
+            {
+                long lastTimeStamp = _interactionLogger.Log.Events.Last(e => e.Category != LogCategory.Browsing).TimeStamp;
+                string jsonQuery = LowercaseJsonSerializer.SerializeObject(query);
 
-            File.WriteAllText(Path.Combine(QueryHistoryDirectory, $"{lastTimeStamp}.json"), jsonQuery);
+                File.WriteAllText(Path.Combine(QueryHistoryDirectory, $"{lastTimeStamp}.json"), jsonQuery);
+            }
         }
 
         public BiTemporalQuery LoadQuery(string path)
