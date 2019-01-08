@@ -19,5 +19,28 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
         public Point EllipseAxis { get; }
         public SketchType SketchType { get; }
         public bool Area { get; }
+
+        public override string ToString()
+        {
+            return "[P(" +
+                Position.X +
+                "; " +
+                Position.Y +
+                "), " +
+                "C(" +
+                FillColor.R +
+                "; " +
+                FillColor.G +
+                "; " +
+                FillColor.B +
+                "), " +
+                "E(" +
+                EllipseAxis.X +
+                "; " +
+                EllipseAxis.Y +
+                "), " +
+                (Area ? "all" : "any") +
+                "]";
+        }
     }
 }

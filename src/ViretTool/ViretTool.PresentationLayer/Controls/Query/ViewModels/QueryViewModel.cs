@@ -294,12 +294,20 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 bool colorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
                 if (colorPoints)
                 {
-                    _iterationLogger.LogInteraction(LogCategory.Sketch, LogType.Color, /*TODO*/"", $"{ColorValue}|{ColorUseForSorting}");
+                    _iterationLogger.LogInteraction(
+                        LogCategory.Sketch,
+                        LogType.Color,
+                        string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
+                        $"{ColorValue}|{ColorUseForSorting}");
                 }
                 bool otherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
                 if (otherPoints)
                 {
-                    _iterationLogger.LogInteraction(LogCategory.Text, LogType.LocalizedObject, /*TODO*/"", $"{ColorValue}|{ColorUseForSorting}");
+                    _iterationLogger.LogInteraction(
+                        LogCategory.Text,
+                        LogType.LocalizedObject,
+                        string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType != SketchType.Color)),
+                        $"{ColorValue}|{ColorUseForSorting}");
                 }
 
                 ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
