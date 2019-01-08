@@ -62,7 +62,10 @@ namespace ViretTool.BusinessLayer.Submission
             try
             {
                 Directory.CreateDirectory(SUBMISSION_LOG_DIRECTORY);
-                string filename = "Submission_" + Environment.MachineName + DateTime.UtcNow.ToString("s").Replace(':', '_').Replace('.', '_');
+                string filename = 
+                    "Submission_" + Environment.MachineName + "_"
+                    + DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss.ffff")
+                    + ".txt";
                 string filePath = Path.Combine(SUBMISSION_LOG_DIRECTORY, filename);
                 File.WriteAllLines(filePath, new string[] { url, jsonInteractionLog });
             }
