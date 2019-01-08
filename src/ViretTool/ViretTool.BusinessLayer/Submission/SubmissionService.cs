@@ -46,7 +46,8 @@ namespace ViretTool.BusinessLayer.Submission
                     "Submission_" 
                     + Environment.MachineName 
                     + DateTime.UtcNow.ToString("s");
-                File.WriteAllLines(filename, new string[] { url, jsonInteractionLog });
+                string filePath = Path.Combine(SUBMISSION_LOG_DIRECTORY, filename);
+                File.WriteAllLines(filePath, new string[] { url, jsonInteractionLog });
             }
             catch (Exception ex)
             {
