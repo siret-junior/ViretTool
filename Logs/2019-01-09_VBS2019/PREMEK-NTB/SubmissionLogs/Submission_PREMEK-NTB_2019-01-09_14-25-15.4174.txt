@@ -1,0 +1,193 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=7210&frame=5075
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1547043914687,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547043718202,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547043722027,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547043731154,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547043732852,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "4647|6700"
+    },
+    {
+      "timestamp": 1547043734344,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043736127,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043737240,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043738264,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043739696,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043740704,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043742888,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043743888,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1547043755147,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "50|True"
+    },
+    {
+      "timestamp": 1547043755147,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547043755168,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547043771335,
+      "category": "Text",
+      "type": "Concept",
+      "value": "waterfall",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1547043775088,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.802228412256268; 0.29058495821727), C(153; 92; 0), E(0.104166666666667; 0.185185185185185), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1547043784250,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.802228412256268; 0.29058495821727), C(153; 92; 0), E(0.104166666666667; 0.185185185185185), any]",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1547043806543,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.802228412256268; 0.29058495821727), C(153; 92; 0), E(0.104166666666667; 0.185185185185185), any],[P(0.103064066852368; 0.79569173630455), C(26; 0; 51), E(0.104166666666667; 0.185185185185185), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1547043809578,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3623|7282"
+    },
+    {
+      "timestamp": 1547043810196,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547043810211,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3623|7350"
+    },
+    {
+      "timestamp": 1547043810899,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547043810930,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3623|7470"
+    },
+    {
+      "timestamp": 1547043863675,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1547043863675,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547043863700,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547043884214,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-09T14_24_44_1785484Z.png",
+      "attributes": "30|False"
+    }
+  ]
+}

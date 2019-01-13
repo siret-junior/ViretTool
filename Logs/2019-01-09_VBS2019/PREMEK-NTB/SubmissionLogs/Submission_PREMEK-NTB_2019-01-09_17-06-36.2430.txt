@@ -1,0 +1,87 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=6929&frame=1150
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1547053596103,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547053572824,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "6276|4705",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1547053577210,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6757|325"
+    },
+    {
+      "timestamp": 1547053578266,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6757|325"
+    },
+    {
+      "timestamp": 1547053580225,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5152|15200"
+    },
+    {
+      "timestamp": 1547053580419,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053580425,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5152|15194"
+    },
+    {
+      "timestamp": 1547053581396,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053581419,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5152|15230"
+    },
+    {
+      "timestamp": 1547053583290,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5967|650"
+    },
+    {
+      "timestamp": 1547053583334,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053583336,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5967|643"
+    },
+    {
+      "timestamp": 1547053589605,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-09T17_06_29_5592620Z.png",
+      "attributes": "30|True"
+    }
+  ]
+}

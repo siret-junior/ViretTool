@@ -1,0 +1,23 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=2292&frame=2787
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1546959821202,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546959780155,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "2291|2787",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546959806452,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "7359|42400"
+    }
+  ]
+}

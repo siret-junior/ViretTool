@@ -1,0 +1,23 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=1773&frame=1678
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1547044119022,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547044096950,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-09T14_28_16_9185377Z.png",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1547044097357,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    }
+  ]
+}
