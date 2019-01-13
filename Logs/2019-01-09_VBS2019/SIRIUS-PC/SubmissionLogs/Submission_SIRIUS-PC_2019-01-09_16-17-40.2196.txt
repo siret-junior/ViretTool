@@ -1,0 +1,272 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547050660123,
+  "type": "Flush",
+  "events": [
+    {
+      "timestamp": 1547050335876,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "2,73046515603656|True"
+    },
+    {
+      "timestamp": 1547050335876,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547050335903,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547050336342,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547050349005,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,134656272147413; 0,316497361997008), C(112; 128; 144), E(0,104166666666667; 0,185185185185185), any]",
+      "attributes": "21,9556863215075|False"
+    },
+    {
+      "timestamp": 1547050351284,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,134656272147413; 0,316497361997008), C(112; 128; 144), E(0,104166666666667; 0,185185185185185), any],[P(0,566973777462792; 0,414772816757225), C(112; 128; 144), E(0,104166666666667; 0,185185185185185), any]",
+      "attributes": "21,9556863215075|True"
+    },
+    {
+      "timestamp": 1547050357848,
+      "category": "Filter",
+      "type": "BW",
+      "value": "BWN|90"
+    },
+    {
+      "timestamp": 1547050368574,
+      "category": "Filter",
+      "type": "BW",
+      "value": "BWOff|90"
+    },
+    {
+      "timestamp": 1547050372322,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0,579730687455705; 0,508008504606662), C(153; 0; 0), E(0,104166666666667; 0,185185185185185), all]",
+      "attributes": "21,9556863215075|True"
+    },
+    {
+      "timestamp": 1547050390673,
+      "category": "Filter",
+      "type": "BW",
+      "value": "BWN|90"
+    },
+    {
+      "timestamp": 1547050391602,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "",
+      "attributes": "21,9556863215075|False"
+    },
+    {
+      "timestamp": 1547050392818,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,566973777462792; 0,414772816757225), C(112; 128; 144), E(0,104166666666667; 0,185185185185185), any]",
+      "attributes": "21,9556863215075|True"
+    },
+    {
+      "timestamp": 1547050406621,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547050415736,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:2"
+    },
+    {
+      "timestamp": 1547050457170,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0,660524450744153; 0,559303882195449), C(153; 0; 0), E(0,104166666666667; 0,185185185185185), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1547050457713,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547050464350,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547050467805,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1547050468226,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547050471624,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0,738483345145287; 0,518985746909206), C(0; 0; 0), E(0,104166666666667; 0,185185185185185), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1547050490205,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0,738483345145287; 0,518985746909206), C(0; 0; 0), E(0,104166666666667; 0,185185185185185), all],[P(0,177179305457123; 0,481187495078353), C(102; 0; 0), E(0,104166666666667; 0,185185185185185), all]",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1547050503129,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547050507942,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:2"
+    },
+    {
+      "timestamp": 1547050513874,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    },
+    {
+      "timestamp": 1547050522123,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1547050528496,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:5"
+    },
+    {
+      "timestamp": 1547050558335,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:6"
+    },
+    {
+      "timestamp": 1547050563050,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:7"
+    },
+    {
+      "timestamp": 1547050571053,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:8"
+    },
+    {
+      "timestamp": 1547050602342,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:9"
+    },
+    {
+      "timestamp": 1547050608347,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:10"
+    },
+    {
+      "timestamp": 1547050613174,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:11"
+    },
+    {
+      "timestamp": 1547050617504,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:12"
+    },
+    {
+      "timestamp": 1547050620768,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:13"
+    },
+    {
+      "timestamp": 1547050627171,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:14"
+    },
+    {
+      "timestamp": 1547050631547,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547050634962,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547050637735,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:2"
+    },
+    {
+      "timestamp": 1547050646019,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    },
+    {
+      "timestamp": 1547050648126,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1547050654885,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,491849751948972; 0,48028978659737), C(112; 128; 144), E(0,104166666666667; 0,185185185185185), any]",
+      "attributes": "21,9556863215075|True"
+    },
+    {
+      "timestamp": 1547050655385,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=402&frame=4900
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547043938839,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547043906890,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    },
+    {
+      "timestamp": 1547043911733,
+      "category": "Text",
+      "type": "Concept",
+      "value": "power station OR pylon",
+      "attributes": "10,1940759208729|True"
+    },
+    {
+      "timestamp": 1547043912209,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547043912714,
+      "category": "Text",
+      "type": "Concept",
+      "value": "pylon",
+      "attributes": "10,1940759208729|True"
+    }
+  ]
+}

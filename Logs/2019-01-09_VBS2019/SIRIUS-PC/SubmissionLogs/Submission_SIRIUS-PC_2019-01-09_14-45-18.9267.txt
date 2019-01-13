@@ -1,0 +1,973 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=6514&frame=4050
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547045118011,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547045074524,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6513|4050"
+    },
+    {
+      "timestamp": 1547045074600,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045074602,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6513|4043"
+    },
+    {
+      "timestamp": 1547045075679,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6513|4062"
+    },
+    {
+      "timestamp": 1547045078134,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6513|4050"
+    },
+    {
+      "timestamp": 1547045079542,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6513|4050"
+    },
+    {
+      "timestamp": 1547045080883,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "685|3200"
+    },
+    {
+      "timestamp": 1547045080977,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045080981,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "685|3193"
+    },
+    {
+      "timestamp": 1547045081984,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045081987,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "232|5538"
+    },
+    {
+      "timestamp": 1547045083085,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "232|5514"
+    },
+    {
+      "timestamp": 1547045083967,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045083972,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "371|8193"
+    },
+    {
+      "timestamp": 1547045085047,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045085050,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3588"
+    },
+    {
+      "timestamp": 1547045085635,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045085636,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3633"
+    },
+    {
+      "timestamp": 1547045085924,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045085926,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3693"
+    },
+    {
+      "timestamp": 1547045085961,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045085963,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3723"
+    },
+    {
+      "timestamp": 1547045086245,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045086248,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3753"
+    },
+    {
+      "timestamp": 1547045086274,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045086279,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3783"
+    },
+    {
+      "timestamp": 1547045086531,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045086561,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3738"
+    },
+    {
+      "timestamp": 1547045086793,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045086797,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3708"
+    },
+    {
+      "timestamp": 1547045086834,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045086876,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3678"
+    },
+    {
+      "timestamp": 1547045087131,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045087344,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3618"
+    },
+    {
+      "timestamp": 1547045087380,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045087383,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4144|3588"
+    },
+    {
+      "timestamp": 1547045088514,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2585|2850"
+    },
+    {
+      "timestamp": 1547045088618,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045088621,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2585|2843"
+    },
+    {
+      "timestamp": 1547045089682,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2585|2850"
+    },
+    {
+      "timestamp": 1547045090934,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5364"
+    },
+    {
+      "timestamp": 1547045091065,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045091068,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5357"
+    },
+    {
+      "timestamp": 1547045091764,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045091793,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6224|3134"
+    },
+    {
+      "timestamp": 1547045092310,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045092316,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6224|3194"
+    },
+    {
+      "timestamp": 1547045093340,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045093344,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5357"
+    },
+    {
+      "timestamp": 1547045094194,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045094200,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5327"
+    },
+    {
+      "timestamp": 1547045094236,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045094257,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5297"
+    },
+    {
+      "timestamp": 1547045094678,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045094686,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5267"
+    },
+    {
+      "timestamp": 1547045095013,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045095018,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5252"
+    },
+    {
+      "timestamp": 1547045095060,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045095068,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5282"
+    },
+    {
+      "timestamp": 1547045095340,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045095352,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5312"
+    },
+    {
+      "timestamp": 1547045095406,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045095408,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5342"
+    },
+    {
+      "timestamp": 1547045095702,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045095713,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5372"
+    },
+    {
+      "timestamp": 1547045096036,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045096041,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5462"
+    },
+    {
+      "timestamp": 1547045096439,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045096442,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "7344|5521"
+    },
+    {
+      "timestamp": 1547045096478,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045097327,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|959"
+    },
+    {
+      "timestamp": 1547045097573,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045097579,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|966"
+    },
+    {
+      "timestamp": 1547045097678,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045097692,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|996"
+    },
+    {
+      "timestamp": 1547045097972,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045097984,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|1026"
+    },
+    {
+      "timestamp": 1547045098019,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045098314,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|1056"
+    },
+    {
+      "timestamp": 1547045098528,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045098757,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|1011"
+    },
+    {
+      "timestamp": 1547045098788,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045098794,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|981"
+    },
+    {
+      "timestamp": 1547045099060,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045099069,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|951"
+    },
+    {
+      "timestamp": 1547045099125,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045099381,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|921"
+    },
+    {
+      "timestamp": 1547045099425,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045099428,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|891"
+    },
+    {
+      "timestamp": 1547045099940,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045099942,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3554"
+    },
+    {
+      "timestamp": 1547045100194,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045100203,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3578"
+    },
+    {
+      "timestamp": 1547045100876,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045100882,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3542"
+    },
+    {
+      "timestamp": 1547045101374,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045101379,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3578"
+    },
+    {
+      "timestamp": 1547045101647,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045101660,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3626"
+    },
+    {
+      "timestamp": 1547045101692,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045101694,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3650"
+    },
+    {
+      "timestamp": 1547045101753,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045101955,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3674"
+    },
+    {
+      "timestamp": 1547045101991,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045101995,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3586|3698"
+    },
+    {
+      "timestamp": 1547045102203,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045102876,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|19120"
+    },
+    {
+      "timestamp": 1547045103287,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045103313,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|19113"
+    },
+    {
+      "timestamp": 1547045103928,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045103929,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|19158"
+    },
+    {
+      "timestamp": 1547045104722,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045104734,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|19113"
+    },
+    {
+      "timestamp": 1547045104799,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045105172,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|19083"
+    },
+    {
+      "timestamp": 1547045105271,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045105493,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4803|19038"
+    },
+    {
+      "timestamp": 1547045105864,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045105866,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2119|518"
+    },
+    {
+      "timestamp": 1547045106723,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045106725,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2119|581"
+    },
+    {
+      "timestamp": 1547045106880,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045106883,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2119|593"
+    },
+    {
+      "timestamp": 1547045106942,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045106950,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2119|568"
+    },
+    {
+      "timestamp": 1547045107810,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045107815,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "1089|28368"
+    },
+    {
+      "timestamp": 1547045108731,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045108742,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "1089|28431"
+    },
+    {
+      "timestamp": 1547045108767,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045108775,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "1089|28456"
+    },
+    {
+      "timestamp": 1547045109332,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045109336,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "371|4943"
+    },
+    {
+      "timestamp": 1547045110067,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045110076,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "371|5031"
+    },
+    {
+      "timestamp": 1547045110715,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045110718,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6493|741"
+    },
+    {
+      "timestamp": 1547045111042,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045111045,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "371|4943"
+    },
+    {
+      "timestamp": 1547045112274,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "371|4887"
+    },
+    {
+      "timestamp": 1547045113400,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045113403,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6493|741"
+    },
+    {
+      "timestamp": 1547045114407,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6493|734"
+    },
+    {
+      "timestamp": 1547045114720,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045115198,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "141|2430"
+    },
+    {
+      "timestamp": 1547045115304,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045115306,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "141|2422"
+    },
+    {
+      "timestamp": 1547045115534,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547045115772,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "141|2467"
+    }
+  ]
+}

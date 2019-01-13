@@ -1,0 +1,93 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=5222&frame=2450
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1546961275791,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546961267956,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1546961269315,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2358|3386"
+    },
+    {
+      "timestamp": 1546961269415,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546961269418,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2358|3379"
+    },
+    {
+      "timestamp": 1546961270033,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546961270036,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "427|4577"
+    },
+    {
+      "timestamp": 1546961270767,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546961270771,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "3475|1627"
+    },
+    {
+      "timestamp": 1546961271694,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546961271699,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5221|2443"
+    },
+    {
+      "timestamp": 1546961273234,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2771|4135"
+    },
+    {
+      "timestamp": 1546961273305,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546961273307,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2771|4143"
+    }
+  ]
+}

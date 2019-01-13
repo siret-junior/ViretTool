@@ -1,0 +1,82 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=450&frame=550
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547053165980,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547053129912,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2087|3700"
+    },
+    {
+      "timestamp": 1547053130111,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053130116,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2087|3706"
+    },
+    {
+      "timestamp": 1547053140973,
+      "category": "Text",
+      "type": "Concept",
+      "value": "surfing OR person",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053142291,
+      "category": "Text",
+      "type": "Concept",
+      "value": "surfing",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053151516,
+      "category": "Text",
+      "type": "Concept",
+      "value": "surfing OR sand",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053153204,
+      "category": "Text",
+      "type": "Concept",
+      "value": "surfing AND sand",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053159634,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "449|550"
+    },
+    {
+      "timestamp": 1547053159761,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053159764,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "449|556"
+    },
+    {
+      "timestamp": 1547053161008,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "449|556"
+    }
+  ]
+}

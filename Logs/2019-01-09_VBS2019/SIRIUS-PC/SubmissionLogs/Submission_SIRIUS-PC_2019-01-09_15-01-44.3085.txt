@@ -1,0 +1,65 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547046104191,
+  "type": "Flush",
+  "events": [
+    {
+      "timestamp": 1547046026339,
+      "category": "Filter",
+      "type": "MaxFrames",
+      "value": "10|1"
+    },
+    {
+      "timestamp": 1547046031379,
+      "category": "Filter",
+      "type": "MaxFrames",
+      "value": "3|1"
+    },
+    {
+      "timestamp": 1547046039114,
+      "category": "Text",
+      "type": "Concept",
+      "value": "vehicle",
+      "attributes": "11,8526560908365|False"
+    },
+    {
+      "timestamp": 1547046048350,
+      "category": "Filter",
+      "type": "MaxFrames",
+      "value": "10|1"
+    },
+    {
+      "timestamp": 1547046054829,
+      "category": "Filter",
+      "type": "MaxFrames",
+      "value": "1|1"
+    },
+    {
+      "timestamp": 1547046063848,
+      "category": "Filter",
+      "type": "MaxFrames",
+      "value": "3|1"
+    },
+    {
+      "timestamp": 1547046102769,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "11,8526560908365|True"
+    },
+    {
+      "timestamp": 1547046102769,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547046102795,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    }
+  ]
+}
