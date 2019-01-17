@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentPassingDependencyResolver.cs" />
     <Compile Include="Installers\BusinessLayerInstaller.cs" />
     <Compile Include="Installers\DataLayerInstaller.cs" />
     <Compile Include="Program.cs" />
