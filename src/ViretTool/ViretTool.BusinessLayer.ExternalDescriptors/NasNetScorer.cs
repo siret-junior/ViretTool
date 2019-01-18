@@ -22,6 +22,7 @@ namespace ViretTool.BusinessLayer.ExternalDescriptors
             PCAComponents = LoadPCAComponents(pcaComponetsLocation);
         }
 
+        // TODO: add option to set root directory for relative input file location
         public float[] GetReducedFeatures(string inputFileLocation)
         {
             var f = GetFullFeatures(inputFileLocation);
