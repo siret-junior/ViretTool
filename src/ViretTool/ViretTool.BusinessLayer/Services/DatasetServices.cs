@@ -3,6 +3,7 @@ using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
+using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.BusinessLayer.Services
@@ -18,13 +19,15 @@ namespace ViretTool.BusinessLayer.Services
             IDatasetService datasetService,
             IDescriptorProvider<byte[]> colorSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
-            IBiTemporalRankingService rankingService)
+            IBiTemporalRankingService rankingService,
+            IQueryPersistingService queryPersistingService)
         {
             ThumbnailService = thumbnailService;
             DatasetService = datasetService;
             ColorSignatureProvider = colorSignatureProvider;
             SemanticVectorProvider = semanticVectorProvider;
             RankingService = rankingService;
+            QueryPersistingService = queryPersistingService;
         }
 
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
@@ -32,5 +35,6 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<byte[]> ColorSignatureProvider { get; }
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
+        public IQueryPersistingService QueryPersistingService { get; }
     }
 }

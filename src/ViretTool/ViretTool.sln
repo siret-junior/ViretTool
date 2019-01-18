@@ -67,6 +67,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KisQueryResultExtraction", 
 		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9} = {737B3FB5-E62B-4ED8-A75F-EC16470B94C9}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VbsKisTaskFramesetExtractor", "VbsKisTaskFramesetExtractor\VbsKisTaskFramesetExtractor.csproj", "{80BB8EA3-676D-4DC9-919B-3373AD0653C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7058311-7616-4EA5-B2D2-35E502782537} = {F7058311-7616-4EA5-B2D2-35E502782537}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -141,6 +146,10 @@ Global
 		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Debug|x64.Build.0 = Debug|x64
 		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Release|x64.ActiveCfg = Release|x64
 		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Release|x64.Build.0 = Release|x64
+		{80BB8EA3-676D-4DC9-919B-3373AD0653C1}.Debug|x64.ActiveCfg = Debug|x64
+		{80BB8EA3-676D-4DC9-919B-3373AD0653C1}.Debug|x64.Build.0 = Debug|x64
+		{80BB8EA3-676D-4DC9-919B-3373AD0653C1}.Release|x64.ActiveCfg = Release|x64
+		{80BB8EA3-676D-4DC9-919B-3373AD0653C1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -160,6 +169,7 @@ Global
 		{D13AAE2E-9635-4AE7-9601-153961B59348} = {ABC14DBB-EDB6-48ED-8B32-0A78ACE58662}
 		{FCBE0EAB-34C6-48D9-9D14-907E106E648E} = {BF158285-9F97-4B1C-BEC7-AB0D49B4F98D}
 		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078} = {2430B804-617A-4539-970A-7ED8E9885E82}
+		{80BB8EA3-676D-4DC9-919B-3373AD0653C1} = {2430B804-617A-4539-970A-7ED8E9885E82}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}
