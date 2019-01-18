@@ -30,6 +30,33 @@ graph = function (file.name, taskBoundaries, xlab, ylab, taskColors, func.before
 }
 
 
+filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
+  
+  resultQueries = c()
+  taskId = 1
+  closestResetAll = suppressWarnings(max(as.numeric(actions[,actions[2,] == "ResetAll" && actions[1,] < taskBoundariesMatrix[1,taskId]][1,])))
+  for (queryId in 1:length(savedQueries))
+  {
+    if (savedQueries[queryId] > taskBoundariesMatrix[2,taskId] && taskId < length(taskBoundariesMatrix[1,])) { #after end
+      taskId = taskId + 1
+      closestResetAll = suppressWarnings(max(as.numeric(actions[,actions[2,] == "ResetAll" && actions[1,] < taskBoundariesMatrix[1,taskId]][1,])))
+    }
+    
+    if (savedQueries[queryId] >= taskBoundariesMatrix[1,taskId] || (!is.infinite(closestResetAll) && savedQueries[queryId] > closestResetAll)) { #earlier than start
+      if (savedQueries[queryId] <= taskBoundariesMatrix[2,taskId]) 
+      {
+        resultQueries = append(resultQueries, savedQueries[queryId])  
+      }
+    } 
+  }
+  
+  return(resultQueries)
+}
+
+
+
+
+
 library("rjson")
 
 baseDir = "d:\\Temp\\Downloads\\database-vbs2019\\"
@@ -61,17 +88,18 @@ for (day in c(1,2)) {
   validTasks = origTasks[c((13*(day-1)+1):(13*day))]
  
   #tasks definitions
-  taskBoundaries = c()
+  taskBoundariesMatrix = c()
   for (line in taskLines)
   {
     jsonData = fromJSON(line)
     if (!is.element(jsonData[["_id"]], validTasks)) {
       next
     }
-    taskBoundaries = cbind(taskBoundaries, c(jsonData[["startTimeStamp"]], jsonData[["endTimeStamp"]]))
+    taskBoundariesMatrix = cbind(taskBoundariesMatrix, c(jsonData[["startTimeStamp"]], jsonData[["endTimeStamp"]]))
   }
   
-  taskBoundaries = as.vector(taskBoundaries[,order(taskBoundaries[1,])])
+  taskBoundariesMatrix = taskBoundariesMatrix[,order(taskBoundariesMatrix[1,])]
+  taskBoundaries = as.vector(taskBoundariesMatrix)
   
   taskColors = rep(c("red", "blue", "green", "orange", "gray", "yellow"),each=2)
   graph(paste0("graph_day",day,".pdf"), taskBoundaries, "Time", "Actions", 
@@ -82,7 +110,7 @@ for (day in c(1,2)) {
         for (member in c(0,1)) {
           
           #actions
-          actionTimeStamps = c()
+          actions = c()
           for (line in actionLines)
           {
             actionData = fromJSON(line)
@@ -92,7 +120,7 @@ for (day in c(1,2)) {
               next
             }
             
-            actionTimeStamps = append(actionTimeStamps, sapply(actionData[["events"]], function(event) {event[["timestamp"]]}))
+            actions = cbind(actions, sapply(actionData[["events"]], function(event) { c(event[["timestamp"]], event[["type"]], event[["category"]]) }))
           }
           
           #submissions
@@ -112,14 +140,16 @@ for (day in c(1,2)) {
           #saved tasks
           baseSavedQPath = "..\\..\\..\\Logs\\2019-01-09_VBS2019\\"
           savedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog"))))
+          savedQueries = filterQueries(taskBoundariesMatrix, actions, savedQueries)
           
-          points(actionTimeStamps, rep(3*member+1, length(actionTimeStamps)), lty=1, pch=20)
+          cex=0.7
+          points(actions[1,], rep(3*member+1, length(actions[1,])), lty=1, pch=20, cex=cex)
           subColors = sapply(submissions[2,], function (success) { ifelse(success == 1, "red", "black")})
-          points(submissions[1,], rep(3*member+2, length(submissions[1,])), lty=1, pch=20, col=subColors)
-          points(savedQueries, rep(3*member+3, length(savedQueries)), lty=1, pch=20)
+          points(submissions[1,], rep(3*member+2, length(submissions[1,])), lty=1, pch=20, col=subColors, cex=cex)
+          points(savedQueries, rep(3*member+3, length(savedQueries)), lty=1, pch=20, cex=cex)
         }
         #axis(1, at=taskBoundaries, labels=rep(1:(length(taskBoundaries)/2), each=2), col = "grey", tck=0, cex.axis=0.5)
-        axis(2, at=c(1:6), labels=paste0(c("All_", "Submissions_", "Saved queries_"),c(rep(0,3),rep(1,3))), col = "grey", tck=0, cex.axis=0.5, las=1)
+        axis(2, at=c(1:6), labels=paste0(c("All\nMember ", "Submissions\nMember ", "Saved queries\nMember "),c(rep(0,3),rep(1,3))), col = "grey", tck=0, cex.axis=0.5, las=1)
       }
   )   
 }
