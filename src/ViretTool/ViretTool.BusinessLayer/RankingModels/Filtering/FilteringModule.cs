@@ -73,15 +73,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             if (aggregatedMask != null)
             {
                 ApplyMaskFilters(aggregatedMask, InputRanking, MaskIntermediateRanking);
-                CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery,
-                    MaskIntermediateRanking, OutputRanking);
             }
             else
             {
                 // mask filters are not applied, we skip MaskIntermediateRanking
-                CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery,
-                    InputRanking, OutputRanking);
+                Array.Copy(InputRanking.Ranks, MaskIntermediateRanking.Ranks, InputRanking.Ranks.Length);
             }
+            CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery,
+                    MaskIntermediateRanking, OutputRanking);
         }
 
         private void InitializeIntermediateBuffers()

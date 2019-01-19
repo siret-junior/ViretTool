@@ -116,6 +116,7 @@ namespace KisQueryResultExtraction
                             default:
                                 throw new NotImplementedException();
                         }
+                        //outputRanks = maskFilteringRanks;
                         outputRanks = countFilteringRanks;
 
 
