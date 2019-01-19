@@ -34,12 +34,16 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
   
   resultQueries = c()
   taskId = 1
-  closestResetAll = suppressWarnings(max(as.numeric(actions[,actions[2,] == "ResetAll" && actions[1,] < taskBoundariesMatrix[1,taskId]][1,])))
+  
+  closestResetAll = suppressWarnings(max(as.numeric(t(t(actions[,actions[2,] == "ResetAll" & actions[1,] < taskBoundariesMatrix[1,taskId]]))[1,])))
+  resultActions = actions[,actions[1,] >= closestResetAll]
+  
   for (queryId in 1:length(savedQueries))
   {
     if (savedQueries[queryId] > taskBoundariesMatrix[2,taskId] && taskId < length(taskBoundariesMatrix[1,])) { #after end
       taskId = taskId + 1
-      closestResetAll = suppressWarnings(max(as.numeric(actions[,actions[2,] == "ResetAll" && actions[1,] < taskBoundariesMatrix[1,taskId]][1,])))
+      closestResetAll = suppressWarnings(max(as.numeric(t(t(resultActions[,resultActions[2,] == "ResetAll" & resultActions[1,] < taskBoundariesMatrix[1,taskId]]))[1,])))
+      resultActions = resultActions[,resultActions[1,] <= taskBoundariesMatrix[2,taskId-1] | resultActions[1,] >= closestResetAll]
     }
     
     if (savedQueries[queryId] >= taskBoundariesMatrix[1,taskId] || (!is.infinite(closestResetAll) && savedQueries[queryId] > closestResetAll)) { #earlier than start
@@ -50,7 +54,7 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
     } 
   }
   
-  return(resultQueries)
+  return(list(resultQueries, resultActions))
 }
 
 
@@ -140,7 +144,9 @@ for (day in c(1,2)) {
           #saved tasks
           baseSavedQPath = "..\\..\\..\\Logs\\2019-01-09_VBS2019\\"
           savedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog"))))
-          savedQueries = filterQueries(taskBoundariesMatrix, actions, savedQueries)
+          newQueriesAndActions = filterQueries(taskBoundariesMatrix, actions, savedQueries)
+          savedQueries = newQueriesAndActions[[1]]
+          actions = newQueriesAndActions[[2]]
           
           cex=0.7
           points(actions[1,], rep(3*member+1, length(actions[1,])), lty=1, pch=20, cex=cex)
