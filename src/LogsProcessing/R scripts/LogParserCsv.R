@@ -5,7 +5,8 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
   resultQueries = c()
   taskId = 1
   
-  closestResetAll = suppressWarnings(max(as.numeric(t(t(actions[,actions[2,] == "ResetAll" & actions[1,] < taskBoundariesMatrix[1,taskId]]))[1,])))
+  closestResetAll = max(as.numeric(taskBoundariesMatrix[1,taskId])- 20000,
+                        suppressWarnings(max(as.numeric(t(t(actions[,actions[2,] == "ResetAll" & actions[1,] < taskBoundariesMatrix[1,taskId]]))[1,]))))
   resultActions = actions[,actions[1,] >= closestResetAll]
   
   resultTaskBoundaries = list("Closes_ResetAll" = closestResetAll, "Server_Start" = taskBoundariesMatrix[1,taskId],"Server_End" = taskBoundariesMatrix[2,taskId])
@@ -14,7 +15,8 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
   {
     if (savedQueries[queryId] > taskBoundariesMatrix[2,taskId] && taskId < length(taskBoundariesMatrix[1,])) { #after end
       taskId = taskId + 1
-      closestResetAll = suppressWarnings(max(as.numeric(t(t(resultActions[,resultActions[2,] == "ResetAll" & resultActions[1,] < taskBoundariesMatrix[1,taskId]]))[1,])))
+      closestResetAll = max(as.numeric(taskBoundariesMatrix[1,taskId]) - 20000,
+                            suppressWarnings(max(as.numeric(t(t(actions[,actions[2,] == "ResetAll" & actions[1,] < taskBoundariesMatrix[1,taskId]]))[1,]))))
       resultActions = resultActions[,resultActions[1,] <= taskBoundariesMatrix[2,taskId-1] | resultActions[1,] >= closestResetAll]
       resultTaskBoundaries = rbind(resultTaskBoundaries, list(closestResetAll,taskBoundariesMatrix[1,taskId],taskBoundariesMatrix[2,taskId]))
     }
@@ -22,7 +24,7 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
     if (savedQueries[queryId] >= taskBoundariesMatrix[1,taskId] || (!is.infinite(closestResetAll) && savedQueries[queryId] > closestResetAll)) { #earlier than start
       if (savedQueries[queryId] <= taskBoundariesMatrix[2,taskId]) 
       {
-        resultQueries = append(resultQueries, savedQueries[queryId])  
+        resultQueries = cbind(resultQueries, c(savedQueries[queryId], taskBoundariesMatrix[3,taskId]))
       }
     } 
   }
@@ -66,7 +68,7 @@ for (line in taskLines)
   if (!is.element(jsonData[["_id"]], validTasks)) {
     next
   }
-  taskBoundariesMatrix = cbind(taskBoundariesMatrix, c(jsonData[["startTimeStamp"]], jsonData[["endTimeStamp"]]))
+  taskBoundariesMatrix = cbind(taskBoundariesMatrix, c(jsonData[["startTimeStamp"]], jsonData[["endTimeStamp"]], jsonData[["name"]]))
 }
 
 taskBoundariesMatrix = taskBoundariesMatrix[,order(taskBoundariesMatrix[1,])]
@@ -107,37 +109,70 @@ for (member in c(0,1)) {
   #saved tasks
   baseSavedQPath = "..\\..\\..\\Logs\\2019-01-09_VBS2019\\"
   savedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog"))))
+  
   newQueriesAndActions = filterQueries(taskBoundariesMatrix, actions, savedQueries)
   savedQueries = newQueriesAndActions[[1]]
   actions = newQueriesAndActions[[2]]
   
-  #actions[1,] = as.numeric(actions[1,])
+  write.table(newQueriesAndActions[[3]], paste0("TaskBoundaries_member_",member,".csv"), row.names = FALSE, sep = ";")
   write.table(t(submissions), paste0("Submissions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
   write.table(t(actions[,actions[3,] == "Browsing"]), paste0("Actions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
-  write.table(newQueriesAndActions[[3]], paste0("TaskBoundaries_member_",member,".csv"), row.names = FALSE, sep = ";")
+  
+  queryResultsFile = file(paste0("ResultRankings_",ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),".txt"),open="r")
+  queryResults = unname(sapply(readLines(queryResultsFile),
+                        function(line) {
+                          queryResJson = fromJSON(line)
+                          return (t(c(queryResJson[["queryTimestamp"]], queryResJson[["topVideoPosition"]],queryResJson[["topShotPosition"]])))
+                        }))
+  close(queryResultsFile)
   
   #transform queries
   transformedQueries = c()
-  for (query in savedQueries) {
-    queryFile = file(paste0(baseSavedQPath,ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"\\QueriesLog\\",query,".json"),open="r")
+  firstKwValue =""; secondKwValue = ""
+  prevFirstKwCount = 0
+  prevSecondKwCount = 0
+  savedQueries = savedQueries[,order(savedQueries[1,])]
+  for (queryNumber in 1:length(savedQueries[1,])) {
+    
+    queryTS = savedQueries[1,queryNumber]
+    queryFile = file(paste0(baseSavedQPath,ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"\\QueriesLog\\",queryTS,".json"),open="r")
     queryData = fromJSON(file = queryFile)
     close(queryFile)
     
-    first = ifelse(queryData[["primarytemporalquery"]] == 0, "formerquery", "latterquery")
-    second = ifelse(queryData[["primarytemporalquery"]] == 1, "formerquery", "latterquery")
+    firstIsMain = queryData[["primarytemporalquery"]] == 0
+    first = ifelse(firstIsMain, "formerquery", "latterquery")
+    second = ifelse(!firstIsMain, "formerquery", "latterquery")
     similarity = queryData[["bitemporalsimilarityquery"]]
     
-    #TODO real key words?
+    potentialKw = actions[,actions[1,] == queryTS & actions[2,] == "Concept" & actions[3,] == "Text"]
+    
+    firstKwCount = length(similarity[["keywordquery"]][[first]][["synsetgroups"]])
+    if (prevFirstKwCount != firstKwCount) {
+      firstKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(firstKwCount <=0, "", firstKwValue))
+      prevFirstKwCount = firstKwCount
+    } 
+    
+    secondKwCount = length(similarity[["keywordquery"]][[second]][["synsetgroups"]])
+    if (prevSecondKwCount != secondKwCount) {
+      secondKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(secondKwCount <=0, "", secondKwValue))
+      prevSecondKwCount = secondKwCount
+    }
+    
     transformedQuery = list(
-      "TimeStamp" = query,
-      "KW_1_Count" = length(similarity[["keywordquery"]][[first]][["synsetgroups"]]),
-      "KW_2_Count" = length(similarity[["keywordquery"]][[second]][["synsetgroups"]]),
-      "Color_1" = ifelse(length(similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]) > 0, "on", "off"),
-      "Color_2" = ifelse(length(similarity[["colorsketchquery"]][[second]][["colorsketchellipses"]]) > 0, "on", "off"),
-      "Face_1" = ifelse(length(similarity[["facesketchquery"]][[first]][["colorsketchellipses"]]) > 0, "on", "off"),
-      "Face_2" = ifelse(length(similarity[["facesketchquery"]][[second]][["colorsketchellipses"]]) > 0, "on", "off"),
-      "Text_1" = ifelse(length(similarity[["textsketchquery"]][[first]][["colorsketchellipses"]]) > 0, "on", "off"),
-      "Text_2" = ifelse(length(similarity[["textsketchquery"]][[second]][["colorsketchellipses"]]) > 0, "on", "off"),
+      "TimeStamp" = queryTS,
+      "TaskName" = savedQueries[2,queryNumber],
+      "TopVideoPosition" = queryResults[,queryResults[1,] == queryTS][2],
+      "TopShotPosition" = queryResults[,queryResults[1,] == queryTS][3],
+      "KW_1_Count" = firstKwCount,
+      "KW_1_Words" = ifelse(firstKwValue != "NA" && !is.na(firstKwValue), firstKwValue, ""),
+      "KW_2_Count" = secondKwCount,
+      "KW_2_Words" = ifelse(secondKwValue != "NA" && !is.na(secondKwValue), secondKwValue, ""),
+      "Color_1" = length(similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]),
+      "Color_2" = length(similarity[["colorsketchquery"]][[second]][["colorsketchellipses"]]),
+      "Face_1" = length(similarity[["facesketchquery"]][[first]][["colorsketchellipses"]]),
+      "Face_2" = length(similarity[["facesketchquery"]][[second]][["colorsketchellipses"]]),
+      "Text_1" = length(similarity[["textsketchquery"]][[first]][["colorsketchellipses"]]),
+      "Text_2" = length(similarity[["textsketchquery"]][[second]][["colorsketchellipses"]]),
       "Semantic_1" = ifelse(length(similarity[["semanticexamplequery"]][[first]][["positiveexampleids"]]) > 0, "on",
                             ifelse(length(similarity[["semanticexamplequery"]][[first]][["externalimages"]]) > 0, "external", "off")),
       "Semantic_2" = ifelse(length(similarity[["semanticexamplequery"]][[second]][["positiveexampleids"]]) > 0, "on", 
