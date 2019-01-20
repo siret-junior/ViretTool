@@ -78,18 +78,24 @@ for (member in c(0,1)) {
   
   #actions
   actions = c()
+  allActions = c()
   for (line in actionLines)
   {
     actionData = fromJSON(line)
-    if (is.null(actionData[["teamId"]]) || actionData[["teamId"]] != 4 || actionData[["memberId"]] != member
-        || !is.element(actionData[["taskId"]], validTasks)
-    ) {
+    if (is.null(actionData[["teamId"]]) || actionData[["teamId"]] != 4 || actionData[["memberId"]] != member || length(actionData[["events"]]) <= 0) {
       next
     }
-    
-    actions = cbind(actions, sapply(actionData[["events"]], 
-                                    function(event) { c(event[["timestamp"]],event[["type"]],event[["category"]],
-                                                        ifelse(is.null(event[["value"]]), "NA", event[["value"]])) }))
+      
+    allActions = cbind(allActions, sapply(actionData[["events"]], 
+                                          function(event) { c(ifelse(is.null(event[["timestamp"]]), NA, event[["timestamp"]]),
+                                                              ifelse(is.null(event[["type"]]), NA, event[["type"]]),
+                                                              ifelse(is.null(event[["category"]]), NA, event[["category"]]),
+                                                              ifelse(is.null(event[["value"]]), NA, event[["value"]])) }))
+    if (is.element(actionData[["taskId"]], validTasks)) {
+      actions = cbind(actions, sapply(actionData[["events"]], 
+                                      function(event) { c(event[["timestamp"]],event[["type"]],event[["category"]],
+                                      ifelse(is.null(event[["value"]]), "NA", event[["value"]])) }))
+    }
   }
   
   #submissions
@@ -108,10 +114,10 @@ for (member in c(0,1)) {
   
   #saved tasks
   baseSavedQPath = "..\\..\\..\\Logs\\2019-01-09_VBS2019\\"
-  savedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog"))))
+  allSavedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog"))))
   
-  newQueriesAndActions = filterQueries(taskBoundariesMatrix, actions, savedQueries)
-  savedQueries = newQueriesAndActions[[1]]
+  newQueriesAndActions = filterQueries(taskBoundariesMatrix, actions, allSavedQueries)
+  filteredSavedQueries = newQueriesAndActions[[1]]
   actions = newQueriesAndActions[[2]]
   
   write.table(newQueriesAndActions[[3]], paste0("TaskBoundaries_member_",member,".csv"), row.names = FALSE, sep = ";")
@@ -126,47 +132,74 @@ for (member in c(0,1)) {
                         }))
   close(queryResultsFile)
   
+  queryResultsBeforeFilterFile = file(paste0("ResultRankings_",ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"_BeforeCountFilter.txt"),open="r")
+  queryResultsBF = unname(sapply(readLines(queryResultsBeforeFilterFile),
+                               function(line) {
+                                 queryResJson = fromJSON(line)
+                                 return (t(c(queryResJson[["queryTimestamp"]], queryResJson[["topVideoPosition"]],queryResJson[["topShotPosition"]])))
+                               }))
+  close(queryResultsBeforeFilterFile)
+  
   #transform queries
   transformedQueries = c()
   firstKwValue =""; secondKwValue = ""
-  prevFirstKwCount = 0
-  prevSecondKwCount = 0
-  savedQueries = savedQueries[,order(savedQueries[1,])]
-  for (queryNumber in 1:length(savedQueries[1,])) {
+  prevFirstKwCount = 0; prevSecondKwCount = 0; prevMainModel = 0
+  allSavedQueries = allSavedQueries[order(allSavedQueries)]
+  for (queryTS in allSavedQueries) {
     
-    queryTS = savedQueries[1,queryNumber]
     queryFile = file(paste0(baseSavedQPath,ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"\\QueriesLog\\",queryTS,".json"),open="r")
     queryData = fromJSON(file = queryFile)
     close(queryFile)
     
-    firstIsMain = queryData[["primarytemporalquery"]] == 0
+    mainModel = queryData[["primarytemporalquery"]]
+    firstIsMain = mainModel == 0
     first = ifelse(firstIsMain, "formerquery", "latterquery")
     second = ifelse(!firstIsMain, "formerquery", "latterquery")
     similarity = queryData[["bitemporalsimilarityquery"]]
     
-    potentialKw = actions[,actions[1,] == queryTS & actions[2,] == "Concept" & actions[3,] == "Text"]
-    
     firstKwCount = length(similarity[["keywordquery"]][[first]][["synsetgroups"]])
-    if (prevFirstKwCount != firstKwCount) {
-      firstKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(firstKwCount <=0, "", firstKwValue))
-      prevFirstKwCount = firstKwCount
-    } 
-    
     secondKwCount = length(similarity[["keywordquery"]][[second]][["synsetgroups"]])
-    if (prevSecondKwCount != secondKwCount) {
-      secondKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(secondKwCount <=0, "", secondKwValue))
-      prevSecondKwCount = secondKwCount
+    
+    #model order just switched
+    if (mainModel != prevMainModel) {
+      temp = firstKwValue
+      firstKwValue = secondKwValue
+      secondKwValue = temp
+    } else {
+      #Keywords matching logic
+      potentialKw = allActions[,allActions[1,] == queryTS & allActions[2,] == "Concept" & allActions[3,] == "Text"]
+      
+      if (prevFirstKwCount != firstKwCount) {
+        firstKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(firstKwCount <=0, "", firstKwValue))
+      } 
+      
+      if (prevSecondKwCount != secondKwCount) {
+        secondKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(secondKwCount <=0, "", secondKwValue))
+      }
+    }
+    prevFirstKwCount = firstKwCount
+    prevSecondKwCount = secondKwCount
+    prevMainModel = mainModel
+    
+    if (!is.element(queryTS, filteredSavedQueries[1,])) {
+      next
     }
     
     transformedQuery = list(
       "TimeStamp" = queryTS,
-      "TaskName" = savedQueries[2,queryNumber],
+      "TaskName" = filteredSavedQueries[2,filteredSavedQueries[1,] == queryTS],
       "TopVideoPosition" = queryResults[,queryResults[1,] == queryTS][2],
       "TopShotPosition" = queryResults[,queryResults[1,] == queryTS][3],
+      "TopVideoPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][2],
+      "TopShotPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][3],
       "KW_1_Count" = firstKwCount,
       "KW_1_Words" = ifelse(firstKwValue != "NA" && !is.na(firstKwValue), firstKwValue, ""),
+      "KW_1_IDS" = paste(sapply(similarity[["keywordquery"]][[first]][["synsetgroups"]], 
+                          function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse =",")}),collapse ="|"),
       "KW_2_Count" = secondKwCount,
       "KW_2_Words" = ifelse(secondKwValue != "NA" && !is.na(secondKwValue), secondKwValue, ""),
+      "KW_2_IDS" = paste(sapply(similarity[["keywordquery"]][[second]][["synsetgroups"]], 
+                                function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse =",")}),collapse ="|"),
       "Color_1" = length(similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]),
       "Color_2" = length(similarity[["colorsketchquery"]][[second]][["colorsketchellipses"]]),
       "Face_1" = length(similarity[["facesketchquery"]][[first]][["colorsketchellipses"]]),
