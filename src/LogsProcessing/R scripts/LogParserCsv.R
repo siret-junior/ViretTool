@@ -9,7 +9,8 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
                         suppressWarnings(max(as.numeric(t(t(actions[,actions[2,] == "ResetAll" & actions[1,] < taskBoundariesMatrix[1,taskId]]))[1,]))))
   resultActions = actions[,actions[1,] >= closestResetAll]
   
-  resultTaskBoundaries = list("Closes_ResetAll" = closestResetAll, "Server_Start" = taskBoundariesMatrix[1,taskId],"Server_End" = taskBoundariesMatrix[2,taskId])
+  resultTaskBoundaries = list("Closes_ResetAll" = closestResetAll, "Server_Start" = taskBoundariesMatrix[1,taskId],"Server_End" = taskBoundariesMatrix[2,taskId],
+                              "TaskName" = taskBoundariesMatrix[3,taskId], "TaskId" = taskBoundariesMatrix[4,taskId])
   
   for (queryId in 1:length(savedQueries))
   {
@@ -18,7 +19,8 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
       closestResetAll = max(as.numeric(taskBoundariesMatrix[1,taskId]) - 20000,
                             suppressWarnings(max(as.numeric(t(t(actions[,actions[2,] == "ResetAll" & actions[1,] < taskBoundariesMatrix[1,taskId]]))[1,]))))
       resultActions = resultActions[,resultActions[1,] <= taskBoundariesMatrix[2,taskId-1] | resultActions[1,] >= closestResetAll]
-      resultTaskBoundaries = rbind(resultTaskBoundaries, list(closestResetAll,taskBoundariesMatrix[1,taskId],taskBoundariesMatrix[2,taskId]))
+      resultTaskBoundaries = rbind(resultTaskBoundaries, list(closestResetAll,taskBoundariesMatrix[1,taskId],taskBoundariesMatrix[2,taskId],
+                                                              taskBoundariesMatrix[3,taskId],taskBoundariesMatrix[4,taskId]))
     }
     
     if (savedQueries[queryId] >= taskBoundariesMatrix[1,taskId] || (!is.infinite(closestResetAll) && savedQueries[queryId] > closestResetAll)) { #earlier than start
@@ -68,7 +70,7 @@ for (line in taskLines)
   if (!is.element(jsonData[["_id"]], validTasks)) {
     next
   }
-  taskBoundariesMatrix = cbind(taskBoundariesMatrix, c(jsonData[["startTimeStamp"]], jsonData[["endTimeStamp"]], jsonData[["name"]]))
+  taskBoundariesMatrix = cbind(taskBoundariesMatrix, c(jsonData[["startTimeStamp"]], jsonData[["endTimeStamp"]], jsonData[["name"]], jsonData[["_id"]]))
 }
 
 taskBoundariesMatrix = taskBoundariesMatrix[,order(taskBoundariesMatrix[1,])]
@@ -109,7 +111,8 @@ for (member in c(0,1)) {
       next
     }
     
-    submissions = cbind(submissions, c(subData[["timestamp"]], ifelse(is.null(subData[["correct"]]), 0, subData[["correct"]])))
+    submissions = cbind(submissions, c(subData[["timestamp"]], ifelse(is.null(subData[["correct"]]), 0, subData[["correct"]]),
+                                       subData[["taskId"]]))
   }
   
   #saved tasks
@@ -119,10 +122,14 @@ for (member in c(0,1)) {
   newQueriesAndActions = filterQueries(taskBoundariesMatrix, actions, allSavedQueries)
   filteredSavedQueries = newQueriesAndActions[[1]]
   actions = newQueriesAndActions[[2]]
+  filteredTaskBoundaries = newQueriesAndActions[[3]]
   
-  write.table(newQueriesAndActions[[3]], paste0("TaskBoundaries_member_",member,".csv"), row.names = FALSE, sep = ";")
+  write.table(filteredTaskBoundaries, paste0("TaskBoundaries_member_",member,".csv"), row.names = FALSE, sep = ";")
   write.table(t(submissions), paste0("Submissions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
   write.table(t(actions[,actions[3,] == "Browsing"]), paste0("Actions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
+  #task order
+  write.table(sapply(validTasks, function(taskId) {filteredTaskBoundaries[filteredTaskBoundaries[,"TaskId"]==taskId,][[4]]}),
+              paste0("Tasks_order_member_",member,".csv"), col.names = TRUE, row.names = FALSE, sep = ";")
   
   queryResultsFile = file(paste0("ResultRankings_",ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),".txt"),open="r")
   queryResults = unname(sapply(readLines(queryResultsFile),
@@ -185,9 +192,12 @@ for (member in c(0,1)) {
       next
     }
     
+    taskName = filteredSavedQueries[2,filteredSavedQueries[1,] == queryTS]
+    taskId = filteredTaskBoundaries[filteredTaskBoundaries[,4]==taskName,][[5]]
+    firstSucSub = min(submissions[,submissions[3,]==taskId & submissions[2,]=="TRUE"][1])
     transformedQuery = list(
       "TimeStamp" = queryTS,
-      "TaskName" = filteredSavedQueries[2,filteredSavedQueries[1,] == queryTS],
+      "TaskName" = taskName,
       "TopVideoPosition" = queryResults[,queryResults[1,] == queryTS][2],
       "TopShotPosition" = queryResults[,queryResults[1,] == queryTS][3],
       "TopVideoPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][2],
@@ -211,7 +221,11 @@ for (member in c(0,1)) {
       "Semantic_2" = ifelse(length(similarity[["semanticexamplequery"]][[second]][["positiveexampleids"]]) > 0, "on", 
                             ifelse(length(similarity[["semanticexamplequery"]][[second]][["externalimages"]]) > 0, "external", "off")),
       "SortedBy" = switch(as.numeric(queryData[[ifelse(queryData[["primarytemporalquery"]] == 0, "formerfusionquery", "latterfusionquery")]][["sortingsimilaritymodel"]]) + 1,
-                          "Keyword", "ColorSketch", "Face", "Text", "Semantic", "None")
+                          "Keyword", "ColorSketch", "Face", "Text", "Semantic", "None"),
+      "TaskStart" = filteredTaskBoundaries[filteredTaskBoundaries[,4]==taskName,][[2]],
+      "TaskEnd" = filteredTaskBoundaries[filteredTaskBoundaries[,4]==taskName,][[3]],
+      "FirstSuccessfulSubmission" = firstSucSub,
+      "IsAfterSuccessfulSubmission" = queryTS > firstSucSub
     )
     
     transformedQueries = rbind(transformedQueries, transformedQuery)
