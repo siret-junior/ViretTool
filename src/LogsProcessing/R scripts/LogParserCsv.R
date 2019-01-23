@@ -34,6 +34,51 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
   return(list(resultQueries, resultActions, resultTaskBoundaries))
 }
 
+isSame = function(firstList, secondList) {
+  unlistedFirst = unlist(firstList)
+  unlistedSecond = unlist(secondList)
+  if (length(unlistedFirst) != length(unlistedSecond)) {
+    return(FALSE)
+  }
+  sum = sum(unlistedFirst != unlistedSecond)
+  return(ifelse(sum > 0, FALSE, TRUE))
+}
+
+getModelsChanged = function(currentQ, previousQ, first, second) {
+  
+  #similarity[["keywordquery"]][[first]][["synsetgroups"]]
+  #similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]
+  #similarity[["facesketchquery"]][[first]][["colorsketchellipses"]]
+  #similarity[["textsketchquery"]][[first]][["colorsketchellipses"]]
+  #similarity[["semanticexamplequery"]][[first]][["positiveexampleids"]]
+  changes = c()
+  for (i in c(1:2)) {
+    fs = c(first, second)[i]
+    
+    if (!isSame(currentQ[["keywordquery"]][[fs]][["synsetgroups"]], previousQ[["keywordquery"]][[fs]][["synsetgroups"]])) {
+      changes = append(changes, paste0("KW_",i))
+    }
+    if (!isSame(currentQ[["colorsketchquery"]][[fs]][["colorsketchellipses"]], previousQ[["colorsketchquery"]][[fs]][["colorsketchellipses"]])) {
+      changes = append(changes, paste0("Color_",i))
+    }
+    if (!isSame(currentQ[["facesketchquery"]][[fs]][["colorsketchellipses"]], previousQ[["facesketchquery"]][[fs]][["colorsketchellipses"]])) {
+      changes = append(changes, paste0("Face_",i))
+    }
+    if (!isSame(currentQ[["textsketchquery"]][[fs]][["colorsketchellipses"]], previousQ[["textsketchquery"]][[fs]][["colorsketchellipses"]])) {
+      changes = append(changes, paste0("Text_",i))
+    }
+    if (!isSame(currentQ[["semanticexamplequery"]][[fs]][["positiveexampleids"]], previousQ[["semanticexamplequery"]][[fs]][["positiveexampleids"]])) {
+      changes = append(changes, paste0("Semantic_",i))
+    }
+    if (!isSame(currentQ[["semanticexamplequery"]][[fs]][["externalimages"]], previousQ[["semanticexamplequery"]][[fs]][["externalimages"]])) {
+      changes = append(changes, paste0("External_",i))
+    }
+  }
+  
+  return (changes)
+}
+
+
 
 
 library("rjson")
@@ -152,6 +197,7 @@ for (member in c(0,1)) {
   firstKwValue =""; secondKwValue = ""
   prevFirstKwCount = 0; prevSecondKwCount = 0; prevMainModel = 0
   allSavedQueries = allSavedQueries[order(allSavedQueries)]
+  previousSimilarity = NULL
   for (queryTS in allSavedQueries) {
     
     queryFile = file(paste0(baseSavedQPath,ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"\\QueriesLog\\",queryTS,".json"),open="r")
@@ -189,6 +235,7 @@ for (member in c(0,1)) {
     prevMainModel = mainModel
     
     if (!is.element(queryTS, filteredSavedQueries[1,])) {
+      previousSimilarity = similarity
       next
     }
     
@@ -222,12 +269,14 @@ for (member in c(0,1)) {
                             ifelse(length(similarity[["semanticexamplequery"]][[second]][["externalimages"]]) > 0, "external", "off")),
       "SortedBy" = switch(as.numeric(queryData[[ifelse(queryData[["primarytemporalquery"]] == 0, "formerfusionquery", "latterfusionquery")]][["sortingsimilaritymodel"]]) + 1,
                           "Keyword", "ColorSketch", "Face", "Text", "Semantic", "None"),
+      "ModelsChanged" = paste(getModelsChanged(similarity, previousSimilarity, first, second), collapse = "|"),
       "TaskStart" = filteredTaskBoundaries[filteredTaskBoundaries[,4]==taskName,][[2]],
       "TaskEnd" = filteredTaskBoundaries[filteredTaskBoundaries[,4]==taskName,][[3]],
       "FirstSuccessfulSubmission" = firstSucSub,
       "IsAfterSuccessfulSubmission" = queryTS > firstSucSub
     )
     
+    previousSimilarity = similarity
     transformedQueries = rbind(transformedQueries, transformedQuery)
   }
   write.table(transformedQueries, paste0("Queries_member_",member,".csv"), row.names = FALSE, sep = ";")
