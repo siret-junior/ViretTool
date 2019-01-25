@@ -19,15 +19,13 @@ namespace ViretTool.BusinessLayer.Services
             IDatasetService datasetService,
             IDescriptorProvider<byte[]> colorSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
-            IBiTemporalRankingService rankingService,
-            IQueryPersistingService queryPersistingService)
+            IBiTemporalRankingService rankingService)
         {
             ThumbnailService = thumbnailService;
             DatasetService = datasetService;
             ColorSignatureProvider = colorSignatureProvider;
             SemanticVectorProvider = semanticVectorProvider;
             RankingService = rankingService;
-            QueryPersistingService = queryPersistingService;
         }
 
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
@@ -35,6 +33,5 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<byte[]> ColorSignatureProvider { get; }
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
-        public IQueryPersistingService QueryPersistingService { get; }
     }
 }

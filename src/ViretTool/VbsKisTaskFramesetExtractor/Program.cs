@@ -47,8 +47,6 @@ namespace VbsKisTaskFramesetExtractor
 
                 // init services
                 DatasetServices dataset = datasetServiceManager.CurrentDataset;
-                IQueryPersistingService queryPersistingService = dataset.QueryPersistingService;
-                IBiTemporalRankingService rankingService = dataset.RankingService;
 
                 // load tasks
                 string[] taskJsons = File.ReadAllLines(taskDatabaseFile);

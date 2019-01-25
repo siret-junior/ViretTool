@@ -51,7 +51,7 @@ namespace KisQueryResultExtraction
 
                 // init services
                 DatasetServices dataset = datasetServiceManager.CurrentDataset;
-                IQueryPersistingService queryPersistingService = dataset.QueryPersistingService;
+                IQueryPersistingService queryPersistingService = container.Resolve<IQueryPersistingService>();
                 IBiTemporalRankingService rankingService = dataset.RankingService;
 
                 // compute result set for each query in query directory
