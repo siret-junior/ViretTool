@@ -194,6 +194,7 @@ for (member in c(0,1)) {
   
   
   timestamps = read.csv(paste0("timestamps_",ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),".csv"), header = TRUE, sep = ";")
+  taskNames = read.csv("tasknames.csv", header = TRUE, sep = ";")
   
   #transform queries
   transformedQueries = c()
@@ -249,6 +250,7 @@ for (member in c(0,1)) {
     transformedQuery = list(
       "TimeStamp" = queryTS,
       "TaskName" = taskName,
+      "TaskNameShort" = toString(taskNames[taskNames[,"TaskName"] == taskName,"TaskID"]),
       "TopVideoPosition" = queryResults[,queryResults[1,] == queryTS][2],
       "TopShotPosition" = queryResults[,queryResults[1,] == queryTS][3],
       "TopVideoPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][2],
