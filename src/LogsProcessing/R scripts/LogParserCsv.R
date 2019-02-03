@@ -192,6 +192,9 @@ for (member in c(0,1)) {
                                }))
   close(queryResultsBeforeFilterFile)
   
+  
+  timestamps = read.csv(paste0("timestamps_",ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),".csv"), header = TRUE, sep = ";")
+  
   #transform queries
   transformedQueries = c()
   firstKwValue =""; secondKwValue = ""
@@ -242,6 +245,7 @@ for (member in c(0,1)) {
     taskName = filteredSavedQueries[2,filteredSavedQueries[1,] == queryTS]
     taskId = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["TaskId"]]
     firstSucSub = min(submissions[,submissions[3,]==taskId & submissions[2,]=="TRUE"][1])
+    fileTimes = timestamps[timestamps[,"Filename"] == paste0(queryTS,".json"),]
     transformedQuery = list(
       "TimeStamp" = queryTS,
       "TaskName" = taskName,
@@ -273,7 +277,10 @@ for (member in c(0,1)) {
       "TaskStart" = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerStart"]],
       "TaskEnd" = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerEnd"]],
       "FirstSuccessfulSubmission" = firstSucSub,
-      "IsAfterSuccessfulSubmission" = queryTS > firstSucSub
+      "IsAfterSuccessfulSubmission" = queryTS > firstSucSub,
+      "QueryFileCreated" = fileTimes[["CreatedUnixMiliseconds"]],
+      "QueryFileModified" = fileTimes[["ModifiedUnixMiliseconds"]],
+      "QueryFileModifiedDiff" = fileTimes[["CreatedModifiedDifferenceSeconds"]]
     )
     
     previousSimilarity = similarity
