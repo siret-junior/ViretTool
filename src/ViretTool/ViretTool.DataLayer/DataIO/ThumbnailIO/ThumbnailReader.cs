@@ -27,10 +27,11 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public int ThumbnailCount => BaseBlobReader.BlobCount;
         public int FramesPerSecond { get; private set; }
 
+
+        public (int videoId, int frameNumber)[] GlobalIdToVideoFramenumber { get; private set; }
         public int[] VideoOffsets { get; private set; }
         public int[] VideoFrameCounts { get; private set; }
 
-        private readonly (int videoId, int frameNumber)[] _globalIdToVideoFramenumber;
         private Dictionary<int, Dictionary<int,int>> _videoFramenumberToGlobalId;
         
         
@@ -62,7 +63,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                     reader.ReadBytes(VideoCount * sizeof(int)));
 
                 // load globalId <-> (videoId, frameId) mappings
-                _globalIdToVideoFramenumber = new (int videoId, int frameNumber)[ThumbnailCount];
+                GlobalIdToVideoFramenumber = new (int videoId, int frameNumber)[ThumbnailCount];
                 _videoFramenumberToGlobalId = new Dictionary<int, Dictionary<int, int>>();
                 for (int iThumb = 0; iThumb < ThumbnailCount; iThumb++)
                 {
@@ -76,7 +77,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                     }
 
                     _videoFramenumberToGlobalId[videoId].Add(frameNumber, globalId);
-                    _globalIdToVideoFramenumber[globalId] = (videoId, frameNumber);
+                    GlobalIdToVideoFramenumber[globalId] = (videoId, frameNumber);
                 }
             }
         }
@@ -106,7 +107,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
             for (int globalId = globalIdStart; globalId < globalIdEnd; globalId++)
             {
-                int frameNumber = _globalIdToVideoFramenumber[globalId].frameNumber;
+                int frameNumber = GlobalIdToVideoFramenumber[globalId].frameNumber;
                 byte[] jpegData = BaseBlobReader.ReadByteBlob(globalId);
 
                 thumbnails[globalId - globalIdStart] = new ThumbnailRaw(videoId, frameNumber, jpegData);
@@ -127,7 +128,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             int firstFrameGlobalId = _videoFramenumberToGlobalId[videoId][0];
             for (int i = 0; i < VideoFrameCounts[videoId]; i++)
             {
-                if (_globalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
+                if (GlobalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
                 {
                     return ReadVideoThumbnail(firstFrameGlobalId + i);
                 }
@@ -140,8 +141,8 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public ThumbnailRaw ReadVideoThumbnail(int globalId)
         {
             byte[] jpegData = BaseBlobReader.ReadByteBlob(globalId);
-            int videoId = _globalIdToVideoFramenumber[globalId].videoId;
-            int frameNumber = _globalIdToVideoFramenumber[globalId].frameNumber;
+            int videoId = GlobalIdToVideoFramenumber[globalId].videoId;
+            int frameNumber = GlobalIdToVideoFramenumber[globalId].frameNumber;
             return new ThumbnailRaw(videoId, frameNumber, jpegData);
         }
 

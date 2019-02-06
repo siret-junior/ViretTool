@@ -12,14 +12,10 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
     {
         public VariableSizeBlobWriter BaseBlobWriter { get; private set; }
         public byte[] DatasetHeader => BaseBlobWriter.DatasetHeader;
-
-        public int[] VideoOffsets { get; private set; }
-        public int[] VideoFrameCounts { get; private set; }
-
-
+        
         public ThumbnailWriter(string outputFile, byte[] datasetHeader, 
             int thumbnailWidth, int thumbnailHeight, int videoCount, int thumbnailCount, int framesPerSecond,
-            (int videoId, int frameNumber)[] thumbnailKeys)
+            (int videoId, int frameNumber)[] globalIdToVideoFramenumber)
         {
             byte[] thumbnailMetadata = null;
             using (MemoryStream metadataStream = new MemoryStream())
@@ -35,21 +31,22 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 writer.Write(thumbnailCount);
                 writer.Write(framesPerSecond);
 
-                ProcessThumbnailKeys(thumbnailKeys);
-                for (int i = 0; i < VideoOffsets.Length; i++)
+                ProcessVideoFramenumberMappings(globalIdToVideoFramenumber, 
+                    out int[] videoOffsets, out int[] videoFrameCounts);
+                for (int i = 0; i < videoOffsets.Length; i++)
                 {
-                    writer.Write(VideoOffsets[i]);
+                    writer.Write(videoOffsets[i]);
                 }
-                for (int i = 0; i < VideoFrameCounts.Length; i++)
+                for (int i = 0; i < videoFrameCounts.Length; i++)
                 {
-                    writer.Write(VideoFrameCounts[i]);
+                    writer.Write(videoFrameCounts[i]);
                 }
 
-                for (int i = 0; i < thumbnailKeys.Length; i++)
+                for (int i = 0; i < globalIdToVideoFramenumber.Length; i++)
                 {
                     writer.Write(i);
-                    writer.Write(thumbnailKeys[i].videoId);
-                    writer.Write(thumbnailKeys[i].frameNumber);
+                    writer.Write(globalIdToVideoFramenumber[i].videoId);
+                    writer.Write(globalIdToVideoFramenumber[i].frameNumber);
                 }
 
                 // reserve space
@@ -73,7 +70,8 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         }
 
 
-        private void ProcessThumbnailKeys((int videoId, int frameNumber)[] thumbnailKeys)
+        private static void ProcessVideoFramenumberMappings((int videoId, int frameNumber)[] thumbnailKeys,
+            out int[] outputVideoOffsets, out int[] outputVideoFrameCounts)
         {
             List<int> videoOffsets = new List<int>();
             List<int> videoFrameCounts = new List<int>();
@@ -98,8 +96,8 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             }
             videoFrameCounts.Add(frameCounter);   // finish the last video
 
-            VideoOffsets = videoOffsets.ToArray();
-            VideoFrameCounts = videoFrameCounts.ToArray();
+            outputVideoOffsets = videoOffsets.ToArray();
+            outputVideoFrameCounts = videoFrameCounts.ToArray();
         }
     }
 }
