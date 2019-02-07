@@ -165,7 +165,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             if (nonFilteredPercentage > percentageOfDatabase)
             {
                 // too much results, sample
-                for (int i = 0; i < SAMPLE_SIZE; i++)
+                for (int i = 0; i < SAMPLE_SIZE && i < notFilteredRanks.Count; i++)
                 {
                     _sampleValues[i] = notFilteredRanks[_random.Next(SAMPLE_SIZE)];
                 }
@@ -178,7 +178,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             {
                 // too few results, return all (set threshold to the smallest value)
                 float minValue = float.MaxValue;
-                for (int i = 0; i < SAMPLE_SIZE; i++)
+                for (int i = 0; i < SAMPLE_SIZE && i < notFilteredRanks.Count; i++)
                 {
                     if (notFilteredRanks[i] != float.MinValue && notFilteredRanks[i] < minValue)
                     {
