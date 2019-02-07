@@ -50,6 +50,7 @@
     <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobReader.cs" />
     <Compile Include="DataIO\BlobIO\VariableSize\VariableSizeBlobWriter.cs" />
     <Compile Include="DataIO\DataConversionUtilities.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetTrimmer.cs" />
     <Compile Include="DataIO\DescriptorIO\BoolSignatureIO\BoolSignatureIOBase.cs" />
     <Compile Include="DataIO\DescriptorIO\BoolSignatureIO\BoolSignatureReader.cs" />
     <Compile Include="DataIO\DescriptorIO\BoolSignatureIO\BoolSignatureWriter.cs" />
