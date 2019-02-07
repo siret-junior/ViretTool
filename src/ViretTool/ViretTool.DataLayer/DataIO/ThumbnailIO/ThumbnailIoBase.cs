@@ -8,7 +8,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 {
     public abstract class ThumbnailIOBase : IDisposable
     {
-        public const string THUMBNAILS_EXTENSION = ".thumb";
+        public const string THUMBNAILS_EXTENSION = ".thumbs";
         public const string THUMBNAILS_FILETYPE_ID = "JPEG thumbnails";
         public const int THUMBNAILS_VERSION = 0;
 
