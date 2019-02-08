@@ -74,6 +74,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VbsKisTaskFramesetExtractor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTrimmer", "DataTrimmer\DataTrimmer.csproj", "{AB797493-EFEB-4557-AFD9-BC13919C9B02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KisQueryResultUpdater", "KisQueryResultUpdater\KisQueryResultUpdater.csproj", "{6BD363F9-AB70-4A46-A3B4-7BAD300300CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -156,6 +158,10 @@ Global
 		{AB797493-EFEB-4557-AFD9-BC13919C9B02}.Debug|x64.Build.0 = Debug|x64
 		{AB797493-EFEB-4557-AFD9-BC13919C9B02}.Release|x64.ActiveCfg = Release|x64
 		{AB797493-EFEB-4557-AFD9-BC13919C9B02}.Release|x64.Build.0 = Release|x64
+		{6BD363F9-AB70-4A46-A3B4-7BAD300300CA}.Debug|x64.ActiveCfg = Debug|x64
+		{6BD363F9-AB70-4A46-A3B4-7BAD300300CA}.Debug|x64.Build.0 = Debug|x64
+		{6BD363F9-AB70-4A46-A3B4-7BAD300300CA}.Release|x64.ActiveCfg = Release|x64
+		{6BD363F9-AB70-4A46-A3B4-7BAD300300CA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078} = {2430B804-617A-4539-970A-7ED8E9885E82}
 		{80BB8EA3-676D-4DC9-919B-3373AD0653C1} = {2430B804-617A-4539-970A-7ED8E9885E82}
 		{AB797493-EFEB-4557-AFD9-BC13919C9B02} = {F38D82C4-0A4A-48DA-9CD6-A2FBB46F305E}
+		{6BD363F9-AB70-4A46-A3B4-7BAD300300CA} = {2430B804-617A-4539-970A-7ED8E9885E82}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}
