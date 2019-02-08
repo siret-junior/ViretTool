@@ -18,8 +18,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 
         public override bool Equals(object obj)
         {
-            return obj is SynsetGroup group &&
-                   EqualityComparer<Synset[]>.Default.Equals(Synsets, group.Synsets);
+            return obj is SynsetGroup group && Synsets.SequenceEqual(group.Synsets);
         }
 
         public override int GetHashCode()

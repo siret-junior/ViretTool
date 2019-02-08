@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
@@ -22,7 +23,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
             return obj is ColorSketchQuery query &&
                    CanvasWidth == query.CanvasWidth &&
                    CanvasHeight == query.CanvasHeight &&
-                   ColorSketchEllipses.Equals(query.ColorSketchEllipses);
+                   ColorSketchEllipses.SequenceEqual(query.ColorSketchEllipses);
         }
 
         public override int GetHashCode()
