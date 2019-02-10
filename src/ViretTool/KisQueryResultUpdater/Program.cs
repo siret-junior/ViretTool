@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Submission;
@@ -26,27 +23,42 @@ namespace KisQueryResultUpdater
             foreach (string queryFile in queryFiles)
             {
                 long queryTimestamp = long.Parse(Path.GetFileNameWithoutExtension(queryFile));
-                if (!GetIfQueryNeedsToBeUpdated(queryFile, previousQueryFile))
+
+                double createWriteTimeDif = GetCreateWriteTimeDiff(queryFile);
+                if (createWriteTimeDif < 0.25)
                 {
-                    //Console.WriteLine($"{queryFile} update not needed");
                     File.Copy(queryFile, Path.Combine(outputDirectory, $"{queryTimestamp}.json"), true);
                     previousQueryFile = queryFile;
                     continue;
                 }
 
-                double createWriteTimeDif = GetCreateWriteTimeDiff(queryFile);
+                //original query is shifted
+                File.Copy(queryFile, Path.Combine(outputDirectory, $"{queryTimestamp + Math.Round(createWriteTimeDif * 1000)}.json"), true);
+                if (string.IsNullOrEmpty(previousQueryFile))
+                {
+                    previousQueryFile = queryFile;
+                    continue;
+                }
+
                 BiTemporalQuery query = DeserializeQueryObject(queryFile);
-                List<FusionQuery.SimilarityModels> changedModels = GetChangedModels(query, DeserializeQueryObject(previousQueryFile)).ToList();
+                FusionQuery.SimilarityModels sortedBy = (query.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former ? query.FormerFusionQuery : query.LatterFusionQuery).SortingSimilarityModel;
+
+                BiTemporalQuery previousQuery = DeserializeQueryObject(previousQueryFile);
+                List<FusionQuery.SimilarityModels> changedModels = GetChangedModels(query, previousQuery).ToList();
+
+                bool sortedByChanged = changedModels.Any() && !changedModels.Contains(sortedBy) && !IsQueryEmpty(query);
+                if (!sortedByChanged)
+                {
+                    previousQueryFile = queryFile;
+                    continue;
+                }
+
                 if (changedModels.Count > 1)
                 {
                     Console.WriteLine($"{queryFile} undecided log");
                 }
 
                 FusionQuery.SimilarityModels newSortedBy = changedModels.First();
-                
-
-                //original query is shifted
-                SaveQueryObject(Path.Combine(outputDirectory, $"{queryTimestamp + Math.Round(createWriteTimeDif * 1000)}.json"), query);
 
                 //query timestamp is saved with different sorted by model
                 //not nice...
@@ -57,27 +69,6 @@ namespace KisQueryResultUpdater
 
                 previousQueryFile = queryFile;
             }
-        }
-
-        private static bool GetIfQueryNeedsToBeUpdated(string queryFile, string previousQueryFile)
-        {
-            double createWriteTimeDif = GetCreateWriteTimeDiff(queryFile);
-            if (createWriteTimeDif < 0.25 || string.IsNullOrEmpty(previousQueryFile))
-            {
-                return false;
-            }
-
-            BiTemporalQuery query = DeserializeQueryObject(queryFile);
-            FusionQuery.SimilarityModels sortedBy = (query.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former ? query.FormerFusionQuery : query.LatterFusionQuery).SortingSimilarityModel;
-            if (sortedBy == FusionQuery.SimilarityModels.None)
-            {
-                return false;
-            }
-
-            BiTemporalQuery previousQuery = DeserializeQueryObject(previousQueryFile);
-            List<FusionQuery.SimilarityModels> changedModels = GetChangedModels(query, previousQuery).ToList();
-
-            return changedModels.Any() && !changedModels.Contains(sortedBy);
         }
 
         private static BiTemporalQuery DeserializeQueryObject(string queryFile)
@@ -99,28 +90,39 @@ namespace KisQueryResultUpdater
 
         private static IEnumerable<FusionQuery.SimilarityModels> GetChangedModels(BiTemporalQuery query, BiTemporalQuery previousQuery)
         {
-            bool isQueryFormer = query.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former;
-            bool isPrevQueryFormer = previousQuery.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former;
-
             BiTemporalSimilarityQuery qSim = query.BiTemporalSimilarityQuery;
             BiTemporalSimilarityQuery pqSim = previousQuery.BiTemporalSimilarityQuery;
 
-            if (!GetQueryModel(qSim.ColorSketchQuery, isQueryFormer).Equals(GetQueryModel(pqSim.ColorSketchQuery, isPrevQueryFormer)) ||
-                !GetQueryModel(qSim.FaceSketchQuery, isQueryFormer).Equals(GetQueryModel(pqSim.FaceSketchQuery, isPrevQueryFormer)) ||
-                !GetQueryModel(qSim.TextSketchQuery, isQueryFormer).Equals(GetQueryModel(pqSim.TextSketchQuery, isPrevQueryFormer)))
+            if (!qSim.ColorSketchQuery.Equals(pqSim.ColorSketchQuery) ||
+                !qSim.FaceSketchQuery.Equals(pqSim.FaceSketchQuery) ||
+                !qSim.TextSketchQuery.Equals(pqSim.TextSketchQuery))
             {
                 yield return FusionQuery.SimilarityModels.ColorSketch;
             }
 
-            if (!GetQueryModel(qSim.KeywordQuery, isQueryFormer).Equals(GetQueryModel(pqSim.KeywordQuery, isPrevQueryFormer)))
+            if (!qSim.KeywordQuery.Equals(pqSim.KeywordQuery))
             {
                 yield return FusionQuery.SimilarityModels.Keyword;
             }
 
-            if (!GetQueryModel(qSim.SemanticExampleQuery, isQueryFormer).Equals(GetQueryModel(pqSim.SemanticExampleQuery, isPrevQueryFormer)))
+            if (!qSim.SemanticExampleQuery.Equals(pqSim.SemanticExampleQuery))
             {
                 yield return FusionQuery.SimilarityModels.SemanticExample;
             }
+        }
+
+        private static bool IsQueryEmpty(BiTemporalQuery query)
+        {
+            bool isQueryFormer = query.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former;
+            BiTemporalSimilarityQuery qSim = query.BiTemporalSimilarityQuery;
+            SemanticExampleQuery semanticExampleQuery = GetQueryModel(qSim.SemanticExampleQuery, isQueryFormer);
+
+            return GetQueryModel(qSim.ColorSketchQuery, isQueryFormer).ColorSketchEllipses.Any() ||
+                   GetQueryModel(qSim.FaceSketchQuery, isQueryFormer).ColorSketchEllipses.Any() ||
+                   GetQueryModel(qSim.TextSketchQuery, isQueryFormer).ColorSketchEllipses.Any() ||
+                   GetQueryModel(qSim.KeywordQuery, isQueryFormer).SynsetGroups.Any() ||
+                   semanticExampleQuery.PositiveExampleIds.Any() ||
+                   semanticExampleQuery.ExternalImages.Any();
         }
 
         private static TQuery GetQueryModel<TQuery>(BiTemporalModelQuery<TQuery> queryModel, bool takeFormer) where TQuery : IQuery
