@@ -44,16 +44,11 @@ isSame = function(firstList, secondList) {
   return(ifelse(sum > 0, FALSE, TRUE))
 }
 
-getModelsChanged = function(currentQ, previousQ, first, second) {
+getModelsChanged = function(currentQ, previousQ) {
   
-  #similarity[["keywordquery"]][[first]][["synsetgroups"]]
-  #similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]
-  #similarity[["facesketchquery"]][[first]][["colorsketchellipses"]]
-  #similarity[["textsketchquery"]][[first]][["colorsketchellipses"]]
-  #similarity[["semanticexamplequery"]][[first]][["positiveexampleids"]]
   changes = c()
   for (i in c(1:2)) {
-    fs = c(first, second)[i]
+    fs = c("formerquery", "latterquery")[i]
     
     if (!isSame(currentQ[["keywordquery"]][[fs]][["synsetgroups"]], previousQ[["keywordquery"]][[fs]][["synsetgroups"]])) {
       changes = append(changes, paste0("KW_",i))
@@ -78,10 +73,53 @@ getModelsChanged = function(currentQ, previousQ, first, second) {
   return (changes)
 }
 
+valueOrEmpty = function(list) {
+  return(ifelse(length(list) > 0, list, ""))
+}
+
+
+getEqualKwIds = function(kwLabelRow, keywordLabels) {
+  
+  kwId = as.character(kwLabelRow[[1]])
+  result = c()
+  if (kwId != "H") {
+    result = c(kwId)
+  }
+  equalities = unlist(strsplit(as.character(kwLabelRow[[4]]), "#"))
+  for (equality in equalities) {
+    
+    newKwLabelRow = keywordLabels[keywordLabels[,2] == equality,]
+    result = append(result, getEqualKwIds(newKwLabelRow, keywordLabels))
+  }
+  
+  return (result)
+}
+
+
+getKwText = function(keywordGroups, keywordLabels) {
+  
+  parts = c()
+  for (synsetGroup in keywordGroups) {
+    
+    groupIds = sapply(synsetGroup[["synsets"]], function(s) { s[["synsetid"]]})
+    localParts = c()
+    while(length(groupIds) > 0) {
+     
+      kwLabelRow = keywordLabels[keywordLabels[,1] == groupIds[1],]
+      localParts = append(localParts, as.character(sub("#.*", "", kwLabelRow[[3]])))
+      groupIds = groupIds[groupIds %ni% getEqualKwIds(kwLabelRow, keywordLabels)]
+    }
+    
+    parts = append(parts, paste(localParts, collapse = " OR "))
+  }
+  
+  return(paste(parts, collapse = " AND "))
+}
 
 
 
 library("rjson")
+"%ni%" = Negate("%in%")
 
 baseDir = "d:\\Temp\\Downloads\\database-vbs2019\\"
 
@@ -162,7 +200,7 @@ for (member in c(0,1)) {
   
   #saved tasks
   baseSavedQPath = "..\\..\\..\\Logs\\2019-01-09_VBS2019\\"
-  allSavedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog"))))
+  allSavedQueries = as.numeric(sub(".json$", "", list.files(paste0(baseSavedQPath, ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"), "\\QueriesLog_sortingModelsUpdated"))))
   
   newQueriesAndActions = filterQueries(taskBoundariesMatrix, actions, allSavedQueries)
   filteredSavedQueries = newQueriesAndActions[[1]]
@@ -195,16 +233,15 @@ for (member in c(0,1)) {
   
   timestamps = read.csv(paste0("timestamps_",ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),".csv"), header = TRUE, sep = ";")
   taskNames = read.csv("tasknames.csv", header = TRUE, sep = ";")
+  keywordLabels = read.csv("V3C1-GoogLeNet.label", header = FALSE, sep = "~")
   
   #transform queries
   transformedQueries = c()
-  firstKwValue =""; secondKwValue = ""
-  prevFirstKwCount = 0; prevSecondKwCount = 0; prevMainModel = 0
   allSavedQueries = allSavedQueries[order(allSavedQueries)]
   previousSimilarity = NULL
   for (queryTS in allSavedQueries) {
     
-    queryFile = file(paste0(baseSavedQPath,ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"\\QueriesLog\\",queryTS,".json"),open="r")
+    queryFile = file(paste0(baseSavedQPath,ifelse(member == 0,"SIRIUS-PC","PREMEK-NTB"),"\\QueriesLog_sortingModelsUpdated\\",queryTS,".json"),open="r")
     queryData = fromJSON(file = queryFile)
     close(queryFile)
     
@@ -213,30 +250,6 @@ for (member in c(0,1)) {
     first = ifelse(firstIsMain, "formerquery", "latterquery")
     second = ifelse(!firstIsMain, "formerquery", "latterquery")
     similarity = queryData[["bitemporalsimilarityquery"]]
-    
-    firstKwCount = length(similarity[["keywordquery"]][[first]][["synsetgroups"]])
-    secondKwCount = length(similarity[["keywordquery"]][[second]][["synsetgroups"]])
-    
-    #model order just switched
-    if (mainModel != prevMainModel) {
-      temp = firstKwValue
-      firstKwValue = secondKwValue
-      secondKwValue = temp
-    } else {
-      #Keywords matching logic
-      potentialKw = allActions[,allActions[1,] == queryTS & allActions[2,] == "Concept" & allActions[3,] == "Text"]
-      
-      if (prevFirstKwCount != firstKwCount) {
-        firstKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(firstKwCount <=0, "", firstKwValue))
-      } 
-      
-      if (prevSecondKwCount != secondKwCount) {
-        secondKwValue = ifelse(length(potentialKw) > 0, potentialKw[[4]], ifelse(secondKwCount <=0, "", secondKwValue))
-      }
-    }
-    prevFirstKwCount = firstKwCount
-    prevSecondKwCount = secondKwCount
-    prevMainModel = mainModel
     
     if (!is.element(queryTS, filteredSavedQueries[1,])) {
       previousSimilarity = similarity
@@ -255,12 +268,12 @@ for (member in c(0,1)) {
       "TopShotPosition" = queryResults[,queryResults[1,] == queryTS][3],
       "TopVideoPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][2],
       "TopShotPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][3],
-      "KW_1_Count" = firstKwCount,
-      "KW_1_Words" = ifelse(firstKwValue != "NA" && !is.na(firstKwValue), firstKwValue, ""),
+      "KW_1_Count" = length(similarity[["keywordquery"]][[first]][["synsetgroups"]]),
+      "KW_1_Words" = getKwText(similarity[["keywordquery"]][[first]][["synsetgroups"]],keywordLabels ),
       "KW_1_IDS" = paste(sapply(similarity[["keywordquery"]][[first]][["synsetgroups"]], 
                           function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse ="+")}),collapse ="|"),
-      "KW_2_Count" = secondKwCount,
-      "KW_2_Words" = ifelse(secondKwValue != "NA" && !is.na(secondKwValue), secondKwValue, ""),
+      "KW_2_Count" = length(similarity[["keywordquery"]][[second]][["synsetgroups"]]),
+      "KW_2_Words" = getKwText(similarity[["keywordquery"]][[second]][["synsetgroups"]], keywordLabels),
       "KW_2_IDS" = paste(sapply(similarity[["keywordquery"]][[second]][["synsetgroups"]], 
                                 function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse ="+")}),collapse ="|"),
       "Color_1" = length(similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]),
@@ -275,14 +288,14 @@ for (member in c(0,1)) {
                             ifelse(length(similarity[["semanticexamplequery"]][[second]][["externalimages"]]) > 0, "external", "off")),
       "SortedBy" = switch(as.numeric(queryData[[ifelse(queryData[["primarytemporalquery"]] == 0, "formerfusionquery", "latterfusionquery")]][["sortingsimilaritymodel"]]) + 1,
                           "Keyword", "ColorSketch", "Face", "Text", "Semantic", "None"),
-      "ModelsChanged" = paste(getModelsChanged(similarity, previousSimilarity, first, second), collapse = "|"),
+      "ModelsChanged" = paste(getModelsChanged(similarity, previousSimilarity), collapse = "|"),
       "TaskStart" = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerStart"]],
       "TaskEnd" = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerEnd"]],
       "FirstSuccessfulSubmission" = firstSucSub,
       "IsAfterSuccessfulSubmission" = queryTS > firstSucSub,
-      "QueryFileCreated" = fileTimes[["CreatedUnixMiliseconds"]],
-      "QueryFileModified" = fileTimes[["ModifiedUnixMiliseconds"]],
-      "QueryFileModifiedDiff" = fileTimes[["CreatedModifiedDifferenceSeconds"]]
+      "QueryFileCreated" = valueOrEmpty(fileTimes[["CreatedUnixMiliseconds"]]),
+      "QueryFileModified" = valueOrEmpty(fileTimes[["ModifiedUnixMiliseconds"]]),
+      "QueryFileModifiedDiff" = valueOrEmpty(fileTimes[["CreatedModifiedDifferenceSeconds"]])
     )
     
     previousSimilarity = similarity
