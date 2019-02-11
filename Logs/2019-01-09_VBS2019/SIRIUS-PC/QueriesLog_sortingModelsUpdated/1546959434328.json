@@ -1,0 +1,207 @@
+{
+  "primarytemporalquery": 0,
+  "bitemporalsimilarityquery": {
+    "keywordquery": {
+      "formerquery": {
+        "synsetgroups": []
+      },
+      "latterquery": {
+        "synsetgroups": []
+      }
+    },
+    "colorsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": [
+          {
+            "ellipsestate": 0,
+            "positionx": 0.019844082211197728,
+            "positiony": 0.75747696669029041,
+            "horizontalaxis": 0.10416666666666667,
+            "verticalaxis": 0.18518518518518517,
+            "rotation": 0,
+            "colorr": 153,
+            "colorg": 0,
+            "colorb": 0
+          }
+        ]
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "facesketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": [
+          {
+            "ellipsestate": 1,
+            "positionx": 0.38979447200566963,
+            "positiony": 0.42989211748956585,
+            "horizontalaxis": 0.097802976612331685,
+            "verticalaxis": 0.20915032679738566,
+            "rotation": 0,
+            "colorr": 112,
+            "colorg": 128,
+            "colorb": 144
+          },
+          {
+            "ellipsestate": 1,
+            "positionx": 0.66477675407512393,
+            "positiony": 0.42989211748956585,
+            "horizontalaxis": 0.0992204110559886,
+            "verticalaxis": 0.22678951098511707,
+            "rotation": 0,
+            "colorr": 112,
+            "colorg": 128,
+            "colorb": 144
+          },
+          {
+            "ellipsestate": 0,
+            "positionx": 0.080793763288447909,
+            "positiony": 0.33665642964012904,
+            "horizontalaxis": 0.10914245216158754,
+            "verticalaxis": 0.29482636428065206,
+            "rotation": 0,
+            "colorr": 0,
+            "colorg": 0,
+            "colorb": 0
+          },
+          {
+            "ellipsestate": 0,
+            "positionx": 0.54712969525159449,
+            "positiony": 0.928829041656823,
+            "horizontalaxis": 0.51169383416017,
+            "verticalaxis": 0.1007953382156075,
+            "rotation": 0,
+            "colorr": 0,
+            "colorg": 0,
+            "colorb": 0
+          },
+          {
+            "ellipsestate": 0,
+            "positionx": 0.90715804394046762,
+            "positiony": 0.37445468147098188,
+            "horizontalaxis": 0.036853295535081543,
+            "verticalaxis": 0.22426962752972676,
+            "rotation": 0,
+            "colorr": 0,
+            "colorg": 0,
+            "colorb": 0
+          }
+        ]
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "textsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "semanticexamplequery": {
+      "formerquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      },
+      "latterquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      }
+    }
+  },
+  "formerfusionquery": {
+    "sortingsimilaritymodel": 1,
+    "keywordfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.16828396600727444
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.22948225266530078
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.22948225266530078
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.22948225266530078
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "latterfusionquery": {
+    "sortingsimilaritymodel": 5,
+    "keywordfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.29267747875454608
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.27333484217124021
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.27333484217124021
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.27333484217124021
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "formerfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.83416777276347187
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 5,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    }
+  },
+  "latterfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.9
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 5,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    }
+  }
+}
