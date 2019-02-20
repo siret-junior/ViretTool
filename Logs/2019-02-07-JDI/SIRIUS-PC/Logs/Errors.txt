@@ -1,0 +1,124 @@
+2019-02-06 23:28:50.4770|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
+   at System.ThrowHelper.ThrowKeyNotFoundException()
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ViretTool.PresentationLayer.Helpers.QueryBuilder.BuildQuery(QueryViewModel query1, QueryViewModel query2, Boolean isFirstQueryPrimary, Int32 maxFramesFromVideo, Int32 maxFramesFromShot) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Helpers\QueryBuilder.cs:line 153
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>b__70_0() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 400
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
+2019-02-06 23:28:52.6426|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
+   at System.ThrowHelper.ThrowKeyNotFoundException()
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ViretTool.PresentationLayer.Helpers.QueryBuilder.BuildQuery(QueryViewModel query1, QueryViewModel query2, Boolean isFirstQueryPrimary, Int32 maxFramesFromVideo, Int32 maxFramesFromShot) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Helpers\QueryBuilder.cs:line 153
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>b__70_0() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 400
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
+2019-02-06 23:28:56.1329|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
+   at System.ThrowHelper.ThrowKeyNotFoundException()
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ViretTool.PresentationLayer.Helpers.QueryBuilder.BuildQuery(QueryViewModel query1, QueryViewModel query2, Boolean isFirstQueryPrimary, Int32 maxFramesFromVideo, Int32 maxFramesFromShot) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Helpers\QueryBuilder.cs:line 153
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>b__70_0() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 400
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
+2019-02-06 23:28:58.8334|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
+   at System.ThrowHelper.ThrowKeyNotFoundException()
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at System.Linq.Enumerable.WhereSelectEnumerableIterator`2.MoveNext()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.Enumerable.ToArray[TSource](IEnumerable`1 source)
+   at ViretTool.PresentationLayer.Helpers.QueryBuilder.BuildQuery(QueryViewModel query1, QueryViewModel query2, Boolean isFirstQueryPrimary, Int32 maxFramesFromVideo, Int32 maxFramesFromShot) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Helpers\QueryBuilder.cs:line 153
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>b__70_0() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 400
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
+2019-02-07 09:14:25.6211|FATAL|ViretTool.App|Unhandled Exception: System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The remote name could not be resolved: 'demo2.itec.aau.at'
+   at System.Net.HttpWebRequest.EndGetRequestStream(IAsyncResult asyncResult, TransportContext& context)
+   at System.Net.Http.HttpClientHandler.GetRequestStreamCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitLog>d__11.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 52
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<SendLogs>d__62.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2019-02-07 11:52:13.8099|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while submitting framesSystem.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The remote name could not be resolved: 'demo2.itec.aau.at'
+   at System.Net.HttpWebRequest.EndGetRequestStream(IAsyncResult asyncResult, TransportContext& context)
+   at System.Net.Http.HttpClientHandler.GetRequestStreamCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitFrameAsync>d__10.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 33
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnSubmittedFramesChanged>d__73.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 501
+2019-02-20 14:51:31.6348|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at ViretTool.BusinessLayer.RankingModels.Filtering.RankFilteringModule.EstimateRankValueThreshold(RankingBuffer inputRanking, Single percentageOfDatabase) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Filtering\RankFilteringModule.cs:line 142
+   at ViretTool.BusinessLayer.RankingModels.Filtering.RankFilteringModule.IncludeAbove(Single percentageOfDatabase, RankingBuffer inputRanking, RankingBuffer outputRanking) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Filtering\RankFilteringModule.cs:line 105
+   at ViretTool.BusinessLayer.RankingModels.Fusion.FusionModule.ComputeRanking(FusionQuery query, RankingBuffer keywordRanking, RankingBuffer colorSketchRanking, RankingBuffer faceSketchRanking, RankingBuffer textSketchRanking, RankingBuffer semanticExampleRanking, RankingBuffer outputRanking, Int32[] temporalPairs) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Fusion\FusionModule.cs:line 78
+   at ViretTool.BusinessLayer.RankingModels.Temporal.BiTemporalRankingModule.ComputeRanking(BiTemporalQuery query, RankingBuffer inputRanking, BiTemporalRankingBuffer outputRanking) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Temporal\BiTemporalRankingModule.cs:line 67
+   at ViretTool.BusinessLayer.RankingModels.Temporal.BiTemporalRankingService.ComputeRankedResultSet(BiTemporalQuery query) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Temporal\BiTemporalRankingService.cs:line 60
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
+2019-02-20 14:51:44.1711|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at ViretTool.BusinessLayer.RankingModels.Filtering.RankFilteringModule.EstimateRankValueThreshold(RankingBuffer inputRanking, Single percentageOfDatabase) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Filtering\RankFilteringModule.cs:line 142
+   at ViretTool.BusinessLayer.RankingModels.Filtering.RankFilteringModule.IncludeAbove(Single percentageOfDatabase, RankingBuffer inputRanking, RankingBuffer outputRanking) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Filtering\RankFilteringModule.cs:line 105
+   at ViretTool.BusinessLayer.RankingModels.Fusion.FusionModule.ComputeRanking(FusionQuery query, RankingBuffer keywordRanking, RankingBuffer colorSketchRanking, RankingBuffer faceSketchRanking, RankingBuffer textSketchRanking, RankingBuffer semanticExampleRanking, RankingBuffer outputRanking, Int32[] temporalPairs) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Fusion\FusionModule.cs:line 78
+   at ViretTool.BusinessLayer.RankingModels.Temporal.BiTemporalRankingModule.ComputeRanking(BiTemporalQuery query, RankingBuffer inputRanking, BiTemporalRankingBuffer outputRanking) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Temporal\BiTemporalRankingModule.cs:line 67
+   at ViretTool.BusinessLayer.RankingModels.Temporal.BiTemporalRankingService.ComputeRankedResultSet(BiTemporalQuery query) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Temporal\BiTemporalRankingService.cs:line 60
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
+2019-02-20 14:51:46.7666|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error during query evaluationSystem.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   at ViretTool.BusinessLayer.RankingModels.Filtering.RankFilteringModule.EstimateRankValueThreshold(RankingBuffer inputRanking, Single percentageOfDatabase) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Filtering\RankFilteringModule.cs:line 142
+   at ViretTool.BusinessLayer.RankingModels.Filtering.RankFilteringModule.IncludeAbove(Single percentageOfDatabase, RankingBuffer inputRanking, RankingBuffer outputRanking) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Filtering\RankFilteringModule.cs:line 105
+   at ViretTool.BusinessLayer.RankingModels.Fusion.FusionModule.ComputeRanking(FusionQuery query, RankingBuffer keywordRanking, RankingBuffer colorSketchRanking, RankingBuffer faceSketchRanking, RankingBuffer textSketchRanking, RankingBuffer semanticExampleRanking, RankingBuffer outputRanking, Int32[] temporalPairs) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Fusion\FusionModule.cs:line 78
+   at ViretTool.BusinessLayer.RankingModels.Temporal.BiTemporalRankingModule.ComputeRanking(BiTemporalQuery query, RankingBuffer inputRanking, BiTemporalRankingBuffer outputRanking) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Temporal\BiTemporalRankingModule.cs:line 67
+   at ViretTool.BusinessLayer.RankingModels.Temporal.BiTemporalRankingService.ComputeRankedResultSet(BiTemporalQuery query) in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.BusinessLayer\RankingModels\Temporal\BiTemporalRankingService.cs:line 60
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnQuerySettingsChanged>d__70.MoveNext() in C:\Programming\ViretTool2018\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 397
