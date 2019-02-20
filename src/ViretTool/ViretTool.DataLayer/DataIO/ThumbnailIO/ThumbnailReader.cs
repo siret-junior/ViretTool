@@ -118,24 +118,25 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
         public ThumbnailRaw ReadVideoThumbnail(int videoId, int frameNumber)
         {
-            if (_videoFramenumberToGlobalId.TryGetValue(videoId, out var dict) && dict.TryGetValue(frameNumber, out int globalId))
+            if (_videoFramenumberToGlobalId.TryGetValue(videoId, out Dictionary<int, int> dict)
+                && dict.TryGetValue(frameNumber, out int globalId))
             {
                 return ReadVideoThumbnail(globalId);
             }
-
-            // TODO: seek closest frame
-            // (this should not happen though)
-            int firstFrameGlobalId = _videoFramenumberToGlobalId[videoId][0];
-            for (int i = 0; i < VideoFrameCounts[videoId]; i++)
+            else
             {
-                if (GlobalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
-                {
-                    return ReadVideoThumbnail(firstFrameGlobalId + i);
-                }
-            }
+                // TODO: seek closest frame (this should not happen though)
+                //int firstFrameGlobalId = _videoFramenumberToGlobalId[videoId][0];
+                //for (int i = 0; i < VideoFrameCounts[videoId]; i++)
+                //{
+                //    if (GlobalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
+                //    {
+                //        return ReadVideoThumbnail(firstFrameGlobalId + i);
+                //    }
+                //}
 
-            // TODO: remove?
-            throw new NotImplementedException();
+                throw new ArgumentException($"Trying to read thumbnail that is not stored [video: {videoId}, frame: {frameNumber}].");
+            }
         }
 
         public ThumbnailRaw ReadVideoThumbnail(int globalId)

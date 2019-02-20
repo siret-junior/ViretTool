@@ -81,11 +81,10 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             for (int i = 0; i < thumbnailKeys.Length; i++)
             {
                 int videoId = thumbnailKeys[i].videoId;
-                frameCounter++;
-
-                if (previousVideoId != videoId)     // when starting a new video
+                
+                if (previousVideoId != videoId) // when starting a new video
                 {
-                    videoOffsets.Add(i);      // mark offset of the new video
+                    videoOffsets.Add(i);        // mark offset of the new video
                     if (previousVideoId != -1)
                     {
                         videoFrameCounts.Add(frameCounter);   // finish counting previous video frames
@@ -93,6 +92,8 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                     }
                     previousVideoId = videoId;
                 }
+
+                frameCounter++;
             }
             videoFrameCounts.Add(frameCounter);   // finish the last video
 
