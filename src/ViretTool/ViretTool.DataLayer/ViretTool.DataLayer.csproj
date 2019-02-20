@@ -31,6 +31,24 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release RAM|x64'">
+    <OutputPath>bin\x64\Release RAM\</OutputPath>
+    <DefineConstants>TRACE;PRELOAD_THUMBNAILS</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug RAM|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug RAM\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PRELOAD_THUMBNAILS</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,6 +91,7 @@
     <Compile Include="DataIO\ThumbnailIO\ThumbnailRaw.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailIOBase.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailReader.cs" />
+    <Compile Include="DataIO\ThumbnailIO\ThumbnailReaderPreloaded.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailWriter.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetFilelistFormatter.cs" />
     <Compile Include="DataProviders\Dataset\DatasetProvider.cs" />

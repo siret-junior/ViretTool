@@ -139,7 +139,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             }
         }
 
-        public ThumbnailRaw ReadVideoThumbnail(int globalId)
+        public virtual ThumbnailRaw ReadVideoThumbnail(int globalId)
         {
             byte[] jpegData = BaseBlobReader.ReadByteBlob(globalId);
             int videoId = GlobalIdToVideoFramenumber[globalId].videoId;

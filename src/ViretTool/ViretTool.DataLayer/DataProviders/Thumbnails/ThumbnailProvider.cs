@@ -12,7 +12,12 @@ namespace ViretTool.DataLayer.DataProviders.Thumbnails
         {
             string[] files = Directory.GetFiles(inputDirectory);
             string inputFile = files.Single(path => path.EndsWith(FILE_EXTENSION));
+
+#if PRELOAD_THUMBNAILS
+            return new ThumbnailReaderPreloaded(inputFile);
+#else
             return new ThumbnailReader(inputFile);
+#endif
         }
     }
 }
