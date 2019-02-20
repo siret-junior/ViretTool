@@ -47,7 +47,7 @@ namespace DataTrimmer
             TrimBoolFile(directoryFiles, ".faces", frameCount, outputDirectory);
             TrimBoolFile(directoryFiles, ".text", frameCount, outputDirectory);
             TrimFrameattributeFile(directoryFiles, frameCount, outputDirectory);
-            //TrimThumbnailsFile(directoryFiles, maxVideos, outputDirectory);
+            TrimThumbnailsFile(directoryFiles, maxVideos, outputDirectory);
         }
 
 
@@ -274,18 +274,19 @@ namespace DataTrimmer
 
             using (ThumbnailReader reader = new ThumbnailReader(inputPath))
             {
-                int thumnailCount = reader.VideoFrameCounts.Take(maxVideos).Sum();
+                int thumbnailCount = reader.VideoFrameCounts.Take(maxVideos).Sum();
+
                 (int videoId, int frameNumber)[] globalIdToVideoFramenumber 
-                    = reader.GlobalIdToVideoFramenumber.Take(thumnailCount).ToArray();
+                    = reader.GlobalIdToVideoFramenumber.Take(thumbnailCount).ToArray();
 
                 using (ThumbnailWriter writer = new ThumbnailWriter(outputPath,
                     _datasetHeader, reader.ThumbnailWidth, reader.ThumbnailHeight,
-                    maxVideos, thumnailCount, reader.FramesPerSecond, globalIdToVideoFramenumber))
+                    maxVideos, thumbnailCount, reader.FramesPerSecond, globalIdToVideoFramenumber))
                 {
-                    for (int i = 0; i < thumnailCount; i++)
+                    for (int i = 0; i < thumbnailCount; i++)
                     {
                         writer.WriteThumbnail(reader.ReadVideoThumbnail(i).JpegData);
-                        if (i % (thumnailCount / PROGRESS_BAR_WIDTH) == 0) { Console.Write("_"); }
+                        if (i % (thumbnailCount / PROGRESS_BAR_WIDTH) == 0) { Console.Write("_"); }
                     }
                 }
             }
