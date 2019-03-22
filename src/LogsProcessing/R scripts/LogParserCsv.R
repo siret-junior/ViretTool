@@ -35,6 +35,9 @@ filterQueries = function(taskBoundariesMatrix, actions, savedQueries) {
 }
 
 isSame = function(firstList, secondList) {
+  if (length(firstList) != length(secondList)) {
+    return(FALSE)
+  }
   unlistedFirst = unlist(firstList)
   unlistedSecond = unlist(secondList)
   if (length(unlistedFirst) != length(unlistedSecond)) {
