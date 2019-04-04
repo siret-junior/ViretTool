@@ -187,7 +187,7 @@
     <value>Last &gt;&gt;</value>
   </data>
   <data name="SearchResultsText" xml:space="preserve">
-    <value>Search results:</value>
+    <value>Search results</value>
   </data>
   <data name="SubmitWindowTitle" xml:space="preserve">
     <value>Submit</value>
@@ -262,10 +262,10 @@
     <value>Tu</value>
   </data>
   <data name="StartTimeLabel" xml:space="preserve">
-    <value>Start:</value>
+    <value>Start time (h):</value>
   </data>
   <data name="EndTimeLabel" xml:space="preserve">
-    <value>End:</value>
+    <value>End time (h):</value>
   </data>
   <data name="WednesdayLabel" xml:space="preserve">
     <value>We</value>
@@ -283,6 +283,15 @@
     <value>Su</value>
   </data>
   <data name="GpsLabel" xml:space="preserve">
-    <value>Gps:</value>
+    <value>gps filter </value>
+  </data>
+  <data name="LSCFiltersLabel" xml:space="preserve">
+    <value>LSC filters</value>
+  </data>
+  <data name="HeartbeatLowLabel" xml:space="preserve">
+    <value>Heartbeat min:</value>
+  </data>
+  <data name="HeartbeatHighLabel" xml:space="preserve">
+    <value>Heartbeat max:</value>
   </data>
 </root>

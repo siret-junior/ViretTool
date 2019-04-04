@@ -181,7 +181,7 @@
     <value>Poslední &gt;&gt;</value>
   </data>
   <data name="SearchResultsText" xml:space="preserve">
-    <value>Výsledky hledání:</value>
+    <value>Výsledky hledání</value>
   </data>
   <data name="SubmitWindowTitle" xml:space="preserve">
     <value>Poslat</value>
@@ -247,10 +247,10 @@
     <value>Út</value>
   </data>
   <data name="StartTimeLabel" xml:space="preserve">
-    <value>Začátek:</value>
+    <value>Počáteční čas (h):</value>
   </data>
   <data name="EndTimeLabel" xml:space="preserve">
-    <value>Konec:</value>
+    <value>Koncový čas (h):</value>
   </data>
   <data name="WednesdayLabel" xml:space="preserve">
     <value>St</value>
@@ -266,5 +266,17 @@
   </data>
   <data name="SundayLabel" xml:space="preserve">
     <value>Ne</value>
+  </data>
+  <data name="GpsLabel" xml:space="preserve">
+    <value>gps filtr</value>
+  </data>
+  <data name="LSCFiltersLabel" xml:space="preserve">
+    <value>LSC filtry</value>
+  </data>
+  <data name="HeartbeatLowLabel" xml:space="preserve">
+    <value>Tep min:</value>
+  </data>
+  <data name="HeartbeatHighLabel" xml:space="preserve">
+    <value>Tep max:</value>
   </data>
 </root>

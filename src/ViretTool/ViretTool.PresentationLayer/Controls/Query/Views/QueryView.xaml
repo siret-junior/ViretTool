@@ -25,7 +25,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -35,22 +34,20 @@
         <common:FilterControl Grid.Row="1" FilterName="{x:Static properties:Resources.PercentageBlackFilterText}"  OutputValue="{Binding PercentageBlackFilterValue}" State="{Binding PercentageBlackFilterState}"
                               Visibility="{Binding IsBwFilterVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <common:DayAndTimeFilter Grid.Row="2" Margin="4,0,0,7" />
-
         <!-- Keyword -->
-        <common:ModelControl Grid.Row="3" ModelName="{x:Static properties:Resources.KeywordModelName}" OutputValue="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}"
+        <common:ModelControl Grid.Row="2" ModelName="{x:Static properties:Resources.KeywordModelName}" OutputValue="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}"
                              cal:Message.Attach="[Event ModelCleared] = [Action OnKeywordsCleared()]"/>
-        <common:KeywordSearchControl Grid.Row="4" QueryResult="{Binding KeywordQueryResult}" Initialize="{Binding InitializeKeywordSearchMethod, Mode=OneWayToSource}" />
+        <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" Initialize="{Binding InitializeKeywordSearchMethod, Mode=OneWayToSource}" />
 
         <!-- Colors -->
-        <common:ModelControl Grid.Row="5" ModelName="{x:Static properties:Resources.SketchModelName}" OutputValue="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"
+        <common:ModelControl Grid.Row="4" ModelName="{x:Static properties:Resources.SketchModelName}" OutputValue="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"
                              cal:Message.Attach="[Event ModelCleared] = [Action OnSketchesCleared()]"/>
-        <common:SketchCanvas Grid.Row="6" QueryResult="{Binding SketchQueryResult}" CanvasWidth="{Binding CanvasWidth}" CanvasHeight="{Binding CanvasHeight}" />
+        <common:SketchCanvas Grid.Row="5" QueryResult="{Binding SketchQueryResult}" CanvasWidth="{Binding CanvasWidth}" CanvasHeight="{Binding CanvasHeight}" />
 
         <!-- Semantic examples -->
-        <common:ModelControl Grid.Row="7" ModelName="{x:Static properties:Resources.SemanticModelName}" OutputValue="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"
+        <common:ModelControl Grid.Row="6" ModelName="{x:Static properties:Resources.SemanticModelName}" OutputValue="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"
                              cal:Message.Attach="[Event ModelCleared] = [Action OnQueryObjectsCleared()]"/>
-        <ItemsControl x:Name="ImagesDisplay" Grid.Row="8" ItemsSource="{Binding QueryObjects}">
+        <ItemsControl x:Name="ImagesDisplay" Grid.Row="7" ItemsSource="{Binding QueryObjects}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <common:FrameControl FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"

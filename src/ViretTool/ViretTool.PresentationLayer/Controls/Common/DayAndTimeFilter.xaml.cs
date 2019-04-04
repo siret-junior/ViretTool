@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -27,25 +15,49 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public static readonly DependencyProperty StartTimeProperty = DependencyProperty.Register(
             nameof(StartTime),
-            typeof(TimeSpan),
+            typeof(int),
             typeof(DayAndTimeFilter),
-            new FrameworkPropertyMetadata(new TimeSpan(8, 0, 0)) { BindsTwoWayByDefault = true });
-
-        public TimeSpan StartTime
-        {
-            get => (TimeSpan)GetValue(StartTimeProperty);
-            set => SetValue(StartTimeProperty, value);
-        }
+            new FrameworkPropertyMetadata(8) { BindsTwoWayByDefault = true });
 
         public static readonly DependencyProperty EndTimeProperty = DependencyProperty.Register(
             nameof(EndTime),
-            typeof(TimeSpan),
+            typeof(int),
             typeof(DayAndTimeFilter),
-            new FrameworkPropertyMetadata(new TimeSpan(12, 0, 0)) { BindsTwoWayByDefault = true });
+            new FrameworkPropertyMetadata(12) { BindsTwoWayByDefault = true });
 
-        public TimeSpan EndTime
+        public static readonly DependencyProperty HeartbeatLowProperty = DependencyProperty.Register(
+            nameof(HeartbeatLow),
+            typeof(int),
+            typeof(DayAndTimeFilter),
+            new PropertyMetadata(50));
+
+        public static readonly DependencyProperty HeartbeatHighProperty = DependencyProperty.Register(
+            nameof(HeartbeatHigh),
+            typeof(int),
+            typeof(DayAndTimeFilter),
+            new PropertyMetadata(80));
+
+        public int HeartbeatHigh
         {
-            get => (TimeSpan)GetValue(EndTimeProperty);
+            get => (int)GetValue(HeartbeatHighProperty);
+            set => SetValue(HeartbeatHighProperty, value);
+        }
+
+        public int HeartbeatLow
+        {
+            get => (int)GetValue(HeartbeatLowProperty);
+            set => SetValue(HeartbeatLowProperty, value);
+        }
+
+        public int StartTime
+        {
+            get => (int)GetValue(StartTimeProperty);
+            set => SetValue(StartTimeProperty, value);
+        }
+
+        public int EndTime
+        {
+            get => (int)GetValue(EndTimeProperty);
             set => SetValue(EndTimeProperty, value);
         }
     }

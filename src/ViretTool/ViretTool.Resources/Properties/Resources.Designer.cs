@@ -133,7 +133,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to End:.
+        ///   Looks up a localized string similar to End time (h):.
         /// </summary>
         public static string EndTimeLabel {
             get {
@@ -178,11 +178,29 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gps:.
+        ///   Looks up a localized string similar to gps filter .
         /// </summary>
         public static string GpsLabel {
             get {
                 return ResourceManager.GetString("GpsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heartbeat max:.
+        /// </summary>
+        public static string HeartbeatHighLabel {
+            get {
+                return ResourceManager.GetString("HeartbeatHighLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heartbeat min:.
+        /// </summary>
+        public static string HeartbeatLowLabel {
+            get {
+                return ResourceManager.GetString("HeartbeatLowLabel", resourceCulture);
             }
         }
         
@@ -237,6 +255,15 @@ namespace ViretTool.Resources.Properties {
         public static string LogsWereSentText {
             get {
                 return ResourceManager.GetString("LogsWereSentText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LSC filters.
+        /// </summary>
+        public static string LSCFiltersLabel {
+            get {
+                return ResourceManager.GetString("LSCFiltersLabel", resourceCulture);
             }
         }
         
@@ -358,7 +385,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search results:.
+        ///   Looks up a localized string similar to Search results.
         /// </summary>
         public static string SearchResultsText {
             get {
@@ -412,7 +439,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start:.
+        ///   Looks up a localized string similar to Start time (h):.
         /// </summary>
         public static string StartTimeLabel {
             get {
