@@ -252,4 +252,34 @@
   <data name="LogsWereSentText" xml:space="preserve">
     <value>Logs were sent.</value>
   </data>
+  <data name="DayOfWeekLabel" xml:space="preserve">
+    <value>Day of week:</value>
+  </data>
+  <data name="MondayLabel" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="TuesdayLabel" xml:space="preserve">
+    <value>Tu</value>
+  </data>
+  <data name="StartTimeLabel" xml:space="preserve">
+    <value>Start:</value>
+  </data>
+  <data name="EndTimeLabel" xml:space="preserve">
+    <value>End:</value>
+  </data>
+  <data name="WednesdayLabel" xml:space="preserve">
+    <value>We</value>
+  </data>
+  <data name="ThursdayLabel" xml:space="preserve">
+    <value>Th</value>
+  </data>
+  <data name="FridayLabel" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="SaturdayLabel" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="SundayLabel" xml:space="preserve">
+    <value>Su</value>
+  </data>
 </root>

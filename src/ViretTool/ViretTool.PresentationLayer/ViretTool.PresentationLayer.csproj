@@ -83,6 +83,9 @@
     <Compile Include="Behaviors\ScrollToColumnOrRowIndexBehavior.cs" />
     <Compile Include="Behaviors\TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="Controls\Common\BusyIndicator.cs" />
+    <Compile Include="Controls\Common\DayAndTimeFilter.xaml.cs">
+      <DependentUpon>DayAndTimeFilter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Common\DownloadedFrameViewModel.cs" />
     <Compile Include="Controls\Common\FrameControl.xaml.cs">
       <DependentUpon>FrameControl.xaml</DependentUpon>
@@ -181,6 +184,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\Common\DayAndTimeFilter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Common\FrameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

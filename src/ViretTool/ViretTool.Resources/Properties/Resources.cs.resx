@@ -237,4 +237,34 @@
   <data name="LogsWereSentText" xml:space="preserve">
     <value>Logy byly poslány.</value>
   </data>
+  <data name="DayOfWeekLabel" xml:space="preserve">
+    <value>Den v týdnu:</value>
+  </data>
+  <data name="MondayLabel" xml:space="preserve">
+    <value>Po</value>
+  </data>
+  <data name="TuesdayLabel" xml:space="preserve">
+    <value>Út</value>
+  </data>
+  <data name="StartTimeLabel" xml:space="preserve">
+    <value>Začátek:</value>
+  </data>
+  <data name="EndTimeLabel" xml:space="preserve">
+    <value>Konec:</value>
+  </data>
+  <data name="WednesdayLabel" xml:space="preserve">
+    <value>St</value>
+  </data>
+  <data name="ThursdayLabel" xml:space="preserve">
+    <value>Čt</value>
+  </data>
+  <data name="FridayLabel" xml:space="preserve">
+    <value>Pá</value>
+  </data>
+  <data name="SaturdayLabel" xml:space="preserve">
+    <value>So</value>
+  </data>
+  <data name="SundayLabel" xml:space="preserve">
+    <value>Ne</value>
+  </data>
 </root>

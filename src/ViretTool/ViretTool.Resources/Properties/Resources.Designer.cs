@@ -106,6 +106,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Day of week:.
+        /// </summary>
+        public static string DayOfWeekLabel {
+            get {
+                return ResourceManager.GetString("DayOfWeekLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detail:.
         /// </summary>
         public static string DetailViewText {
@@ -120,6 +129,15 @@ namespace ViretTool.Resources.Properties {
         public static string DetailWindowTitle {
             get {
                 return ResourceManager.GetString("DetailWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End:.
+        /// </summary>
+        public static string EndTimeLabel {
+            get {
+                return ResourceManager.GetString("EndTimeLabel", resourceCulture);
             }
         }
         
@@ -147,6 +165,15 @@ namespace ViretTool.Resources.Properties {
         public static string FramesSentSuccessText {
             get {
                 return ResourceManager.GetString("FramesSentSuccessText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fr.
+        /// </summary>
+        public static string FridayLabel {
+            get {
+                return ResourceManager.GetString("FridayLabel", resourceCulture);
             }
         }
         
@@ -250,6 +277,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mo.
+        /// </summary>
+        public static string MondayLabel {
+            get {
+                return ResourceManager.GetString("MondayLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next &gt;.
         /// </summary>
         public static string NextPageButtonText {
@@ -300,6 +336,15 @@ namespace ViretTool.Resources.Properties {
         public static string SampledFramesText {
             get {
                 return ResourceManager.GetString("SampledFramesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sa.
+        /// </summary>
+        public static string SaturdayLabel {
+            get {
+                return ResourceManager.GetString("SaturdayLabel", resourceCulture);
             }
         }
         
@@ -358,6 +403,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start:.
+        /// </summary>
+        public static string StartTimeLabel {
+            get {
+                return ResourceManager.GetString("StartTimeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Submit.
         /// </summary>
         public static string SubmitButtonText {
@@ -381,6 +435,15 @@ namespace ViretTool.Resources.Properties {
         public static string SubmitWindowTitle {
             get {
                 return ResourceManager.GetString("SubmitWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Su.
+        /// </summary>
+        public static string SundayLabel {
+            get {
+                return ResourceManager.GetString("SundayLabel", resourceCulture);
             }
         }
         
@@ -439,6 +502,24 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Th.
+        /// </summary>
+        public static string ThursdayLabel {
+            get {
+                return ResourceManager.GetString("ThursdayLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tu.
+        /// </summary>
+        public static string TuesdayLabel {
+            get {
+                return ResourceManager.GetString("TuesdayLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to V.
         /// </summary>
         public static string VideoButtonText {
@@ -453,6 +534,15 @@ namespace ViretTool.Resources.Properties {
         public static string VideoDetailText {
             get {
                 return ResourceManager.GetString("VideoDetailText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We.
+        /// </summary>
+        public static string WednesdayLabel {
+            get {
+                return ResourceManager.GetString("WednesdayLabel", resourceCulture);
             }
         }
         
