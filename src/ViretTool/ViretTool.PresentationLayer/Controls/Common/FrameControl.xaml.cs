@@ -15,6 +15,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
+        public static readonly RoutedEvent AddToGpsQueryClickedEvent = EventManager.RegisterRoutedEvent(
+            nameof(AddToGpsQueryClicked),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
         public static readonly RoutedEvent RemoveFromQueryClickedEvent = EventManager.RegisterRoutedEvent(
             nameof(RemoveFromQueryClicked),
             RoutingStrategy.Bubble,
@@ -149,6 +155,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(AddToQueryClickedEvent, value);
         }
 
+        public event RoutedEventHandler AddToGpsQueryClicked
+        {
+            add => AddHandler(AddToGpsQueryClickedEvent, value);
+            remove => RemoveHandler(AddToGpsQueryClickedEvent, value);
+        }
+
         public event RoutedEventHandler RemoveFromQueryClicked
         {
             add => AddHandler(RemoveFromQueryClickedEvent, value);
@@ -258,6 +270,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
+        }
+        private void ButtonAddGpsClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(AddToGpsQueryClickedEvent));
         }
 
         private void ButtonRemovedClicked(object sender, RoutedEventArgs e)

@@ -46,13 +46,14 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Name="Add" Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked">
+                        <Button Grid.Column="0" FontSize="7" Background="LightCoral" Click="ButtonAddClicked">
                             <Button.Visibility>
                                 <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Path="IsSelectable" IsAsync="True" />
@@ -61,20 +62,29 @@
                             </Button.Visibility>
                             <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+</TextBlock>
                         </Button>
-                        <Button Name="Remove" Grid.Column="1" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked"
+                        <Button Grid.Column="1" FontSize="7" Background="LightCoral" Click="ButtonAddGpsClicked">
+                            <Button.Visibility>
+                                <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Path="IsSelectable" IsAsync="True" />
+                                    <Binding Path="CanAddToQuery" />
+                                </MultiBinding>
+                            </Button.Visibility>
+                            <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">+G</TextBlock>
+                        </Button>
+                        <Button Name="Remove" Grid.Column="2" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked"
                                 Visibility="{Binding Path=IsNotSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">-</TextBlock>
                         </Button>
 
-                        <Button x:Name="VideoButton" Grid.Column="2" FontSize="7" Background="DeepSkyBlue" Click="VideoClicked"
+                        <Button x:Name="VideoButton" Grid.Column="3" FontSize="7" Background="DeepSkyBlue" Click="VideoClicked"
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.VideoButtonText}"/>
                         </Button>
-                        <Button x:Name="SortedButton" Grid.Column="3" FontSize="7" Background="DeepSkyBlue" Click="SortedClicked"
+                        <Button x:Name="SortedButton" Grid.Column="4" FontSize="7" Background="DeepSkyBlue" Click="SortedClicked"
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.MapButtonText}"/>
                         </Button>
-                        <Button x:Name="SubmitButton" Grid.Column="4" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked"
+                        <Button x:Name="SubmitButton" Grid.Column="5" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked"
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.SubmitButtonTextShort}"/>
                         </Button>

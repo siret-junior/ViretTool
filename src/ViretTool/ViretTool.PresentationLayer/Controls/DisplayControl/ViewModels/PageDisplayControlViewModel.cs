@@ -16,11 +16,26 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         private int _maxFramesFromShot = 1;
         private int _maxFramesFromVideo = 3;
+        private FrameViewModel _gpsFrame;
 
         public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger iterationLogger)
             : base(logger, datasetServicesManager)
         {
             _iterationLogger = iterationLogger;
+        }
+
+        public FrameViewModel GpsFrame
+        {
+            get => _gpsFrame;
+            set {
+                if (_gpsFrame?.Equals(value) == true)
+                {
+                    return;
+                }
+
+                _gpsFrame = value;
+                NotifyOfPropertyChange();
+            }
         }
 
         public int MaxFramesFromShot

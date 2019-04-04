@@ -33,6 +33,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
+                                                                     [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
                                                                      [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                      [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
                                                                      [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
@@ -72,6 +73,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
+                                                                     [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
                                                                      [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                      [Event FrameSelected] = [Action OnFrameSelectedSampled($dataContext)];
                                                                      [Event SortDisplay] = [Action OnSortDisplay($dataContext)];

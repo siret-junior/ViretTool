@@ -178,6 +178,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gps:.
+        /// </summary>
+        public static string GpsLabel {
+            get {
+                return ResourceManager.GetString("GpsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show/hide BW filters.
         /// </summary>
         public static string HideBwFilterText {

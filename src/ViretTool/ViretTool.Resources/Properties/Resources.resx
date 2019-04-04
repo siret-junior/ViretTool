@@ -282,4 +282,7 @@
   <data name="SundayLabel" xml:space="preserve">
     <value>Su</value>
   </data>
+  <data name="GpsLabel" xml:space="preserve">
+    <value>Gps:</value>
+  </data>
 </root>
