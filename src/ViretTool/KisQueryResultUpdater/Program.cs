@@ -117,12 +117,12 @@ namespace KisQueryResultUpdater
             BiTemporalSimilarityQuery qSim = query.BiTemporalSimilarityQuery;
             SemanticExampleQuery semanticExampleQuery = GetQueryModel(qSim.SemanticExampleQuery, isQueryFormer);
 
-            return GetQueryModel(qSim.ColorSketchQuery, isQueryFormer).ColorSketchEllipses.Any() ||
-                   GetQueryModel(qSim.FaceSketchQuery, isQueryFormer).ColorSketchEllipses.Any() ||
-                   GetQueryModel(qSim.TextSketchQuery, isQueryFormer).ColorSketchEllipses.Any() ||
-                   GetQueryModel(qSim.KeywordQuery, isQueryFormer).SynsetGroups.Any() ||
-                   semanticExampleQuery.PositiveExampleIds.Any() ||
-                   semanticExampleQuery.ExternalImages.Any();
+            return !GetQueryModel(qSim.ColorSketchQuery, isQueryFormer).ColorSketchEllipses.Any() &&
+                   !GetQueryModel(qSim.FaceSketchQuery, isQueryFormer).ColorSketchEllipses.Any() &&
+                   !GetQueryModel(qSim.TextSketchQuery, isQueryFormer).ColorSketchEllipses.Any() &&
+                   !GetQueryModel(qSim.KeywordQuery, isQueryFormer).SynsetGroups.Any() &&
+                   !semanticExampleQuery.PositiveExampleIds.Any() &&
+                   !semanticExampleQuery.ExternalImages.Any();
         }
 
         private static TQuery GetQueryModel<TQuery>(BiTemporalModelQuery<TQuery> queryModel, bool takeFormer) where TQuery : IQuery
