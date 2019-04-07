@@ -266,10 +266,13 @@ for (member in c(0,1)) {
     
     taskName = filteredSavedQueries[2,filteredSavedQueries[1,] == queryTS]
     taskId = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["TaskId"]]
-    firstSucSub = min(allSubmissions[,allSubmissions[3,]==taskId & allSubmissions[2,]=="TRUE"][1])
+    firstSucSub = min(as.numeric(allSubmissions[,allSubmissions[3,]==taskId & allSubmissions[2,]=="TRUE"][1]))
+    taskStart = as.numeric(filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerStart"]])
     fileTimes = timestamps[timestamps[,"Filename"] == paste0(queryTS,".json"),]
     transformedQuery = list(
       "TimeStamp" = queryTS,
+      "TimeAfterStart" = (queryTS - taskStart) / 1000,
+      "TimeBeforeSubmission" = (firstSucSub - queryTS) / 1000,
       "TaskName" = taskName,
       "TaskNameShort" = toString(taskNames[taskNames[,"TaskName"] == taskName,"TaskID"]),
       "TopVideoPosition" = queryResults[,queryResults[1,] == queryTS][2],
