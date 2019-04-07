@@ -188,17 +188,22 @@ for (member in c(0,1)) {
   
   #submissions
   submissions = c()
+  allSubmissions = c()
   for (line in submissionsLines)
   {
     subData = fromJSON(line)
-    if (is.null(subData[["teamNumber"]]) || subData[["teamNumber"]] != 4 || subData[["memberNumber"]] != member
-        || !is.element(subData[["taskId"]], validTasks)
+    if (is.null(subData[["teamNumber"]]) || subData[["teamNumber"]] != 4 || !is.element(subData[["taskId"]], validTasks)
     ) {
       next
     }
     
-    submissions = cbind(submissions, c(subData[["timestamp"]], ifelse(is.null(subData[["correct"]]), 0, subData[["correct"]]),
-                                       subData[["taskId"]]))
+    newSub = c(subData[["timestamp"]], ifelse(is.null(subData[["correct"]]), 0, subData[["correct"]]), subData[["taskId"]])
+    allSubmissions = cbind(allSubmissions, newSub)
+    
+    if (subData[["memberNumber"]] == member) {
+      submissions = cbind(submissions, newSub)
+    }
+    
   }
   
   #saved tasks
@@ -261,7 +266,7 @@ for (member in c(0,1)) {
     
     taskName = filteredSavedQueries[2,filteredSavedQueries[1,] == queryTS]
     taskId = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["TaskId"]]
-    firstSucSub = min(submissions[,submissions[3,]==taskId & submissions[2,]=="TRUE"][1])
+    firstSucSub = min(allSubmissions[,allSubmissions[3,]==taskId & allSubmissions[2,]=="TRUE"][1])
     fileTimes = timestamps[timestamps[,"Filename"] == paste0(queryTS,".json"),]
     transformedQuery = list(
       "TimeStamp" = queryTS,
@@ -271,11 +276,11 @@ for (member in c(0,1)) {
       "TopShotPosition" = queryResults[,queryResults[1,] == queryTS][3],
       "TopVideoPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][2],
       "TopShotPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][3],
-      "KW_1_Count" = length(similarity[["keywordquery"]][[first]][["synsetgroups"]]),
+      "KW_1" = length(similarity[["keywordquery"]][[first]][["synsetgroups"]]),
       "KW_1_Words" = getKwText(similarity[["keywordquery"]][[first]][["synsetgroups"]],keywordLabels ),
       "KW_1_IDS" = paste(sapply(similarity[["keywordquery"]][[first]][["synsetgroups"]], 
                           function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse ="+")}),collapse ="|"),
-      "KW_2_Count" = length(similarity[["keywordquery"]][[second]][["synsetgroups"]]),
+      "KW_2" = length(similarity[["keywordquery"]][[second]][["synsetgroups"]]),
       "KW_2_Words" = getKwText(similarity[["keywordquery"]][[second]][["synsetgroups"]], keywordLabels),
       "KW_2_IDS" = paste(sapply(similarity[["keywordquery"]][[second]][["synsetgroups"]], 
                                 function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse ="+")}),collapse ="|"),
@@ -300,6 +305,11 @@ for (member in c(0,1)) {
       "QueryFileModified" = valueOrEmpty(fileTimes[["ModifiedUnixMiliseconds"]]),
       "QueryFileModifiedDiff" = valueOrEmpty(fileTimes[["CreatedModifiedDifferenceSeconds"]])
     )
+    
+    enabledModels = c(sapply(c("KW_1","KW_2","Color_1","Color_2","Face_1","Face_2","Text_1","Text_2"),
+                             function(var) {return (ifelse(transformedQuery[[var]] > 0, var, ""))}),
+                      sapply(c("Semantic_1","Semantic_2"), function(var) {return (ifelse(transformedQuery[[var]] != "off", var, ""))}))
+    transformedQuery[["EnabledModels"]] = paste0(enabledModels[enabledModels!=""], collapse = " ")
     
     previousSimilarity = similarity
     transformedQueries = rbind(transformedQueries, transformedQuery)
