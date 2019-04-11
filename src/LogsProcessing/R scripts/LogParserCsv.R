@@ -121,7 +121,9 @@ getKwText = function(keywordGroups, keywordLabels) {
 
 
 
-library("rjson")
+library(stringr)
+library(rjson)
+library(pheatmap)
 "%ni%" = Negate("%in%")
 
 baseDir = "d:\\Temp\\Downloads\\database-vbs2019\\"
@@ -162,6 +164,12 @@ for (line in taskLines)
 taskBoundariesMatrix = taskBoundariesMatrix[,order(taskBoundariesMatrix[1,])]
 taskBoundaries = as.vector(taskBoundariesMatrix)
 
+allTransformedQueries = c()
+browsingActionsForHeatmap = c()
+graphData = c()
+solvedTasks = c()
+aggrInterval = 10 # 10s
+
 for (member in c(0,1)) {
   
   #actions
@@ -182,7 +190,7 @@ for (member in c(0,1)) {
     if (is.element(actionData[["taskId"]], validTasks)) {
       actions = cbind(actions, sapply(actionData[["events"]], 
                                       function(event) { c(event[["timestamp"]],event[["type"]],event[["category"]],
-                                      ifelse(is.null(event[["value"]]), "NA", event[["value"]])) }))
+                                        ifelse(is.null(event[["value"]]), "NA", event[["value"]]), actionData[["taskId"]]) }))
     }
   }
   
@@ -215,9 +223,34 @@ for (member in c(0,1)) {
   actions = newQueriesAndActions[[2]]
   filteredTaskBoundaries = newQueriesAndActions[[3]]
   
+  browsingActions = cbind(t(actions[,actions[3,] == "Browsing"]), c(NA), c(NA))
+  
+  browActTemp = c()
+  solvedTasksTemp = c()
+  #assign 10s IDS to actions
+  for(taskId in validTasks) {
+    boundary = filteredTaskBoundaries[filteredTaskBoundaries[,"TaskId"]==taskId,]
+    serverStart = as.numeric(boundary[["ServerStart"]])
+    firstSucSub = min(as.numeric(allSubmissions[,allSubmissions[3,]==taskId & allSubmissions[2,]=="TRUE"][1]))
+    if (!is.na(firstSucSub)) {
+      newSolvedTask = c(boundary[["TaskName"]],sapply((0:50),function(n) { ifelse(serverStart + n*aggrInterval*1000 < firstSucSub, 1, 0)} ))
+      solvedTasksTemp = rbind(solvedTasksTemp, newSolvedTask)
+    }
+
+    browsingActions[browsingActions[,1] >= boundary[["ServerStart"]] & browsingActions[,1] <= boundary[["ServerEnd"]],6:7] =
+      cbind(floor((as.numeric(browsingActions[browsingActions[,1] >= boundary[["ServerStart"]] & browsingActions[,1] <= boundary[["ServerEnd"]],1]) - as.numeric(boundary[["ServerStart"]])) / (1000 * aggrInterval)),
+        boundary[["TaskName"]])
+
+    # filter for after submission time
+    browActTemp = rbind(browActTemp, browsingActions[browsingActions[,1] >= boundary[["ServerStart"]] & browsingActions[,1] <= boundary[["ServerEnd"]]
+                                                     & (is.na(firstSucSub) | browsingActions[,1] <= firstSucSub),])
+  }
+  browsingActions = browActTemp
+  solvedTasks[[as.character(member)]] = solvedTasksTemp
+  
   write.table(filteredTaskBoundaries, paste0("TaskBoundaries_member_",member,".csv"), row.names = FALSE, sep = ";")
   write.table(t(submissions), paste0("Submissions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
-  write.table(t(actions[,actions[3,] == "Browsing"]), paste0("Actions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
+  write.table(browsingActions, paste0("Actions_member_",member,".csv"), col.names = FALSE, row.names = FALSE, sep = ";")
   #task order
   write.table(sapply(validTasks, function(taskId) {filteredTaskBoundaries[filteredTaskBoundaries[,"TaskId"]==taskId,][["TaskName"]]}),
               paste0("Tasks_order_member_",member,".csv"), col.names = TRUE, row.names = FALSE, sep = ";")
@@ -269,10 +302,12 @@ for (member in c(0,1)) {
     firstSucSub = min(as.numeric(allSubmissions[,allSubmissions[3,]==taskId & allSubmissions[2,]=="TRUE"][1]))
     taskStart = as.numeric(filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerStart"]])
     fileTimes = timestamps[timestamps[,"Filename"] == paste0(queryTS,".json"),]
+    
     transformedQuery = list(
       "TimeStamp" = queryTS,
       "TimeAfterStart" = (queryTS - taskStart) / 1000,
       "TimeBeforeSubmission" = (firstSucSub - queryTS) / 1000,
+      "10sId" = floor((queryTS - taskStart) / (1000 * aggrInterval)),
       "TaskName" = taskName,
       "TaskNameShort" = toString(taskNames[taskNames[,"TaskName"] == taskName,"TaskID"]),
       "TopVideoPosition" = queryResults[,queryResults[1,] == queryTS][2],
@@ -317,10 +352,121 @@ for (member in c(0,1)) {
     previousSimilarity = similarity
     transformedQueries = rbind(transformedQueries, transformedQuery)
   }
+  
+  allTransformedQueries[[as.character(member)]] = transformedQueries
   write.table(transformedQueries, paste0("Queries_member_",member,".csv"), row.names = FALSE, sep = ";")
+  
+  browsingActionsForHeatmap[[as.character(member)]] = browsingActions
 }
 
+####### graphs #######
+init.graph = function (file.name, width, height, pointsize) {
+  dpi = 72
+  pdf(file.name, width = width / dpi, height = height / dpi, pointsize = pointsize)
+  par(mar=c(2.9,6,2,2), mgp=c(3.9,0.5,0))
+}
 
+graph.heat = function (file.name, data, labCol, main, scale="none", gaps_row=(1:4)*4, xlab=NULL, width=450, height=300, pointsize = 13.5) {
+  
+  init.graph(file.name, width, height, pointsize)
+  
+  tryCatch({
+    #heatmap.2(data, scale=scale, Rowv=FALSE, Colv = FALSE, dendrogram="none", labCol=labCol, col=rev(terrain.colors(30)), density.info = "none")
+    #heatmap(data, scale=scale, Colv = NA, Rowv = NA, labCol=labCol, col=rev(terrain.colors(30)), xlab="Time from task start (s)", main=main, cexRow=0.8)
+    pheatmap(data, scale=scale, cluster_rows=FALSE,cluster_cols=FALSE, labels_col=labCol,col=rev(terrain.colors(30)), xlab="Time from task start (s)", main=main, gaps_row=gaps_row,
+             width=width, height=height, fontsize=12, fontsize_col=11, cellwidth=11, angle_col=0)
+    
+  }, finally = {
+    dev.off()
+  }, error = function(e) {
+    print(e)
+  })
+}
+
+strReverse = function(x) {
+  sapply(lapply(strsplit(x, NULL), rev), paste, collapse="")
+}
+
+for (taskType in c("Textual","Visual")) {
+  
+  if (taskType == "Visual") {
+    novices = c("TRUE", "FALSE")
+  } else {
+    novices = c("BOTH")
+  }
+  
+  graphData = NULL
+  for (member in c("0","1")) {
+    for (novice in novices) {
+      
+      transformedQueries = allTransformedQueries[[member]]
+      filter = (transformedQueries[,"IsAfterSuccessfulSubmission"] == FALSE | is.na(transformedQueries[,"IsAfterSuccessfulSubmission"])) & startsWith(unlist(transformedQueries[,"TaskName"]),taskType)
+      filteredActions = browsingActionsForHeatmap[[member]]
+      
+      if (novice == "TRUE") {
+        noviceFilter = endsWith(unlist(transformedQueries[,"TaskName"]),"N")
+        actionsFilter = endsWith(filteredActions[,7],"N")
+      } else if (novice == "FALSE") {
+        noviceFilter = !endsWith(unlist(transformedQueries[,"TaskName"]),"N")
+        actionsFilter = !endsWith(filteredActions[,7],"N")
+      } else {
+        noviceFilter = TRUE
+        actionsFilter = TRUE
+      }
+      
+        
+      selectedQueries = transformedQueries[filter & noviceFilter,c("10sId","ModelsChanged","SortedBy")]
+      selectedQueries[,"ModelsChanged"] = apply(matrix(unlist(selectedQueries[,c("ModelsChanged","SortedBy")]), ncol = 2, byrow = FALSE),1, function(row) { ifelse(row[1] == "", 
+                                                                                           switch(row[2], Keyword={"KW_1"}, ColorSketch={"Color_1"}, Face={""}, Text={""}, Semantic={"Semantic_"}, None={""}),
+                                                                                           row[1])})
+      
+      matrixForHeatmap = matrix(unlist(selectedQueries[,c("10sId","ModelsChanged")]), ncol = 2, byrow = FALSE)
+      matrixForHeatmapExpanded = cbind(as.numeric(matrixForHeatmap[,1]), t(sapply(matrixForHeatmap[,2], function(m) { c(str_count(m,"Face_"),
+                                                                                                                        max(str_count(m,"Color_"), str_count(m,"Text_")),
+                                                                                                                        max(str_count(m,"Semantic_"), str_count(m,"External_")),
+                                                                                                                        str_count(m,"KW_"))})))
+      #lines with multiple changes are discarded
+      matrixForHeatmapExpanded = matrixForHeatmapExpanded[rowSums(matrixForHeatmapExpanded[,-1]) == 1,]
+      
+      dataForHeatmap = as.matrix(aggregate(matrixForHeatmapExpanded[,-1], by=list(matrixForHeatmapExpanded[,1]), FUN = sum))
+      
+      filteredActions = filteredActions[startsWith(filteredActions[,7],taskType) & actionsFilter,]
+      browsingActions = as.matrix(aggregate(filteredActions[,6], by=list(as.numeric(filteredActions[,6])), FUN = length))
+      
+      dataForHeatmap = merge(dataForHeatmap,browsingActions, by="Group.1", all=TRUE)
+      colnames(dataForHeatmap) = c("Id",paste0(c("F", "C", "I", "K", "B"), "_", ifelse(novice == "TRUE", "N", "E"), ifelse(member == 0, "2", "1")))
+      
+      if (is.null(graphData)) {
+        graphData = dataForHeatmap
+      } else {
+        graphData = merge(graphData, dataForHeatmap, by="Id", all=TRUE) 
+      }
+      
+    }
+  }
+  
+  graphData[is.na(graphData)] = 0
+  graphData = t(graphData)
+  xlab = graphData[1,]*10
+  xlab[(1:length(xlab)) %% 2 == 0] = ""
+  
+  browseGraphData = graphData[startsWith(rownames(graphData),"B_"),]
+  browseGraphData = browseGraphData[order(strReverse(rownames(browseGraphData))),]
+  graph.heat(paste0(taskType,"_browse.pdf"), browseGraphData, xlab, main=paste0(taskType," KIS browsing interactions"), gaps_row=c(),
+             width=ifelse(taskType=="Textual",650,450), height=200)
+  csvData = t(rbind(graphData[1,]*10,browseGraphData))
+  colnames(csvData)[1] = "Time interval"
+  write.table(csvData, paste0(taskType,"_browsing.csv"), row.names = FALSE, sep = ";")
+  
+  queryGraphData = graphData[!startsWith(rownames(graphData),"B_"),][-1,]
+  queryGraphData = queryGraphData[order(strReverse(rownames(queryGraphData))),]
+  graph.heat(paste0(taskType,"_queries.pdf"), queryGraphData, xlab, main=paste0(taskType," KIS query interactions"), gaps_row=(1:ifelse(taskType=="Textual",1,3))*4,
+             width=ifelse(taskType=="Textual",650,450))
+  
+  csvData = t(rbind(graphData[1,]*10,queryGraphData))
+  colnames(csvData)[1] = "Time interval"
+  write.table(csvData, paste0(taskType,"_queries.csv"), row.names = FALSE, sep = ";")
+}
 
 
 
