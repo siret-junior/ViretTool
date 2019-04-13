@@ -98,25 +98,32 @@ getEqualKwIds = function(kwLabelRow, keywordLabels) {
   return (result)
 }
 
-
-getKwText = function(keywordGroups, keywordLabels) {
+getKwText = function(keywordGroups, keywordLabels, groupIdsCache) {
   
   parts = c()
   for (synsetGroup in keywordGroups) {
     
     groupIds = sapply(synsetGroup[["synsets"]], function(s) { s[["synsetid"]]})
-    localParts = c()
-    while(length(groupIds) > 0) {
-     
-      kwLabelRow = keywordLabels[keywordLabels[,1] == groupIds[1],]
-      localParts = append(localParts, as.character(sub("#.*", "", kwLabelRow[[3]])))
-      groupIds = groupIds[groupIds %ni% getEqualKwIds(kwLabelRow, keywordLabels)]
+    groupIdsKey = paste0(groupIds, collapse = ",")
+    localParts = groupIdsCache[groupIdsCache[,1] == groupIdsKey,]
+    if (length(localParts) > 0) {
+      stringKw = localParts[-1]
+    } else {
+      localParts = c()
+      while(length(groupIds) > 0) {
+       
+        kwLabelRow = keywordLabels[keywordLabels[,1] == groupIds[1],]
+        localParts = append(localParts, as.character(sub("#.*", "", kwLabelRow[[3]])))
+        groupIds = groupIds[groupIds %ni% getEqualKwIds(kwLabelRow, keywordLabels)]
+      }
+      stringKw = paste(localParts, collapse = " OR ")
+      groupIdsCache = rbind(groupIdsCache, c(groupIdsKey, stringKw))
     }
     
-    parts = append(parts, paste(localParts, collapse = " OR "))
+    parts = append(parts, stringKw)
   }
   
-  return(paste(parts, collapse = " AND "))
+  return(list(paste(parts, collapse = " AND "), groupIdsCache))
 }
 
 
@@ -168,6 +175,7 @@ allTransformedQueries = c()
 browsingActionsForHeatmap = c()
 graphData = c()
 solvedTasks = c()
+groupIdsCache = c()
 aggrInterval = 10 # 10s
 
 for (member in c(0,1)) {
@@ -319,6 +327,11 @@ for (member in c(0,1)) {
       }
       return (res)}))
     
+    kw1 = getKwText(similarity[["keywordquery"]][[first]][["synsetgroups"]],keywordLabels,groupIdsCache)
+    groupIdsCache = kw1[[2]]
+    kw2 = getKwText(similarity[["keywordquery"]][[second]][["synsetgroups"]], keywordLabels,groupIdsCache)
+    groupIdsCache = kw2[[2]]
+    
     transformedQuery = list(
       "TimeStamp" = queryTS,
       "TimeAfterStart" = (queryTS - taskStart) / 1000,
@@ -331,11 +344,11 @@ for (member in c(0,1)) {
       "TopVideoPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][2],
       "TopShotPositionBeforeFilter" = queryResultsBF[,queryResultsBF[1,] == queryTS][3],
       "KW_1" = length(similarity[["keywordquery"]][[first]][["synsetgroups"]]),
-      "KW_1_Words" = getKwText(similarity[["keywordquery"]][[first]][["synsetgroups"]],keywordLabels ),
+      "KW_1_Words" = kw1[[1]],
       "KW_1_IDS" = paste(sapply(similarity[["keywordquery"]][[first]][["synsetgroups"]], 
                           function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse ="+")}),collapse ="|"),
       "KW_2" = length(similarity[["keywordquery"]][[second]][["synsetgroups"]]),
-      "KW_2_Words" = getKwText(similarity[["keywordquery"]][[second]][["synsetgroups"]], keywordLabels),
+      "KW_2_Words" = kw2[[1]],
       "KW_2_IDS" = paste(sapply(similarity[["keywordquery"]][[second]][["synsetgroups"]], 
                                 function(g) { paste(sapply(g[["synsets"]], function(s) { s[["synsetid"]]}),collapse ="+")}),collapse ="|"),
       "Color_1" = length(similarity[["colorsketchquery"]][[first]][["colorsketchellipses"]]),
