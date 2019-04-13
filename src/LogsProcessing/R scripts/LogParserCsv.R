@@ -303,6 +303,22 @@ for (member in c(0,1)) {
     taskStart = as.numeric(filteredTaskBoundaries[filteredTaskBoundaries[,"TaskName"]==taskName,][["ServerStart"]])
     fileTimes = timestamps[timestamps[,"Filename"] == paste0(queryTS,".json"),]
     
+    firstFilter = ifelse(firstIsMain, "formerfilteringquery", "latterfilteringquery")
+    secondFilter = ifelse(!firstIsMain, "formerfilteringquery", "latterfilteringquery")
+    enabledFilters = c(sapply(c(firstFilter,secondFilter), function(filterQuery) { 
+      res = c()
+      id = ifelse(filterQuery == firstFilter, 1, 2)
+      if (queryData[[filterQuery]][["colorsaturationquery"]][["filterstate"]] != 2) {
+        res = c(paste0("ColorSatur_",id,":", queryData[[filterQuery]][["colorsaturationquery"]][["threshold"]]))
+      }
+      if (queryData[[filterQuery]][["percentofblackquery"]][["filterstate"]] != 2) {
+        res = c(res, paste0("BW%_",id,":", queryData[[filterQuery]][["percentofblackquery"]][["threshold"]]))
+      }
+      if (id == 1 & queryData[[filterQuery]][["countfilteringquery"]][["filterstate"]] != 2) {
+        res = c(res, paste0("FramesCount:Vid:", queryData[[filterQuery]][["countfilteringquery"]][["maxpervideo"]],",Shots:",queryData[[filterQuery]][["countfilteringquery"]][["maxpershot"]]))
+      }
+      return (res)}))
+    
     transformedQuery = list(
       "TimeStamp" = queryTS,
       "TimeAfterStart" = (queryTS - taskStart) / 1000,
@@ -341,7 +357,8 @@ for (member in c(0,1)) {
       "IsAfterSuccessfulSubmission" = queryTS > firstSucSub,
       "QueryFileCreated" = valueOrEmpty(fileTimes[["CreatedUnixMiliseconds"]]),
       "QueryFileModified" = valueOrEmpty(fileTimes[["ModifiedUnixMiliseconds"]]),
-      "QueryFileModifiedDiff" = valueOrEmpty(fileTimes[["CreatedModifiedDifferenceSeconds"]])
+      "QueryFileModifiedDiff" = valueOrEmpty(fileTimes[["CreatedModifiedDifferenceSeconds"]]),
+      "EnabledFilters" = paste0(unlist(enabledFilters), collapse = " ")
     )
     
     enabledModels = c(sapply(c("KW_1","KW_2","Color_1","Color_2","Face_1","Face_2","Text_1","Text_2"),
@@ -366,15 +383,18 @@ init.graph = function (file.name, width, height, pointsize) {
   par(mar=c(2.9,6,2,2), mgp=c(3.9,0.5,0))
 }
 
-graph.heat = function (file.name, data, labCol, main, scale="none", gaps_row=(1:4)*4, xlab=NULL, width=450, height=300, pointsize = 13.5) {
+graph.heat = function (file.name, data, labCol, main, scale="none", fontsize=12, gaps_row=(1:4)*4, xlab=NULL, width=450, height=300, pointsize = 13.5) {
   
   init.graph(file.name, width, height, pointsize)
   
   tryCatch({
     #heatmap.2(data, scale=scale, Rowv=FALSE, Colv = FALSE, dendrogram="none", labCol=labCol, col=rev(terrain.colors(30)), density.info = "none")
     #heatmap(data, scale=scale, Colv = NA, Rowv = NA, labCol=labCol, col=rev(terrain.colors(30)), xlab="Time from task start (s)", main=main, cexRow=0.8)
-    pheatmap(data, scale=scale, cluster_rows=FALSE,cluster_cols=FALSE, labels_col=labCol,col=rev(terrain.colors(30)), xlab="Time from task start (s)", main=main, gaps_row=gaps_row,
-             width=width, height=height, fontsize=12, fontsize_col=11, cellwidth=11, angle_col=0)
+    pheatmap(data, scale=scale, cluster_rows=FALSE,cluster_cols=FALSE, labels_col=labCol,
+             #col=rev(terrain.colors(30)),
+             color=colorRampPalette(c("white","#307de8"))(50),
+             xlab="Time from task start (s)", main=main, gaps_row=gaps_row,
+             width=width, height=height, fontsize=fontsize, fontsize_col=fontsize-1, cellwidth=11, angle_col=0)
     
   }, finally = {
     dev.off()
@@ -416,9 +436,9 @@ for (taskType in c("Textual","Visual")) {
       
         
       selectedQueries = transformedQueries[filter & noviceFilter,c("10sId","ModelsChanged","SortedBy")]
-      selectedQueries[,"ModelsChanged"] = apply(matrix(unlist(selectedQueries[,c("ModelsChanged","SortedBy")]), ncol = 2, byrow = FALSE),1, function(row) { ifelse(row[1] == "", 
-                                                                                           switch(row[2], Keyword={"KW_1"}, ColorSketch={"Color_1"}, Face={""}, Text={""}, Semantic={"Semantic_"}, None={""}),
-                                                                                           row[1])})
+      # selectedQueries[,"ModelsChanged"] = apply(matrix(unlist(selectedQueries[,c("ModelsChanged","SortedBy")]), ncol = 2, byrow = FALSE),1, function(row) { ifelse(row[1] == "", 
+      #                                                                                      switch(row[2], Keyword={"KW_1"}, ColorSketch={"Color_1"}, Face={""}, Text={""}, Semantic={"Semantic_"}, None={""}),
+      #                                                                                      row[1])})
       
       matrixForHeatmap = matrix(unlist(selectedQueries[,c("10sId","ModelsChanged")]), ncol = 2, byrow = FALSE)
       matrixForHeatmapExpanded = cbind(as.numeric(matrixForHeatmap[,1]), t(sapply(matrixForHeatmap[,2], function(m) { c(str_count(m,"Face_"),
@@ -448,12 +468,16 @@ for (taskType in c("Textual","Visual")) {
   graphData[is.na(graphData)] = 0
   graphData = t(graphData)
   xlab = graphData[1,]*10
-  xlab[(1:length(xlab)) %% 2 == 0] = ""
+  if (taskType=="Textual") {
+    xlab[!(0:(length(xlab)-1) %% 3 == 0)] = ""
+  } else{
+    xlab[(1:length(xlab)) %% 2 == 0] = ""
+  }
   
   browseGraphData = graphData[startsWith(rownames(graphData),"B_"),]
   browseGraphData = browseGraphData[order(strReverse(rownames(browseGraphData))),]
   graph.heat(paste0(taskType,"_browse.pdf"), browseGraphData, xlab, main=paste0(taskType," KIS browsing interactions"), gaps_row=c(),
-             width=ifelse(taskType=="Textual",650,450), height=200)
+             width=ifelse(taskType=="Textual",680,450), height=200, fontsize=ifelse(taskType=="Textual",18.1,12))
   csvData = t(rbind(graphData[1,]*10,browseGraphData))
   colnames(csvData)[1] = "Time interval"
   write.table(csvData, paste0(taskType,"_browsing.csv"), row.names = FALSE, sep = ";")
@@ -461,7 +485,7 @@ for (taskType in c("Textual","Visual")) {
   queryGraphData = graphData[!startsWith(rownames(graphData),"B_"),][-1,]
   queryGraphData = queryGraphData[order(strReverse(rownames(queryGraphData))),]
   graph.heat(paste0(taskType,"_queries.pdf"), queryGraphData, xlab, main=paste0(taskType," KIS query interactions"), gaps_row=(1:ifelse(taskType=="Textual",1,3))*4,
-             width=ifelse(taskType=="Textual",650,450))
+             width=ifelse(taskType=="Textual",680,450), fontsize=ifelse(taskType=="Textual",18.1,12))
   
   csvData = t(rbind(graphData[1,]*10,queryGraphData))
   colnames(csvData)[1] = "Time interval"
