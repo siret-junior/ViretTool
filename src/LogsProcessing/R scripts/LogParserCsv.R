@@ -420,6 +420,8 @@ strReverse = function(x) {
   sapply(lapply(strsplit(x, NULL), rev), paste, collapse="")
 }
 
+ignoredTS = read.csv("ignoreTS.csv", header=F,sep=";")
+
 for (taskType in c("Textual","Visual")) {
   
   if (taskType == "Visual") {
@@ -432,7 +434,7 @@ for (taskType in c("Textual","Visual")) {
   for (member in c("0","1")) {
     for (novice in novices) {
       
-      transformedQueries = allTransformedQueries[[member]]
+      transformedQueries = allTransformedQueries[[member]][allTransformedQueries[[member]][,1] %ni% ignoredTS[,as.numeric(member)+1],]
       filter = (transformedQueries[,"IsAfterSuccessfulSubmission"] == FALSE | is.na(transformedQueries[,"IsAfterSuccessfulSubmission"])) & startsWith(unlist(transformedQueries[,"TaskName"]),taskType)
       filteredActions = browsingActionsForHeatmap[[member]]
       
@@ -449,6 +451,7 @@ for (taskType in c("Textual","Visual")) {
       
         
       selectedQueries = transformedQueries[filter & noviceFilter,c("10sId","ModelsChanged","SortedBy")]
+      # SortedBy is ignored for now
       # selectedQueries[,"ModelsChanged"] = apply(matrix(unlist(selectedQueries[,c("ModelsChanged","SortedBy")]), ncol = 2, byrow = FALSE),1, function(row) { ifelse(row[1] == "", 
       #                                                                                      switch(row[2], Keyword={"KW_1"}, ColorSketch={"Color_1"}, Face={""}, Text={""}, Semantic={"Semantic_"}, None={""}),
       #                                                                                      row[1])})
@@ -490,15 +493,15 @@ for (taskType in c("Textual","Visual")) {
   browseGraphData = graphData[startsWith(rownames(graphData),"B_"),]
   browseGraphData = browseGraphData[order(strReverse(rownames(browseGraphData))),]
   graph.heat(paste0(taskType,"_browse.pdf"), browseGraphData, xlab, main=paste0(taskType," KIS browsing interactions"), gaps_row=c(),
-             width=ifelse(taskType=="Textual",680,450), height=200, fontsize=ifelse(taskType=="Textual",18.1,12))
+             width=ifelse(taskType=="Textual",680,440), height=200, fontsize=ifelse(taskType=="Textual",18.1,12))
   csvData = t(rbind(graphData[1,]*10,browseGraphData))
   colnames(csvData)[1] = "Time interval"
   write.table(csvData, paste0(taskType,"_browsing.csv"), row.names = FALSE, sep = ";")
   
   queryGraphData = graphData[!startsWith(rownames(graphData),"B_"),][-1,]
   queryGraphData = queryGraphData[order(strReverse(rownames(queryGraphData))),]
-  graph.heat(paste0(taskType,"_queries.pdf"), queryGraphData, xlab, main=paste0(taskType," KIS query interactions"), gaps_row=(1:ifelse(taskType=="Textual",1,3))*4,
-             width=ifelse(taskType=="Textual",680,450), fontsize=ifelse(taskType=="Textual",18.1,12))
+  graph.heat(paste0(taskType,"_queries.pdf"), queryGraphData, xlab, main=paste0(taskType," KIS query modifications"), gaps_row=(1:ifelse(taskType=="Textual",1,3))*4,
+             width=ifelse(taskType=="Textual",680,440), fontsize=ifelse(taskType=="Textual",18.1,12))
   
   csvData = t(rbind(graphData[1,]*10,queryGraphData))
   colnames(csvData)[1] = "Time interval"
