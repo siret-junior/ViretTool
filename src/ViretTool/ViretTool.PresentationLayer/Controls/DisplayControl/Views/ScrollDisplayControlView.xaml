@@ -62,7 +62,7 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"
-                                                       cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('VideoSummary','')]"/>
+                                                       cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('TemporalContext','')]"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.Template>
