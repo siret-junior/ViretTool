@@ -49,14 +49,15 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => ColorSignatureDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
                 
-                Component.For<IFaceSignatureDescriptorProvider>()
-                         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
-                         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".faces"))
-                         .LifestyleBoundTo<DatasetServices>(),
-                Component.For<ITextSignatureDescriptorProvider>()
-                         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
-                         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".text"))
-                         .LifestyleBoundTo<DatasetServices>(),
+                //Component.For<IFaceSignatureDescriptorProvider>()
+                //         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
+                //         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".faces"))
+                //         .LifestyleBoundTo<DatasetServices>(),
+                //Component.For<ITextSignatureDescriptorProvider>()
+                //         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
+                //         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".text"))
+                //         .LifestyleBoundTo<DatasetServices>(),
+
 
                 Component.For<IBiTemporalRankingService>()
                          .ImplementedBy<BiTemporalRankingService>()
@@ -86,8 +87,10 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleTransient(),
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
-                Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
-                Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
+                //Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
+                //Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
+                Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
+                Component.For<ITextSketchModel>().ImplementedBy<TextSketchModelSkeleton>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
 
                 //dataset parameters
