@@ -68,6 +68,7 @@
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionFilters.cs" />
+    <Compile Include="Services\IDatasetParameters.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />

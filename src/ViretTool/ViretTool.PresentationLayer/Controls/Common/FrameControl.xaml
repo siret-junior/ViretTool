@@ -65,6 +65,7 @@
                         <Button Grid.Column="1" FontSize="7" Background="LightCoral" Click="ButtonAddGpsClicked">
                             <Button.Visibility>
                                 <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
+                                    <Binding Path="GpsAddVisible" />
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Path="IsSelectable" IsAsync="True" />
                                     <Binding Path="CanAddToQuery" />
                                 </MultiBinding>

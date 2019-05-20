@@ -4,7 +4,6 @@
     {
         DatasetServices Create(string datasetDirectory);
 
-
         void Destroy(DatasetServices databaseServices);
     }
 }

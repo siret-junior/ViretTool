@@ -83,12 +83,17 @@ namespace ViretTool.Installers
 
                 // similarity used by IBiTemporalSimilarityModel
                 Component.For<IKeywordModel>() //TODO this is both model and provider - data are loaded each time a ranking module is instantiated
-                    .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
-                    .LifestyleTransient(),
+                         .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleTransient(),
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
                 Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
                 Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
+
+                //dataset parameters
+                Component.For<IDatasetParameters>()
+                         .UsingFactoryMethod((_, context) => new DatasetParameters((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleTransient(),
 
                 // fusion used by IBiTemporalSimilarityModel
                 Component.For<IBiTemporalRankFusionSum>()

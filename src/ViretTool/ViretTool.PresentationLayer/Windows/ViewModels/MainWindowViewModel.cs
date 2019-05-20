@@ -230,6 +230,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.LifelogFiltersVisible;
+
         public async void OpenDatabase()
         {
             string datasetDirectory = GetDatasetDirectory();
@@ -239,6 +241,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             await OpenDataset(datasetDirectory);
+            NotifyOfPropertyChange(nameof(LscFiltersVisible));
         }
 
         public void OpenTestWindow()
