@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
+using ViretTool.DataLayer.DataIO.DatasetIO;
 using ViretTool.DataLayer.DataModel;
-using ViretTool.DataLayer.DataProviders.Dataset;
 
 namespace DatasetFileCreator
 {
@@ -19,10 +14,21 @@ namespace DatasetFileCreator
             string datasetName = args[0];
             string inputFile = Path.GetFullPath(args[1]);
             string outputFile = Path.GetFullPath(args[2]);
+            bool isLSC = false;
+            if (args.Length >= 3 && args[3].Equals("LSC")) isLSC = true;
 
-            DatasetProvider datasetProvider = new DatasetProvider();
-            Dataset dataset = datasetProvider.FromFilelist(inputFile, datasetName);
-            datasetProvider.ToBinaryFile(dataset, outputFile);
+            Dataset dataset;
+            if (isLSC)
+            {
+                DatasetFilelistDeserializerLSC datasetDeserializer = new DatasetFilelistDeserializerLSC();
+                dataset = datasetDeserializer.Deserialize(new StreamReader(inputFile), datasetName);
+            }
+            else
+            {
+                DatasetFilelistDeserializer datasetDeserializer = new DatasetFilelistDeserializer();
+                dataset = datasetDeserializer.Deserialize(new StreamReader(inputFile), datasetName);
+            }
+            DatasetBinarySerializer.Serialize(File.OpenWrite(outputFile), dataset);
         }
     }
 }

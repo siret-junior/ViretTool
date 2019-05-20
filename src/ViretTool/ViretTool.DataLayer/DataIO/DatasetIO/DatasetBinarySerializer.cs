@@ -8,7 +8,7 @@ using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.DataLayer.DataIO.DatasetIO
 {
-    internal class DatasetBinarySerializer : DatasetSerializationBase
+    public class DatasetBinarySerializer : DatasetSerializationBase
     {
         public DatasetBinarySerializer()
         {
