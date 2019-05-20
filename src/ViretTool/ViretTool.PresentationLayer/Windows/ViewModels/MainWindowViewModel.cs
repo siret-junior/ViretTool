@@ -20,6 +20,7 @@ using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.PresentationLayer.Controls.Common.LifelogFilters;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 using ViretTool.PresentationLayer.Helpers;
@@ -57,6 +58,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             TestControlViewModel testControlViewModel,
             QueryViewModel query1,
             QueryViewModel query2,
+            LifelogFilterViewModel lifelogFilterViewModel,
             IDatasetServicesManager datasetServicesManager,
             IGridSorter gridSorter,
             ISubmissionService submissionService,
@@ -82,6 +84,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             DetailViewModel = detailViewModel;
             Query1 = query1;
             Query2 = query2;
+            LifelogFilterViewModel = lifelogFilterViewModel;
 
             Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
             Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
@@ -105,6 +108,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public QueryViewModel Query1 { get; }
         public QueryViewModel Query2 { get; }
+        public LifelogFilterViewModel LifelogFilterViewModel { get; }
 
         public PageDisplayControlViewModel QueryResults { get; }
         public DisplayControlViewModelBase DetailView { get; }

@@ -2,7 +2,7 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using ViretTool.BusinessLayer.OutputGridSorting;
-using ViretTool.PresentationLayer.Controls.DisplayControl;
+using ViretTool.PresentationLayer.Controls.Common.LifelogFilters;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.DisplayControl.Views;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
@@ -25,6 +25,8 @@ namespace ViretTool.Installers
 
                 Component.For<QueryBuilder>(),
 
+                Component.For<LifelogFilterView>().LifestyleTransient(),
+                Component.For<LifelogFilterViewModel>().LifestyleTransient(),
                 Component.For<QueryView>().LifestyleTransient(),
                 Component.For<QueryViewModel>().LifestyleTransient(),
                 Component.For<PageDisplayControlView>().LifestyleTransient(),

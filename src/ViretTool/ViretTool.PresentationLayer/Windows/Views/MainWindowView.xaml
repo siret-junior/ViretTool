@@ -104,7 +104,7 @@
                         </Grid>
 
                         <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.LSCFiltersLabel}" Visibility="{Binding LscFiltersVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <common:DayAndTimeFilter />
+                            <ContentControl x:Name="LifelogFilterViewModel" />
                         </GroupBox>
 
                         <GroupBox Grid.Row="2" Margin="6">

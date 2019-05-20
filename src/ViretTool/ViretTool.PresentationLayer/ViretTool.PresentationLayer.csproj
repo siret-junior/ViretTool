@@ -83,8 +83,8 @@
     <Compile Include="Behaviors\ScrollToColumnOrRowIndexBehavior.cs" />
     <Compile Include="Behaviors\TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="Controls\Common\BusyIndicator.cs" />
-    <Compile Include="Controls\Common\DayAndTimeFilter.xaml.cs">
-      <DependentUpon>DayAndTimeFilter.xaml</DependentUpon>
+    <Compile Include="Controls\Common\LifelogFilters\LifelogFilterView.xaml.cs">
+      <DependentUpon>LifelogFilterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Common\DownloadedFrameViewModel.cs" />
     <Compile Include="Controls\Common\FrameControl.xaml.cs">
@@ -105,6 +105,7 @@
     <Compile Include="Controls\Common\KeywordSearch\Suggestion\SuggestionResultItem.cs" />
     <Compile Include="Controls\Common\KeywordSearch\Themes\StringHighlightingConverter.cs" />
     <Compile Include="Controls\Common\KeywordSearch\Themes\SuggestionTemplateSelector.cs" />
+    <Compile Include="Controls\Common\LifelogFilters\LifelogFilterViewModel.cs" />
     <Compile Include="Controls\Common\ModelControl.xaml.cs">
       <DependentUpon>ModelControl.xaml</DependentUpon>
     </Compile>
@@ -140,6 +141,7 @@
     <Compile Include="Converters\BooleanAndToVisibilityConverter.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DetailViewModel.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
+    <Compile Include="Converters\DayOfWeekLableConverter.cs" />
     <Compile Include="Helpers\QueryBuilder.cs" />
     <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\DetailView.xaml.cs">
@@ -184,7 +186,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\Common\DayAndTimeFilter.xaml">
+    <Page Include="Controls\Common\LifelogFilters\LifelogFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
