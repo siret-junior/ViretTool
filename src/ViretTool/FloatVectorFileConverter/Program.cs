@@ -10,6 +10,10 @@ using ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO;
 
 namespace FloatVectorFileConverter
 {
+    /// <summary>
+    /// V3C1 arguments:
+    /// "V3C1.dataset" "V3C1.deepFeatures" "V3C1.floatvector" "NasNet retrained v1"
+    /// </summary>
     class Program
     {
         static void Main(string[] args)
@@ -31,16 +35,20 @@ namespace FloatVectorFileConverter
 
             // load input data
             List<(int id, float[] vector)> descriptors = new List<(int id, float[] vector)> ();
+            //int vectorCount; // the commented lines were used to convert an old format (LSC)
             int vectorLength;
             using (BinaryReader reader = new BinaryReader(
                 File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
                 reader.ReadBytes(36);   // header
+                //vectorCount = reader.ReadInt32();
                 vectorLength = reader.ReadInt32();
 
+                //int iVector = 0;
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {
                     int id = reader.ReadInt32();
+                    //int id = iVector++;
                     float[] vector = new float[vectorLength];
                     for (int i = 0; i < vectorLength; i++)
                     {

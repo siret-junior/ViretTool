@@ -18,7 +18,8 @@ namespace ThumbnailFileCreator
     public class Program
     {
         /// <summary>
-        /// TODO: documentation
+        /// V3C1 arguments:
+        /// 128 72 4 "V3C1\Keyframes\images" "V3C1.dataset" "V3C1.thumbs"
         /// </summary>
         private static void PrintUsage()
         {
@@ -83,7 +84,11 @@ namespace ThumbnailFileCreator
                 for (int iFile = 0; iFile < filenames.Length; iFile++)
                 {
                     ParseFrameHeirarchy(Path.GetFileName(filenames[iFile]),
-                        out int videoId, out int frameNumber, out decimal seconds, out string extension);
+                        out int videoId, 
+                        out int frameNumber,
+                        out decimal seconds,
+                        //out string datetime,
+                        out string extension);
                     keys.Add((videoCount, frameNumber));
                 }
 
@@ -101,6 +106,8 @@ namespace ThumbnailFileCreator
             + @"[Ff](?<frameNumber>[0-9]+)"
             + @"_"
             + @"(?<seconds>[0-9\.]+)sec"
+            //+ @"_"
+            //+ @"[Dd](?<datetime>[^\.]+)"
             + @"\.(?<extension>.*)$",
             System.Text.RegularExpressions.RegexOptions.ExplicitCapture);
 
@@ -108,6 +115,7 @@ namespace ThumbnailFileCreator
             out int videoId,
             out int frameNumber,
             out decimal seconds,
+            //out string datetime,
             out string extension)
         {
             System.Text.RegularExpressions.Match match = _tokenFormatRegex.Match(inputString);
@@ -119,6 +127,7 @@ namespace ThumbnailFileCreator
             videoId = int.Parse(match.Groups["videoId"].Value);
             frameNumber = int.Parse(match.Groups["frameNumber"].Value);
             seconds = decimal.Parse(match.Groups["seconds"].Value, CultureInfo.InvariantCulture);
+            //datetime = match.Groups["datetime"].Value;
             extension = match.Groups["extension"].Value;
         }
 

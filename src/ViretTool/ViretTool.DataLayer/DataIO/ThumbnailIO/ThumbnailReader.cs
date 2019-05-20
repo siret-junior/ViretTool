@@ -135,6 +135,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 //    }
                 //}
 
+                // TODO: return an error image instead of raising an exception
                 throw new ArgumentException($"Trying to read thumbnail that is not stored [video: {videoId}, frame: {frameNumber}].");
             }
         }

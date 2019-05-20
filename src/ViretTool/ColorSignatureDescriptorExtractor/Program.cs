@@ -9,6 +9,11 @@ using ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO;
 
 namespace ColorSignatureDescriptorExtractor
 {
+    /// <summary>
+    /// 
+    /// V3C1_2019 arguments: 
+    /// 26 15 "V3C1.dataset" "V3C1\KeyFrames\images" "V3C1\KeyFrames\filelist.txt" "ExtractedData\V3C1\V3C1-26x15.color"
+    /// </summary>
     class Program
     {
         static void Main(string[] args)

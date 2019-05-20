@@ -11,6 +11,10 @@ using ViretTool.DataLayer.DataIO.FilterIO;
 
 namespace BlackAndWhiteFilterExtractor
 {
+    /// <summary>
+    /// V3C1 arguments:
+    /// 32 "V3C1.dataset" "V3C1\KeyFrames\images" "V3C1\KeyFrames\filelist.txt" "V3C1_first750"
+    /// </summary>
     class Program
     {
         // generally using threshold 32

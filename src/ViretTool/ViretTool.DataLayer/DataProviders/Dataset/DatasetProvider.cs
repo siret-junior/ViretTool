@@ -22,22 +22,29 @@ namespace ViretTool.DataLayer.DataProviders.Dataset
 
         public DataModel.Dataset FromBinaryFile(string datasetPath, string frameAttributesPath = null)
         {
-            using (FileStream inputStream = File.Open(datasetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            try
             {
-                DataModel.Dataset dataset = DatasetBinaryFormatter.Instance.Deserialize(inputStream);
-
-                // TODO:
-                if (frameAttributesPath != null)
-                using (StreamReader reader = new StreamReader(frameAttributesPath))
+                using (FileStream inputStream = File.Open(datasetPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    for (int i = 0; i < dataset.Frames.Count; i++)
-                    {
-                        dataset.Frames[i].FrameNumber = int.Parse(reader.ReadLine());
-                    }
+                    DataModel.Dataset dataset = DatasetBinaryFormatter.Instance.Deserialize(inputStream);
+
+                    // TODO:
+                    if (frameAttributesPath != null)
+                        using (StreamReader reader = new StreamReader(frameAttributesPath))
+                        {
+                            for (int i = 0; i < dataset.Frames.Count; i++)
+                            {
+                                dataset.Frames[i].FrameNumber = int.Parse(reader.ReadLine());
+                            }
+                        }
+
+
+                    return dataset;
                 }
-
-
-                return dataset;
+            }
+            catch
+            {
+                throw;
             }
             
 //#if DEBUG
