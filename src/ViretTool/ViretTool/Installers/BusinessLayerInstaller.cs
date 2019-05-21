@@ -48,15 +48,15 @@ namespace ViretTool.Installers
                 Component.For<IDescriptorProvider<byte[]>>()
                          .UsingFactoryMethod((_, context) => ColorSignatureDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
-                
-                //Component.For<IFaceSignatureDescriptorProvider>()
-                //         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
-                //         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".faces"))
-                //         .LifestyleBoundTo<DatasetServices>(),
-                //Component.For<ITextSignatureDescriptorProvider>()
-                //         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
-                //         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".text"))
-                //         .LifestyleBoundTo<DatasetServices>(),
+
+                Component.For<IFaceSignatureDescriptorProvider>()
+                         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
+                         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".faces"))
+                         .LifestyleBoundTo<DatasetServices>(),
+                Component.For<ITextSignatureDescriptorProvider>()
+                         .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
+                         .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".text"))
+                         .LifestyleBoundTo<DatasetServices>(),
 
 
                 Component.For<IBiTemporalRankingService>()

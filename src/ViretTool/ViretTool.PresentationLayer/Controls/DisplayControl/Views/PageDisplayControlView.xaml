@@ -76,7 +76,7 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5,8,5,5">
                     <TextBlock Text="{x:Static properties:Resources.MaxFromVideo}" />
-                    <TextBox Text="{Binding MaxFramesFromVideo, UpdateSourceTrigger=LostFocus}" Margin="4,0,0,0" Width="22">
+                    <TextBox Text="{Binding MaxFramesFromVideo, UpdateSourceTrigger=LostFocus}" Margin="4,0,0,0">
                         <i:Interaction.Behaviors>
                             <behaviors:TextBoxEnterKeyUpdateBehavior />
                         </i:Interaction.Behaviors>
@@ -85,7 +85,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,8,5,5">
                     <TextBlock Text="{x:Static properties:Resources.MaxFromShot}" />
-                    <TextBox Text="{Binding MaxFramesFromShot, UpdateSourceTrigger=LostFocus}" Margin="4,0,0,0" Width="22">
+                    <TextBox Text="{Binding MaxFramesFromShot, UpdateSourceTrigger=LostFocus}" Margin="4,0,0,0">
                         <i:Interaction.Behaviors>
                             <behaviors:TextBoxEnterKeyUpdateBehavior />
                         </i:Interaction.Behaviors>
