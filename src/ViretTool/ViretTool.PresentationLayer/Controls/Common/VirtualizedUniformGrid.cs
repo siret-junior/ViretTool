@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +21,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private ScrollViewer _owner;
         private readonly int _scrollLength = 25;
         private Size _viewport = new Size(0, 0);
+
+        private readonly List<FrameworkElement> _cache = new List<FrameworkElement>();
 
         //-----------------------------------------
         //
@@ -132,7 +136,34 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     break;
             }
         }
-        
+
+        private void EnsureCache()
+        {
+            if (InternalChildren.Count == _cache.Count)
+            {
+                bool equals = true;
+                for (int i = 0; i < InternalChildren.Count; i++)
+                {
+                    if (!ReferenceEquals(InternalChildren[i], _cache[i]))
+                    {
+                        equals = false;
+                        break;
+                    }
+                }
+
+                if (equals)
+                {
+                    return;
+                }
+            }
+
+            RemoveInternalChildRange(0, InternalChildren.Count);
+            foreach (FrameworkElement element in _cache)
+            {
+                AddInternalChild(element);
+            }
+        }
+
         /// <summary>
         /// Measure the children
         /// </summary>
@@ -142,56 +173,75 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             UpdateScrollInfo(availableSize);
 
-            int firstVisibleItemIndex, lastVisibleItemIndex;
-            GetVisibleRange(out firstVisibleItemIndex, out lastVisibleItemIndex);
+            GetVisibleRange(out int firstVisibleItemIndex, out int lastVisibleItemIndex);
 
             // We need to access InternalChildren before the generator to work around a bug
             UIElementCollection children = this.InternalChildren;
-            IItemContainerGenerator generator = this.ItemContainerGenerator;
+            IItemContainerGenerator iGenerator = this.ItemContainerGenerator;
+            ItemContainerGenerator generator = iGenerator as ItemContainerGenerator;
 
             // Get the generator position of the first visible data item
-            GeneratorPosition startPos = generator.GeneratorPositionFromIndex(firstVisibleItemIndex);
+            GeneratorPosition startPos = iGenerator.GeneratorPositionFromIndex(firstVisibleItemIndex);
 
             // Get index where we'd insert the child for this position. If the item is realized
             // (position.Offset == 0), it's just position.Index, otherwise we have to add one to
             // insert after the corresponding child
             int childIndex = (startPos.Offset == 0) ? startPos.Index : startPos.Index + 1;
+            int cacheIndex = 0;
 
-            using (generator.StartAt(startPos, GeneratorDirection.Forward, true))
+            if (!GetIsVirtualizing(this) ||
+                GetVirtualizationMode(this) != VirtualizationMode.Recycling ||
+                _cache.Count < lastVisibleItemIndex - firstVisibleItemIndex ||
+                generator == null)
             {
-                for (int itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; ++itemIndex, ++childIndex)
+                _cache.Clear();
+                using (iGenerator.StartAt(startPos, GeneratorDirection.Forward, true))
                 {
-                    bool newlyRealized;
-
-                    // Get or create the child
-                    UIElement child = generator.GenerateNext(out newlyRealized) as UIElement;
-
-                    childIndex = Math.Max(0, childIndex);
-
-                    if (newlyRealized)
+                    for (int itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; ++itemIndex, ++childIndex)
                     {
-                        // Figure out if we need to insert the child at the end or somewhere in the middle
-                        if (childIndex >= children.Count)
+                        bool newlyRealized;
+                        // Get or create the child
+                        FrameworkElement child = iGenerator.GenerateNext(out newlyRealized) as FrameworkElement;
+                        childIndex = Math.Max(0, childIndex);
+
+                        if (newlyRealized)
                         {
-                            base.AddInternalChild(child);
-                        }
-                        else
-                        {
-                            base.InsertInternalChild(childIndex, child);
+                            iGenerator.PrepareItemContainer(child);
                         }
 
-                        generator.PrepareItemContainer(child);
+                        // Measurements will depend on layout algorithm
+                        child.Measure(GetChildSize(availableSize));
+                        _cache.Add(child);
                     }
-                    else
-                    {
-                        // The child has already been created, let's be sure it's in the right spot
-                        Debug.Assert(child == children[childIndex], "Wrong child was generated");
-                    }
-
-                    // Measurements will depend on layout algorithm
-                    child.Measure(GetChildSize(availableSize));
                 }
             }
+            else if (firstVisibleItemIndex < lastVisibleItemIndex)
+            {
+                HashSet<object> notChangedDataContexts = generator.Items.Skip(firstVisibleItemIndex)
+                                                                  .Take(lastVisibleItemIndex - firstVisibleItemIndex)
+                                                                  .Intersect(_cache.Select(x => x.DataContext))
+                                                                  .ToHashSet();
+                
+                for (int itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; ++itemIndex)
+                {
+                    object context = generator.Items[itemIndex];
+                    if (notChangedDataContexts.Contains(context))
+                    {
+                        continue;
+                    }
+
+                    while (notChangedDataContexts.Contains(_cache[cacheIndex].DataContext))
+                    {
+                        ++cacheIndex;
+                    }
+
+                    _cache[cacheIndex].DataContext = context;
+                    _cache[cacheIndex].Measure(GetChildSize(availableSize));
+                    ++cacheIndex;
+                }
+            }
+
+            EnsureCache();
 
             // Note: this could be deferred to idle time for efficiency
             //CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
@@ -212,15 +262,23 @@ namespace ViretTool.PresentationLayer.Controls.Common
         /// <returns>Size used</returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            IItemContainerGenerator generator = this.ItemContainerGenerator;
+            IItemContainerGenerator iGenerator = this.ItemContainerGenerator;
+            ItemContainerGenerator generator = iGenerator as ItemContainerGenerator;
 
             UpdateScrollInfo(finalSize);
 
-            for (int i = 0; i < this.Children.Count; i++)
+            for (int i = 0; i < _cache.Count; i++)
             {
-                UIElement child = this.Children[i];
-
-                int itemIndex = generator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
+                FrameworkElement child = _cache[i];
+                int itemIndex;
+                if (generator == null)
+                {
+                    itemIndex = iGenerator.IndexFromGeneratorPosition(new GeneratorPosition(i, 0));
+                }
+                else
+                {
+                    itemIndex = generator.Items.IndexOf(child.DataContext);
+                }
 
                 ArrangeChild(itemIndex, child, finalSize);
             }
@@ -247,6 +305,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             UIElementCollection children = this.InternalChildren;
             IItemContainerGenerator generator = this.ItemContainerGenerator;
+            //generator as ItemContainerGenerator also support Recycle - improvement maybe?
 
             for (int i = children.Count - 1; i >= 0; i--)
             {

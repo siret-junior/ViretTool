@@ -89,7 +89,7 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="18" Columns="3"
+                            <common:VirtualizedUniformGrid Orientation="Vertical" Rows="18" Columns="3" IsVirtualizing ="True" VirtualizationMode="Recycling"
                                                            cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('Exploration', 'SampledScroll')]"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>

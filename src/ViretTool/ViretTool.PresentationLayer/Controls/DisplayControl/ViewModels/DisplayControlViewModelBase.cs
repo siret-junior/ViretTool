@@ -137,7 +137,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
         }
 
-        protected void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
+        protected virtual void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
         {
             int i = 0;
             for (; i < collectionToUpdate.Count && i < viewModelsToAdd.Count; i++)

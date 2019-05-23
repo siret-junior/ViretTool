@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Services;
@@ -58,6 +60,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public void OnGridScrollChanged(LogType logType, string detailDescription = null)
         {
             _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged", detailDescription);
+        }
+
+        protected override void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
+        {
+            collectionToUpdate.Clear();
+            collectionToUpdate.AddRange(viewModelsToAdd);
         }
 
         protected void ScrollToFrameHorizontally(FrameViewModel frameViewModel)
