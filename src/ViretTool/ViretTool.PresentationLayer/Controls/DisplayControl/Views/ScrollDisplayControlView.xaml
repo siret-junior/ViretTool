@@ -54,9 +54,7 @@
                                                                  [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
                                                                  [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
                                                                  [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
-                                             IsSelectable="True"
-                                             FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
-                                             FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
+                                             IsSelectable="True" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>

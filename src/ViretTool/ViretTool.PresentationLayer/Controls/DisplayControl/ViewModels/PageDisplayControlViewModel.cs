@@ -88,7 +88,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / (double)(DisplayHeight / ImageHeight * (DisplayWidth / ImageWidth))) - 1 : 0;
+        public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / ((double)RowCount * ColumnCount)) - 1 : 0;
 
         public event EventHandler MaxFramesChanged;
 
@@ -146,8 +146,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected override void UpdateVisibleFrames()
         {
+            RowCount = DisplayHeight / ImageHeight;
+            ColumnCount = DisplayWidth / ImageWidth;
             NotifyOfPropertyChange(nameof(LastPageNumber));
-            int itemsCount = (DisplayHeight / ImageHeight) * (DisplayWidth / ImageWidth);
+            int itemsCount = RowCount * ColumnCount;
             List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);

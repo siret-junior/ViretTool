@@ -70,18 +70,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(FrameControl),
             null);
 
-        public static readonly DependencyProperty FrameWidthProperty = DependencyProperty.Register(
-            nameof(FrameWidth),
-            typeof(int),
-            typeof(FrameControl),
-            new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
-
-        public static readonly DependencyProperty FrameHeightProperty = DependencyProperty.Register(
-            nameof(FrameHeight),
-            typeof(int),
-            typeof(FrameControl),
-            new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
-
         public static readonly DependencyProperty IsClickedProperty = DependencyProperty.Register(
             nameof(IsClicked),
             typeof(bool),
@@ -118,18 +106,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
         public bool IsNotSelectable => !IsSelectable;
-
-        public int FrameWidth
-        {
-            get => (int)GetValue(FrameWidthProperty);
-            set => SetValue(FrameWidthProperty, value);
-        }
-
-        public int FrameHeight
-        {
-            get => (int)GetValue(FrameHeightProperty);
-            set => SetValue(FrameHeightProperty, value);
-        }
 
         public bool IsClicked
         {

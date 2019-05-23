@@ -19,6 +19,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         protected readonly ILogger _logger;
         protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
 
+        private int _rowCount;
+        private int _columnCount;
+
         protected DisplayControlViewModelBase(ILogger logger, IDatasetServicesManager datasetServicesManager)
         {
             _logger = logger;
@@ -35,7 +38,37 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public int ImageHeight { get; }
         public int ImageWidth { get; }
-        
+
+        public int ColumnCount
+        {
+            get => _columnCount;
+            set
+            {
+                if (_columnCount == value)
+                {
+                    return;
+                }
+
+                _columnCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int RowCount
+        {
+            get => _rowCount;
+            set
+            {
+                if (_rowCount == value)
+                {
+                    return;
+                }
+
+                _rowCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
         public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;

@@ -133,14 +133,12 @@
                                                                                    [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
                                                                                    [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
                                                                                    [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];"
-                                         IsSelectable="True"
-                                         FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
-                                         FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}" />
+                                         IsSelectable="True" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <i:Interaction.Behaviors>

@@ -15,10 +15,7 @@
             <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
             <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
             <Grid x:Key="CommonControls" x:Shared="False">
-                <Image Name="Image"
-                       Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}" 
-                       Height="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}"
-                       Stretch="Fill">
+                <Image Name="Image" Stretch="Fill">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay, IsAsync=True}"/>
@@ -40,8 +37,7 @@
                 <Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
                 <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />
 
-                <Grid Name="DisplayButtons" Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}" 
-                      Height="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Opacity="0.6"
+                <Grid Name="DisplayButtons" Height="16" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Opacity="0.6"
                       Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -92,10 +88,7 @@
                     </Grid>
                 </Grid>
 
-                <Grid Name="ScrollHelper" 
-                      Width="{Binding Path=FrameWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}" 
-                      Height="{Binding Path=FrameHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, IsAsync=True}"
-                      HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="1">
+                <Grid Name="ScrollHelper" HorizontalAlignment="Stretch" VerticalAlignment="Center" Opacity="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="4*" />
@@ -120,7 +113,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseWheel="FrameControl_OnMouseWheel" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave"
-          Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter }, Mode=OneWay, IsAsync=True}">
+          Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
         <ContentControl Content="{StaticResource CommonControls}" />
         <Popup IsOpen="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay, IsAsync=True}" 
                Placement="Center" MouseLeave="Popup_OnMouseLeave">

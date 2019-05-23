@@ -50,8 +50,8 @@
         <ItemsControl x:Name="ImagesDisplay" Grid.Row="7" ItemsSource="{Binding QueryObjects}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <common:FrameControl FrameWidth="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
-                                         FrameHeight="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}"
+                    <common:FrameControl Width="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
+                                         Height="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}"
                                          cal:Message.Attach="[Event RemoveFromQueryClicked] = [Action RemoveFromQueryClicked($dataContext)];"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
