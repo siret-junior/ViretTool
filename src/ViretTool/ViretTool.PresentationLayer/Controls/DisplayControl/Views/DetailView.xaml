@@ -56,7 +56,6 @@
                                 <i:Interaction.Behaviors>
                                     <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToRow="{Binding ScrollToRow, Mode=OneWayToSource}"/>
                                 </i:Interaction.Behaviors>
-
                             </ScrollViewer>
                         </ControlTemplate>
                     </ItemsControl.Template>
@@ -95,6 +94,9 @@
                                           Padding="{TemplateBinding Control.Padding}"
                                           Focusable="False">
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                <i:Interaction.Behaviors>
+                                    <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToRow="{Binding ScrollToSampleRow, Mode=OneWayToSource}"/>
+                                </i:Interaction.Behaviors>
                             </ScrollViewer>
                         </ControlTemplate>
                     </ItemsControl.Template>

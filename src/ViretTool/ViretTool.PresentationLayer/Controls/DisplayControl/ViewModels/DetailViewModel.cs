@@ -25,6 +25,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();
 
+        public Action<int> ScrollToSampleRow { private get; set; }
+
         public bool IsBusy
         {
             get => _isBusy;
@@ -56,6 +58,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
+            ScrollToSampleRow(0);
             IsBusy = false;
         }
 
@@ -75,6 +78,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
+            ScrollToSampleRow(0);
             IsBusy = false;
         }
 

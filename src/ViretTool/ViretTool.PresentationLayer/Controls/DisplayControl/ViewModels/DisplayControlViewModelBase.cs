@@ -187,7 +187,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 for (; i < collectionToUpdate.Count; i++)
                 {
-                    collectionToUpdate[i].IsVisible = false;
+                    collectionToUpdate[i].IsVisible = viewModelsToAdd.Contains(collectionToUpdate[i]);
                 }
             }
         }

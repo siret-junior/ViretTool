@@ -396,7 +396,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         public void UpdateQueryObjects(IList<FrameViewModel> queries)
         {
             //maybe get some feedback, what changed?
-            var queriesToInsert = queries.Where(q => _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _)).ToList();
+            var queriesToInsert = queries.Where(q => _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _)).Select(f => f.Clone()).ToList();
             if (!QueryObjects.Any() && !queriesToInsert.Any())
             {
                 return;

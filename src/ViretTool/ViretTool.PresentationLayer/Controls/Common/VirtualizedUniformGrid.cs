@@ -221,23 +221,26 @@ namespace ViretTool.PresentationLayer.Controls.Common
                                                                   .Take(lastVisibleItemIndex - firstVisibleItemIndex)
                                                                   .Intersect(_cache.Select(x => x.DataContext))
                                                                   .ToHashSet();
-                
-                for (int itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; ++itemIndex)
-                {
-                    object context = generator.Items[itemIndex];
-                    if (notChangedDataContexts.Contains(context))
-                    {
-                        continue;
-                    }
 
-                    while (notChangedDataContexts.Contains(_cache[cacheIndex].DataContext))
+                if (notChangedDataContexts.Count != generator.Items.Count)
+                {
+                    for (int itemIndex = firstVisibleItemIndex; itemIndex <= lastVisibleItemIndex; ++itemIndex)
                     {
+                        object context = generator.Items[itemIndex];
+                        if (notChangedDataContexts.Contains(context))
+                        {
+                            continue;
+                        }
+
+                        while (notChangedDataContexts.Contains(_cache[cacheIndex].DataContext))
+                        {
+                            ++cacheIndex;
+                        }
+
+                        _cache[cacheIndex].DataContext = context;
+                        _cache[cacheIndex].Measure(GetChildSize(availableSize));
                         ++cacheIndex;
                     }
-
-                    _cache[cacheIndex].DataContext = context;
-                    _cache[cacheIndex].Measure(GetChildSize(availableSize));
-                    ++cacheIndex;
                 }
             }
 
