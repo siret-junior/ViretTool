@@ -88,9 +88,8 @@ namespace ViretTool.Installers
                          .LifestyleTransient(),
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
                 //Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
-                //Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
                 Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
-                Component.For<ITextSketchModel>().ImplementedBy<TextSketchModelSkeleton>().LifestyleTransient(),
+                Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
 
                 //dataset parameters
