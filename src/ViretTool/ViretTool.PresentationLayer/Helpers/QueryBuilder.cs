@@ -4,6 +4,7 @@ using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.PresentationLayer.Controls.Common.LifelogFilters;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
 namespace ViretTool.PresentationLayer.Helpers
@@ -17,7 +18,15 @@ namespace ViretTool.PresentationLayer.Helpers
             _datasetServicesManager = datasetServicesManager;
         }
 
-        public BiTemporalQuery BuildQuery(QueryViewModel query1, QueryViewModel query2, bool isFirstQueryPrimary, int maxFramesFromVideo, int maxFramesFromShot)
+        public BiTemporalQuery BuildQuery(
+            QueryViewModel query1,
+            QueryViewModel query2,
+            bool isFirstQueryPrimary,
+            int maxFramesFromVideo,
+            int maxFramesFromShot,
+            IDatasetParameters datasetParameters,
+            FrameViewModel frameForGpsFilter,
+            LifelogFilterViewModel lifelogFilters)
         {
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
@@ -36,37 +45,39 @@ namespace ViretTool.PresentationLayer.Helpers
                         query1.CanvasWidth,
                         query1.CanvasHeight,
                         query1.SketchQueryResult?.SketchColorPoints?
-                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Color)
-                            .Select(
-                                point => new Ellipse(
-                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                    point.Position.X,
-                                    point.Position.Y,
-                                    point.EllipseAxis.X,
-                                    point.EllipseAxis.Y,
-                                    0,
-                                    point.FillColor.R,
-                                    point.FillColor.G,
-                                    point.FillColor.B))
-                                .ToArray() ?? new Ellipse[0]
+                              .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Color)
+                              .Select(
+                                  point => new Ellipse(
+                                      point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                      point.Position.X,
+                                      point.Position.Y,
+                                      point.EllipseAxis.X,
+                                      point.EllipseAxis.Y,
+                                      0,
+                                      point.FillColor.R,
+                                      point.FillColor.G,
+                                      point.FillColor.B))
+                              .ToArray() ??
+                        new Ellipse[0]
                     ),
                     new ColorSketchQuery(
                         query2.CanvasWidth,
                         query2.CanvasHeight,
                         query2.SketchQueryResult?.SketchColorPoints?
-                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Color)
-                            .Select(
-                                point => new Ellipse(
-                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                    point.Position.X,
-                                    point.Position.Y,
-                                    point.EllipseAxis.X,
-                                    point.EllipseAxis.Y,
-                                    0,
-                                    point.FillColor.R,
-                                    point.FillColor.G,
-                                    point.FillColor.B))
-                                .ToArray() ?? new Ellipse[0]
+                              .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Color)
+                              .Select(
+                                  point => new Ellipse(
+                                      point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                      point.Position.X,
+                                      point.Position.Y,
+                                      point.EllipseAxis.X,
+                                      point.EllipseAxis.Y,
+                                      0,
+                                      point.FillColor.R,
+                                      point.FillColor.G,
+                                      point.FillColor.B))
+                              .ToArray() ??
+                        new Ellipse[0]
                     )
                 );
 
@@ -76,37 +87,39 @@ namespace ViretTool.PresentationLayer.Helpers
                         query1.CanvasWidth,
                         query1.CanvasHeight,
                         query1.SketchQueryResult?.SketchColorPoints?
-                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Face)
-                            .Select(
-                                point => new Ellipse(
-                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                    point.Position.X,
-                                    point.Position.Y,
-                                    point.EllipseAxis.X,
-                                    point.EllipseAxis.Y,
-                                    0,
-                                    point.FillColor.R,
-                                    point.FillColor.G,
-                                    point.FillColor.B))
-                                .ToArray() ?? new Ellipse[0]
+                              .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Face)
+                              .Select(
+                                  point => new Ellipse(
+                                      point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                      point.Position.X,
+                                      point.Position.Y,
+                                      point.EllipseAxis.X,
+                                      point.EllipseAxis.Y,
+                                      0,
+                                      point.FillColor.R,
+                                      point.FillColor.G,
+                                      point.FillColor.B))
+                              .ToArray() ??
+                        new Ellipse[0]
                     ),
                     new ColorSketchQuery(
                         query2.CanvasWidth,
                         query2.CanvasHeight,
                         query2.SketchQueryResult?.SketchColorPoints?
-                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Face)
-                            .Select(
-                                point => new Ellipse(
-                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                    point.Position.X,
-                                    point.Position.Y,
-                                    point.EllipseAxis.X,
-                                    point.EllipseAxis.Y,
-                                    0,
-                                    point.FillColor.R,
-                                    point.FillColor.G,
-                                    point.FillColor.B))
-                                .ToArray() ?? new Ellipse[0]
+                              .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Face)
+                              .Select(
+                                  point => new Ellipse(
+                                      point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                      point.Position.X,
+                                      point.Position.Y,
+                                      point.EllipseAxis.X,
+                                      point.EllipseAxis.Y,
+                                      0,
+                                      point.FillColor.R,
+                                      point.FillColor.G,
+                                      point.FillColor.B))
+                              .ToArray() ??
+                        new Ellipse[0]
                     )
                 );
 
@@ -116,37 +129,39 @@ namespace ViretTool.PresentationLayer.Helpers
                         query1.CanvasWidth,
                         query1.CanvasHeight,
                         query1.SketchQueryResult?.SketchColorPoints?
-                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Text)
-                            .Select(
-                                point => new Ellipse(
-                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                    point.Position.X,
-                                    point.Position.Y,
-                                    point.EllipseAxis.X,
-                                    point.EllipseAxis.Y,
-                                    0,
-                                    point.FillColor.R,
-                                    point.FillColor.G,
-                                    point.FillColor.B))
-                                .ToArray() ?? new Ellipse[0]
+                              .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Text)
+                              .Select(
+                                  point => new Ellipse(
+                                      point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                      point.Position.X,
+                                      point.Position.Y,
+                                      point.EllipseAxis.X,
+                                      point.EllipseAxis.Y,
+                                      0,
+                                      point.FillColor.R,
+                                      point.FillColor.G,
+                                      point.FillColor.B))
+                              .ToArray() ??
+                        new Ellipse[0]
                     ),
                     new ColorSketchQuery(
                         query2.CanvasWidth,
                         query2.CanvasHeight,
                         query2.SketchQueryResult?.SketchColorPoints?
-                            .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Text)
-                            .Select(
-                                point => new Ellipse(
-                                    point.Area ? Ellipse.State.All : Ellipse.State.Any,
-                                    point.Position.X,
-                                    point.Position.Y,
-                                    point.EllipseAxis.X,
-                                    point.EllipseAxis.Y,
-                                    0,
-                                    point.FillColor.R,
-                                    point.FillColor.G,
-                                    point.FillColor.B))
-                                .ToArray() ?? new Ellipse[0]
+                              .Where(p => p.SketchType == Controls.Common.Sketches.SketchType.Text)
+                              .Select(
+                                  point => new Ellipse(
+                                      point.Area ? Ellipse.State.All : Ellipse.State.Any,
+                                      point.Position.X,
+                                      point.Position.Y,
+                                      point.EllipseAxis.X,
+                                      point.EllipseAxis.Y,
+                                      0,
+                                      point.FillColor.R,
+                                      point.FillColor.G,
+                                      point.FillColor.B))
+                              .ToArray() ??
+                        new Ellipse[0]
                     )
                 );
 
@@ -178,8 +193,7 @@ namespace ViretTool.PresentationLayer.Helpers
                             //    ? FusionQuery.SimilarityModels.TextSketch
                             : query1.SemanticUseForSorting
                                 ? FusionQuery.SimilarityModels.SemanticExample
-                                : FusionQuery.SimilarityModels.None
-                    ,
+                                : FusionQuery.SimilarityModels.None,
 
                     new ThresholdFilteringQuery(
                         (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
@@ -194,15 +208,13 @@ namespace ViretTool.PresentationLayer.Helpers
                         query1.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        || biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                        (biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any() || biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        || biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any())
+                        (biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any() || biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.ColorValue * 0.01),
@@ -229,8 +241,7 @@ namespace ViretTool.PresentationLayer.Helpers
                             //    ? FusionQuery.SimilarityModels.TextSketch
                             : query2.SemanticUseForSorting
                                 ? FusionQuery.SimilarityModels.SemanticExample
-                                : FusionQuery.SimilarityModels.None
-                    ,
+                                : FusionQuery.SimilarityModels.None,
                     new ThresholdFilteringQuery(
                         (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
@@ -244,15 +255,13 @@ namespace ViretTool.PresentationLayer.Helpers
                         query2.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        || biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                        (biTemporalFaceSketchQuery.FormerQuery.ColorSketchEllipses.Any() || biTemporalFaceSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.ColorValue * 0.01),
 
                     new ThresholdFilteringQuery(
-                        (biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                        || biTemporalTextSketchQuery.LatterQuery.ColorSketchEllipses.Any())
+                        (biTemporalTextSketchQuery.FormerQuery.ColorSketchEllipses.Any() || biTemporalTextSketchQuery.LatterQuery.ColorSketchEllipses.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.ColorValue * 0.01),

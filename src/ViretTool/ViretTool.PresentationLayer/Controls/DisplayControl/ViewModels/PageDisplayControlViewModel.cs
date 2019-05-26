@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
@@ -22,6 +24,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             : base(logger, datasetServicesManager)
         {
             _iterationLogger = iterationLogger;
+            datasetServicesManager.DatasetOpened += (_, services) =>
+                                                    {
+                                                        MaxFramesFromVideo = services.DatasetParameters.LifelogFiltersVisible ? 30 : 3;
+                                                    };
         }
 
         public FrameViewModel GpsFrame
@@ -34,6 +40,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _gpsFrame = value;
+                NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
         }
@@ -50,7 +57,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
                 _maxFramesFromShot = value;
                 _iterationLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
-                MaxFramesChanged?.Invoke(this, EventArgs.Empty);
+                NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
         }
@@ -67,7 +74,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
                 _maxFramesFromVideo = value;
                 _iterationLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
-                MaxFramesChanged?.Invoke(this, EventArgs.Empty);
+                NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
         }
@@ -90,7 +97,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / ((double)RowCount * ColumnCount)) - 1 : 0;
 
-        public event EventHandler MaxFramesChanged;
+        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
         public void FirstPageButton()
         {
@@ -153,6 +160,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
+        }
+
+        private void NotifyQuerySettingsChanged()
+        {
+            QuerySettingsChanged.OnNext(Unit.Default);
         }
     }
 }

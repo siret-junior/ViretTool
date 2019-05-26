@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using Caliburn.Micro;
 using Castle.Core.Logging;
@@ -21,8 +23,6 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly IInteractionLogger _iterationLogger;
 
-        public EventHandler QuerySettingsChanged;
-        
         // TODO: load default values from a settings file
         private FilterControl.FilterState _bwFilterState = FilterControl.FilterState.Off;
         private double _bwFilterValue = 90;
@@ -54,37 +54,28 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
 
-            //when any property is changed, new settings are rebuild - maybe we want to throttle?
-            IObservable<string> onPropertyChanged =
-                Observable
-                    .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-                        eventHandler => PropertyChanged += eventHandler,
-                        eventHandler => PropertyChanged -= eventHandler)
-                    .Select(p => $"{p.EventArgs.PropertyName}: {p.Sender.GetType().GetProperty(p.EventArgs.PropertyName)?.GetValue(p.Sender)}");
-            IObservable<string> onQueriesChanged = Observable
-                                                   .FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-                                                       eventHandler => QueryObjects.CollectionChanged += eventHandler,
-                                                       eventHandler => QueryObjects.CollectionChanged -= eventHandler)
-                                                   .Select(p => $"{nameof(QueryObjects)}: {p.EventArgs.Action}");
-            onQueriesChanged.Throttle(TimeSpan.FromMilliseconds(20))
-                            .ObserveOn(SynchronizationContext.Current)
-                            .Subscribe(
-                                _ =>
-                                {
-                                    _iterationLogger.LogInteraction(
-                                        LogCategory.Image,
-                                        LogType.GlobalFeatures,
-                                        string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
-                                        $"{SemanticValue}|{SemanticUseForSorting}");
-                                    SemanticUseForSorting = QueryObjects.Any();
-                                });
+            PropertyChanged += (sender, args) => NotifyQuerySettingsChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender));
+            QueryObjects.CollectionChanged += (sender, args) => NotifyQuerySettingsChanged(nameof(QueryObjects), args.Action);
 
-            onPropertyChanged.Merge(onQueriesChanged)
-                             .Throttle(TimeSpan.FromMilliseconds(50))
-                             .Where(_ => datasetServicesManager.IsDatasetOpened)
-                             .ObserveOn(SynchronizationContext.Current)
-                             .Subscribe(NotifyQuerySettingsChange);
+            Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                          eventHandler => QueryObjects.CollectionChanged += eventHandler,
+                          eventHandler => QueryObjects.CollectionChanged -= eventHandler)
+                      .Throttle(TimeSpan.FromMilliseconds(20))
+                      .ObserveOn(SynchronizationContext.Current)
+                      .Subscribe(
+                          args =>
+                          {
+                              _iterationLogger.LogInteraction(
+                                  LogCategory.Image,
+                                  LogType.GlobalFeatures,
+                                  string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
+                                  $"{SemanticValue}|{SemanticUseForSorting}");
+                              SemanticUseForSorting = QueryObjects.Any();
+                              NotifyQuerySettingsChanged(nameof(QueryObjects), args.EventArgs.Action);
+                          });
         }
+
+        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
         public int ImageHeight { get; }
         public int ImageWidth { get; }
@@ -406,10 +397,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QueryObjects.AddRange(queriesToInsert);
         }
 
-        private void NotifyQuerySettingsChange(string change)
+        private void NotifyQuerySettingsChanged(string changedFilterName, object value)
         {
-            _logger.Info(change);
-            QuerySettingsChanged?.Invoke(this, EventArgs.Empty);
+            _logger.Info($"Lifelog filters changed: ${changedFilterName}: {value}");
+            QuerySettingsChanged.OnNext(Unit.Default);
         }
     }
 }

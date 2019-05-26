@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Microsoft.Win32;
@@ -86,11 +86,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query2 = query2;
             LifelogFilterViewModel = lifelogFilterViewModel;
 
-            Query1.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
-            Query2.QuerySettingsChanged += async (sender, args) => await OnQuerySettingsChanged();
+            Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged)
+                      .Throttle(TimeSpan.FromMilliseconds(50))
+                      .ObserveOn(SynchronizationContext.Current)
+                      .Subscribe(async _ => await OnQuerySettingsChanged());
 
             queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
-            queryResults.MaxFramesChanged += async (sender, args) => await OnQuerySettingsChanged();
             
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (var display in displays)
@@ -410,7 +411,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                                     Query2,
                                                                     IsFirstQueryPrimary,
                                                                     QueryResults.MaxFramesFromVideo,
-                                                                    QueryResults.MaxFramesFromShot);
+                                                                    QueryResults.MaxFramesFromShot,
+                                                                    _datasetServicesManager.CurrentDataset.DatasetParameters,
+                                                                    QueryResults.GpsFrame,
+                                                                    LifelogFilterViewModel);
                                                                 Task.Run(() => _queryPersistingService.SaveQuery(biTemporalQuery));
                                                                 return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
                                                             });
