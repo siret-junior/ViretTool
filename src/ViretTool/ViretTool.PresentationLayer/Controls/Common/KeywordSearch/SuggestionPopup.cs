@@ -199,6 +199,25 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             }
         }
 
+        public void Popup_OnMouseLeft(object sender, MouseButtonEventArgs e)
+        {
+            if (!IsPopupOpen)
+            {
+                throw new Exception();
+            }
+
+            Point mousePosition = Mouse.GetPosition(this);
+            VirtualizingStackPanel originalSource = e.OriginalSource as VirtualizingStackPanel;
+            FrameworkElement itemWithMouseOver = originalSource?.Children.Cast<FrameworkElement>().Last(fe => fe.TranslatePoint(new Point(0, 0), this).Y < mousePosition.Y);
+            if (IsLoading || itemWithMouseOver == null)
+            {
+                return;
+            }
+
+            RaiseEvent(new SelectedItemRoutedEventArgs(OnItemSelectedEvent, (IIdentifiable)itemWithMouseOver.DataContext, Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)));
+            e.Handled = true;
+        }
+
         public void Close() {
             IsPopupOpen = false;
             IsLoading = false;

@@ -49,6 +49,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             Popups_[0].OnItemSelected += Popup_OnItemSelected;
             Popups_[0].OnItemExpanded += Popup_OnItemExpanded;
+            Popups_[0].MouseLeftButtonDown += Popup_OnMouseLeft;
 
             RasultStack_ = (WrapPanel)Template.FindName(PartResultStack, this);
 
@@ -284,6 +285,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             p.OnItemSelected += Popup_OnItemSelected;
             p.OnItemExpanded += Popup_OnItemExpanded;
             p.PopupBorderThickness = new Thickness(0, 1, 1, 1);
+            p.MouseLeftButtonDown += Popup_OnMouseLeft;
 
             Popups_.Add(p);
 
@@ -292,6 +294,16 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             p.HorizontalOffset = ActualWidth * numberOfPopups;
 
             ((Grid)TextBox_.Parent).Children.Add(p);
+        }
+
+        private void Popup_OnMouseLeft(object sender, MouseButtonEventArgs e)
+        {
+            if (!(sender is SuggestionPopup popup))
+            {
+                return;
+            }
+
+            popup.Popup_OnMouseLeft(sender, e);
         }
 
         private void AnnotationSourceButton_Checked(object sender, RoutedEventArgs e) {
