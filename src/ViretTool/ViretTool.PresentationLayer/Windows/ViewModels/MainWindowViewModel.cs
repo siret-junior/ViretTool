@@ -510,7 +510,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IsBusy = true;
             try
             {
-                List<FrameToSubmit> framesToSubmit = _submitControlViewModel.SubmittedFrames.Select(f => new FrameToSubmit(f.VideoId + 1, f.FrameNumber)).ToList();
+                List<FrameToSubmit> framesToSubmit = _submitControlViewModel.SubmittedFrames.Select(f => new FrameToSubmit(f.VideoId, f.FrameNumber)).ToList();
                 foreach (FrameToSubmit frameToSubmit in framesToSubmit)
                 {
                     string response = await _submissionService.SubmitFrameAsync(frameToSubmit);

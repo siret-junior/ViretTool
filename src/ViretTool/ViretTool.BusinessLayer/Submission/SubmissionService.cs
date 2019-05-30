@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
+using ViretTool.BusinessLayer.Descriptors.Models;
+using ViretTool.BusinessLayer.Services;
 
 namespace ViretTool.BusinessLayer.Submission
 {
@@ -15,22 +17,38 @@ namespace ViretTool.BusinessLayer.Submission
         private readonly HttpClient _client = new HttpClient();
         private readonly IInteractionLogger _interactionLogger;
         private readonly ILogger _logger;
+        private readonly IDatasetServicesManager _datasetServicesManager;
 
-        public SubmissionService(IInteractionLogger interactionLogger, ILogger logger)
+        public SubmissionService(IInteractionLogger interactionLogger, ILogger logger, IDatasetServicesManager datasetServicesManager)
         {
             _interactionLogger = interactionLogger;
             _logger = logger;
+            _datasetServicesManager = datasetServicesManager;
         }
 
         public string SubmissionUrl { get; set; } = BaseUrl;
 
         public async Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit)
         {
+            if (!_datasetServicesManager.IsDatasetOpened)
+            {
+                throw new InvalidOperationException("Dataset is not opened");
+            }
+
             _interactionLogger.Log.Type = SubmissionType.Submit;
             string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
+
             string jsonInteractionLog = GetContent();
-            StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PostAsync(url, content);
+            HttpResponseMessage response;
+            if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+            {
+                response = await _client.GetAsync(url);
+            }
+            else
+            {
+                StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
+                response = await _client.PostAsync(url, content);
+            }
 
             // log to disk
             StoreSubmissionLog(url, jsonInteractionLog);
@@ -81,7 +99,14 @@ namespace ViretTool.BusinessLayer.Submission
 
         private string GetUrl(int teamId, int memberId, FrameToSubmit frameToSubmit)
         {
-            return $"{SubmissionUrl}?team={teamId}&member={memberId}&video={frameToSubmit.VideoId}&frame={frameToSubmit.FrameNumber}";
+            if (!_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+            {
+                return $"{SubmissionUrl}?team={teamId}&member={memberId}&video={frameToSubmit.VideoId + 1}&frame={frameToSubmit.FrameNumber}";
+            }
+
+            int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(frameToSubmit.VideoId, frameToSubmit.FrameNumber);
+            LifelogFrameMetadata metadata = _datasetServicesManager.CurrentDataset.LifelogDescriptorProvider[frameId];
+            return $"{SubmissionUrl}?team={teamId}&image={metadata.FileName}.jpg";
         }
 
         private string GetUrl(int teamId, int memberId)
