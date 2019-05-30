@@ -235,7 +235,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.LifelogFiltersVisible;
+        public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
 
         public async void OpenDatabase()
         {

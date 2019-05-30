@@ -81,8 +81,13 @@
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.MapButtonText}"/>
                         </Button>
-                        <Button x:Name="SubmitButton" Grid.Column="5" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked"
-                                Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
+                        <Button x:Name="SubmitButton" Grid.Column="5" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked">
+                            <Button.Visibility>
+                                <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
+                                    <Binding Path="IsSelectable" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" IsAsync="True" />
+                                    <Binding Path="CanSubmit" />
+                                </MultiBinding>
+                            </Button.Visibility>
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.SubmitButtonTextShort}"/>
                         </Button>
                     </Grid>
@@ -127,3 +132,4 @@
 
     </Grid>
 </UserControl>
+

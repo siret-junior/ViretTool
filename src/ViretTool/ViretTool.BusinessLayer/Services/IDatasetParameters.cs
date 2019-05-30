@@ -1,12 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace ViretTool.BusinessLayer.Services
 {
     public interface IDatasetParameters
     {
-        bool LifelogFiltersVisible { get; }
-        bool GpsFilterVisible { get; }
+        bool IsLifelogData { get; }
+        string LifelogDataFileName { get; }
     }
 
     public class DatasetParameters : IDatasetParameters
@@ -14,12 +15,11 @@ namespace ViretTool.BusinessLayer.Services
         public DatasetParameters(string datasetDirectory)
         {
             string[] datasetFiles = Directory.GetFiles(datasetDirectory);
-            //TODO
-            LifelogFiltersVisible = datasetFiles.Any(f => f.EndsWith(".hb") && f.EndsWith(".week")); //heartbeat and day of week
-            GpsFilterVisible = datasetFiles.Any(f => f.EndsWith(".gps"));
+            IsLifelogData = datasetFiles.Any(f => Path.GetFileName(f).Equals(LifelogDataFileName, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public bool LifelogFiltersVisible { get; }
-        public bool GpsFilterVisible { get; }
+        public string LifelogDataFileName => "lifelog-data.json";
+
+        public bool IsLifelogData { get; } 
     }
 }

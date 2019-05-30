@@ -12,6 +12,7 @@ namespace ViretTool.BusinessLayer.RankingModels
         FilteringQuery CachedQuery { get; }
         RankingBuffer InputRanking { get; }
         RankingBuffer MaskIntermediateRanking { get; }
+        RankingBuffer LifelogIntermediateRanking { get; }
         RankingBuffer OutputRanking { get; }
 
         void ComputeRanking(FilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking);

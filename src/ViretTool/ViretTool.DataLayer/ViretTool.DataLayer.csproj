@@ -50,6 +50,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -95,6 +98,7 @@
     <Compile Include="DataIO\ThumbnailIO\ThumbnailReaderPreloaded.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailWriter.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetFilelistFormatter.cs" />
+    <Compile Include="DataModel\LifelogFrameInfo.cs" />
     <Compile Include="DataProviders\Dataset\DatasetProvider.cs" />
     <Compile Include="DataModel\Dataset.cs" />
     <Compile Include="DataModel\Attributes\DatasetAttributes.cs" />
@@ -108,11 +112,15 @@
     <Compile Include="DataModel\Attributes\VideoAttributes.cs" />
     <Compile Include="DataProviders\Descriptor\ColorSignatureDescriptorProvider.cs" />
     <Compile Include="DataProviders\Descriptor\FloatVectorDescriptorProvider.cs" />
+    <Compile Include="DataIO\LifelogIO\LifelogDataReader.cs" />
     <Compile Include="DataProviders\Thumbnails\ThumbnailProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DataIO\DescriptorIO\KeywordIO\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

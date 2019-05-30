@@ -25,7 +25,31 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public bool CanAddToQuery => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
 
-        public bool GpsAddVisible => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetParameters.GpsFilterVisible;
+        public bool GpsAddVisible => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
+
+        public bool CanSubmit
+        {
+            get
+            {
+                if (!_servicesManager.IsDatasetOpened)
+                {
+                    return false;
+                }
+
+                if (!_servicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+                {
+                    return true;
+                }
+
+                if (!_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+                {
+                    return false;
+                }
+
+                return !_servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId].FromVideo;
+            }
+        }
+
 
         public int FrameNumber { get; private set; }
 
@@ -91,6 +115,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             FrameNumber = _originalFrameNumber;
+            NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
         }
@@ -116,6 +141,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             FrameNumber = allFrameNumbers[newIndex];
+            NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
         }

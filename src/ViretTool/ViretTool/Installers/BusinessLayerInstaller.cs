@@ -5,6 +5,7 @@ using Castle.Windsor;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.RankingModels;
 using ViretTool.BusinessLayer.RankingModels.Filtering;
@@ -49,6 +50,9 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => ColorSignatureDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
 
+                Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
+                Component.For<ILifelogFilter>().ImplementedBy<LifelogFilter>().LifestyleBoundTo<DatasetServices>(),
+
                 Component.For<IFaceSignatureDescriptorProvider>()
                          .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
                          .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".faces"))
@@ -58,6 +62,10 @@ namespace ViretTool.Installers
                          .FromDirectory((string)context.AdditionalArguments["datasetDirectory"], ".text"))
                          .LifestyleBoundTo<DatasetServices>(),
 
+                //dataset parameters
+                Component.For<IDatasetParameters>().ImplementedBy<DatasetParameters>()
+                         //.UsingFactoryMethod((_, context) => new DatasetParameters((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
 
                 Component.For<IBiTemporalRankingService>()
                          .ImplementedBy<BiTemporalRankingService>()
@@ -91,11 +99,6 @@ namespace ViretTool.Installers
                 Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
                 Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
-
-                //dataset parameters
-                Component.For<IDatasetParameters>()
-                         .UsingFactoryMethod((_, context) => new DatasetParameters((string)context.AdditionalArguments["datasetDirectory"]))
-                         .LifestyleTransient(),
 
                 // fusion used by IBiTemporalSimilarityModel
                 Component.For<IBiTemporalRankFusionSum>()

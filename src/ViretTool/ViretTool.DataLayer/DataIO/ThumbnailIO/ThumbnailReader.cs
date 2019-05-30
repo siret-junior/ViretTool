@@ -32,7 +32,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public int[] VideoOffsets { get; private set; }
         public int[] VideoFrameCounts { get; private set; }
 
-        private Dictionary<int, Dictionary<int,int>> _videoFramenumberToGlobalId;
+        private readonly Dictionary<int, Dictionary<int,int>> _videoFramenumberToGlobalId;
         
         
         public ThumbnailReader(string filePath)

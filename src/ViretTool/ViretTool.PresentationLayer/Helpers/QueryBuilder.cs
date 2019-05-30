@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Services;
@@ -279,12 +280,14 @@ namespace ViretTool.PresentationLayer.Helpers
             FilteringQuery formerFilteringQuery = new FilteringQuery(
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query1.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query1.PercentageBlackFilterValue * 0.01),
-                new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1));
+                new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1),
+                GetLifelogFilteringQuery(datasetParameters, frameForGpsFilter, lifelogFilters));
 
             FilteringQuery latterFilteringQuery = new FilteringQuery(
                 new ThresholdFilteringQuery(ConvertToFilterState(query2.BwFilterState), query2.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query2.PercentageBlackFilterState), query2.PercentageBlackFilterValue * 0.01),
-                new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1));
+                new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1),
+                GetLifelogFilteringQuery(datasetParameters, frameForGpsFilter, lifelogFilters));
 
 
             BiTemporalQuery biTemporalQuery =
@@ -305,7 +308,7 @@ namespace ViretTool.PresentationLayer.Helpers
 
             return biTemporalQuery;
         }
-
+        
         private static ThresholdFilteringQuery.State ConvertToFilterState(FilterControl.FilterState filterState)
         {
             switch (filterState)
@@ -319,6 +322,31 @@ namespace ViretTool.PresentationLayer.Helpers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(filterState), filterState, "Uknown filtering state.");
             }
+        }
+
+        private LifelogFilteringQuery GetLifelogFilteringQuery(IDatasetParameters datasetParameters, FrameViewModel frameForGpsFilter, LifelogFilterViewModel lifelogFilters)
+        {
+            if (!datasetParameters.IsLifelogData)
+            {
+                return new LifelogFilteringQuery();
+            }
+
+            LifelogFrameMetadata metadata = null;
+            if (frameForGpsFilter != null)
+            {
+                int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(frameForGpsFilter.VideoId, frameForGpsFilter.FrameNumber);
+                metadata = _datasetServicesManager.CurrentDataset.LifelogDescriptorProvider[frameId];
+            }
+
+            return new LifelogFilteringQuery(
+                lifelogFilters.SelectedDaysOfWeek.ToArray(),
+                TimeSpan.FromHours(lifelogFilters.StartTimeHour),
+                TimeSpan.FromHours(lifelogFilters.EndTimeHour),
+                lifelogFilters.HeartbeatLow,
+                lifelogFilters.HeartbeatHigh,
+                metadata?.GpsLocation,
+                metadata?.GpsLatitude,
+                metadata?.GpsLongitude);
         }
     }
 }

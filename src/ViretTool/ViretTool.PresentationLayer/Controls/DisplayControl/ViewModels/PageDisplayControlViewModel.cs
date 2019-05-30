@@ -26,7 +26,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             _iterationLogger = iterationLogger;
             datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
-                                                        MaxFramesFromVideo = services.DatasetParameters.LifelogFiltersVisible ? 30 : 3;
+                                                        _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 30 : 3;
+                                                        NotifyOfPropertyChange(nameof(MaxFramesFromVideo));
                                                     };
         }
 

@@ -15,7 +15,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         RankingBuffer InputRanking { get; }
         RankingBuffer OutputRanking { get; }
 
-        void ComputeFiltering(CountFilteringQuery query,
-            RankingBuffer inputRanking, RankingBuffer outputRanking);
+        void ComputeFiltering(CountFilteringQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking);
     }
 }

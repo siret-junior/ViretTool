@@ -1,9 +1,7 @@
 ﻿using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
-using ViretTool.BusinessLayer.RankingModels;
-using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
-using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.BusinessLayer.Services
@@ -20,7 +18,8 @@ namespace ViretTool.BusinessLayer.Services
             IDescriptorProvider<byte[]> colorSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
             IBiTemporalRankingService rankingService,
-            IDatasetParameters datasetParameters)
+            IDatasetParameters datasetParameters,
+            IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider)
         {
             ThumbnailService = thumbnailService;
             DatasetService = datasetService;
@@ -28,6 +27,7 @@ namespace ViretTool.BusinessLayer.Services
             SemanticVectorProvider = semanticVectorProvider;
             RankingService = rankingService;
             DatasetParameters = datasetParameters;
+            LifelogDescriptorProvider = lifelogDescriptorProvider;
         }
 
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
@@ -36,5 +36,6 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
         public IDatasetParameters DatasetParameters { get; }
+        public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }
     }
 }

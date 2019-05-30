@@ -1,36 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.RankingModels.Filtering.Filters;
 using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.Services;
 
 namespace ViretTool.BusinessLayer.RankingModels.Filtering
 {
     public class FilteringModule : IFilteringModule
     {
+        private readonly IDatasetParameters _datasetParameters;
+
         // color filters
         public IColorSaturationFilter ColorSaturationFilter { get; }
         public IPercentOfBlackFilter PercentOfBlackColorFilter { get; }
         public ICountRestrictionFilter CountRestrictionFilter { get; }
+        public ILifelogFilter LifelogFilter { get; }
 
         public FilteringQuery CachedQuery { get; set; }
         public RankingBuffer InputRanking { get; private set; }
         public RankingBuffer MaskIntermediateRanking { get; private set; }
+        public RankingBuffer LifelogIntermediateRanking { get; private set; }
         public RankingBuffer OutputRanking { get; private set; }
         
         private bool[] _aggregatedFilterMask;
 
 
         public FilteringModule(
+            IDatasetParameters datasetParameters,
             IColorSaturationFilter colorSaturationFilter,
             IPercentOfBlackFilter percentOfBlackColorFilter,
-            ICountRestrictionFilter countRestrictionFilter)
+            ICountRestrictionFilter countRestrictionFilter,
+            ILifelogFilter lifelogFilter)
         {
+            _datasetParameters = datasetParameters;
             ColorSaturationFilter = colorSaturationFilter;
             PercentOfBlackColorFilter = percentOfBlackColorFilter;
             CountRestrictionFilter = countRestrictionFilter;
+            LifelogFilter = lifelogFilter;
         }
 
 
@@ -79,18 +86,29 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 // mask filters are not applied, we skip MaskIntermediateRanking
                 Array.Copy(InputRanking.Ranks, MaskIntermediateRanking.Ranks, InputRanking.Ranks.Length);
             }
-            CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery,
-                    MaskIntermediateRanking, OutputRanking);
+
+            if (_datasetParameters.IsLifelogData)
+            {
+                LifelogFilter.ComputeFiltering(query.LifelogFilteringQuery, MaskIntermediateRanking, LifelogIntermediateRanking);
+                CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery, LifelogIntermediateRanking, OutputRanking);
+            }
+            else
+            {
+                CountRestrictionFilter.ComputeFiltering(query.CountFilteringQuery, MaskIntermediateRanking, OutputRanking);
+            }
         }
 
         private void InitializeIntermediateBuffers()
         {
             // create itermediate rankings if neccessary
-            if (MaskIntermediateRanking == null
-                || MaskIntermediateRanking.Ranks.Length != InputRanking.Ranks.Length)
+            if (MaskIntermediateRanking == null || MaskIntermediateRanking.Ranks.Length != InputRanking.Ranks.Length)
             {
-                MaskIntermediateRanking = RankingBuffer.Zeros(
-                    "MaskIntermediateRanking", InputRanking.Ranks.Length);
+                MaskIntermediateRanking = RankingBuffer.Zeros("MaskIntermediateRanking", InputRanking.Ranks.Length);
+            }
+
+            if (_datasetParameters.IsLifelogData && (LifelogIntermediateRanking == null || LifelogIntermediateRanking.Ranks.Length != InputRanking.Ranks.Length))
+            {
+                LifelogIntermediateRanking = RankingBuffer.Zeros("LifelogIntermediateRanking", InputRanking.Ranks.Length);
             }
         }
 
