@@ -134,6 +134,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
+        public void DeleteGpsFrame()
+        {
+            GpsFrame = null;
+        }
+
         public override Task LoadInitialDisplay()
         {
             CurrentPageNumber = 0;

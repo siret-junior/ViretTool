@@ -10,6 +10,7 @@
 				</ResourceDictionary>
 				<!-- Other dictionaries can be placed here -->
                 <ResourceDictionary Source="pack://application:,,,/ViretTool.PresentationLayer;component/Styles/BusyIndicatorStyle.xaml" />
+			    <ResourceDictionary Source="pack://application:,,,/ViretTool.PresentationLayer;component/Styles/CommonStyles.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

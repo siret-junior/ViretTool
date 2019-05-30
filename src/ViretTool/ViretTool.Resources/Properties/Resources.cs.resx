@@ -279,4 +279,13 @@
   <data name="HeartbeatHighLabel" xml:space="preserve">
     <value>Tep max:</value>
   </data>
+  <data name="DeleteText" xml:space="preserve">
+    <value>Smazat</value>
+  </data>
+  <data name="StartTimeEndTimeError" xml:space="preserve">
+    <value>Počáteční čas je větší než koncový čas.</value>
+  </data>
+  <data name="HeartrateError" xml:space="preserve">
+    <value>Spodní hranice tepu je vyšší než horní hranice.</value>
+  </data>
 </root>

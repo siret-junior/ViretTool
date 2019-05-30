@@ -273,6 +273,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 queryViewModel.QueryObjects.Clear();
             }
 
+            LifelogFilterViewModel.Reset();
+            QueryResults.DeleteGpsFrame();
+
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ResetAll);
         }
 

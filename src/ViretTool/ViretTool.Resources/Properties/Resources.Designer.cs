@@ -115,6 +115,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string DeleteText {
+            get {
+                return ResourceManager.GetString("DeleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Detail:.
         /// </summary>
         public static string DetailViewText {
@@ -201,6 +210,15 @@ namespace ViretTool.Resources.Properties {
         public static string HeartbeatLowLabel {
             get {
                 return ResourceManager.GetString("HeartbeatLowLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heart rate lower value is higher than the high value..
+        /// </summary>
+        public static string HeartrateError {
+            get {
+                return ResourceManager.GetString("HeartrateError", resourceCulture);
             }
         }
         
@@ -435,6 +453,15 @@ namespace ViretTool.Resources.Properties {
         public static string SortCheckBoxText {
             get {
                 return ResourceManager.GetString("SortCheckBoxText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start time is greater than end time..
+        /// </summary>
+        public static string StartTimeEndTimeError {
+            get {
+                return ResourceManager.GetString("StartTimeEndTimeError", resourceCulture);
             }
         }
         

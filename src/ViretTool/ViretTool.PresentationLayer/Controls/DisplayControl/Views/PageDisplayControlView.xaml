@@ -54,7 +54,31 @@
                     </StackPanel.Style>
                     <TextBlock Text=" (" />
                     <TextBlock Text="{x:Static properties:Resources.GpsLabel}" />
-                    <Image Width="57" Height="32" Source="{Binding GpsFrame.ImageSource}" />
+                    <Grid Width="57" Height="32" x:Name="GpsGrid" cal:Message.Attach="[Event MouseLeftButtonDown] = [Action DeleteGpsFrame]">
+                        <Image Source="{Binding GpsFrame.ImageSource}">
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=GpsGrid}" Value="True">
+                                            <Setter Property="Opacity" Value="0.4" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{x:Static properties:Resources.DeleteText}" Foreground="White">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, ElementName=GpsGrid}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
                     <TextBlock Text=")" />
                 </StackPanel>
                 <TextBlock Text=":" />

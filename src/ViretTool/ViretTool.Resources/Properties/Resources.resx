@@ -294,4 +294,13 @@
   <data name="HeartbeatHighLabel" xml:space="preserve">
     <value>Heartbeat max:</value>
   </data>
+  <data name="DeleteText" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="StartTimeEndTimeError" xml:space="preserve">
+    <value>Start time is greater than end time.</value>
+  </data>
+  <data name="HeartrateError" xml:space="preserve">
+    <value>Heart rate lower value is higher than the high value.</value>
+  </data>
 </root>
