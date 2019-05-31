@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using Castle.Facilities.Logging;
@@ -16,6 +17,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Services.Logging.NLogIntegration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.PresentationLayer.Windows.ViewModels;
 
 namespace ViretTool
@@ -35,6 +37,21 @@ namespace ViretTool
             //InitializeCulture();
 
             DisplayRootViewFor<MainWindowViewModel>();
+        }
+
+        protected override void OnExit(object sender, EventArgs e)
+        {
+            _container.Resolve<IInteractionLogger>().Dispose();
+        }
+
+        protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            _container.Resolve<ILogger>().Fatal("Unhandled Exception: ", e.Exception);
+            MessageBox.Show(e.Exception.Message, "Fatal error");
+
+            e.Handled = true;
+            //I'm not sure if it's always possible to recover so we better terminate the app
+            Environment.Exit(-1);
         }
 
         protected override void Configure()

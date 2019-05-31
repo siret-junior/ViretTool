@@ -99,7 +99,7 @@
                             </Menu>
 
                             <Button x:Name="ClearAll" Grid.Column="1" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
-                            <Button x:Name="SendLogs" Grid.Column="2" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" />
+                            <Button x:Name="SendLogs" Grid.Column="2" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />
 
                         </Grid>
 

@@ -1,4 +1,6 @@
-﻿namespace ViretTool.BusinessLayer.ActionLogging
+﻿using System;
+
+namespace ViretTool.BusinessLayer.ActionLogging
 {
     public enum LogCategory
     {
@@ -25,10 +27,11 @@
         Submit, Flush
     }
 
-    public interface IInteractionLogger
+    public interface IInteractionLogger : IDisposable
     {
         void LogInteraction(LogCategory category, LogType type, string value = null, string attributes = null);
         void ResetLog();
         InteractionLog Log { get; }
+        string GetContent();
     }
 }
