@@ -5,8 +5,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Subjects;
+using System.Runtime.InteropServices;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.Core;
 
 namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
@@ -42,6 +44,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
     public class LifelogFilterViewModel : PropertyChangedBase, INotifyDataErrorInfo
     {
         private readonly ILogger _logger;
+        private readonly IInteractionLogger _interationLogger;
         private int _endTimeHour;
 
         private readonly Dictionary<string, string> _errors = new Dictionary<string, string>();
@@ -50,9 +53,10 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         private int _heartbeatLow;
         private int _startTimeHour;
 
-        public LifelogFilterViewModel(ILogger logger)
+        public LifelogFilterViewModel(ILogger logger, IInteractionLogger interationLogger)
         {
             _logger = logger;
+            _interationLogger = interationLogger;
             //all days are generated and monday is first
             Array daysOfWeek = Enum.GetValues(typeof(DayOfWeek));
             DaysOfWeek = new BindableCollection<DayOfWeekViewModel>(
@@ -154,6 +158,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         private void NotifyFiltersChanged(string changedFilterName, object value)
         {
             _logger.Info($"Lifelog filters changed: ${changedFilterName}: {value}");
+            _interationLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, $"{changedFilterName}|{value}");
             Validate();
             if (!HasErrors)
             {

@@ -14,7 +14,7 @@
         //sketch
         Color,
         //Filter
-        BW, MaxFrames,
+        BW, MaxFrames, Lifelog,
         //browsing
         RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll
 

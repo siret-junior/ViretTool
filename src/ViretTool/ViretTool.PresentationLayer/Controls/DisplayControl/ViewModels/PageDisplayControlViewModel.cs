@@ -41,6 +41,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _gpsFrame = value;
+                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
                 NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }

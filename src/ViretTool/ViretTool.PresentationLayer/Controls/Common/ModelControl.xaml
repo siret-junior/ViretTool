@@ -25,8 +25,10 @@
                FontWeight="Bold"
                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Path=ModelName}" />
 
+        <!-- Keyboard actions are not notified (supported) for the slider and checkbox right now -->
         <Slider x:Name="ValueSlider"
                 Grid.Column="1"
+                IsTabStop="False"
                 Margin="10, 0, 0, 0"
                 VerticalAlignment="Center"
                 Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Mode=TwoWay, Path=Value}"
@@ -41,11 +43,11 @@
 
         <CheckBox Grid.Column="3"
                   Content="{x:Static properties:Resources.SortCheckBoxText}"
+                  IsTabStop="False"
                   VerticalAlignment="Center"
                   Margin="10, 0, 10, 0"
                   IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Mode=TwoWay, Path=UseForSorting}"
-                  Unchecked="CheckBox_Changed"
-                  Checked="CheckBox_Changed" />
+                  PreviewMouseLeftButtonUp="OnFilterClicked"/>
 
         <Button Grid.Column="4"
                 Click="Clear"

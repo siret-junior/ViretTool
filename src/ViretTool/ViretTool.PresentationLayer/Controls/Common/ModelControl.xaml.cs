@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ViretTool.BusinessLayer.ActionLogging;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -25,12 +15,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             InitializeComponent();
         }
-
-        public delegate void ModelSettingChangedHandler(double value, bool useForSorting);
-        public event ModelSettingChangedHandler ModelSettingChangedEvent;
         
         public static readonly RoutedEvent ModelClearedEvent = EventManager.RegisterRoutedEvent(
             nameof(ModelCleared),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
+        public static readonly RoutedEvent SortingExplicitlyChangedEvent = EventManager.RegisterRoutedEvent(
+            nameof(SortingExplicitlyChanged),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
@@ -59,17 +52,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(ModelControl),
             new FrameworkPropertyMetadata(0.0d, (obj, args) => ((ModelControl)obj).Value = (double)args.NewValue) { BindsTwoWayByDefault = true });
 
-        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register(
-            "DefaultValue",
-            typeof(double),
-            typeof(ModelControl),
-            new FrameworkPropertyMetadata(0.0d));
-
 
         public event RoutedEventHandler ModelCleared
         {
             add => AddHandler(ModelClearedEvent, value);
             remove => RemoveHandler(ModelClearedEvent, value);
+        }
+
+        public event RoutedEventHandler SortingExplicitlyChanged
+        {
+            add => AddHandler(SortingExplicitlyChangedEvent, value);
+            remove => RemoveHandler(SortingExplicitlyChangedEvent, value);
         }
 
         public string ModelName
@@ -96,45 +89,19 @@ namespace ViretTool.PresentationLayer.Controls.Common
             set { SetValue(OutputValueProperty, value); }
         }
 
-        public double DefaultValue
-        {
-            get { return (double)GetValue(DefaultValueProperty); }
-            set
-            {
-                SetValue(DefaultValueProperty, value);
-                Value = value;
-                OutputValue = value;
-            }
-        }
-
         private void Slider_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            ModelSettingChangedEvent?.Invoke(Value / 100d, UseForSorting);
             OutputValue = Value;
-        }
-
-        public void Clear()
-        {
-            Value = DefaultValue;
-            if (UseForSorting)
-            {
-                UseForSorting = false;
-            }
-            else
-            {
-                ModelSettingChangedEvent?.Invoke(Value / 100d, UseForSorting);
-            }
         }
 
         private void Clear(object sender, RoutedEventArgs e)
         {
-            //Clear();
             RaiseEvent(new RoutedEventArgs(ModelClearedEvent));
         }
 
-        private void CheckBox_Changed(object sender, RoutedEventArgs e)
+        private void OnFilterClicked(object sender, MouseButtonEventArgs e)
         {
-            ModelSettingChangedEvent?.Invoke(Value / 100d, UseForSorting);
+            RaiseEvent(new RoutedEventArgs(SortingExplicitlyChangedEvent));
         }
     }
 }

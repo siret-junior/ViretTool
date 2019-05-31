@@ -21,7 +21,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
     {
         private readonly ILogger _logger;
         private readonly IDatasetServicesManager _datasetServicesManager;
-        private readonly IInteractionLogger _iterationLogger;
+        private readonly IInteractionLogger _interationLogger;
 
         // TODO: load default values from a settings file
         private FilterControl.FilterState _bwFilterState = FilterControl.FilterState.Off;
@@ -44,11 +44,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private bool _isBwFilterVisible;
 
 
-        public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger iterationLogger)
+        public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interationLogger)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
-            _iterationLogger = iterationLogger;
+            _interationLogger = interationLogger;
             _datasetServicesManager.DatasetOpened += (sender, services) => InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
 
             ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
@@ -65,7 +65,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                       .Subscribe(
                           args =>
                           {
-                              _iterationLogger.LogInteraction(
+                              _interationLogger.LogInteraction(
                                   LogCategory.Image,
                                   LogType.GlobalFeatures,
                                   string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
@@ -93,7 +93,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterState = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -109,7 +109,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterValue = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -162,7 +162,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                _iterationLogger.LogInteraction(LogCategory.Text, LogType.Concept, _keywordQueryResult?.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
+                _interationLogger.LogInteraction(LogCategory.Text, LogType.Concept, _keywordQueryResult?.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
                 
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
@@ -215,7 +215,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterState = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -231,7 +231,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterValue = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
                 NotifyOfPropertyChange();
             }
         }
@@ -285,7 +285,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 bool colorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
                 if (colorPoints)
                 {
-                    _iterationLogger.LogInteraction(
+                    _interationLogger.LogInteraction(
                         LogCategory.Sketch,
                         LogType.Color,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
@@ -294,7 +294,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 bool otherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
                 if (otherPoints)
                 {
-                    _iterationLogger.LogInteraction(
+                    _interationLogger.LogInteraction(
                         LogCategory.Text,
                         LogType.LocalizedObject,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType != SketchType.Color)),
@@ -349,6 +349,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 _isBwFilterVisible = value;
                 NotifyOfPropertyChange();
             }
+        }
+
+        public void OnSortingExplicitlyChanged(string modelName, bool isUsedForSorting)
+        {
+            _interationLogger.LogInteraction(LogCategory.Browsing, LogType.ExplicitSort, $"{modelName}:{!isUsedForSorting}");
         }
 
         public void RemoveFromQueryClicked(FrameViewModel frameViewModel)
