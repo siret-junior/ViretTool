@@ -137,10 +137,19 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public virtual async Task LoadInitialDisplay()
         {
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-
-            Random random = new Random(); //shuffle initial images randomly
-            _loadedFrames = await Task.Run(() => datasetService.VideoIds.SelectMany(LoadAllThumbnails).OrderBy(_ => random.Next()).ToList());
-            UpdateVisibleFrames();
+            if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed)
+            {
+                IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
+                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+                RowCount = ColumnCount = 10;
+                AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
+            }
+            else
+            {
+                Random random = new Random(); //shuffle initial images randomly
+                _loadedFrames = await Task.Run(() => datasetService.VideoIds.SelectMany(LoadAllThumbnails).OrderBy(_ => random.Next()).ToList());
+                UpdateVisibleFrames();
+            }
         }
 
         public void OnAddToQueryClicked(FrameViewModel frameViewModel)

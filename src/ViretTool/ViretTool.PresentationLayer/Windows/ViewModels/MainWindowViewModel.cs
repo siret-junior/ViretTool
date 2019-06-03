@@ -87,6 +87,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             LifelogFilterViewModel = lifelogFilterViewModel;
 
             Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged)
+                      .Where(_ => !IsBusy)
                       .Throttle(TimeSpan.FromMilliseconds(50))
                       .ObserveOn(SynchronizationContext.Current)
                       .Subscribe(async _ => await OnQuerySettingsChanged());
@@ -94,7 +95,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
-            foreach (var display in displays)
+            foreach (DisplayControlViewModelBase display in displays)
             {
                 display.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
@@ -261,8 +262,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _windowManager.ShowWindow(_testControlViewModel);
         }
 
-        public void ClearAll()
+        public async void ClearAll()
         {
+            IsBusy = true;
+
             foreach (QueryViewModel queryViewModel in new[] { Query1, Query2 })
             {
                 queryViewModel.BwFilterState = FilterControl.FilterState.Off;
@@ -277,6 +280,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             QueryResults.DeleteGpsFrame();
 
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ResetAll);
+
+            if (_datasetServicesManager.IsDatasetOpened)
+            {
+                await Task.WhenAll(QueryResults.LoadInitialDisplay(), Task.Delay(200));
+            }
+
+            IsBusy = false;
         }
 
         public void ShowHideBwFilters()

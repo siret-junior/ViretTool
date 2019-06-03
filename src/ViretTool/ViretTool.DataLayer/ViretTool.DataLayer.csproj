@@ -92,6 +92,7 @@
     <Compile Include="DataIO\FilterIO\MaskFilterIOBase.cs" />
     <Compile Include="DataIO\FilterIO\MaskFilterReader.cs" />
     <Compile Include="DataIO\FilterIO\MaskFilterWriter.cs" />
+    <Compile Include="DataIO\InitialDisplay\InitialDisplayReader.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailRaw.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailIOBase.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailReader.cs" />

@@ -19,7 +19,8 @@ namespace ViretTool.BusinessLayer.Services
             IDescriptorProvider<float[]> semanticVectorProvider,
             IBiTemporalRankingService rankingService,
             IDatasetParameters datasetParameters,
-            IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider)
+            IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider,
+            IInitialDisplayProvider initialDisplayProvider)
         {
             ThumbnailService = thumbnailService;
             DatasetService = datasetService;
@@ -28,6 +29,7 @@ namespace ViretTool.BusinessLayer.Services
             RankingService = rankingService;
             DatasetParameters = datasetParameters;
             LifelogDescriptorProvider = lifelogDescriptorProvider;
+            InitialDisplayProvider = initialDisplayProvider;
         }
 
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
@@ -37,5 +39,6 @@ namespace ViretTool.BusinessLayer.Services
         public IBiTemporalRankingService RankingService { get; }
         public IDatasetParameters DatasetParameters { get; }
         public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }
+        public IInitialDisplayProvider InitialDisplayProvider { get; }
     }
 }

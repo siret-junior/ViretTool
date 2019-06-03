@@ -8,6 +8,9 @@ namespace ViretTool.BusinessLayer.Services
     {
         bool IsLifelogData { get; }
         string LifelogDataFileName { get; }
+
+        bool IsInitialDisplayPrecomputed { get; }
+        string InitialDisplayFileName { get; }
     }
 
     public class DatasetParameters : IDatasetParameters
@@ -16,10 +19,15 @@ namespace ViretTool.BusinessLayer.Services
         {
             string[] datasetFiles = Directory.GetFiles(datasetDirectory);
             IsLifelogData = datasetFiles.Any(f => Path.GetFileName(f).Equals(LifelogDataFileName, StringComparison.CurrentCultureIgnoreCase));
+            IsInitialDisplayPrecomputed = datasetFiles.Any(f => Path.GetFileName(f).Equals(InitialDisplayFileName, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public string LifelogDataFileName => "lifelog-data.json";
+        
+        public bool IsLifelogData { get; }
 
-        public bool IsLifelogData { get; } 
+
+        public string InitialDisplayFileName => "initial-display-ids.txt";
+        public bool IsInitialDisplayPrecomputed { get; }
     }
 }

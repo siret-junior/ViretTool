@@ -130,12 +130,22 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void FirstPageButton()
         {
+            if (CurrentPageNumber == 0)
+            {
+                return;
+            }
+
             CurrentPageNumber = 0;
             UpdateVisibleFrames();
         }
 
         public void LastPageButton()
         {
+            if (CurrentPageNumber == LastPageNumber)
+            {
+                return;
+            }
+
             CurrentPageNumber = LastPageNumber;
             UpdateVisibleFrames();
         }
