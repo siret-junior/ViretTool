@@ -20,7 +20,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         public DayOfWeekViewModel(DayOfWeek dayOfWeek)
         {
             DayOfWeek = dayOfWeek;
-            IsSelected = true;
         }
 
         public DayOfWeek DayOfWeek { get; }
@@ -117,7 +116,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
             }
         }
 
-        public IEnumerable<DayOfWeek> SelectedDaysOfWeek => DaysOfWeek.Where(d => d.IsSelected).Select(d => d.DayOfWeek);
+        public IEnumerable<DayOfWeek> SelectedDaysOfWeek =>
+            DaysOfWeek.Any(d => d.IsSelected) ? DaysOfWeek.Where(d => d.IsSelected).Select(d => d.DayOfWeek) : DaysOfWeek.Select(d => d.DayOfWeek);
 
         public int StartTimeHour
         {
@@ -148,7 +148,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
 
         public void Reset()
         {
-            DaysOfWeek.ForEach(d => d.IsSelected = true);
+            DaysOfWeek.ForEach(d => d.IsSelected = false);
             StartTimeHour = 2;
             EndTimeHour = 23;
             HeartbeatLow = 00;
