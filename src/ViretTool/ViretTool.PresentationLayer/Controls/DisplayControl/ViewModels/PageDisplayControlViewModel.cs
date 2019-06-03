@@ -126,6 +126,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public Action ResetGrid { private get; set; }
 
+        public double LargeFramesMultiplier => 1.5;
+
         public void FirstPageButton()
         {
             CurrentPageNumber = 0;
@@ -213,8 +215,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             if (_isLargeFramesChecked)
             {
-                ImageHeight = _defaultImageHeight * 2;
-                ImageWidth = _defaultImageWidth * 2;
+                ImageHeight = (int)(_defaultImageHeight * LargeFramesMultiplier);
+                ImageWidth = (int)(_defaultImageWidth * LargeFramesMultiplier);
             }
             else
             {

@@ -166,7 +166,7 @@
                                     <DataTrigger Binding="{Binding DataContext.IsLargeFramesChecked, ElementName= ImagesDisplay}" Value="True">
                                         <Setter Property="LayoutTransform">
                                             <Setter.Value>
-                                                <ScaleTransform ScaleX="2" ScaleY="2" />
+                                                <ScaleTransform ScaleX="{Binding DataContext.LargeFramesMultiplier, ElementName= ImagesDisplay}" ScaleY="{Binding DataContext.LargeFramesMultiplier, ElementName= ImagesDisplay}" />
                                             </Setter.Value>
                                         </Setter>
                                     </DataTrigger>
