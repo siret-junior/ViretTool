@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\ActualSizeBehavior.cs" />
     <Compile Include="Behaviors\BaseBehavior.cs" />
+    <Compile Include="Behaviors\ResetVirtualizedCacheBehavior.cs" />
     <Compile Include="Behaviors\ScrollToColumnOrRowIndexBehavior.cs" />
     <Compile Include="Behaviors\TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="Controls\Common\BusyIndicator.cs" />

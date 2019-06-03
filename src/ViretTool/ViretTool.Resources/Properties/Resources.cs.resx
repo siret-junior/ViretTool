@@ -288,4 +288,10 @@
   <data name="HeartrateError" xml:space="preserve">
     <value>Spodní hranice tepu je vyšší než horní hranice.</value>
   </data>
+  <data name="LargeFramesText" xml:space="preserve">
+    <value>Velké snímky</value>
+  </data>
+  <data name="SmallFramesText" xml:space="preserve">
+    <value>Malé snímky</value>
+  </data>
 </root>

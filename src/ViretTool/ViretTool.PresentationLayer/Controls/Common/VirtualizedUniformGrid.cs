@@ -137,7 +137,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-        private void EnsureCache()
+        private void EnsureCache(Size childSize)
         {
             if (InternalChildren.Count == _cache.Count)
             {
@@ -149,6 +149,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                         equals = false;
                         break;
                     }
+
+                    _cache[i].Measure(childSize);
                 }
 
                 if (equals)
@@ -161,6 +163,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             foreach (FrameworkElement element in _cache)
             {
                 AddInternalChild(element);
+                element.Measure(childSize);
             }
         }
 
@@ -191,7 +194,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             if (!GetIsVirtualizing(this) ||
                 GetVirtualizationMode(this) != VirtualizationMode.Recycling ||
-                _cache.Count < lastVisibleItemIndex - firstVisibleItemIndex ||
+                _cache.Count < lastVisibleItemIndex - firstVisibleItemIndex + 1 ||
                 generator == null)
             {
                 _cache.Clear();
@@ -209,8 +212,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
                             iGenerator.PrepareItemContainer(child);
                         }
 
-                        // Measurements will depend on layout algorithm
-                        child.Measure(GetChildSize(availableSize));
                         _cache.Add(child);
                     }
                 }
@@ -238,13 +239,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
                         }
 
                         _cache[cacheIndex].DataContext = context;
-                        _cache[cacheIndex].Measure(GetChildSize(availableSize));
                         ++cacheIndex;
                     }
                 }
             }
 
-            EnsureCache();
+            EnsureCache(GetChildSize(availableSize));
 
             // Note: this could be deferred to idle time for efficiency
             //CleanUpItems(firstVisibleItemIndex, lastVisibleItemIndex);
@@ -649,5 +649,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
         #endregion IScrollInfo Implementation
+
+        public void ResetCache()
+        {
+            _cache.Clear();
+        }
     }
 }

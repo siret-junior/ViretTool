@@ -10,25 +10,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public abstract class ScrollableDisplayControlViewModel : DisplayControlViewModelBase
     {
-        protected readonly IInteractionLogger _interactionLogger;
-
         protected ScrollableDisplayControlViewModel(
             ILogger logger,
             IDatasetServicesManager datasetServicesManager,
             IInteractionLogger interactionLogger)
-            : base(logger, datasetServicesManager)
+            : base(logger, datasetServicesManager, interactionLogger)
         {
-            _interactionLogger = interactionLogger;
         }
 
         public Action<int> ScrollToColumn { private get; set; }
-
-        public Action<int> ScrollToRow { private get; set; }
-
-        public void OnGridScrollChanged(LogType logType, string detailDescription = null)
-        {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged", detailDescription);
-        }
 
         protected override void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
         {

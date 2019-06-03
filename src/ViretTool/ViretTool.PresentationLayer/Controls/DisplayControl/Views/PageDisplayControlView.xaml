@@ -9,15 +9,13 @@
              xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels"
              xmlns:common="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
              xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
+             xmlns:converters="clr-namespace:ViretTool.PresentationLayer.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance viewModels:PageDisplayControlViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
+            <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -82,6 +80,11 @@
                     <TextBlock Text=")" />
                 </StackPanel>
                 <TextBlock Text=":" />
+
+                <StackPanel Margin="20,0,0,0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <RadioButton IsChecked="{Binding IsLargeFramesChecked}" Content="{x:Static properties:Resources.LargeFramesText}"/>
+                    <RadioButton Margin="4,0,0,0" IsChecked="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}" Content="{x:Static properties:Resources.SmallFramesText}"/>
+                </StackPanel>
             </StackPanel>
 
             <Grid Grid.Column="1">
@@ -117,11 +120,11 @@
                 </StackPanel>
 
                 <Button
-                    x:Name="FirstPageButton"
+                    x:Name="FirstPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
                     Grid.Column="3"
                     Content="{x:Static properties:Resources.FirstPageButtonText}" />
                 <Button
-                    x:Name="PreviousPageButton"
+                    x:Name="PreviousPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
                     Grid.Column="4"
                     Content="{x:Static properties:Resources.PreviousPageButtonText}" />
 
@@ -135,19 +138,18 @@
                 </TextBlock>
 
                 <Button
-                    x:Name="NextPageButton"
+                    x:Name="NextPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
                     Grid.Column="6"
                     Content="{x:Static properties:Resources.NextPageButtonText}" />
                 <Button
-                    x:Name="LastPageButton"
+                    x:Name="LastPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
                     Grid.Column="7"
                     Content="{x:Static properties:Resources.LastPageButtonText}" />
 
             </Grid>
         </Grid>
 
-        <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" ItemsSource="{Binding VisibleFrames}">
-
+        <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" ItemsSource="{Binding VisibleFrames}" ScrollViewer.CanContentScroll="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <common:FrameControl x:Name="FrameControl" cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
@@ -157,14 +159,45 @@
                                                                                    [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
                                                                                    [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
                                                                                    [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];"
-                                         IsSelectable="True" />
+                                         IsSelectable="True" >
+                        <common:FrameControl.Style>
+                            <Style TargetType="{x:Type common:FrameControl}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.IsLargeFramesChecked, ElementName= ImagesDisplay}" Value="True">
+                                        <Setter Property="LayoutTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform ScaleX="2" ScaleY="2" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </common:FrameControl.Style>
+                    </common:FrameControl>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"/>
+                    <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"
+                                                   cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('RankedList', 'RankedListScroll')]">
+                        <i:Interaction.Behaviors>
+                            <behaviors:ResetVirtualizedCacheBehavior Reset="{Binding ResetGrid, Mode=OneWayToSource}"/>
+                        </i:Interaction.Behaviors>
+                    </common:VirtualizedUniformGrid>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                  Padding="{TemplateBinding Control.Padding}"
+                                  Focusable="False">
+                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToRow="{Binding ScrollToRow, Mode=OneWayToSource}"/>
+                        </i:Interaction.Behaviors>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
             <i:Interaction.Behaviors>
                 <behaviors:ActualSizeBehavior ActualHeight="{Binding DisplayHeight}" ActualWidth="{Binding DisplayWidth}"
                                               SizeChanged="{Binding DisplaySizeChangedHandler, Mode=OneWay}"/>

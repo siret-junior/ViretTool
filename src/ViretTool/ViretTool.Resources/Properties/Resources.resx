@@ -303,4 +303,10 @@
   <data name="HeartrateError" xml:space="preserve">
     <value>Heart rate lower value is higher than the high value.</value>
   </data>
+  <data name="LargeFramesText" xml:space="preserve">
+    <value>Large frames</value>
+  </data>
+  <data name="SmallFramesText" xml:space="preserve">
+    <value>Small frames</value>
+  </data>
 </root>

@@ -259,6 +259,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Large frames.
+        /// </summary>
+        public static string LargeFramesText {
+            get {
+                return ResourceManager.GetString("LargeFramesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last &gt;&gt;.
         /// </summary>
         public static string LastPageButtonText {
@@ -444,6 +453,15 @@ namespace ViretTool.Resources.Properties {
         public static string SketchModelName {
             get {
                 return ResourceManager.GetString("SketchModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Small frames.
+        /// </summary>
+        public static string SmallFramesText {
+            get {
+                return ResourceManager.GetString("SmallFramesText", resourceCulture);
             }
         }
         

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -16,18 +17,25 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         protected readonly IDatasetServicesManager _datasetServicesManager;
+        protected readonly IInteractionLogger _interactionLogger;
         protected readonly ILogger _logger;
         protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
+        protected int _defaultImageHeight;
+        protected int _defaultImageWidth;
 
         private int _rowCount;
         private int _columnCount;
+        private int _imageHeight;
+        private int _imageWidth;
+        
 
-        protected DisplayControlViewModelBase(ILogger logger, IDatasetServicesManager datasetServicesManager)
+        protected DisplayControlViewModelBase(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interactionLogger)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
-            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
-            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
+            _interactionLogger = interactionLogger;
+            _imageHeight = _defaultImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
+            _imageWidth = _defaultImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
         }
 
         public int DisplayHeight { get; set; }
@@ -36,8 +44,35 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public Action DisplaySizeChangedHandler => UpdateVisibleFrames;
 
-        public int ImageHeight { get; }
-        public int ImageWidth { get; }
+        public int ImageHeight
+        {
+            get => _imageHeight;
+            set
+            {
+                if (_imageHeight == value)
+                {
+                    return;
+                }
+
+                _imageHeight = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int ImageWidth
+        {
+            get => _imageWidth;
+            set
+            {
+                if (_imageWidth == value)
+                {
+                    return;
+                }
+
+                _imageWidth = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public int ColumnCount
         {
@@ -68,6 +103,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+
+        public Action<int> ScrollToRow { protected get; set; }
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
@@ -161,6 +198,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameForScrollVideoChanged?.Invoke(this, frameViewModel.Clone());
         }
 
+        public void OnGridScrollChanged(LogType logType, string detailDescription = null)
+        {
+            _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged", detailDescription);
+        }
+
         protected virtual void BeforeEventAction()
         {
         }
@@ -181,7 +223,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             if (collectionToUpdate.Count < viewModelsToAdd.Count)
             {
-                collectionToUpdate.AddRange(viewModelsToAdd.Skip(collectionToUpdate.Count));
+                collectionToUpdate.AddRange(viewModelsToAdd.Skip(collectionToUpdate.Count).ToList());
             }
             else if (viewModelsToAdd.Count < collectionToUpdate.Count)
             {

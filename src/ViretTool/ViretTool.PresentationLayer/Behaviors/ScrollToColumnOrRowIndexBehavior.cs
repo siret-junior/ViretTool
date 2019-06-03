@@ -45,7 +45,6 @@ namespace ViretTool.PresentationLayer.Behaviors
             ScrollToRow = ScrollToRowNumber;
         }
 
-        
 
         private async void ScrollToColumnNumber(int columnNumber)
         {

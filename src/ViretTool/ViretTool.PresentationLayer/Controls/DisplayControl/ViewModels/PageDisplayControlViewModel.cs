@@ -6,27 +6,34 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
+using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
+using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class PageDisplayControlViewModel : DisplayControlViewModelBase
     {
-        private readonly IInteractionLogger _iterationLogger;
+        private readonly IGridSorter _gridSorter;
         private int _currentPageNumber;
 
         private int _maxFramesFromShot = 1;
         private int _maxFramesFromVideo = 3;
+        private bool _isLargeFramesChecked;
         private FrameViewModel _gpsFrame;
 
-        public PageDisplayControlViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger iterationLogger)
-            : base(logger, datasetServicesManager)
+        public PageDisplayControlViewModel(
+            ILogger logger,
+            IDatasetServicesManager datasetServicesManager,
+            IInteractionLogger iterationLogger,
+            IGridSorter gridSorter)
+            : base(logger, datasetServicesManager, iterationLogger)
         {
-            _iterationLogger = iterationLogger;
+            _gridSorter = gridSorter;
             datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
-                                                        _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 30 : 3;
+                                                        _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 50 : 3;
                                                         NotifyOfPropertyChange(nameof(MaxFramesFromVideo));
                                                     };
         }
@@ -41,7 +48,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _gpsFrame = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
                 NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
@@ -58,7 +65,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _maxFramesFromShot = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
                 NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
@@ -75,7 +82,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _maxFramesFromVideo = value;
-                _iterationLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
                 NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
@@ -92,14 +99,32 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _currentPageNumber = value;
-                _iterationLogger.LogInteraction(LogCategory.Browsing, LogType.RankedList, $"CurrentPage:{value}");
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.RankedList, $"CurrentPage:{value}");
                 NotifyOfPropertyChange();
             }
         }
 
         public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / ((double)RowCount * ColumnCount)) - 1 : 0;
 
+        public bool IsLargeFramesChecked
+        {
+            get => _isLargeFramesChecked;
+            set
+            {
+                if (_isLargeFramesChecked == value)
+                {
+                    return;
+                }
+
+                _isLargeFramesChecked = value;
+                OnLargeFramesChanged();
+                NotifyOfPropertyChange();
+            }
+        }
+
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
+
+        public Action ResetGrid { private get; set; }
 
         public void FirstPageButton()
         {
@@ -146,10 +171,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return base.LoadInitialDisplay();
         }
 
-        public override Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
+        public override async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
         {
             CurrentPageNumber = 0;
-            return base.LoadFramesForIds(sortedFrameIds);
+            //int[] ids = await _gridSorter.GetSortedFrameIdsAsync(sortedFrameIds.Take(RowCount * ColumnCount).ToList(), ColumnCount, new CancellationTokenSource());
+            await base.LoadFramesForIds(sortedFrameIds);
         }
 
         public override Task LoadVideoForFrame(FrameViewModel frameViewModel)
@@ -163,8 +189,17 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
             NotifyOfPropertyChange(nameof(LastPageNumber));
-            int itemsCount = RowCount * ColumnCount;
-            List<FrameViewModel> viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
+            List<FrameViewModel> viewModelsToAdd = _loadedFrames;
+            if (!IsLargeFramesChecked)
+            {
+                int itemsCount = RowCount * ColumnCount;
+                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
+            }
+            else
+            {
+                ScrollToRow(0);
+                VisibleFrames.Clear();
+            }
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
         }
@@ -172,6 +207,25 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private void NotifyQuerySettingsChanged()
         {
             QuerySettingsChanged.OnNext(Unit.Default);
+        }
+
+        private void OnLargeFramesChanged()
+        {
+            if (_isLargeFramesChecked)
+            {
+                ImageHeight = _defaultImageHeight * 2;
+                ImageWidth = _defaultImageWidth * 2;
+            }
+            else
+            {
+                ImageHeight = _defaultImageHeight;
+                ImageWidth = _defaultImageWidth;
+            }
+
+            ScrollToRow(0);
+            ResetGrid();
+            VisibleFrames.Clear();
+            UpdateVisibleFrames();
         }
     }
 }
