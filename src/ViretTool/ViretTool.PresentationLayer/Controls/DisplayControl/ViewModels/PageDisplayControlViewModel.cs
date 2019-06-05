@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
-using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
@@ -16,9 +14,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class PageDisplayControlViewModel : DisplayControlViewModelBase
     {
-        private readonly IGridSorter _gridSorter;
         private int _currentPageNumber;
-
         private int _maxFramesFromShot = 1;
         private int _maxFramesFromVideo = 3;
         private bool _isLargeFramesChecked;
@@ -27,11 +23,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public PageDisplayControlViewModel(
             ILogger logger,
             IDatasetServicesManager datasetServicesManager,
-            IInteractionLogger iterationLogger,
-            IGridSorter gridSorter)
+            IInteractionLogger iterationLogger)
             : base(logger, datasetServicesManager, iterationLogger)
         {
-            _gridSorter = gridSorter;
             datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
                                                         _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 50 : 3;
@@ -196,22 +190,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return base.LoadVideoForFrame(frameViewModel);
         }
 
-        protected override async void UpdateVisibleFrames()
+        protected override void UpdateVisibleFrames()
         {
-            IsBusy = true;
-
-            int newRowCount = DisplayHeight / ImageHeight;
-            int newColumnCount = DisplayWidth / ImageWidth;
-
+            RowCount = DisplayHeight / ImageHeight;
+            ColumnCount = DisplayWidth / ImageWidth;
+            NotifyOfPropertyChange(nameof(LastPageNumber));
             List<FrameViewModel> viewModelsToAdd = _loadedFrames;
             if (!IsLargeFramesChecked)
             {
-                int itemsCount = newRowCount * newColumnCount;
-                Dictionary<int, FrameViewModel> viewModelsWithIds =
-                    _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).Where(f => GetFrameId(f).HasValue).ToDictionary(f => GetFrameId(f).Value);
-                int[] sortedIds = await _gridSorter.GetSortedFrameIdsAsync(viewModelsWithIds.Keys.ToList(), newColumnCount, new CancellationTokenSource(), 100000);
-                viewModelsToAdd = sortedIds.Select(id => viewModelsWithIds[id]).ToList();
-
+                int itemsCount = RowCount * ColumnCount;
+                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).OrderBy(f => f.VideoId).ToList();
             }
             else
             {
@@ -219,12 +207,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 VisibleFrames.Clear();
             }
 
-            RowCount = newRowCount;
-            ColumnCount = newColumnCount;
-            NotifyOfPropertyChange(nameof(LastPageNumber));
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
-
-            IsBusy = false;
         }
 
         private void NotifyQuerySettingsChanged()

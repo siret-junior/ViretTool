@@ -8,17 +8,31 @@ namespace ViretTool.BusinessLayer.Services
     public interface IInitialDisplayProvider
     {
         IReadOnlyList<int> InitialDisplayIds { get; }
+
+        int RowCount { get; }
+        int ColumnCount { get; }
     }
 
     public class InitialDisplayProvider : IInitialDisplayProvider
     {
         public InitialDisplayProvider(IDatasetParameters datasetParameters, string datasetDirectory)
         {
-            InitialDisplayIds = datasetParameters.IsInitialDisplayPrecomputed
-                                    ? new InitialDisplayReader().ReadInitialIds(Path.Combine(datasetDirectory, datasetParameters.InitialDisplayFileName)).ToArray()
-                                    : new int[0];
+            if (datasetParameters.IsInitialDisplayPrecomputed)
+            {
+                InitialDisplayReader initialDisplayReader = new InitialDisplayReader();
+                string filePath = Path.Combine(datasetDirectory, datasetParameters.InitialDisplayFileName);
+                InitialDisplayIds = initialDisplayReader.ReadInitialIds(filePath).ToArray();
+                RowCount = initialDisplayReader.ReadRowCount(filePath);
+                ColumnCount = initialDisplayReader.ReadColumnCount(filePath);
+            }
+            else
+            {
+                InitialDisplayIds = new int[0];
+            }
         }
 
         public IReadOnlyList<int> InitialDisplayIds { get; }
+        public int RowCount { get; }
+        public int ColumnCount { get; }
     }
 }

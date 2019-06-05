@@ -142,7 +142,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="140" />
+                            <ColumnDefinition Width="270" />
                         </Grid.ColumnDefinitions>
 
                         <ContentControl Grid.Column="0" x:Name="QueryResults" />

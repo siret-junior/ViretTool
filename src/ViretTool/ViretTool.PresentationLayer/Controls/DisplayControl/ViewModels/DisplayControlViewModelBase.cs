@@ -157,7 +157,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-                RowCount = ColumnCount = 10;
+                RowCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.RowCount;
+                ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
                 ScrollToRow(0);
                 AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
             }
