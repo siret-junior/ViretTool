@@ -58,7 +58,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public Action DisplaySizeChangedHandler => UpdateVisibleFrames;
+        public Action DisplaySizeChangedHandler => () =>
+                                                   {
+                                                       ResetGrid?.Invoke();
+                                                       UpdateVisibleFrames();
+                                                   };
 
         public int ImageHeight
         {
@@ -121,6 +125,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         public Action<int> ScrollToRow { protected get; set; }
+
+        public Action ResetGrid { protected get; set; }
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 

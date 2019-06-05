@@ -119,8 +119,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
-        public Action ResetGrid { private get; set; }
-
         public double LargeFramesMultiplier => 1.5;
 
         public void FirstPageButton()
