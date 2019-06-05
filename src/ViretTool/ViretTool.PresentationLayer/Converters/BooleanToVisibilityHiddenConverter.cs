@@ -9,7 +9,15 @@ namespace ViretTool.PresentationLayer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && (bool)value ? Visibility.Visible : Visibility.Hidden;
+            bool inverted = parameter != null && System.Convert.ToBoolean(parameter);
+            bool valueBool = value != null && value is bool bv && bv;
+
+            if (inverted)
+            {
+                return valueBool ? Visibility.Hidden : Visibility.Visible;
+            }
+
+            return valueBool ? Visibility.Visible : Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -9,7 +9,6 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
 {
     public class GridSorterFast : IGridSorter
     {
-        private const int Iterations = 500000;
         private readonly IDatasetServicesManager _datasetServicesManager;
 
         public GridSorterFast(IDatasetServicesManager datasetServicesManager)
@@ -17,19 +16,24 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
             _datasetServicesManager = datasetServicesManager;
         }
 
-        public async Task<int[]> GetSortedFrameIdsAsync(IList<int> topFrameIds, int columnCount, CancellationTokenSource cancellationTokenSource)
+        public async Task<int[]> GetSortedFrameIdsAsync(IList<int> topFrameIds, int columnCount, CancellationTokenSource cancellationTokenSource, int iterations)
         {
+            if (topFrameIds.Count <= 1)
+            {
+                return topFrameIds.ToArray();
+            }
+
             CancellationToken cancellationToken = cancellationTokenSource.Token;
-            return await Task.Run(() => GetSortedFrameIds(topFrameIds, columnCount, cancellationToken), cancellationToken);
+            return await Task.Run(() => GetSortedFrameIds(topFrameIds, columnCount, cancellationToken, iterations), cancellationToken);
         }
 
-        private int[] GetSortedFrameIds(IList<int> topFrameIds, int columnCount, CancellationToken cancellationToken)
+        private int[] GetSortedFrameIds(IList<int> topFrameIds, int columnCount, CancellationToken cancellationToken, int iterations)
         {
             List<float[]> data = topFrameIds.Select(_datasetServicesManager.CurrentDataset.SemanticVectorProvider.GetDescriptor).ToList();
             int width = columnCount;
             int height = data.Count / columnCount;
             //we ignore items out of the grid
-            int[,] sortedFrames = SortItems(data.Take(width * height).ToList(), width, height, cancellationToken);
+            int[,] sortedFrames = SortItems(data.Take(width * height).ToList(), width, height, cancellationToken, iterations);
 
             int[] result = new int[width * height];
             for (int i = 0; i < height; i++)
@@ -92,7 +96,7 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
         }
 
         // returns indexes of data organized in a 2D grid
-        private int[,] SortItems(List<float[]> data, int width, int height, CancellationToken cancellationToken)
+        private int[,] SortItems(List<float[]> data, int width, int height, CancellationToken cancellationToken, int iterations)
         {
             int dataCount = data.Count;
             if (dataCount != width * height || dataCount == 0)
@@ -133,7 +137,7 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
             int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
             float scoreBefore1 = 0, scoreBefore2 = 0, scoreAfter;
             bool keepItem1 = false, keepItem2 = false;
-            for (int iteration = 0; iteration < Iterations; iteration++)
+            for (int iteration = 0; iteration < iterations; iteration++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

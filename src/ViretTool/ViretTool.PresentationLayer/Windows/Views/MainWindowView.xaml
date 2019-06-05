@@ -19,6 +19,7 @@
         <ResourceDictionary>
             <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:BooleanOrToBooleanConverter x:Key="BooleanOrToBooleanConverter" />
             <Style TargetType="CheckBox" x:Key="PrimaryCheckBoxStyle">
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="ContentTemplate">
@@ -46,7 +47,13 @@
 
 
     <Grid>
-        <common:BusyIndicator IsBusy="{Binding IsBusy}">
+        <common:BusyIndicator>
+            <common:BusyIndicator.IsBusy>
+                <MultiBinding Converter="{StaticResource BooleanOrToBooleanConverter}">
+                    <Binding Path="IsBusy" />
+                    <Binding Path="QueryResults.IsBusy" />
+                </MultiBinding>
+            </common:BusyIndicator.IsBusy>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -139,7 +146,7 @@
                         </Grid.ColumnDefinitions>
 
                         <ContentControl Grid.Column="0" x:Name="QueryResults" />
-                        <TextBlock Grid.Column="0" x:Name="TestFramesPosition" Margin="150,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
+                        <TextBlock Grid.Column="0" x:Name="TestFramesPosition" Margin="330,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
 
                         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
                         <ContentControl Grid.Column="2" x:Name="DetailView" />

@@ -139,6 +139,7 @@
     <Compile Include="Controls\Query\Views\QueryView.xaml.cs">
       <DependentUpon>QueryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanOrToBooleanConverter.cs" />
     <Compile Include="Converters\BooleanAndToVisibilityConverter.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DetailViewModel.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />

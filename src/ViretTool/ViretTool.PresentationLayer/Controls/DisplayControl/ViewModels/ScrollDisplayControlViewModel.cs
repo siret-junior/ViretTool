@@ -8,7 +8,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class ScrollDisplayControlViewModel : ScrollableDisplayControlViewModel
     {
-        private bool _isBusy;
         private FrameViewModel _lastSelectedFrame;
 
         public ScrollDisplayControlViewModel(
@@ -17,22 +16,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IInteractionLogger interactionLogger)
             : base(logger, datasetServicesManager, interactionLogger)
         {
-        }
-
-        
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                if (_isBusy == value)
-                {
-                    return;
-                }
-
-                _isBusy = value;
-                NotifyOfPropertyChange();
-            }
         }
 
         public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)

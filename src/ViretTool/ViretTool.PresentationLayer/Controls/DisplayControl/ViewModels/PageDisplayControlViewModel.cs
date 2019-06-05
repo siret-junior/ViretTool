@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
@@ -186,7 +187,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public override async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
         {
             CurrentPageNumber = 0;
-            //int[] ids = await _gridSorter.GetSortedFrameIdsAsync(sortedFrameIds.Take(RowCount * ColumnCount).ToList(), ColumnCount, new CancellationTokenSource());
             await base.LoadFramesForIds(sortedFrameIds);
         }
 
@@ -196,16 +196,22 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return base.LoadVideoForFrame(frameViewModel);
         }
 
-        protected override void UpdateVisibleFrames()
+        protected override async void UpdateVisibleFrames()
         {
-            RowCount = DisplayHeight / ImageHeight;
-            ColumnCount = DisplayWidth / ImageWidth;
-            NotifyOfPropertyChange(nameof(LastPageNumber));
+            IsBusy = true;
+
+            int newRowCount = DisplayHeight / ImageHeight;
+            int newColumnCount = DisplayWidth / ImageWidth;
+
             List<FrameViewModel> viewModelsToAdd = _loadedFrames;
             if (!IsLargeFramesChecked)
             {
-                int itemsCount = RowCount * ColumnCount;
-                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).ToList();
+                int itemsCount = newRowCount * newColumnCount;
+                Dictionary<int, FrameViewModel> viewModelsWithIds =
+                    _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).Where(f => GetFrameId(f).HasValue).ToDictionary(f => GetFrameId(f).Value);
+                int[] sortedIds = await _gridSorter.GetSortedFrameIdsAsync(viewModelsWithIds.Keys.ToList(), newColumnCount, new CancellationTokenSource(), 100000);
+                viewModelsToAdd = sortedIds.Select(id => viewModelsWithIds[id]).ToList();
+
             }
             else
             {
@@ -213,7 +219,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 VisibleFrames.Clear();
             }
 
+            RowCount = newRowCount;
+            ColumnCount = newColumnCount;
+            NotifyOfPropertyChange(nameof(LastPageNumber));
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
+
+            IsBusy = false;
         }
 
         private void NotifyQuerySettingsChanged()

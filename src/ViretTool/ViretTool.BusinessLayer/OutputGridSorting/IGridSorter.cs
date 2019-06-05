@@ -6,6 +6,6 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
 {
     public interface IGridSorter
     {
-        Task<int[]> GetSortedFrameIdsAsync(IList<int> topFrameIds, int columnCount, CancellationTokenSource cancellationTokenSource);
+        Task<int[]> GetSortedFrameIdsAsync(IList<int> topFrameIds, int columnCount, CancellationTokenSource cancellationTokenSource, int iterations = 500000);
     }
 }

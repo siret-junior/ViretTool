@@ -12,8 +12,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class DetailViewModel : ScrollableDisplayControlViewModel
     {
-        private bool _isBusy;
-
         public DetailViewModel(
             ILogger logger,
             IDatasetServicesManager datasetServicesManager,
@@ -26,21 +24,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();
 
         public Action<int> ScrollToSampleRow { private get; set; }
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                if (_isBusy == value)
-                {
-                    return;
-                }
-
-                _isBusy = value;
-                NotifyOfPropertyChange();
-            }
-        }
 
         public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)
         {

@@ -23,6 +23,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         protected int _defaultImageHeight;
         protected int _defaultImageWidth;
 
+        private bool _isBusy;
         private int _rowCount;
         private int _columnCount;
         private int _imageHeight;
@@ -41,6 +42,21 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public int DisplayHeight { get; set; }
 
         public int DisplayWidth { get; set; }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (_isBusy == value)
+                {
+                    return;
+                }
+
+                _isBusy = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public Action DisplaySizeChangedHandler => UpdateVisibleFrames;
 
@@ -142,6 +158,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
                 RowCount = ColumnCount = 10;
+                ScrollToRow(0);
                 AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
             }
             else
@@ -260,6 +277,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return new FrameViewModel(videoId, frameNumber, _datasetServicesManager);
         }
 
+        protected int? GetFrameId(FrameViewModel frame)
+        {
+            return !_datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId) ? (int?)null : frameId;
+        }
+
         private IEnumerable<FrameViewModel> LoadAllThumbnails(int videoId)
         {
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
@@ -272,11 +294,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             int videoId = datasetService.GetVideoIdForFrameId(frameId);
             int frameNumber = datasetService.GetFrameNumberForFrameId(frameId);
             return ConvertThumbnailToViewModel(videoId, frameNumber);
-        }
-
-        protected int? GetFrameId(FrameViewModel frame)
-        {
-            return !_datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId) ? (int?)null : frameId;
         }
     }
 }

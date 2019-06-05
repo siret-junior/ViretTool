@@ -16,6 +16,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+            <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -120,15 +121,15 @@
                 </StackPanel>
 
                 <Button
-                    x:Name="FirstPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
+                    x:Name="FirstPageButton" Visibility="{Binding IsLargeFramesChecked, Converter={StaticResource BooleanToVisibilityHiddenConverter}, ConverterParameter=True}"
                     Grid.Column="3"
                     Content="{x:Static properties:Resources.FirstPageButtonText}" />
                 <Button
-                    x:Name="PreviousPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
+                    x:Name="PreviousPageButton" Visibility="{Binding IsLargeFramesChecked, Converter={StaticResource BooleanToVisibilityHiddenConverter}, ConverterParameter=True}"
                     Grid.Column="4"
                     Content="{x:Static properties:Resources.PreviousPageButtonText}" />
 
-                <TextBlock Grid.Column="5" Background="White" Padding="8">
+                <TextBlock Grid.Column="5" Background="White" Padding="8" Visibility="{Binding IsLargeFramesChecked, Converter={StaticResource BooleanToVisibilityHiddenConverter}, ConverterParameter=True}">
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0}/{1}">
                             <Binding Path="CurrentPageNumber" />
@@ -138,11 +139,11 @@
                 </TextBlock>
 
                 <Button
-                    x:Name="NextPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
+                    x:Name="NextPageButton" Visibility="{Binding IsLargeFramesChecked, Converter={StaticResource BooleanToVisibilityHiddenConverter}, ConverterParameter=True}"
                     Grid.Column="6"
                     Content="{x:Static properties:Resources.NextPageButtonText}" />
                 <Button
-                    x:Name="LastPageButton" IsEnabled="{Binding IsLargeFramesChecked, Converter={StaticResource InvertedBooleanConverter}}"
+                    x:Name="LastPageButton" Visibility="{Binding IsLargeFramesChecked, Converter={StaticResource BooleanToVisibilityHiddenConverter}, ConverterParameter=True}"
                     Grid.Column="7"
                     Content="{x:Static properties:Resources.LastPageButtonText}" />
 
