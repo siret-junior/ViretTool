@@ -26,7 +26,6 @@ namespace ViretTool.DataLayer.DataModel
             //EndFrameNumber = endFrameNumber;
         }
 
-
         public override string ToString()
         {
             return "ShotId: " + Id.ToString("00000")

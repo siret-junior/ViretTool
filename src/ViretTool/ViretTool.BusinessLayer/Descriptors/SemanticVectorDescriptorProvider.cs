@@ -66,7 +66,7 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         public double GetDistance(int id1, int id2)
         {
-            return CosineDistance(Descriptors[id1], Descriptors[id1]);
+            return CosineDistance(Descriptors[id1], Descriptors[id2]);
         }
 
 
