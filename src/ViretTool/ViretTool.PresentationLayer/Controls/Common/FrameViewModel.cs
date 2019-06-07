@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Caliburn.Micro;
+using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
 
 namespace ViretTool.PresentationLayer.Controls.Common
@@ -26,6 +27,30 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public bool CanAddToQuery => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
 
         public bool GpsAddVisible => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
+
+        public string FrameMetadata
+        {
+            get
+            {
+                if (!_servicesManager.IsDatasetOpened)
+                {
+                    return string.Empty;
+                }
+
+                if (!_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+                {
+                    return string.Empty;
+                }
+
+                if (_servicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+                {
+                    LifelogFrameMetadata metadata = _servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId];
+                    return $"{metadata.Time.Hours}:{metadata.Time.Minutes:D2}";
+                }
+
+                return _servicesManager.CurrentDataset.DatasetService.GetShotNumberForFrameId(frameId).ToString();
+            }
+        }
 
         public bool CanSubmit
         {
@@ -118,6 +143,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
+            NotifyOfPropertyChange(nameof(FrameMetadata));
         }
 
         public void ScrollNext()
@@ -144,6 +170,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
+            NotifyOfPropertyChange(nameof(FrameMetadata));
         }
     }
 }

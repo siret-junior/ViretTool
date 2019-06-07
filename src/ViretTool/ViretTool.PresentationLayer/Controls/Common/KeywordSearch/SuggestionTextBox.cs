@@ -251,7 +251,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             QueryTextBlock b = new QueryTextBlock(item, e.CtrlKeyPressed);
 
             if (Query_.Count > 0) {
-                QueryTextBlock c = new QueryTextBlock(TextBlockType.OR);
+                QueryTextBlock c = new QueryTextBlock(TextBlockType.AND);
                 RasultStack_.Children.Add(c);
                 Query_.Add(c);
                 c.MouseUp += QueryOperator_MouseUp;

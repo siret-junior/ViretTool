@@ -97,7 +97,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
             {
-                display.FramesForQueryChanged += (sender, queries) => (IsFirstQueryPrimary ? Query1 : Query2).UpdateQueryObjects(queries);
+                display.FramesForQueryChanged += (sender, selectedFrames) =>
+                                                     ((selectedFrames.ToSecondary ? !IsFirstQueryPrimary : IsFirstQueryPrimary) ? Query1 : Query2).UpdateQueryObjects(
+                                                         selectedFrames.Queries);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
@@ -237,6 +239,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         }
 
         public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
+        public bool InitialDisplayAvailable => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed;
 
         public async void OpenDatabase()
         {
@@ -248,6 +251,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             await OpenDataset(datasetDirectory);
             NotifyOfPropertyChange(nameof(LscFiltersVisible));
+            NotifyOfPropertyChange(nameof(InitialDisplayAvailable));
         }
 
         public void OpenTestWindow()
@@ -287,6 +291,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             IsBusy = false;
+        }
+
+        public async void ShowInitialDisplay()
+        {
+            if (_datasetServicesManager.IsDatasetOpened)
+            {
+                IsBusy = true;
+                await Task.WhenAll(QueryResults.LoadInitialDisplay(), Task.Delay(200));
+                IsBusy = false;
+            }
         }
 
         public void ShowHideBwFilters()

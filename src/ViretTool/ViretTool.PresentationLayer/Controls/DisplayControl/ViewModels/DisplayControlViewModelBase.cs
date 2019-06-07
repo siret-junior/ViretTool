@@ -130,7 +130,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
-        public event EventHandler<IList<FrameViewModel>> FramesForQueryChanged;
+        public event EventHandler<(IList<FrameViewModel> Queries, bool ToSecondary)> FramesForQueryChanged;
         public event EventHandler<FrameViewModel> FrameForVideoChanged;
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
         public event EventHandler<FrameViewModel> FrameForSortChanged;
@@ -180,7 +180,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             frameViewModel.IsSelectedForQuery = true;
             BeforeEventAction();
-            FramesForQueryChanged?.Invoke(this, _loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList());
+            var toOther = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            FramesForQueryChanged?.Invoke(this, (_loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList(), toOther));
         }
 
         public void OnAddToGpsClicked(FrameViewModel frameViewModel)

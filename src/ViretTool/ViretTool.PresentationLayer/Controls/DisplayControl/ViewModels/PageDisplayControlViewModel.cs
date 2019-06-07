@@ -197,7 +197,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             if (!IsLargeFramesChecked)
             {
                 int itemsCount = RowCount * ColumnCount;
-                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).OrderBy(f => f.VideoId).ToList();
+                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).OrderBy(f => f.VideoId).ThenBy(f => f.FrameNumber).ToList();
             }
             else
             {

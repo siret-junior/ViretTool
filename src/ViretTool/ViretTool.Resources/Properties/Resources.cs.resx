@@ -294,4 +294,7 @@
   <data name="SmallFramesText" xml:space="preserve">
     <value>Malé snímky</value>
   </data>
+  <data name="ShowInitialDisplayText" xml:space="preserve">
+    <value>Iniciální pohled</value>
+  </data>
 </root>

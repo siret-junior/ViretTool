@@ -105,8 +105,9 @@
                                 <MenuItem Header="{x:Static properties:Resources.TestButtonText}" cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"></MenuItem>
                             </Menu>
 
-                            <Button x:Name="ClearAll" Grid.Column="1" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
-                            <Button x:Name="SendLogs" Grid.Column="2" Margin="4,4,4,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />
+                            <Button x:Name="ClearAll" Grid.Column="1" Margin="0,4,0,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
+                            <Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />
+                            <Button x:Name="ShowInitialDisplay" Grid.Column="3" Margin="2,4,6,0" Padding="4" Content="{x:Static properties:Resources.ShowInitialDisplayText}" IsEnabled="{Binding InitialDisplayAvailable}" />
 
                         </Grid>
 
@@ -142,7 +143,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="270" />
+                            <ColumnDefinition Width="140" />
                         </Grid.ColumnDefinitions>
 
                         <ContentControl Grid.Column="0" x:Name="QueryResults" />

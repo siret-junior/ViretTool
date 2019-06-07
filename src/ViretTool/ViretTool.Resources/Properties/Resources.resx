@@ -309,4 +309,7 @@
   <data name="SmallFramesText" xml:space="preserve">
     <value>Small frames</value>
   </data>
+  <data name="ShowInitialDisplayText" xml:space="preserve">
+    <value>Initial display</value>
+  </data>
 </root>

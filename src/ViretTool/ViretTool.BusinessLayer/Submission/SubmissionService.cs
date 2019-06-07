@@ -36,7 +36,6 @@ namespace ViretTool.BusinessLayer.Submission
             _interactionLogger.Log.Type = SubmissionType.Submit;
             string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
 
-            string jsonInteractionLog = _interactionLogger.GetContent();
             HttpResponseMessage response;
             if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
             {
@@ -44,6 +43,7 @@ namespace ViretTool.BusinessLayer.Submission
             }
             else
             {
+                string jsonInteractionLog = _interactionLogger.GetContent();
                 StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
                 response = await _client.PostAsync(url, content);
                 if (response.IsSuccessStatusCode)

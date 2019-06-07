@@ -32,8 +32,20 @@
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"
                            Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Name="videoLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" VerticalAlignment="Top"
+                <TextBlock FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" VerticalAlignment="Top"
                        Text="{Binding VideoId, IsAsync=True}"/>
+                <TextBlock FontSize="8" Padding="1" Background="Transparent" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Text" Value="{Binding FrameMetadata, Mode=OneWay, IsAsync=True}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay, IsAsync=True}" Value="True">
+                                    <Setter Property="Text" Value="{Binding FrameMetadata, Mode=OneWay}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 <!--<Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
                 <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />-->
 
@@ -119,9 +131,10 @@
     </UserControl.Resources>
     <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseWheel="FrameControl_OnMouseWheel" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave"
           Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
-        <ContentControl Content="{StaticResource CommonControls}" />
+        <ContentControl x:Name="MainTile" Content="{StaticResource CommonControls}" />
         <Popup IsOpen="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay, IsAsync=True}" 
-               Placement="Center" MouseLeave="Popup_OnMouseLeave">
+               Placement="Center" MouseLeave="Popup_OnMouseLeave"
+               Width="{Binding ActualWidth, ElementName=MainTile, Mode=OneWay, IsAsync=True}" Height="{Binding ActualHeight, ElementName=MainTile, Mode=OneWay, IsAsync=True}">
             <Popup.LayoutTransform>
                 <ScaleTransform ScaleX="2" ScaleY="2" />
             </Popup.LayoutTransform>

@@ -448,6 +448,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Initial display.
+        /// </summary>
+        public static string ShowInitialDisplayText {
+            get {
+                return ResourceManager.GetString("ShowInitialDisplayText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Color.
         /// </summary>
         public static string SketchModelName {
