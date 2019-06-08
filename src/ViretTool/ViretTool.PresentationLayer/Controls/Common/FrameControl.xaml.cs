@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -245,7 +246,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void ButtonAddClicked(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(AddToQueryClickedEvent));
+            switch (((Button)sender).Tag.ToString())
+            {
+                case "1":
+                    RaiseEvent(new AddToQueryEventArgs(AddToQueryClickedEvent, true));
+                    break;
+                case "2":
+                    RaiseEvent(new AddToQueryEventArgs(AddToQueryClickedEvent, false));
+                    break;
+                    default:
+                    throw new ArgumentException("Unknown sender");
+            }
         }
         private void ButtonAddGpsClicked(object sender, RoutedEventArgs e)
         {
@@ -271,5 +282,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             RaiseEvent(new RoutedEventArgs(VideoDisplayEvent));
         }
+    }
+
+    public class AddToQueryEventArgs : RoutedEventArgs
+    {
+        public AddToQueryEventArgs(RoutedEvent routedEvent, bool first) : base(routedEvent)
+        {
+            First = first;
+        }
+
+        public bool First { get; }
     }
 }

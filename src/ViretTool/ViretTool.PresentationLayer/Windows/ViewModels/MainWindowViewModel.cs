@@ -97,9 +97,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
             {
-                display.FramesForQueryChanged += (sender, selectedFrames) =>
-                                                     ((selectedFrames.ToSecondary ? !IsFirstQueryPrimary : IsFirstQueryPrimary) ? Query1 : Query2).UpdateQueryObjects(
-                                                         selectedFrames.Queries);
+                display.FramesForQueryChanged += (sender, framesToQuery) =>
+                                                     ((framesToQuery.AddToFirst ? IsFirstQueryPrimary : !IsFirstQueryPrimary) ? Query1 : Query2).UpdateQueryObjects(
+                                                         framesToQuery);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
@@ -453,8 +453,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 UpdateTestFramesPositionIfActive(sortedIds);
 
                 _cancellationTokenSource = new CancellationTokenSource();
-                //start async sorting computation
-                _sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
+                //start async sorting computation - INFO - it's currently disabled
+                //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
 
                 await QueryResults.LoadFramesForIds(sortedIds);
             }

@@ -28,7 +28,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private int _columnCount;
         private int _imageHeight;
         private int _imageWidth;
-        
+        private bool _isInitialDisplayShown;
+
 
         protected DisplayControlViewModelBase(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interactionLogger)
         {
@@ -124,13 +125,28 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
+        public bool IsInitialDisplayShown
+        {
+            get => _isInitialDisplayShown;
+            set
+            {
+                if (_isInitialDisplayShown == value)
+                {
+                    return;
+                }
+
+                _isInitialDisplayShown = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public Action<int> ScrollToRow { protected get; set; }
 
         public Action ResetGrid { protected get; set; }
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
 
-        public event EventHandler<(IList<FrameViewModel> Queries, bool ToSecondary)> FramesForQueryChanged;
+        public event EventHandler<FramesToQuery> FramesForQueryChanged;
         public event EventHandler<FrameViewModel> FrameForVideoChanged;
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
         public event EventHandler<FrameViewModel> FrameForSortChanged;
@@ -147,17 +163,20 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                                                              .Select(frameId => ConvertThumbnailToViewModel(videoId, frameId))
                                                              .ToList());
             SelectFrame(frameViewModel);
+            IsInitialDisplayShown = false;
             UpdateVisibleFrames();
         }
 
         public virtual async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
         {
             _loadedFrames = await Task.Run(() => sortedFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+            IsInitialDisplayShown = false;
             UpdateVisibleFrames();
         }
 
         public virtual async Task LoadInitialDisplay()
         {
+            IsInitialDisplayShown = false;
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
             if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed)
             {
@@ -167,6 +186,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
                 AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
                 ScrollToRow(0);
+                IsInitialDisplayShown = true;
             }
             else
             {
@@ -176,12 +196,14 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public void OnAddToQueryClicked(FrameViewModel frameViewModel)
+        public void OnAddToQueryClicked(FrameViewModel frameViewModel, AddToQueryEventArgs args)
         {
             frameViewModel.IsSelectedForQuery = true;
             BeforeEventAction();
-            var toOther = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-            FramesForQueryChanged?.Invoke(this, (_loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList(), toOther));
+            bool supressQueryChange = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            FramesForQueryChanged?.Invoke(
+                this,
+                new FramesToQuery(_loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList(), args.First, supressQueryChange));
         }
 
         public void OnAddToGpsClicked(FrameViewModel frameViewModel)

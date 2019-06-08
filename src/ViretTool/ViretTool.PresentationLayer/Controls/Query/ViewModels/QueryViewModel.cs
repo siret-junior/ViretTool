@@ -14,6 +14,7 @@ using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.Sketches;
+using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 
 namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 {
@@ -43,6 +44,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private bool _semanticUseForSorting = false;
         private bool _isBwFilterVisible;
 
+        private bool _supressQueryChanged;
 
         public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interationLogger)
         {
@@ -55,24 +57,17 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
 
             PropertyChanged += (sender, args) => NotifyQuerySettingsChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender));
-            QueryObjects.CollectionChanged += (sender, args) => NotifyQuerySettingsChanged(nameof(QueryObjects), args.Action);
 
-            Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-                          eventHandler => QueryObjects.CollectionChanged += eventHandler,
-                          eventHandler => QueryObjects.CollectionChanged -= eventHandler)
-                      .Throttle(TimeSpan.FromMilliseconds(20))
-                      .ObserveOn(SynchronizationContext.Current)
-                      .Subscribe(
-                          args =>
-                          {
-                              _interationLogger.LogInteraction(
-                                  LogCategory.Image,
-                                  LogType.GlobalFeatures,
-                                  string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
-                                  $"{SemanticValue}|{SemanticUseForSorting}");
-                              SemanticUseForSorting = QueryObjects.Any();
-                              NotifyQuerySettingsChanged(nameof(QueryObjects), args.EventArgs.Action);
-                          });
+            QueryObjects.CollectionChanged += (sender, args) =>
+                                              {
+                                                  _interationLogger.LogInteraction(
+                                                      LogCategory.Image,
+                                                      LogType.GlobalFeatures,
+                                                      string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
+                                                      $"{SemanticValue}|{SemanticUseForSorting}");
+                                                  SemanticUseForSorting = QueryObjects.Any();
+                                                  NotifyQuerySettingsChanged(nameof(QueryObjects), args.Action);
+                                              };
         }
 
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
@@ -389,22 +384,32 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QueryObjects.Add(downloadedFrame);
         }
 
-        public void UpdateQueryObjects(IList<FrameViewModel> queries)
+        public void UpdateQueryObjects(FramesToQuery framesToQuery)
         {
             //maybe get some feedback, what changed?
-            var queriesToInsert = queries.Where(q => _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _)).Select(f => f.Clone()).ToList();
+            List<FrameViewModel> queriesToInsert = framesToQuery
+                                                   .Frames.Where(q => _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _))
+                                                   .Select(f => f.Clone())
+                                                   .ToList();
             if (!QueryObjects.Any() && !queriesToInsert.Any())
             {
                 return;
             }
 
+            _supressQueryChanged = framesToQuery.SupressResultChanges;
             QueryObjects.Clear();
             QueryObjects.AddRange(queriesToInsert);
+            _supressQueryChanged = false;
         }
 
         private void NotifyQuerySettingsChanged(string changedFilterName, object value)
         {
-            _logger.Info($"Lifelog filters changed: ${changedFilterName}: {value}");
+            if (_supressQueryChanged)
+            {
+                return;
+            }
+
+            _logger.Info($"Query settings changed: ${changedFilterName}: {value}");
             QuerySettingsChanged.OnNext(Unit.Default);
         }
     }

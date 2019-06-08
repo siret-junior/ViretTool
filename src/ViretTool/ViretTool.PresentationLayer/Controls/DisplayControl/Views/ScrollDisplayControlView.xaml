@@ -48,7 +48,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext)];
+                        <common:FrameControl cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext, $eventArgs)];
                                                                  [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
                                                                  [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                  [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
