@@ -10,7 +10,6 @@ using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
-using EnumerableExtensions = ViretTool.Core.EnumerableExtensions;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -204,6 +203,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FramesForQueryChanged?.Invoke(
                 this,
                 new FramesToQuery(_loadedFrames.Where(f => f.IsSelectedForQuery).Append(frameViewModel).Distinct().ToList(), args.First, supressQueryChange));
+
+            if (supressQueryChange)
+            {
+                _loadedFrames.ForEach(f => f.IsSelectedForQuery = false);
+            }
         }
 
         public void OnAddToGpsClicked(FrameViewModel frameViewModel)
@@ -220,7 +224,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
             else if (Mouse.RightButton == MouseButtonState.Pressed)
             {
-                EnumerableExtensions.ForEach(_loadedFrames, f => f.IsSelectedForQuery = false);
+                _loadedFrames.ForEach(f => f.IsSelectedForQuery = false);
             }
             
         }
