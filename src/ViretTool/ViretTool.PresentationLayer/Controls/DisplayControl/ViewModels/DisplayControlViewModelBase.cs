@@ -165,8 +165,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
                 RowCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.RowCount;
                 ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
-                ScrollToRow(0);
                 AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
+                ScrollToRow(0);
             }
             else
             {

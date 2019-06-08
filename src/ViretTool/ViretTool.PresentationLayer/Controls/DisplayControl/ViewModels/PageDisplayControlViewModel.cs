@@ -170,10 +170,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             GpsFrame = null;
         }
 
-        public override Task LoadInitialDisplay()
+        public override async Task LoadInitialDisplay()
         {
             CurrentPageNumber = 0;
-            return base.LoadInitialDisplay();
+            await base.LoadInitialDisplay();
+            NotifyOfPropertyChange(nameof(LastPageNumber));
         }
 
         public override async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
@@ -197,7 +198,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             if (!IsLargeFramesChecked)
             {
                 int itemsCount = RowCount * ColumnCount;
-                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount).Take(itemsCount).OrderBy(f => f.VideoId).ThenBy(f => f.FrameNumber).ToList();
+
+                //order by top fram in a video ID a then by frame numbers in a video
+                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount)
+                                               .Take(itemsCount)
+                                               .GroupBy(f => f.VideoId)
+                                               .SelectMany(g => g.OrderBy(f => f.FrameNumber))
+                                               .ToList();
             }
             else
             {

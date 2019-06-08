@@ -238,7 +238,7 @@
     <value>Logy byly poslány.</value>
   </data>
   <data name="DayOfWeekLabel" xml:space="preserve">
-    <value>Den v týdnu:</value>
+    <value>Den:</value>
   </data>
   <data name="MondayLabel" xml:space="preserve">
     <value>Po</value>

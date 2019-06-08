@@ -16,49 +16,50 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Margin="0,0,0,5" Text="{x:Static properties:Resources.DayOfWeekLabel }"/>
+        <StackPanel Grid.Row="0" Margin="0,5,0,0" Orientation="Horizontal">
+            <TextBlock Text="{x:Static properties:Resources.DayOfWeekLabel}" VerticalAlignment="Center"/>
 
-        <ItemsControl ItemsSource="{Binding DaysOfWeek}" Grid.Row="1" Grid.Column="0">
-            <ItemsControl.Resources>
-                <converters:DayOfWeekLableConverter x:Key="DayOfWeekLableConverter" />
-            </ItemsControl.Resources>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ToggleButton Content="{Binding DayOfWeek, Converter={StaticResource DayOfWeekLableConverter}}" IsChecked="{Binding IsSelected}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.Resources>
-                            <Style TargetType="ToggleButton">
-                                <Setter Property="Width" Value="24" />
-                                <Setter Property="Height" Value="24" />
-                                <Setter Property="Margin" Value="0,0,2,0" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter Property="Background" Value="Lime" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Resources>
-                    </StackPanel>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+            <ItemsControl Margin="5,0,0,0" ItemsSource="{Binding DaysOfWeek}">
+                <ItemsControl.Resources>
+                    <converters:DayOfWeekLableConverter x:Key="DayOfWeekLableConverter" />
+                </ItemsControl.Resources>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton Content="{Binding DayOfWeek, Converter={StaticResource DayOfWeekLableConverter}}" IsChecked="{Binding IsSelected}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="ToggleButton">
+                                    <Setter Property="Width" Value="24" />
+                                    <Setter Property="Height" Value="24" />
+                                    <Setter Property="Margin" Value="0,0,2,0" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter Property="Background" Value="Lime" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Resources>
+                        </StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
 
-        <Grid Grid.Row="2" Margin="0,7,0,0">
+        <Grid Grid.Row="1" Margin="0,7,0,0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

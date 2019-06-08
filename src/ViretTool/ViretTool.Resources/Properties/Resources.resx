@@ -253,7 +253,7 @@
     <value>Logs were sent.</value>
   </data>
   <data name="DayOfWeekLabel" xml:space="preserve">
-    <value>Day of week:</value>
+    <value>Day:</value>
   </data>
   <data name="MondayLabel" xml:space="preserve">
     <value>Mo</value>

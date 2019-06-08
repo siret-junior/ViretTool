@@ -106,7 +106,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Day of week:.
+        ///   Looks up a localized string similar to Day:.
         /// </summary>
         public static string DayOfWeekLabel {
             get {
