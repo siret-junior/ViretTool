@@ -198,18 +198,24 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             if (!IsLargeFramesChecked)
             {
                 int itemsCount = RowCount * ColumnCount;
-
                 //order by top fram in a video ID a then by frame numbers in a video
                 viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount)
                                                .Take(itemsCount)
                                                .GroupBy(f => f.VideoId)
-                                               .SelectMany(g => g.OrderBy(f => f.FrameNumber))
+                                               .SelectMany(
+                                                   g =>
+                                                   {
+                                                       FrameViewModel[] orderedFrames = g.OrderBy(f => f.FrameNumber).ToArray();
+                                                       orderedFrames[orderedFrames.Length - 1].IsLastInVideo = true;
+                                                       return orderedFrames;
+                                                   })
                                                .ToList();
             }
             else
             {
                 ScrollToRow(0);
                 VisibleFrames.Clear();
+                viewModelsToAdd.ForEach(f => f.IsLastInVideo = false);
             }
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);

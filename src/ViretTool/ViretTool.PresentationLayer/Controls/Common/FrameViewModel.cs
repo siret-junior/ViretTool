@@ -14,6 +14,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private bool _isSelectedForDetail;
         private bool _isSelectedForQuery;
         private bool _isVisible = true;
+        private bool _isLastInVideo;
 
         public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
         {
@@ -126,6 +127,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
         public int VideoId { get; }
+
+        public bool IsLastInVideo
+        {
+            get => _isLastInVideo;
+            set
+            {
+                if (_isLastInVideo == value)
+                {
+                    return;
+                }
+
+                _isLastInVideo = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public FrameViewModel Clone()
         {

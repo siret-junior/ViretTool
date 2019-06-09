@@ -11,7 +11,7 @@ namespace ViretTool.PresentationLayer.Converters
         {
             foreach (object value in values)
             {
-                if (value is bool b && b == false)
+                if (!(value is bool b) || !b)
                 {
                     return Visibility.Hidden;
                 }

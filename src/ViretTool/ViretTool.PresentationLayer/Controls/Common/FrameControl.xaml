@@ -14,6 +14,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
             <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
+            <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
             <Grid x:Key="CommonControls" x:Shared="False">
                 <Image Name="Image" Stretch="Fill">
                     <Image.Style>
@@ -28,13 +29,22 @@
                     </Image.Style>
                 </Image>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
-                           Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                           Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"
-                           Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                           Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
 
-                <TextBlock FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Text="{Binding VideoId, IsAsync=True}"/>
-                <TextBlock FontSize="8" Padding="1" Background="Transparent" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Border BorderBrush="Lime" BorderThickness="0,0,4,0">
+                    <Border.Visibility>
+                        <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
+                            <Binding Path="IsLastInVideo" IsAsync="True" />
+                            <Binding Path="IsClicked" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Converter="{StaticResource InvertedBooleanConverter}" IsAsync="True"/>
+                        </MultiBinding>
+                    </Border.Visibility>
+                </Border>
+
+                <TextBlock FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}">
+                </TextBlock>
+                <TextBlock FontSize="8" Padding="1" Margin="0,0,3,0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Text" Value="{Binding FrameMetadata, Mode=OneWay, IsAsync=True}"/>
@@ -156,4 +166,3 @@
 
     </Grid>
 </UserControl>
-
