@@ -69,10 +69,14 @@
                                 </MultiBinding>
                             </StackPanel.Visibility>
                             <Button FontSize="7" Background="LightCoral" Click="ButtonAddClicked" Tag="1">
-                                <TextBlock Text="+1" FontSize="14" VerticalAlignment="Center" FontWeight="Bold" />
+                                <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,-3,0,0">
+                                    <Run Text="+" FontSize="14"/><Run FontSize="6" Text="1"/>
+                                </TextBlock>
                             </Button>
                             <Button FontSize="7" Background="LightCoral" Click="ButtonAddClicked" Tag="2">
-                                <TextBlock Text="+2" FontSize="14" VerticalAlignment="Center" FontWeight="Bold" />
+                                <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,-3,0,0">
+                                    <Run Text="+" FontSize="14"/><Run FontSize="6" Text="2"/>
+                                </TextBlock>
                             </Button>
                         </StackPanel>
                         <Button Grid.Column="1" FontSize="7" Background="LightCoral" Click="ButtonAddGpsClicked">
@@ -83,7 +87,9 @@
                                     <Binding Path="CanAddToQuery" />
                                 </MultiBinding>
                             </Button.Visibility>
-                            <TextBlock FontSize="14" VerticalAlignment="Center" FontWeight="Bold">+G</TextBlock>
+                            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,-3,0,0">
+                                <Run Text="+" FontSize="14"/><Run FontSize="6" Text="G"/>
+                            </TextBlock>
                         </Button>
                         <Button Name="Remove" Grid.Column="3" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked"
                                 Visibility="{Binding Path=IsNotSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
