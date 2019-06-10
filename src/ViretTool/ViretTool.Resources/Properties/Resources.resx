@@ -159,12 +159,6 @@
   <data name="PrimaryQueryLabel" xml:space="preserve">
     <value>Query is primary</value>
   </data>
-  <data name="ImageWidth" xml:space="preserve">
-    <value>128</value>
-  </data>
-  <data name="ImageHeight" xml:space="preserve">
-    <value>72</value>
-  </data>
   <data name="SortCheckBoxText" xml:space="preserve">
     <value>Sort</value>
   </data>

@@ -232,24 +232,6 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 72.
-        /// </summary>
-        public static string ImageHeight {
-            get {
-                return ResourceManager.GetString("ImageHeight", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 128.
-        /// </summary>
-        public static string ImageWidth {
-            get {
-                return ResourceManager.GetString("ImageWidth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Key word.
         /// </summary>
         public static string KeywordModelName {

@@ -25,8 +25,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private bool _isBusy;
         private int _rowCount;
         private int _columnCount;
-        private int _imageHeight;
-        private int _imageWidth;
+        private int _imageHeight = 1;
+        private int _imageWidth = 1;
         private bool _isInitialDisplayShown;
 
 
@@ -35,8 +35,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
             _interactionLogger = interactionLogger;
-            _imageHeight = _defaultImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
-            _imageWidth = _defaultImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
+            _datasetServicesManager.DatasetOpened += (_, services) =>
+                                                     {
+                                                         ImageHeight = _defaultImageHeight = services.DatasetParameters.DefaultFrameHeight;
+                                                         ImageWidth = _defaultImageWidth = services.DatasetParameters.DefaultFrameWidth;
+                                                     };
         }
 
         public int DisplayHeight { get; set; }

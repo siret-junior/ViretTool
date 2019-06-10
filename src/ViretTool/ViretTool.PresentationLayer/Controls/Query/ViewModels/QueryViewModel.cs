@@ -45,16 +45,21 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private bool _isBwFilterVisible;
 
         private bool _supressQueryChanged;
+        private int _imageHeight;
+        private int _imageWidth;
 
         public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interationLogger)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
             _interationLogger = interationLogger;
-            _datasetServicesManager.DatasetOpened += (sender, services) => InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
 
-            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight);
-            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth);
+            _datasetServicesManager.DatasetOpened += (_, services) =>
+                                                    {
+                                                        InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
+                                                        ImageHeight = services.DatasetParameters.DefaultFrameHeight;
+                                                        ImageWidth = services.DatasetParameters.DefaultFrameWidth;
+                                                    };
 
             PropertyChanged += (sender, args) => NotifyQuerySettingsChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender));
 
@@ -72,8 +77,25 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
-        public int ImageHeight { get; }
-        public int ImageWidth { get; }
+        public int ImageHeight
+        {
+            get => _imageHeight;
+            private set
+            {
+                _imageHeight = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int ImageWidth
+        {
+            get => _imageWidth;
+            private set
+            {
+                _imageWidth = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public BindableCollection<FrameViewModel> QueryObjects { get; } = new BindableCollection<FrameViewModel>();
 
@@ -285,6 +307,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                         LogType.Color,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
                         $"{ColorValue}|{ColorUseForSorting}");
+                    ColorUseForSorting = true;
                 }
                 bool otherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
                 if (otherPoints)
@@ -296,7 +319,6 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                         $"{ColorValue}|{ColorUseForSorting}");
                 }
 
-                ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
                 NotifyOfPropertyChange();
             }
         }

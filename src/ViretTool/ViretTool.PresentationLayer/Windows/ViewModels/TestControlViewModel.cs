@@ -18,13 +18,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             _datasetServicesManager = datasetServicesManager;
             _queryPersistingService = queryPersistingService;
-            ImageHeight = int.Parse(Resources.Properties.Resources.ImageHeight) * 2;
-            ImageWidth = int.Parse(Resources.Properties.Resources.ImageWidth) * 2;
         }
-
-        public int ImageHeight { get; }
-
-        public int ImageWidth { get; }
 
         public BindableCollection<FrameViewModel> Frames { get; } = new BindableCollection<FrameViewModel>();
 

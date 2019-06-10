@@ -270,6 +270,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             IsBusy = true;
 
+            IsFirstQueryPrimary = true;
             foreach (QueryViewModel queryViewModel in new[] { Query1, Query2 })
             {
                 queryViewModel.BwFilterState = FilterControl.FilterState.Off;
