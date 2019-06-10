@@ -48,7 +48,7 @@ namespace ViretTool.PresentationLayer.Behaviors
         {
             _subscriber = Observable.FromEventPattern<SizeChangedEventHandler, SizeChangedEventArgs>(
                                         h => AssociatedObject.SizeChanged += h,
-                                        h => AssociatedObject.SizeChanged -= h).Throttle(TimeSpan.FromMilliseconds(300))
+                                        h => AssociatedObject.SizeChanged -= h).Throttle(TimeSpan.FromMilliseconds(700))
                                     .ObserveOn(AssociatedObject.Dispatcher)
                                     .Subscribe(_ => AssociatedObjectOnSizeChanged());
             AssociatedObjectOnSizeChanged();

@@ -30,15 +30,6 @@ namespace ViretTool.Core
             return sourceToList.Average(valueSelector);
         }
 
-        public static IEnumerable<TElement> Append<TElement>(this IEnumerable<TElement> collection, TElement item)
-        {
-            foreach (var element in collection)
-            {
-                yield return element;
-            }
-            yield return item;
-        }
-
         public static IList<TElement> AsList<TElement>(this IEnumerable<TElement> source)
         {
             return source as IList<TElement> ?? source.ToList();

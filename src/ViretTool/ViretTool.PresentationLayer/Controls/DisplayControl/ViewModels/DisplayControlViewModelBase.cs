@@ -8,6 +8,7 @@ using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.Core;
 using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
 
@@ -277,6 +278,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected virtual void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
         {
+            viewModelsToAdd.ForEach(vm => vm.IsVisible = true);
+
             int i = 0;
             for (; i < collectionToUpdate.Count && i < viewModelsToAdd.Count; i++)
             {
