@@ -269,6 +269,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public async void ClearAll()
         {
             IsBusy = true;
+            await Task.Delay(150);
 
             IsFirstQueryPrimary = true;
             foreach (QueryViewModel queryViewModel in new[] { Query1, Query2 })
@@ -288,7 +289,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             if (_datasetServicesManager.IsDatasetOpened)
             {
-                await Task.WhenAll(QueryResults.LoadInitialDisplay(), Task.Delay(200));
+                await QueryResults.LoadInitialDisplay();
             }
 
             IsBusy = false;
@@ -299,7 +300,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (_datasetServicesManager.IsDatasetOpened)
             {
                 IsBusy = true;
-                await Task.WhenAll(QueryResults.LoadInitialDisplay(), Task.Delay(200));
+                await QueryResults.LoadInitialDisplay();
                 IsBusy = false;
             }
         }
