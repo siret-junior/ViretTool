@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -9,11 +10,13 @@ namespace ViretTool.BusinessLayer.ActionLogging
         public InteractionLog()
         {
             Events = new List<Action>();
+            TeamId = int.Parse(ConfigurationManager.AppSettings["teamId"] ?? "5");
+            MemberId = int.Parse(ConfigurationManager.AppSettings["memberId"] ?? "1");
         }
 
         public string TeamName { get; set; } = "VIRET";
-        public int TeamId { get; set; } = 5;
-        public int MemberId { get; set; } = 1;
+        public int TeamId { get; set; }
+        public int MemberId { get; set; }
 
         public long TimeStamp { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]

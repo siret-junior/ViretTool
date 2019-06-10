@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,6 @@ namespace ViretTool.BusinessLayer.Submission
 {
     public class SubmissionService : ISubmissionService
     {
-        private const string BaseUrl = "http://demo2.itec.aau.at:80/vbs/submit";
         private readonly HttpClient _client = new HttpClient();
         private readonly IInteractionLogger _interactionLogger;
         private readonly ILogger _logger;
@@ -22,9 +22,10 @@ namespace ViretTool.BusinessLayer.Submission
             _interactionLogger = interactionLogger;
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
+            SubmissionUrl = ConfigurationManager.AppSettings["submissionUrl"];
         }
 
-        public string SubmissionUrl { get; set; } = BaseUrl;
+        public string SubmissionUrl { get; set; }
 
         public async Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit)
         {
