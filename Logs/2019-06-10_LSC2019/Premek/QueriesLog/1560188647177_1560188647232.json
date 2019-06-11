@@ -1,0 +1,446 @@
+{
+  "primarytemporalquery": 1,
+  "bitemporalsimilarityquery": {
+    "keywordquery": {
+      "formerquery": {
+        "synsetgroups": []
+      },
+      "latterquery": {
+        "synsetgroups": [
+          {
+            "synsets": [
+              {
+                "text": "GoogLeNet",
+                "synsetid": 940
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 941
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 942
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 943
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 944
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 945
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1048
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 950
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 951
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 968
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 975
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 960
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 961
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 962
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 972
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 953
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 954
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 955
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 956
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 957
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 958
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 959
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 963
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 964
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 965
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 976
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 966
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 967
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 969
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 973
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 974
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 977
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 978
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 979
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 980
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 981
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 982
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 983
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 984
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 985
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 986
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 987
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 988
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 989
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 990
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 991
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 992
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 993
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 994
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 995
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 996
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 997
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 998
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 999
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1000
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1001
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1002
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1003
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1004
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1005
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1006
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1008
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1029
+              },
+              {
+                "text": "GoogLeNet",
+                "synsetid": 1030
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "colorsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": [
+          {
+            "ellipsestate": 1,
+            "positionx": 0.42339832869080785,
+            "positiony": 0.42083565459610067,
+            "horizontalaxis": 0.10416666666666667,
+            "verticalaxis": 0.18518518518518517,
+            "rotation": 0,
+            "colorr": 0,
+            "colorg": 20,
+            "colorb": 204
+          }
+        ]
+      }
+    },
+    "facesketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "textsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "semanticexamplequery": {
+      "formerquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      },
+      "latterquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      }
+    }
+  },
+  "formerfusionquery": {
+    "sortingsimilaritymodel": 5,
+    "keywordfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.5
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.1
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "latterfusionquery": {
+    "sortingsimilaritymodel": 0,
+    "keywordfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.5
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.1
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "formerfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.9
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 50,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    },
+    "lifelogfilteringquery": {
+      "daysofweek": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        0
+      ],
+      "timefrom": "11:00:00",
+      "timeto": "13:00:00",
+      "heartratelow": 0,
+      "heartratehigh": 250,
+      "isgpsdefinedbystring": false,
+      "isgpsdefinedbycoordinates": false
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    }
+  },
+  "latterfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.9
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 50,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    },
+    "lifelogfilteringquery": {
+      "daysofweek": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        0
+      ],
+      "timefrom": "11:00:00",
+      "timeto": "13:00:00",
+      "heartratelow": 0,
+      "heartratehigh": 250,
+      "isgpsdefinedbystring": false,
+      "isgpsdefinedbycoordinates": false
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    }
+  }
+}

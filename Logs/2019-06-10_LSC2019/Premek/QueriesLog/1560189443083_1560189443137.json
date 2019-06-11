@@ -1,0 +1,182 @@
+{
+  "primarytemporalquery": 0,
+  "bitemporalsimilarityquery": {
+    "keywordquery": {
+      "formerquery": {
+        "synsetgroups": [
+          {
+            "synsets": [
+              {
+                "text": "GoogLeNet",
+                "synsetid": 336
+              }
+            ]
+          }
+        ]
+      },
+      "latterquery": {
+        "synsetgroups": []
+      }
+    },
+    "colorsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": [
+          {
+            "ellipsestate": 0,
+            "positionx": 0.415041782729805,
+            "positiony": 0.43439182915506053,
+            "horizontalaxis": 0.25905292479108638,
+            "verticalaxis": 0.35159393376663567,
+            "rotation": 0,
+            "colorr": 238,
+            "colorg": 238,
+            "colorb": 238
+          }
+        ]
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "facesketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "textsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "semanticexamplequery": {
+      "formerquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      },
+      "latterquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      }
+    }
+  },
+  "formerfusionquery": {
+    "sortingsimilaritymodel": 1,
+    "keywordfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.5
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.1
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "latterfusionquery": {
+    "sortingsimilaritymodel": 1,
+    "keywordfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.5
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.1
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.1
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "formerfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.9
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 50,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    },
+    "lifelogfilteringquery": {
+      "daysofweek": [
+        6
+      ],
+      "timefrom": "15:00:00",
+      "timeto": "23:00:00",
+      "heartratelow": 0,
+      "heartratehigh": 250,
+      "isgpsdefinedbystring": false,
+      "isgpsdefinedbycoordinates": false
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    }
+  },
+  "latterfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.9
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 50,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    },
+    "lifelogfilteringquery": {
+      "daysofweek": [
+        6
+      ],
+      "timefrom": "15:00:00",
+      "timeto": "23:00:00",
+      "heartratelow": 0,
+      "heartratehigh": 250,
+      "isgpsdefinedbystring": false,
+      "isgpsdefinedbycoordinates": false
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    }
+  }
+}
