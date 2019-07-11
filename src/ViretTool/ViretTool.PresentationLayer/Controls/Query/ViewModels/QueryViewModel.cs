@@ -30,16 +30,19 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private FilterControl.FilterState _percentageBlackFilterState = FilterControl.FilterState.Off;
         private double _percentageBlackFilterValue = 65;
 
+        // keyword query
         private double _keywordValue = 50;
         private bool _keywordUseForSorting = false;
         private KeywordQueryResult _keywordQueryResult;
 
+        // color sketch query
         private double _colorValue = 10;
         private bool _colorUseForSorting = false;
         private SketchQueryResult _sketchQueryResult;
         private int _canvasWidth = 240;
         private int _canvasHeight = 320;
 
+        // semantic example query
         private double _semanticValue = 30;
         private bool _semanticUseForSorting = false;
         private bool _isBwFilterVisible;
@@ -299,18 +302,23 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _sketchQueryResult = value;
-                bool colorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
-                if (colorPoints)
+                bool hasColorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
+                if (hasColorPoints)
                 {
                     _interationLogger.LogInteraction(
                         LogCategory.Sketch,
                         LogType.Color,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
                         $"{ColorValue}|{ColorUseForSorting}");
-                    ColorUseForSorting = true;
+
+                    // use for sorting only if not already sorted by an another model
+                    if (!_keywordUseForSorting && !_semanticUseForSorting)
+                    {
+                        ColorUseForSorting = true;
+                    }
                 }
-                bool otherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
-                if (otherPoints)
+                bool hasOtherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
+                if (hasOtherPoints)
                 {
                     _interationLogger.LogInteraction(
                         LogCategory.Text,
