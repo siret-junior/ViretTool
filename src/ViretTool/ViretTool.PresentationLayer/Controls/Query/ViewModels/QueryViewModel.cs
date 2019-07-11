@@ -312,7 +312,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                         $"{ColorValue}|{ColorUseForSorting}");
 
                     // use for sorting only if not already sorted by an another model
-                    if (!_keywordUseForSorting && !_semanticUseForSorting)
+                    if (!KeywordUseForSorting && !SemanticUseForSorting)
                     {
                         ColorUseForSorting = true;
                     }
