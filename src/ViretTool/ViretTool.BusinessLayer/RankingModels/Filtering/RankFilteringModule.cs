@@ -167,7 +167,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 // too much results, sample
                 for (int i = 0; i < SAMPLE_SIZE && i < notFilteredRanks.Count; i++)
                 {
-                    _sampleValues[i] = notFilteredRanks[_random.Next(SAMPLE_SIZE)];
+                    _sampleValues[i] = notFilteredRanks[_random.Next(notFilteredRanks.Count)];
                 }
                 float percentageInSubset = percentageOfDatabase / nonFilteredPercentage;
                 Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
