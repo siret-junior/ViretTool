@@ -96,8 +96,10 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleTransient(),
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
-                //Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
-                Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
+                // FaceSketchModel disabled for LSC as it is not very useful there
+                // TODO: ignore missing data transparently
+                Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
+                //Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
                 Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
 
