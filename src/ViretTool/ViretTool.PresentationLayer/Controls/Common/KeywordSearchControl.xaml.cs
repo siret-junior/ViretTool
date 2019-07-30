@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
@@ -44,13 +45,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public static readonly DependencyProperty InitializeProperty = DependencyProperty.Register(
             nameof(Initialize),
-            typeof(Action<string, string[]>),
+            typeof(Action<string, string[], IDatasetServicesManager>),
             typeof(KeywordSearchControl),
             null);
 
-        public Action<string, string[]> Initialize
+        public Action<string, string[], IDatasetServicesManager> Initialize
         {
-            get => (Action<string, string[]>)GetValue(InitializeProperty);
+            get => (Action<string, string[], IDatasetServicesManager>)GetValue(InitializeProperty);
             set => SetValue(InitializeProperty, value);
         }
 
@@ -59,7 +60,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             suggestionTextBox.ClearQuery();
         }
 
-        private void Init(string datasetDirectory, string[] annotationSources)
+        private void Init(string datasetDirectory, string[] annotationSources, IDatasetServicesManager datasetServicesManager)
         {
             //unregister previous events
             foreach (SuggestionProvider suggestionProvider in mSuggestionProviders.Values)
@@ -83,7 +84,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 LabelProvider labelProvider = new LabelProvider(labelsFilePath);
                 mLabelProviders.Add(source, labelProvider);
 
-                SuggestionProvider suggestionProvider = new SuggestionProvider(labelProvider);
+                SuggestionProvider suggestionProvider = new SuggestionProvider(labelProvider, datasetServicesManager);
                 mSuggestionProviders.Add(source, suggestionProvider);
                 suggestionProvider.SuggestionResultsReadyEvent += suggestionTextBox.OnSuggestionResultsReady;
                 suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;

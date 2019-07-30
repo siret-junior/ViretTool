@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Caliburn.Micro;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 {
-    class SuggestionResultItem : IIdentifiable, IComparable<SuggestionResultItem>
+    internal class SuggestionResultItem : PropertyChangedBase, IIdentifiable, IComparable<SuggestionResultItem>
     {
         public const string HIGHLIGHT_END_TAG = "$~END~$";
 
@@ -29,6 +30,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         public int Id => Label.SynsetId;
         public string TextDescription => Label.Name;
         public string TextRepresentation => Label.Names[0];
+
+        public BindableCollection<byte[]> MostRelevantImages { get; set; }
 
         public struct Relevance
         {

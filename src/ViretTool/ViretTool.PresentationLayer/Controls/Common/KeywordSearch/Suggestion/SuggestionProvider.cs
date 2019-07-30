@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
+using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.TextSearch;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
@@ -11,12 +14,14 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
     class SuggestionProvider
     {
         private readonly LabelProvider mLabelProvider;
+        private readonly IDatasetServicesManager _datasetServicesManager;
         private CancellationTokenSource CTS;
 
         /// <param name="labelProvider">Reference to a class managing suggestion dictionary</param>
-        public SuggestionProvider(LabelProvider labelProvider)
+        public SuggestionProvider(LabelProvider labelProvider, IDatasetServicesManager datasetServicesManager)
         {
             mLabelProvider = labelProvider;
+            _datasetServicesManager = datasetServicesManager;
         }
 
         #region Events
@@ -201,6 +206,19 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                     }
                 }
 
+                IKeywordModel keywordModel = _datasetServicesManager.CurrentDataset.RankingService.BiTemporalRankingModule.BiTemporalSimilarityModule.KeywordModel
+                                                                    .FormerSimilarityModel;
+                Dictionary<int, float> ranks = keywordModel.GetRankForOneSynsetGroup(new List<int>() { item.Id });
+                IEnumerable<byte[]> images = ranks.OrderByDescending(r => r.Value)
+                                  .Take(5)
+                                  .Select(
+                                      r =>
+                                      {
+                                          int frameNumber = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(r.Key);
+                                          int videoId = _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(r.Key);
+                                          return _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnail(videoId, frameNumber).Image;
+                                      });
+
                 return new SuggestionResultItem
                        {
                            Label = item,
@@ -212,7 +230,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                                                  NameHits = nameRel.Hits,
                                                  DescriptionHits = descriptionRel.Hits,
                                                  Bonus = nameRel.Bonus
-                                             }
+                                             },
+                           MostRelevantImages = new BindableCollection<byte[]>(images)
                        };
             }
 

@@ -289,9 +289,10 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             Popups_.Add(p);
 
-            int numberOfPopups = (int)Math.Floor((System.Windows.SystemParameters.PrimaryScreenWidth - 50) / ActualWidth);
+            var actualWidth = (sender as SuggestionPopup)?.ActualWidth ?? 200;
+            int numberOfPopups = (int)Math.Floor((SystemParameters.PrimaryScreenWidth - 50) / actualWidth);
             numberOfPopups = (Popups_.Count - 1) % (numberOfPopups);
-            p.HorizontalOffset = ActualWidth * numberOfPopups;
+            p.HorizontalOffset = actualWidth * numberOfPopups;
 
             ((Grid)TextBox_.Parent).Children.Add(p);
         }

@@ -39,7 +39,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Themes
             string xml = escaped.Replace(SuggestionResultItem.HIGHLIGHT_START_TAG, "<Run Foreground=\"Red\">").Replace(SuggestionResultItem.HIGHLIGHT_END_TAG, "</Run>");
 
             string wrappedXml = string.Format(
-                "<TextBlock xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xml:space=\"preserve\" TextWrapping=\"Wrap\">{0}</TextBlock>",
+                "<TextBlock xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xml:space=\"preserve\" TextWrapping=\"Wrap\" Width=\"200\">{0}</TextBlock>",
                 xml);
 
             using (StringReader stringReader = new StringReader(wrappedXml))

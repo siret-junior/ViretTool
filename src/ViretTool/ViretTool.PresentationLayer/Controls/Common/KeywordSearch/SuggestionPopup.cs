@@ -132,6 +132,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         #endregion
 
 
+        public new double ActualWidth => mPopup.Child.RenderSize.Width;
+
         /// <summary>
         /// Manage navigation in suggestions popup and run search if pressed enter
         /// </summary>

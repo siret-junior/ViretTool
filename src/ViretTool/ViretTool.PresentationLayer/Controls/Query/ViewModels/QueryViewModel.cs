@@ -59,7 +59,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
             _datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
-                                                        InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
+                                                        InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" }, datasetServicesManager);
                                                         ImageHeight = services.DatasetParameters.DefaultFrameHeight;
                                                         ImageWidth = services.DatasetParameters.DefaultFrameWidth;
                                                     };
@@ -169,7 +169,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             }
         }
 
-        public Action<string, string[]> InitializeKeywordSearchMethod { private get; set; }
+        public Action<string, string[], IDatasetServicesManager> InitializeKeywordSearchMethod { private get; set; }
 
         public KeywordQueryResult KeywordQueryResult
         {
