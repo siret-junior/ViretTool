@@ -21,7 +21,6 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public KeywordSearchControl()
         {
             InitializeComponent();
-            Loaded += (sender, args) => Initialize = Init;
         }
 
         public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
@@ -43,16 +42,24 @@ namespace ViretTool.PresentationLayer.Controls.Common
             set => SetValue(QueryResultProperty, value);
         }
 
-        public static readonly DependencyProperty InitializeProperty = DependencyProperty.Register(
-            nameof(Initialize),
-            typeof(Action<string, string[], IDatasetServicesManager>),
+        public static readonly DependencyProperty DatasetServicesManagerProperty = DependencyProperty.Register(
+            nameof(DatasetServicesManager),
+            typeof(IDatasetServicesManager),
             typeof(KeywordSearchControl),
-            null);
+            new FrameworkPropertyMetadata(
+                (obj, args) =>
+                {
+                    IDatasetServicesManager datasetServicesManager = args.NewValue as IDatasetServicesManager;
+                    if (datasetServicesManager != null)
+                    {
+                        datasetServicesManager.DatasetOpened += (_, services) => ((KeywordSearchControl)obj).Init(new[] { "GoogLeNet" }, datasetServicesManager);
+                    }
+                }));
 
-        public Action<string, string[], IDatasetServicesManager> Initialize
+        public IDatasetServicesManager DatasetServicesManager
         {
-            get => (Action<string, string[], IDatasetServicesManager>)GetValue(InitializeProperty);
-            set => SetValue(InitializeProperty, value);
+            get => (IDatasetServicesManager)GetValue(DatasetServicesManagerProperty);
+            set => SetValue(DatasetServicesManagerProperty, value);
         }
 
         public void Clear()
@@ -60,7 +67,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             suggestionTextBox.ClearQuery();
         }
 
-        private void Init(string datasetDirectory, string[] annotationSources, IDatasetServicesManager datasetServicesManager)
+        private void Init(string[] annotationSources, IDatasetServicesManager datasetServicesManager)
         {
             //unregister previous events
             foreach (SuggestionProvider suggestionProvider in mSuggestionProviders.Values)
@@ -78,8 +85,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 //string labels = GetFileNameByExtension(datatsetDirectory, $"-{source}.label");
                 //string labelsFilePath = Path.Combine(datasetDirectory, $"{Path.GetFileName(datasetDirectory)}-{source}.label");
-                string labelsFilePath = Directory.GetFiles(datasetDirectory).Where(file => file.EndsWith(".label")).First();
-
+                string labelsFilePath = Directory.GetFiles(datasetServicesManager.CurrentDatasetFolder).First(file => file.EndsWith(".label"));
 
                 LabelProvider labelProvider = new LabelProvider(labelsFilePath);
                 mLabelProviders.Add(source, labelProvider);
