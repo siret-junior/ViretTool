@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.RankingModels.Queries;
@@ -32,11 +33,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         private Random mRandom = new Random();
         private Dictionary<int, List<KeywordSearchFrame>> mClassCache;
-        private const int CACHE_DELETE = 10;
-        private const int MAX_CACHE_SIZE = 100;
+        private const int CACHE_DELETE = 100;
+        private const int MAX_CACHE_SIZE = 1000;
         private const int LIST_DEFAULT_SIZE = 32768;
 
-        private const int MAX_CLAUSE_CACHE_SIZE = 10;
+        private const int MAX_CLAUSE_CACHE_SIZE = 1000;
         private Dictionary<List<int>, Dictionary<int, float>> mClauseCache;
 
         /// <param name="lp">For class name to class id conversion</param>
@@ -252,6 +253,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             return list;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)] //cannot run in parallel
         public Dictionary<int, float> GetRankForOneSynsetGroup(List<int> listOfIds)
         {
             if (mClauseCache.TryGetValue(listOfIds, out var dict))

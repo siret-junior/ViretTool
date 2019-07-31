@@ -208,7 +208,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 
                 IKeywordModel keywordModel = _datasetServicesManager.CurrentDataset.RankingService.BiTemporalRankingModule.BiTemporalSimilarityModule.KeywordModel
                                                                     .FormerSimilarityModel;
-                Dictionary<int, float> ranks = keywordModel.GetRankForOneSynsetGroup(new List<int>() { item.Id });
+                Dictionary<int, float> ranks = keywordModel.GetRankForOneSynsetGroup(ExpandLabel(new[] { item.SynsetId }));
                 IEnumerable<byte[]> images = ranks.OrderByDescending(r => r.Value)
                                   .Take(5)
                                   .Select(
@@ -236,6 +236,26 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
             }
 
             return null;
+        }
+
+        private List<int> ExpandLabel(IEnumerable<int> ids)
+        {
+            var list = new List<int>();
+            foreach (var item in ids)
+            {
+                var label = mLabelProvider.Labels[item];
+                if (label.Id != -1)
+                {
+                    list.Add(label.Id);
+                }
+
+                if (label.Hyponyms != null)
+                {
+                    list.AddRange(ExpandLabel(label.Hyponyms));
+                }
+            }
+
+            return list;
         }
 
         private struct HighlightedStringWithRelevance
