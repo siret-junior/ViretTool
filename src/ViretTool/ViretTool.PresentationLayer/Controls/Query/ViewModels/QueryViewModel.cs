@@ -21,7 +21,6 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
     public class QueryViewModel : PropertyChangedBase
     {
         private readonly ILogger _logger;
-        private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly IInteractionLogger _interationLogger;
 
         // TODO: load default values from a settings file
@@ -54,12 +53,11 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interationLogger)
         {
             _logger = logger;
-            _datasetServicesManager = datasetServicesManager;
             _interationLogger = interationLogger;
+            DatasetServicesManager = datasetServicesManager;
 
-            _datasetServicesManager.DatasetOpened += (_, services) =>
+            datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
-                                                        InitializeKeywordSearchMethod(_datasetServicesManager.CurrentDatasetFolder, new[] { "GoogLeNet" });
                                                         ImageHeight = services.DatasetParameters.DefaultFrameHeight;
                                                         ImageWidth = services.DatasetParameters.DefaultFrameWidth;
                                                     };
@@ -169,7 +167,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             }
         }
 
-        public Action<string, string[]> InitializeKeywordSearchMethod { private get; set; }
+        public IDatasetServicesManager DatasetServicesManager { get; }
 
         public KeywordQueryResult KeywordQueryResult
         {
@@ -418,7 +416,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         {
             //maybe get some feedback, what changed?
             List<FrameViewModel> queriesToInsert = framesToQuery
-                                                   .Frames.Where(q => _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _))
+                                                   .Frames.Where(q => DatasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(q.VideoId, q.FrameNumber, out _))
                                                    .Select(f => f.Clone())
                                                    .ToList();
             if (!QueryObjects.Any() && !queriesToInsert.Any())

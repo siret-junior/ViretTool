@@ -33,7 +33,6 @@
                 <ControlTemplate TargetType="{x:Type local:SuggestionPopup}">
                     <Popup x:Name="PART_Popup"
                            IsOpen="{Binding Path=IsPopupOpen, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay}"
-                           Width="{TemplateBinding ActualWidth}"
                            MinHeight="25"
                            MaxHeight="400"
                            AllowsTransparency="True"
