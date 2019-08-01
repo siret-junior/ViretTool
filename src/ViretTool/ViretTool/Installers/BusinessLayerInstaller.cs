@@ -72,7 +72,7 @@ namespace ViretTool.Installers
                          .ImplementedBy<BiTemporalRankingService>()
                          .LifestyleBoundTo<DatasetServices>()
             );
-                
+            
 
             //singleton services
             container.Register(

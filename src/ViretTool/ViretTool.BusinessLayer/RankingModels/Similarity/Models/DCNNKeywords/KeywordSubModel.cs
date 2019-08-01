@@ -146,7 +146,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
             // header = 'KS INDEX'+(Int64)-1
             if (mReader.ReadInt64() != 0x4b5320494e444558 && mReader.ReadInt64() != -1)
-                throw new FileFormatException("Invalid index file format.");
+                throw new System.IO.FileFormatException("Invalid index file format.");
 
             // read offests of each class
             while (true)

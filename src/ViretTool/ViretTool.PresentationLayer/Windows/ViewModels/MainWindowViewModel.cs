@@ -435,6 +435,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 BiTemporalRankedResultSet queryResult = await Task.Run(
                                                             () =>
                                                             {
+                                                                // collect GUI settings and build a query object
                                                                 BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(
                                                                     Query1,
                                                                     Query2,
@@ -444,7 +445,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                                     _datasetServicesManager.CurrentDataset.DatasetParameters,
                                                                     QueryResults.GpsFrame,
                                                                     LifelogFilterViewModel);
+                                                                // log the query object
                                                                 Task.Run(() => _queryPersistingService.SaveQuery(biTemporalQuery));
+                                                                // compute and return the ranked result
                                                                 return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
                                                             });
 
