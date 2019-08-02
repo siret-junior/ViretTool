@@ -199,5 +199,14 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
             DialogResult = true;
             Close();
         }
+
+        private void SketchColorPickerOnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                DialogResult = false;
+                Close();
+            }
+        }
     }
 }

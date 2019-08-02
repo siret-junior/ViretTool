@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.RankingModels.Queries;
@@ -32,11 +33,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         private Random mRandom = new Random();
         private Dictionary<int, List<KeywordSearchFrame>> mClassCache;
-        private const int CACHE_DELETE = 10;
-        private const int MAX_CACHE_SIZE = 100;
+        private const int CACHE_DELETE = 100;
+        private const int MAX_CACHE_SIZE = 1000;
         private const int LIST_DEFAULT_SIZE = 32768;
 
-        private const int MAX_CLAUSE_CACHE_SIZE = 10;
+        private const int MAX_CLAUSE_CACHE_SIZE = 1000;
         private Dictionary<List<int>, Dictionary<int, float>> mClauseCache;
 
         /// <param name="lp">For class name to class id conversion</param>
@@ -244,47 +245,67 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
             // should be fast
             // http://alicebobandmallory.com/articles/2012/10/18/merge-collections-without-duplicates-in-c
-            foreach (List<int> listOfIds in ids) {
-                if (mClauseCache.ContainsKey(listOfIds)) {
-                    list.Add(mClauseCache[listOfIds]);
-                    continue;
-                }
-
-                Dictionary<int, float> dict = new Dictionary<int, float>(); //= mClasses[listOfIds[i]].ToDictionary(f => f.Frame.ID);
-                
-                for (int i = 0; i < listOfIds.Count; i++) {
-                    var classFrames = ReadClassFromFile(listOfIds[i]);
-                    if (classFrames.Count == 0) continue;
-
-                    if (mUseIDF) {
-                        float idf = IDF[listOfIds[i]];
-                        foreach (KeywordSearchFrame f in classFrames) {
-                            if (dict.ContainsKey(f.Id)) {
-                                dict[f.Id] += f.Rank * idf;
-                            } else {
-                                dict.Add(f.Id, f.Rank * idf);
-                            }
-                        }
-                    } else {
-                        foreach (KeywordSearchFrame f in classFrames) {
-                            if (dict.ContainsKey(f.Id)) {
-                                dict[f.Id] += f.Rank;
-                            } else {
-                                dict.Add(f.Id, f.Rank);
-                            }
-                        }
-                    }
-                }
-
-                if (MAX_CLAUSE_CACHE_SIZE == mClauseCache.Count) {
-                    var randClass = mClauseCache.Keys.ToList()[mRandom.Next(mClauseCache.Count)];
-                    mClauseCache.Remove(randClass);
-                }
-                mClauseCache.Add(listOfIds, dict);
-
+            foreach (List<int> listOfIds in ids)
+            {
+                Dictionary<int, float> dict = GetRankForOneSynsetGroup(listOfIds);
                 list.Add(dict);
             }
             return list;
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)] //cannot run in parallel
+        public Dictionary<int, float> GetRankForOneSynsetGroup(List<int> listOfIds)
+        {
+            if (mClauseCache.TryGetValue(listOfIds, out var dict))
+            {
+                return dict;
+            }
+
+            dict = new Dictionary<int, float>();
+            for (int i = 0; i < listOfIds.Count; i++)
+            {
+                var classFrames = ReadClassFromFile(listOfIds[i]);
+                if (classFrames.Count == 0) return dict;
+
+                if (mUseIDF)
+                {
+                    float idf = IDF[listOfIds[i]];
+                    foreach (KeywordSearchFrame f in classFrames)
+                    {
+                        if (dict.ContainsKey(f.Id))
+                        {
+                            dict[f.Id] += f.Rank * idf;
+                        }
+                        else
+                        {
+                            dict.Add(f.Id, f.Rank * idf);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (KeywordSearchFrame f in classFrames)
+                    {
+                        if (dict.ContainsKey(f.Id))
+                        {
+                            dict[f.Id] += f.Rank;
+                        }
+                        else
+                        {
+                            dict.Add(f.Id, f.Rank);
+                        }
+                    }
+                }
+            }
+
+            if (MAX_CLAUSE_CACHE_SIZE == mClauseCache.Count)
+            {
+                var randClass = mClauseCache.Keys.ToList()[mRandom.Next(mClauseCache.Count)];
+                mClauseCache.Remove(randClass);
+            }
+
+            mClauseCache.Add(listOfIds, dict);
+            return dict;
         }
 
         #endregion

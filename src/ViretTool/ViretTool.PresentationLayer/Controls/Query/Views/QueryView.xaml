@@ -37,7 +37,7 @@
         <!-- Keyword -->
         <common:ModelControl Grid.Row="2" x:Name="KeywordModel" ModelName="{x:Static properties:Resources.KeywordModelName}" OutputValue="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}"
                              cal:Message.Attach="[Event ModelCleared] = [Action OnKeywordsCleared()];[Event SortingExplicitlyChanged] = [Action OnSortingExplicitlyChanged(KeywordModel.Name, KeywordModel.UseForSorting)]"/>
-        <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" Initialize="{Binding InitializeKeywordSearchMethod, Mode=OneWayToSource}" />
+        <common:KeywordSearchControl Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" DatasetServicesManager="{Binding DatasetServicesManager, Mode=OneTime}" />
 
         <!-- Colors -->
         <common:ModelControl Grid.Row="4" x:Name="SketchesModel" ModelName="{x:Static properties:Resources.SketchModelName}" OutputValue="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"

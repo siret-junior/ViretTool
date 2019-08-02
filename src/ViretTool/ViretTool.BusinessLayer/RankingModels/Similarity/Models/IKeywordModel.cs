@@ -9,5 +9,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
     public interface IKeywordModel : ISimilarityModel<KeywordQuery>
     {
+        Dictionary<int, float> GetRankForOneSynsetGroup(List<int> listOfIds);
     }
 }

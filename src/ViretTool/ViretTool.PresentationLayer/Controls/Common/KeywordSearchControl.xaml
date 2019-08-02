@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:ViretTool.PresentationLayer.Controls.Common.KeywordSearch"
              xmlns:themes="clr-namespace:ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Themes"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -30,32 +31,54 @@
             <!-- Highlights searched phrase in suggestions -->
             <themes:StringHighlightingConverter x:Key="StringHighlightingConverter"/>
 
+            <ItemsControl x:Key="MostRelevantImages" x:Shared="False" ItemsSource="{Binding MostRelevantImages}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Image Width="128" Height="76" Source="{Binding ., IsAsync=True}" Stretch="Fill" Margin="5,0,0,0"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
             <!-- Templates distinguishing various types of suggested items (red / green background) -->
             <DataTemplate x:Key="SuggestionResultItemTemplate_OnlyChildren">
                 <Border Padding="5" Background="#44DD88DD">
-                    <StackPanel Orientation="Vertical">
-                        <ContentControl FontWeight="Bold" Content="{Binding Path=Name, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
-                        <TextBlock Text="{Binding Path=Hyponyms, StringFormat=Being: \{0\}}" Margin="0,0,0,2" FontStyle="Italic" TextWrapping="Wrap"/>
-                        <ContentControl Content="{Binding Path=Description, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                            <ContentControl FontWeight="Bold" Content="{Binding Path=Name, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                            <TextBlock Text="{Binding Path=Hyponyms, StringFormat=Being: \{0\}}" Margin="0,0,0,2" FontStyle="Italic" TextWrapping="Wrap" Width="200"/>
+                            <ContentControl Content="{Binding Path=Description, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                        </StackPanel>
+                        <ContentPresenter Content="{StaticResource MostRelevantImages}" />
                     </StackPanel>
                 </Border>
             </DataTemplate>
 
             <DataTemplate x:Key="SuggestionResultItemTemplate_WithChildren">
                 <Border Padding="5" Background="#4488DDDD">
-                    <StackPanel Orientation="Vertical">
-                        <ContentControl FontWeight="Bold" Content="{Binding Path=Name, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
-                        <TextBlock Text="{Binding Path=Hyponyms, StringFormat=Including: \{0\}}" Margin="0,0,0,2" FontStyle="Italic" TextWrapping="Wrap"/>
-                        <ContentControl Content="{Binding Path=Description, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                            <ContentControl FontWeight="Bold" Content="{Binding Path=Name, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                            <TextBlock Text="{Binding Path=Hyponyms, StringFormat=Including: \{0\}}" Margin="0,0,0,2" FontStyle="Italic" TextWrapping="Wrap" Width="200"/>
+                            <ContentControl Content="{Binding Path=Description, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                        </StackPanel>
+                        <ContentPresenter Content="{StaticResource MostRelevantImages}" />
                     </StackPanel>
                 </Border>
             </DataTemplate>
 
             <DataTemplate x:Key="SuggestionResultItemTemplate_Base">
                 <Border Padding="5">
-                    <StackPanel Orientation="Vertical">
-                        <ContentControl FontWeight="Bold" Content="{Binding Path=Name, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
-                        <ContentControl Content="{Binding Path=Description, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical">
+                            <ContentControl FontWeight="Bold" Content="{Binding Path=Name, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                            <ContentControl Content="{Binding Path=Description, Converter={StaticResource ResourceKey=StringHighlightingConverter}, Mode=OneTime}"/>
+                        </StackPanel>
+                        <ContentPresenter Content="{StaticResource MostRelevantImages}" />
                     </StackPanel>
                 </Border>
             </DataTemplate>
