@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,5 +50,22 @@ namespace ViretTool.DataLayer.DataIO
             Buffer.BlockCopy(boolArray, 0, bytes, 0, boolArray.Length);
             return bytes;
         }
+        
+        // TODO: find an efficient solution
+        public static byte[] TranslateToByteArray((int synsetId, float rank)[] synsetRanks)
+        {
+            using (MemoryStream stream = new MemoryStream(synsetRanks.Length * (sizeof(int) + sizeof(float))))
+            using (BinaryWriter writer = new BinaryWriter(stream))
+            {
+                foreach ((int synsetId, float rank) in synsetRanks)
+                {
+                    writer.Write(synsetId);
+                    writer.Write(rank);
+                }
+                
+                return stream.ToArray();
+            }
+        }
+
     }
 }

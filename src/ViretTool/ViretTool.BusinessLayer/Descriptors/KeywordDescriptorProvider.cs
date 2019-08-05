@@ -16,14 +16,32 @@ namespace ViretTool.BusinessLayer.Descriptors
         public int DescriptorLength => throw new NotImplementedException();
         public (int synsetId, float probability)[][] Descriptors => throw new NotImplementedException();
 
-        private readonly Dictionary<int, (int synsetId, int probability)> _descriptorCache;
-        private readonly KeywordInvertedReader _reader;
+        //private readonly Dictionary<int, (int synsetId, int probability)> _descriptorCache;
+        private readonly KeywordReader _reader;
 
         public KeywordDescriptorProvider(string inputFile)
         {
-            _descriptorCache = new Dictionary<int, (int synsetId, int probability)>();
-            _reader = new KeywordInvertedReader(inputFile);
+            //_descriptorCache = new Dictionary<int, (int synsetId, int probability)>();
+            _reader = new KeywordReader(inputFile);
         }
+
+
+        public static KeywordDescriptorProvider FromDirectory(string directory)
+        {
+            string inputFile = Directory.GetFiles(directory)
+                    .Where(dir => Path.GetFileName(dir).EndsWith(KeywordIOBase.KEYWORD_EXTENSION))
+                    .FirstOrDefault();
+
+            if (inputFile != null)
+            {
+                return new KeywordDescriptorProvider(inputFile);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         public void Dispose()
         {
@@ -38,7 +56,7 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         public (int synsetId, float probability)[] GetDescriptor(int frameId)
         {
-            return _reader.
+            return _reader.ReadSynsets(frameId);
         }
 
         public (int frameId, float probability)[] GetDescriptorInverted(int synsetId)

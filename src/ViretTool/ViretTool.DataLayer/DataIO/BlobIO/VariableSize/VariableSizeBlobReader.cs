@@ -55,6 +55,21 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             return DataConversionUtilities.TranslateToFloatArray(ReadByteBlob(blobId));
         }
 
+        public void SeekToBlob(int blobId)
+        {
+            long position = BlobOffsets[blobId];
+            lock (_lockObject)
+            {
+                SeekIfNeccessary(position);
+            }
+        }
+
+        public int GetBlobSize(int blobId)
+        {
+            return BlobLengths[blobId];
+        }
+
+
         private void SeekIfNeccessary(long position)
         {
             if (position != BaseBinaryReader.BaseStream.Position)
@@ -63,7 +78,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             }
         }
 
-
+        
         private void ReadAndVerifyFiletypeHeader()
         {
             string filetypeId = BaseBinaryReader.ReadString();

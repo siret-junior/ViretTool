@@ -17,8 +17,8 @@ namespace ViretTool.BusinessLayer.Services
             IDatasetService datasetService,
             IDescriptorProvider<byte[]> colorSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
-            IDescriptorProvider<int[]> keywordSynsetProvider,
-            IDescriptorProvider<string> keywordLabelProvider,
+            IDescriptorProvider<(int synsetId, float probability)[]> keywordSynsetProvider,
+            //IDescriptorProvider<string> keywordLabelProvider,
             IBiTemporalRankingService rankingService,
             IDatasetParameters datasetParameters,
             IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider,
@@ -29,7 +29,7 @@ namespace ViretTool.BusinessLayer.Services
             ColorSignatureProvider = colorSignatureProvider;
             SemanticVectorProvider = semanticVectorProvider;
             KeywordSynsetProvider = keywordSynsetProvider;
-            KeywordLabelProvider = keywordLabelProvider;
+            //KeywordLabelProvider = keywordLabelProvider;
             RankingService = rankingService;
             DatasetParameters = datasetParameters;
             LifelogDescriptorProvider = lifelogDescriptorProvider;
@@ -40,8 +40,8 @@ namespace ViretTool.BusinessLayer.Services
         public IDatasetService DatasetService { get; }
         public IDescriptorProvider<byte[]> ColorSignatureProvider { get; }
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
-        public IDescriptorProvider<int[]> KeywordSynsetProvider { get; }
-        public IDescriptorProvider<string> KeywordLabelProvider { get; }
+        public IDescriptorProvider<(int synsetId, float probability)[]> KeywordSynsetProvider { get; }
+        //public IDescriptorProvider<string> KeywordLabelProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
         public IDatasetParameters DatasetParameters { get; }
         public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }

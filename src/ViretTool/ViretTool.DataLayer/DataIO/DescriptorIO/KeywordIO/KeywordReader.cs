@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ViretTool.DataLayer.DataIO.BlobIO.VariableSize;
+
+namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
+{
+    public class KeywordReader : KeywordIOBase
+    {
+        public VariableSizeBlobReader BaseBlobReader { get; private set; }
+
+
+        public KeywordReader(string inputFile)
+        {
+            BaseBlobReader = new VariableSizeBlobReader(inputFile);
+
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            {
+                // TODO if needed    
+            }
+        }
+
+
+        public (int synsetId, float probability)[] ReadSynsets(int frameId)
+        {
+            int blobSizeBytes = BaseBlobReader.GetBlobSize(frameId);
+            int synsetCount = blobSizeBytes / (sizeof(int) + sizeof(float)); // synsetId + probability
+            BaseBlobReader.SeekToBlob(frameId);
+
+            List<(int synsetId, float probability)> result = new List<(int synsetId, float probability)>();
+            for (int i = 0; i < synsetCount; i++)
+            {
+                int synsetId = BaseBlobReader.BaseBinaryReader.ReadInt32();
+                float probability = BaseBlobReader.BaseBinaryReader.ReadSingle();
+                result.Add((synsetId, probability));
+            }
+
+            return result.ToArray();
+        }
+
+
+        public override void Dispose()
+        {
+            BaseBlobReader.Dispose();
+        }
+    }
+}

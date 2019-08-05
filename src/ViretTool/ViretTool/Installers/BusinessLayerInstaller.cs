@@ -49,6 +49,9 @@ namespace ViretTool.Installers
                 Component.For<IDescriptorProvider<byte[]>>()
                          .UsingFactoryMethod((_, context) => ColorSignatureDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
+                Component.For<IDescriptorProvider<(int synsetId, float probability)[]>>()
+                         .UsingFactoryMethod((_, context) => KeywordDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
 
                 Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<ILifelogFilter>().ImplementedBy<LifelogFilter>().LifestyleBoundTo<DatasetServices>(),
