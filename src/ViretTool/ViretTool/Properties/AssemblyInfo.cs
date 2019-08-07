@@ -3,6 +3,7 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -53,3 +54,12 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+
+// Allow XAML debug preprocessor definitions
+// https://stackoverflow.com/a/19940157
+// This has to be defined in assembly other than the one that is using it
+// https://stackoverflow.com/a/36151477
+//#if DEBUG
+//[assembly: XmlnsDefinition("debug-mode", "Namespace")]
+//#endif
