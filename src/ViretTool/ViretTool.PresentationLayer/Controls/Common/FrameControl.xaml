@@ -42,8 +42,9 @@
                     </Border.Visibility>
                 </Border>
 
-                <TextBlock FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}">
-                </TextBlock>
+                <TextBlock Name="VideoIdLabel" FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}" />
+                <TextBlock Name="KeywordLabel" FontSize="8" Padding="1" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Black" Foreground="White" Text="{Binding Label, IsAsync=True}" />
+                
                 <TextBlock FontSize="8" Padding="1" Margin="0,0,3,0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">

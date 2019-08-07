@@ -128,6 +128,25 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public int VideoId { get; }
 
+        public string Label
+        {
+            get
+            {
+                int frameId = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+                (int synsetId, float probability)[] synsets = _servicesManager.CurrentDataset.KeywordSynsetProvider.GetDescriptor(frameId);
+                if (synsets == null || synsets.Length == 0)
+                {
+                    return "-";
+                }
+                else
+                {
+                    int synsetId = synsets.First().synsetId;
+                    string label = _servicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsetId);
+                    return label;
+                }
+            }
+        }
+
         public bool IsLastInVideo
         {
             get => _isLastInVideo;

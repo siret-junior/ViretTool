@@ -12,6 +12,8 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
     {
         public VariableSizeBlobReader BaseBlobReader { get; private set; }
 
+        private object _lockObject = new object();
+
 
         public KeywordReader(string inputFile)
         {
@@ -27,19 +29,23 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
 
         public (int synsetId, float probability)[] ReadSynsets(int frameId)
         {
-            int blobSizeBytes = BaseBlobReader.GetBlobSize(frameId);
-            int synsetCount = blobSizeBytes / (sizeof(int) + sizeof(float)); // synsetId + probability
-            BaseBlobReader.SeekToBlob(frameId);
-
-            List<(int synsetId, float probability)> result = new List<(int synsetId, float probability)>();
-            for (int i = 0; i < synsetCount; i++)
+            lock (_lockObject)
             {
-                int synsetId = BaseBlobReader.BaseBinaryReader.ReadInt32();
-                float probability = BaseBlobReader.BaseBinaryReader.ReadSingle();
-                result.Add((synsetId, probability));
-            }
+                int blobSizeBytes = BaseBlobReader.GetBlobSize(frameId);
+                int synsetCount = blobSizeBytes / (sizeof(int) + sizeof(float)); // synsetId + probability
+                BaseBlobReader.SeekToBlob(frameId);
+                int blobSizeBytes2 = BaseBlobReader.BaseBinaryReader.ReadInt32(); // TODO: double check or remove
 
-            return result.ToArray();
+                List<(int synsetId, float probability)> result = new List<(int synsetId, float probability)>();
+                for (int i = 0; i < synsetCount; i++)
+                {
+                    int synsetId = BaseBlobReader.BaseBinaryReader.ReadInt32();
+                    float probability = BaseBlobReader.BaseBinaryReader.ReadSingle();
+                    result.Add((synsetId, probability));
+                }
+
+                return result.ToArray();
+            }
         }
 
 

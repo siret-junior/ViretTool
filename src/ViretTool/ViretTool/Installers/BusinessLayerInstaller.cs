@@ -52,6 +52,10 @@ namespace ViretTool.Installers
                 Component.For<IDescriptorProvider<(int synsetId, float probability)[]>>()
                          .UsingFactoryMethod((_, context) => KeywordDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
+                Component.For<IKeywordLabelProvider<string>>()
+                         .UsingFactoryMethod((_, context) => KeywordLabelProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
+
 
                 Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<ILifelogFilter>().ImplementedBy<LifelogFilter>().LifestyleBoundTo<DatasetServices>(),

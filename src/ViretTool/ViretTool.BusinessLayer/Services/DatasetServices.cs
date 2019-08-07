@@ -18,7 +18,7 @@ namespace ViretTool.BusinessLayer.Services
             IDescriptorProvider<byte[]> colorSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
             IDescriptorProvider<(int synsetId, float probability)[]> keywordSynsetProvider,
-            //IDescriptorProvider<string> keywordLabelProvider,
+            IKeywordLabelProvider<string> keywordLabelProvider,
             IBiTemporalRankingService rankingService,
             IDatasetParameters datasetParameters,
             IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider,
@@ -29,7 +29,7 @@ namespace ViretTool.BusinessLayer.Services
             ColorSignatureProvider = colorSignatureProvider;
             SemanticVectorProvider = semanticVectorProvider;
             KeywordSynsetProvider = keywordSynsetProvider;
-            //KeywordLabelProvider = keywordLabelProvider;
+            KeywordLabelProvider = keywordLabelProvider;
             RankingService = rankingService;
             DatasetParameters = datasetParameters;
             LifelogDescriptorProvider = lifelogDescriptorProvider;
@@ -41,7 +41,7 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<byte[]> ColorSignatureProvider { get; }
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
         public IDescriptorProvider<(int synsetId, float probability)[]> KeywordSynsetProvider { get; }
-        //public IDescriptorProvider<string> KeywordLabelProvider { get; }
+        public IKeywordLabelProvider<string> KeywordLabelProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
         public IDatasetParameters DatasetParameters { get; }
         public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }
