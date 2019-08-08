@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
@@ -9,7 +10,7 @@ namespace ViretTool.BusinessLayer.Submission
 {
     public interface IQueryPersistingService
     {
-        void SaveQuery(BiTemporalQuery query);
+        long SaveQuery(BiTemporalQuery query);
         BiTemporalQuery LoadQuery(string path);
         void SaveTestObjects(int videoId, IList<int> frameNumbers);
         void SaveTestEnd();
@@ -34,15 +35,20 @@ namespace ViretTool.BusinessLayer.Submission
             }
         }
 
-        public void SaveQuery(BiTemporalQuery query)
+        public long SaveQuery(BiTemporalQuery query)
         {
             lock (this)
             {
                 long lastTimeStamp = _interactionLogger.Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
                 long actualTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                string jsonQuery = LowercaseJsonSerializer.SerializeObject(query);
 
-                File.WriteAllText(Path.Combine(QueryHistoryDirectory, $"{lastTimeStamp}_{actualTimeStamp}.json"), jsonQuery);
+                Task.Run(() => 
+                {
+                    string jsonQuery = LowercaseJsonSerializer.SerializeObject(query);
+                    File.WriteAllText(Path.Combine(QueryHistoryDirectory, $"{lastTimeStamp}_{actualTimeStamp}.json"), jsonQuery);
+                });
+                
+                return actualTimeStamp;
             }
         }
 

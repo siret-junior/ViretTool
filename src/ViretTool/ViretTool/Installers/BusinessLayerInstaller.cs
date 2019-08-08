@@ -20,6 +20,7 @@ using ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Fusion;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Similarity;
+using ViretTool.BusinessLayer.ResultLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.TaskLogging;
@@ -86,6 +87,7 @@ namespace ViretTool.Installers
             container.Register(
                 Component.For<ISubmissionService>().ImplementedBy<SubmissionService>(),
                 Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>(),
+                Component.For<IResultLogger>().ImplementedBy<ResultLogger>(),
                 Component.For<ITaskLogger>().ImplementedBy<TaskLogger>(),
                 Component.For<NasNetScorer>()
                          .Instance(

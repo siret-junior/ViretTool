@@ -17,6 +17,7 @@ using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
+using ViretTool.BusinessLayer.ResultLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.TaskLogging;
@@ -35,6 +36,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly IGridSorter _gridSorter;
         private readonly ISubmissionService _submissionService;
         private readonly ITaskLogger _taskLogger;
+        private readonly IResultLogger _resultLogger;
         private readonly IInteractionLogger _interactionLogger;
         private readonly IQueryPersistingService _queryPersistingService;
         private readonly QueryBuilder _queryBuilder;
@@ -65,6 +67,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IGridSorter gridSorter,
             ISubmissionService submissionService,
             ITaskLogger taskLogger,
+            IResultLogger resultLogger,
             IInteractionLogger interactionLogger,
             IQueryPersistingService queryPersistingService,
             QueryBuilder queryBuilder,
@@ -78,6 +81,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _gridSorter = gridSorter;
             _submissionService = submissionService;
             _taskLogger = taskLogger;
+            _resultLogger = resultLogger;
             _interactionLogger = interactionLogger;
             _queryPersistingService = queryPersistingService;
             _queryBuilder = queryBuilder;
@@ -472,23 +476,30 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 CancelSortingTaskIfNecessary();
 
                 BiTemporalRankedResultSet queryResult = await Task.Run(
-                                                            () =>
-                                                            {
-                                                                // collect GUI settings and build a query object
-                                                                BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(
-                                                                    Query1,
-                                                                    Query2,
-                                                                    IsFirstQueryPrimary,
-                                                                    QueryResults.MaxFramesFromVideo,
-                                                                    QueryResults.MaxFramesFromShot,
-                                                                    _datasetServicesManager.CurrentDataset.DatasetParameters,
-                                                                    QueryResults.GpsFrame,
-                                                                    LifelogFilterViewModel);
-                                                                // log the query object
-                                                                Task.Run(() => _queryPersistingService.SaveQuery(biTemporalQuery));
-                                                                // compute and return the ranked result
-                                                                return _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
-                                                            });
+                    () =>
+                    {
+                        // collect GUI settings and build a query object
+                        BiTemporalQuery biTemporalQuery = _queryBuilder.BuildQuery(
+                            Query1,
+                            Query2,
+                            IsFirstQueryPrimary,
+                            QueryResults.MaxFramesFromVideo,
+                            QueryResults.MaxFramesFromShot,
+                            _datasetServicesManager.CurrentDataset.DatasetParameters,
+                            QueryResults.GpsFrame,
+                            LifelogFilterViewModel);
+                        
+                        // log the query object (save unix timestamp to match queries with results)
+                        long unixTimestamp = _queryPersistingService.SaveQuery(biTemporalQuery);
+                        
+                        // compute ranked result
+                        BiTemporalRankedResultSet resultSet = _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
+                        
+                        // log result set
+                        Task.Run(() => _resultLogger.LogResultSet(resultSet, unixTimestamp));
+                        
+                        return resultSet;
+                    });
 
                 List<int> sortedIds = (queryResult.TemporalQuery.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former
                                            ? queryResult.FormerTemporalResultSet

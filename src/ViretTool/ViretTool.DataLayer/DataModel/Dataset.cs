@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using ViretTool.DataLayer.DataIO;
 
 namespace ViretTool.DataLayer.DataModel
 {
@@ -36,7 +38,10 @@ namespace ViretTool.DataLayer.DataModel
         public readonly byte[] DatasetId;
         // TODO: datasetId into a separate object + ToString() method?
         // TODO: interpret datasetId (datasetName:string + timestamp:DateTime)?        
-        
+        public readonly string DatasetName;
+        public readonly DateTime DatasetCreationTime;
+
+
         // heirarchy
         public readonly ReadOnlyCollection<Video> Videos;
         public readonly ReadOnlyCollection<Shot> Shots;
@@ -68,6 +73,11 @@ namespace ViretTool.DataLayer.DataModel
             {
                 video.ParentDataset = this;
             }
+
+            FileHeaderUtilities.DecodeDatasetID(DatasetId,
+                    out string datasetName, out DateTime creationTime);
+            DatasetName = datasetName;
+            DatasetCreationTime = creationTime;
         }
     }
 }
