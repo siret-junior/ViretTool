@@ -9,6 +9,6 @@ namespace ViretTool.BusinessLayer.ResultLogging
 {
     public interface IResultLogger : IDisposable
     {
-        void LogResultSet(TemporalRankedResultSet resultSet, long unixTimestamp);
+        Task LogResultSet(BiTemporalRankedResultSet resultSet, long unixTimestamp);
     }
 }

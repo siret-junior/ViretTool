@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,37 +27,48 @@ namespace ViretTool.BusinessLayer.ResultLogging
         }
 
 
-        public void LogResultSet(TemporalRankedResultSet resultSet, long unixTimestamp)
+        public async Task LogResultSet(BiTemporalRankedResultSet resultSet, long unixTimestamp)
         {
-            try
+            await Task.Run(() =>
             {
-                Directory.CreateDirectory(LogDirectory);
-                string filename = $"ResultLog_{Environment.MachineName}_{unixTimestamp}.txt";
-                using (StreamWriter writer = new StreamWriter(Path.Combine(LogDirectory, filename)))
+                try
                 {
-                    Dataset dataset = _datasetServicesManager.CurrentDataset.DatasetService.Dataset;
-                    writer.WriteLine($"Dataset name: {dataset.DatasetName}");
-                    writer.WriteLine($"Creation time: {dataset.DatasetCreationTime}");
-                    writer.WriteLine($"Videos: {dataset.Videos.Count}, Shots: {dataset.Shots.Count}, Frames: {dataset.Frames.Count}");
+                    Directory.CreateDirectory(LogDirectory);
+                    string filename = $"ResultLog_{Environment.MachineName}_{unixTimestamp}.txt";
+                    using (StreamWriter writer = new StreamWriter(Path.Combine(LogDirectory, filename)))
+                    {
+                        Dataset dataset = _datasetServicesManager.CurrentDataset.DatasetService.Dataset;
+                        writer.WriteLine($"Dataset name: {dataset.DatasetName}");
+                        writer.WriteLine($"Creation time: {dataset.DatasetCreationTime}");
+                        writer.WriteLine($"Videos: {dataset.Videos.Count}, Shots: {dataset.Shots.Count}, Frames: {dataset.Frames.Count}");
 
-                    writer.WriteLine(resultSet.TemporalQuery.ToString());
-
-                    List<int> resultIdsSampledPrimary = SampleResultSet(resultSet.TemporalResultSets[0]);
-                    List<int> resultIdsSampledSecondary = SampleResultSet(resultSet.TemporalResultSets[1]);
-
+                        writer.WriteLine($"Former temporal result set: { string.Join("; ", SampleResultSet(resultSet.FormerTemporalResultSet))}");
+                        writer.WriteLine($"Latter temporal result set: { string.Join("; ", SampleResultSet(resultSet.LatterTemporalResultSet))}");
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error while storing task logs to disk.", ex);
-                throw;
-            }
+                catch (Exception ex)
+                {
+                    _logger.Error("Error while storing task logs to disk.", ex);
+                    throw;
+                }
+            });
         }
 
+        private List<string> SampleResultSet(List<PairedRankedFrame> resultSet)
+        {
+            List<string> result = new List<string>();
+            for (int i = 1; i < resultSet.Count; i *= 2)
+            {
+                PairedRankedFrame frame = resultSet[i - 1];
+
+                result.Add($"{(i - 1).ToString("00000000")}|{frame.Id.ToString("00000000")}|{frame.Rank.ToString("000000.0000000000;-00000.0000000000", CultureInfo.InvariantCulture)}|{frame.PairId.ToString("00000000")}");
+            }
+            return result;
+        }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
