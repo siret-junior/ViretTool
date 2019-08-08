@@ -96,8 +96,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
                 FaceSketchIntermediateRanking.FormerRankingBuffer,
                 TextSketchIntermediateRanking.FormerRankingBuffer,
                 SemanticExampleIntermediateRanking.FormerRankingBuffer,
-                IntermediateFusionRanking.FormerRankingBuffer,
-                IntermediateFusionRanking.FormerTemporalPairs);
+                IntermediateFusionRanking.FormerRankingBuffer);
             LatterFusionModule.ComputeRanking(
                 query.LatterFusionQuery,
                 KeywordIntermediateRanking.LatterRankingBuffer,
@@ -105,7 +104,24 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
                 FaceSketchIntermediateRanking.LatterRankingBuffer,
                 TextSketchIntermediateRanking.LatterRankingBuffer,
                 SemanticExampleIntermediateRanking.LatterRankingBuffer,
-                IntermediateFusionRanking.LatterRankingBuffer,
+                IntermediateFusionRanking.LatterRankingBuffer);
+
+            // assign temporal pairs hotfix
+            AssignTemporalPairs(
+                query.FormerFusionQuery.SortingSimilarityModel,
+                KeywordIntermediateRanking.FormerTemporalPairs,
+                ColorSketchIntermediateRanking.FormerTemporalPairs,
+                FaceSketchIntermediateRanking.FormerTemporalPairs,
+                TextSketchIntermediateRanking.FormerTemporalPairs,
+                SemanticExampleIntermediateRanking.FormerTemporalPairs,
+                IntermediateFusionRanking.FormerTemporalPairs);
+            AssignTemporalPairs(
+                query.LatterFusionQuery.SortingSimilarityModel,
+                KeywordIntermediateRanking.LatterTemporalPairs,
+                ColorSketchIntermediateRanking.LatterTemporalPairs,
+                FaceSketchIntermediateRanking.LatterTemporalPairs,
+                TextSketchIntermediateRanking.LatterTemporalPairs,
+                SemanticExampleIntermediateRanking.LatterTemporalPairs,
                 IntermediateFusionRanking.LatterTemporalPairs);
 
             // fusion ranks fitering (side by side temporal)
@@ -126,6 +142,45 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
                 IntermediateFusionRanking.LatterTemporalPairs,
                 OutputRanking.LatterTemporalPairs,
                 IntermediateFusionRanking.LatterTemporalPairs.Length);
+        }
+
+        private void AssignTemporalPairs(
+            FusionQuery.SimilarityModels sortingSimilarityModel, 
+            int[] keywordTemporalPairs, 
+            int[] colorSketchTemporalPairs, 
+            int[] faceSketchTemporalPairs, 
+            int[] textSketchTemporalPairs, 
+            int[] semanticExampleTemporalPairs, 
+            int[] outputTemporalPairs)
+        {
+            int[] temporalPairs;
+            switch (sortingSimilarityModel)
+            {
+                case FusionQuery.SimilarityModels.Keyword:
+                    temporalPairs = keywordTemporalPairs;
+                    break;
+                case FusionQuery.SimilarityModels.ColorSketch:
+                    temporalPairs = colorSketchTemporalPairs;
+                    break;
+                
+
+
+                case FusionQuery.SimilarityModels.SemanticExample:
+                    temporalPairs = semanticExampleTemporalPairs;
+                    break;
+                default:
+                    // no model for sorting is selected, just filter results
+                    temporalPairs = null;
+                    break;
+            }
+            if (temporalPairs != null)
+            {
+                Array.Copy(temporalPairs, outputTemporalPairs, temporalPairs.Length);
+            }
+            else
+            {
+                outputTemporalPairs = null;
+            }
         }
 
         private bool HasQueryOrInputChanged(BiTemporalQuery query, RankingBuffer inputRanking)

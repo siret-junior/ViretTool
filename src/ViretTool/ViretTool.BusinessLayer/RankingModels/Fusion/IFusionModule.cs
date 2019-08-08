@@ -34,8 +34,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
             RankingBuffer faceSketchRanking,
             RankingBuffer textSketchRanking,
             RankingBuffer semanticExampleRanking,
-            RankingBuffer outputRanking,
-            // TODO: remove and create ITemporalFusionModule
-            int[] temporalPairs);
+            RankingBuffer outputRanking);
     }
 }

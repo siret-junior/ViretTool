@@ -56,8 +56,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
             RankingBuffer faceSketchRanking, 
             RankingBuffer textSketchRanking, 
             RankingBuffer semanticExampleRanking, 
-            RankingBuffer outputRanking,
-            int[] temporalPairs)
+            RankingBuffer outputRanking)
         {
             KeywordRanking = keywordRanking;
             ColorSketchRanking = colorSketchRanking;
