@@ -80,6 +80,8 @@
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionFilters.cs" />
+    <Compile Include="ResultLogging\IResultLogger.cs" />
+    <Compile Include="ResultLogging\ResultLogger.cs" />
     <Compile Include="Services\IDatasetParameters.cs" />
     <Compile Include="Services\IInitialDisplayProvider.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
