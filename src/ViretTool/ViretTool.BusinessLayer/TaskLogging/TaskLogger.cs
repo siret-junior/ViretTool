@@ -63,13 +63,13 @@ namespace ViretTool.BusinessLayer.TaskLogging
             try
             {
                 HttpClient _httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(HTTP_CLIENT_TIMEOUT_SECONDS) };
-                HttpResponseMessage responseMessage = await _httpClient.GetAsync(ServerAddress);
+                HttpResponseMessage responseMessage = await _httpClient.GetAsync(QueryUrl);
                 string responseString = await responseMessage.Content.ReadAsStringAsync();
                 return responseString;
             }
             catch (Exception ex)
             {
-                string message = $"Error fetching task list: \"{ServerAddress}\"";
+                string message = $"Error fetching task list: \"{QueryUrl}\"";
                 _logger.Error(message, ex);
                 return message;
             }
