@@ -13,7 +13,7 @@
              d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
 			 Title="{x:Static properties:Resources.AppTitle}"
              WindowStyle="None" ResizeMode="NoResize" AllowDrop="True"
-             cal:Message.Attach="[Event KeyUp] = [Action OnKeyUp($eventArgs)]; [Event Drop] = [Action OnDrop($eventArgs)]"
+             cal:Message.Attach="[Event KeyUp] = [Action OnKeyUp($eventArgs)]; [Event Drop] = [Action OnDrop($eventArgs)]; [Event Closing] = [Action OnClose($eventArgs)]"
              WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.Resources>
         <ResourceDictionary>
@@ -101,6 +101,8 @@
                                         <TextBlock Text="Submission URL" />
                                         <TextBox x:Name="SubmissionUrl" Margin="4,0,0,0" Width="120"/>
                                     </StackPanel>
+                                    <Separator />
+                                    <MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>
                                 </MenuItem>
                                 <MenuItem Header="{x:Static properties:Resources.TestButtonText}" cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"></MenuItem>
                             </Menu>

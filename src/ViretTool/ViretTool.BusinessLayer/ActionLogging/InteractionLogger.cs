@@ -9,6 +9,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
 {
     public class InteractionLogger : IInteractionLogger
     {
+        // TODO: elaborate what is this delay used for
         private const int TimeDelayMiliseconds = 1000;
         private const string LogDirectory = "InteractionLogs";
 

@@ -306,4 +306,7 @@
   <data name="ShowInitialDisplayText" xml:space="preserve">
     <value>Initial display</value>
   </data>
+  <data name="FetchTaskList" xml:space="preserve">
+    <value>Fetch task list</value>
+  </data>
 </root>

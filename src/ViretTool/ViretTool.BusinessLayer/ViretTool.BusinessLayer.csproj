@@ -196,6 +196,8 @@
     <Compile Include="Submission\ISubmissionService.cs" />
     <Compile Include="Submission\QueryPersistingService.cs" />
     <Compile Include="Submission\SubmissionService.cs" />
+    <Compile Include="TaskLogging\ITaskLogger.cs" />
+    <Compile Include="TaskLogging\TaskLogger.cs" />
     <Compile Include="Thumbnails\CachedThumbnailService.cs" />
     <Compile Include="Thumbnails\IThumbnailService.cs" />
     <Compile Include="Thumbnails\JpegThumbnailService.cs" />

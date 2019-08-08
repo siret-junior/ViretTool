@@ -151,6 +151,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fetch task list.
+        /// </summary>
+        public static string FetchTaskList {
+            get {
+                return ResourceManager.GetString("FetchTaskList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         public static string FileHeader {

@@ -297,4 +297,7 @@
   <data name="ShowInitialDisplayText" xml:space="preserve">
     <value>Iniciální pohled</value>
   </data>
+  <data name="FetchTaskList" xml:space="preserve">
+    <value>Stáhni seznam úloh</value>
+  </data>
 </root>

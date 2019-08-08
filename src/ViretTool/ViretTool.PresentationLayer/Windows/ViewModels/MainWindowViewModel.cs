@@ -19,6 +19,7 @@ using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
+using ViretTool.BusinessLayer.TaskLogging;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.LifelogFilters;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
@@ -33,6 +34,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private readonly IDatasetServicesManager _datasetServicesManager;
         private readonly IGridSorter _gridSorter;
         private readonly ISubmissionService _submissionService;
+        private readonly ITaskLogger _taskLogger;
         private readonly IInteractionLogger _interactionLogger;
         private readonly IQueryPersistingService _queryPersistingService;
         private readonly QueryBuilder _queryBuilder;
@@ -62,6 +64,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IDatasetServicesManager datasetServicesManager,
             IGridSorter gridSorter,
             ISubmissionService submissionService,
+            ITaskLogger taskLogger,
             IInteractionLogger interactionLogger,
             IQueryPersistingService queryPersistingService,
             QueryBuilder queryBuilder,
@@ -74,6 +77,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _datasetServicesManager = datasetServicesManager;
             _gridSorter = gridSorter;
             _submissionService = submissionService;
+            _taskLogger = taskLogger;
             _interactionLogger = interactionLogger;
             _queryPersistingService = queryPersistingService;
             _queryBuilder = queryBuilder;
@@ -320,6 +324,23 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             MessageBox.Show(Resources.Properties.Resources.LogsWereSentText);
         }
 
+        public async void FetchTaskList()
+        {
+            IsBusy = true;
+            try
+            {
+                await Task.Run(() => _taskLogger.FetchAndStoreTaskList());
+            }
+            catch (Exception exception)
+            {
+                LogError(exception, "Error while fetching and storing task list.");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -340,6 +361,23 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             catch (Exception exception)
             {
                 LogError(exception, "Error while dropping image");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public async void OnClose(EventArgs e)
+        {
+            IsBusy = true;
+            try
+            {
+                await Task.Run(() => _taskLogger.FetchAndStoreTaskList());
+            }
+            catch (Exception exception)
+            {
+                LogError(exception, "Error while closing application");
             }
             finally
             {

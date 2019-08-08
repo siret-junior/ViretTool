@@ -22,6 +22,7 @@ using ViretTool.BusinessLayer.RankingModels.Temporal.Fusion;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Similarity;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.Submission;
+using ViretTool.BusinessLayer.TaskLogging;
 using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.Installers
@@ -85,6 +86,7 @@ namespace ViretTool.Installers
             container.Register(
                 Component.For<ISubmissionService>().ImplementedBy<SubmissionService>(),
                 Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>(),
+                Component.For<ITaskLogger>().ImplementedBy<TaskLogger>(),
                 Component.For<NasNetScorer>()
                          .Instance(
                              new NasNetScorer(
