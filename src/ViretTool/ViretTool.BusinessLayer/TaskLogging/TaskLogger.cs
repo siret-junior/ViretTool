@@ -13,20 +13,34 @@ namespace ViretTool.BusinessLayer.TaskLogging
 {
     public class TaskLogger : ITaskLogger
     {
+        private const int HTTP_CLIENT_TIMEOUT_SECONDS = 3;
         private const string LogDirectory = "TaskLogs";
-        private const string ServerQuery = "/competition-state/get-active-competition-tasks";
-
+        
         private readonly ILogger _logger;
         private readonly object _lockObject = new object();
-        private string _queryUrl { get; set; }
 
+        public string QueryPath { get => "/competition-state/get-active-competition-tasks"; }
+        public string ServerAddress { get; private set; }
+        public string QueryUrl { get; private set; }
+
+        private string _submissionUrl = "";
+        public string SubmissionUrl
+        {
+            get => _submissionUrl;
+            set
+            {
+                Uri uri = new Uri(value);
+                ServerAddress = uri.GetLeftPart(UriPartial.Authority);
+                QueryUrl = ServerAddress + QueryPath;
+            }
+        }
+        
 
         public TaskLogger(ILogger logger)
         {
             _logger = logger;
-            string submissionUrl = ConfigurationManager.AppSettings["submissionUrl"];
-            Uri uri = new Uri(submissionUrl);
-            _queryUrl = uri.GetLeftPart(UriPartial.Authority) + ServerQuery;
+
+            SubmissionUrl = ConfigurationManager.AppSettings["submissionUrl"];
         }
 
         // TODO: fix exception handling
@@ -48,14 +62,14 @@ namespace ViretTool.BusinessLayer.TaskLogging
         {
             try
             {
-                HttpClient _httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(3) };
-                HttpResponseMessage responseMessage = await _httpClient.GetAsync(_queryUrl);
+                HttpClient _httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(HTTP_CLIENT_TIMEOUT_SECONDS) };
+                HttpResponseMessage responseMessage = await _httpClient.GetAsync(ServerAddress);
                 string responseString = await responseMessage.Content.ReadAsStringAsync();
                 return responseString;
             }
             catch (Exception ex)
             {
-                string message = $"Error fetching task list: \"{_queryUrl}\"";
+                string message = $"Error fetching task list: \"{ServerAddress}\"";
                 _logger.Error(message, ex);
                 return message;
             }

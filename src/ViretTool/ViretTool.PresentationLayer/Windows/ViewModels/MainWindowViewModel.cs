@@ -193,6 +193,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
 
                 _submissionService.SubmissionUrl = value;
+                _taskLogger.SubmissionUrl = value;
                 NotifyOfPropertyChange();
             }
         }

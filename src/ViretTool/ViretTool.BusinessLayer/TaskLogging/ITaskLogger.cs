@@ -8,6 +8,11 @@ namespace ViretTool.BusinessLayer.TaskLogging
 {
     public interface ITaskLogger : IDisposable
     {
+        string SubmissionUrl { get; set; }
+        string ServerAddress { get; }
+        string QueryPath { get; }
+        string QueryUrl { get; }
+
         void FetchAndStoreTaskList();
     }
 }
