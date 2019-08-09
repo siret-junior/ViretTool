@@ -33,15 +33,19 @@ namespace KeywordScoringFileConverter
             Console.WriteLine("Loading dataset...");
             Dataset dataset = DatasetBinaryFormatter.Instance.Deserialize(File.OpenRead(args[2]));
 
-            int[] synsetToIdMapping = mLabelProvider.Labels.Keys.OrderBy(x => x).ToArray();
+            int[] idToSynsetMapping = mLabelProvider.Labels.Keys.OrderBy(x => x).ToArray();
 
-            Dictionary<int, float> test = GetRankForOneSynsetClause(ExpandLabel(new List<int>() { 2084071 }));
+            //Dictionary<int, float> test = GetRankForOneSynsetClause(ExpandLabel(new List<int>() { 2084071 }));
+            int topK = int.Parse(args[5]);
 
-            using (KeywordScoringWriter writer = new KeywordScoringWriter(args[3], dataset.DatasetId, 
-                dataset.Frames.Count, synsetToIdMapping.Length, synsetToIdMapping))
+            //using (KeywordScoringWriter writer = new KeywordScoringWriter(args[3], dataset.DatasetId,
+            //    dataset.Frames.Count, idToSynsetMapping.Length, synsetToIdMapping))
+            int writtenCounter = 0;
+            using (SynsetFramesWriter topKWriter = new SynsetFramesWriter(args[4], dataset.DatasetId,
+                topK, idToSynsetMapping.Length, idToSynsetMapping))
             {
                 int lengthSameCheck = -1;
-                foreach (int synsetId in synsetToIdMapping)
+                foreach (int synsetId in idToSynsetMapping)
                 {
                     Label label = mLabelProvider.Labels[synsetId];
                     Console.WriteLine($"Processing synset {synsetId} ({label.Name})...");
@@ -59,7 +63,22 @@ namespace KeywordScoringFileConverter
                         lengthSameCheck = scoring.Length;
                     }
 
-                    writer.WriteScoring(scoring);
+                    //writer.WriteScoring(scoring);
+
+
+                    (int synsetId, float probability)[] topKScoring = scoring
+                        .Select((score, frameId) => (frameId, score))
+                        .OrderByDescending(x => x.score)
+                        .Take(topK)
+                        .ToArray();
+
+                    if (topKScoring.Length != topK)
+                    {
+                        throw new Exception("Unexpected empty data.");
+                    }
+
+                    topKWriter.WriteSynsetFrames(topKScoring);
+                    writtenCounter++;
                 }
             }
             Console.WriteLine("Done!");

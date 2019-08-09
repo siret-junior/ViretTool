@@ -82,9 +82,7 @@ namespace KisQueryResultExtraction.Installers
                 //Component.For<IRankFusion>().ImplementedBy<RankFusionSum>().LifestyleTransient(),
 
                 // similarity used by IBiTemporalSimilarityModel
-                Component.For<IKeywordModel>() //TODO this is both model and provider - data are loaded each time a ranking module is instantiated
-                    .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
-                    .LifestyleTransient(),
+                Component.For<IKeywordModel>().ImplementedBy<KeywordModel>().LifestyleTransient(),
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
                 Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
                 Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),

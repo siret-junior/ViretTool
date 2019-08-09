@@ -143,7 +143,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             List<SynsetClause> resultClauses = new List<SynsetClause>();
             foreach (List<int> clauseList in queryExanded)
             {
-                SynsetClause clause = new SynsetClause(clauseList.Select(x => new Synset("TODO", x)).ToArray());
+                SynsetClause clause = new SynsetClause(clauseList.Select(x => new Synset(lp.Labels[x].Name, x)).ToArray());
                 resultClauses.Add(clause);
             }
 

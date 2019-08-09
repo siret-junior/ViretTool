@@ -13,7 +13,6 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         Dictionary<int, float[]> Scorings { get; }
         Dictionary<int, (int frameId, float score)[]> TopScorings { get; }
-        int TopKScoreCount { get; }
 
         float[] GetScoring(int synsetId);
 

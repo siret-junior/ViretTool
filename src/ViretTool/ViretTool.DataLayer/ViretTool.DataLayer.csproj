@@ -94,7 +94,10 @@
     <Compile Include="DataIO\DescriptorIO\KeywordIO\KeywordScoringIOBase.cs" />
     <Compile Include="DataIO\DescriptorIO\KeywordIO\KeywordScoringReader.cs" />
     <Compile Include="DataIO\DescriptorIO\KeywordIO\KeywordScoringWriter.cs" />
+    <Compile Include="DataIO\DescriptorIO\KeywordIO\SynsetFramesIOBase.cs" />
     <Compile Include="DataIO\DescriptorIO\KeywordIO\KeywordWriter.cs" />
+    <Compile Include="DataIO\DescriptorIO\KeywordIO\SynsetFramesReader.cs" />
+    <Compile Include="DataIO\DescriptorIO\KeywordIO\SynsetFramesWriter.cs" />
     <Compile Include="DataIO\FileHeaderUtilities.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinaryFormatter.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinaryDeserializer.cs" />

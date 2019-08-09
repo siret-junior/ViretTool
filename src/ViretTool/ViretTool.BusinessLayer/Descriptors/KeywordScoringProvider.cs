@@ -14,13 +14,12 @@ namespace ViretTool.BusinessLayer.Descriptors
     {
         public Dictionary<int, float[]> Scorings { get; }
         public Dictionary<int, (int frameId, float score)[]> TopScorings { get; }
-        public int TopKScoreCount { get; private set; }
-
+        
         public int ScoringVectorSize { get; private set; }
         public int ScoringCount { get; private set; }
 
 
-        public KeywordScoringProvider(string inputFile, int topKScoreCount = 0)
+        public KeywordScoringProvider(string inputFile, string topKFile)
         {
             using (KeywordScoringReader reader = new KeywordScoringReader(inputFile))
             {
@@ -35,16 +34,15 @@ namespace ViretTool.BusinessLayer.Descriptors
                 }
             }
 
-            // precompute top K scores per synset
-            TopKScoreCount = topKScoreCount;
+            // read top scores per synset
             TopScorings = new Dictionary<int, (int frameId, float score)[]>();
-            foreach (int synsetId in Scorings.Keys)
+            using (SynsetFramesReader reader = new SynsetFramesReader(topKFile))
             {
-                TopScorings[synsetId] = Scorings[synsetId]
-                    .Select((score, frameId) => (frameId, score))
-                    .OrderByDescending(x => x.score)
-                    .Take(TopKScoreCount)
-                    .ToArray();
+                for (int i = 0; i < ScoringCount; i++)
+                {
+                    int synsetId = reader.IdToSynsetIdMapping[i];
+                    TopScorings[synsetId] = reader.ReadSynsetFrames(i);
+                }
             }
         }
 
@@ -53,10 +51,13 @@ namespace ViretTool.BusinessLayer.Descriptors
             string inputFile = Directory.GetFiles(directory)
                     .Where(dir => Path.GetFileName(dir).EndsWith(KeywordScoringIOBase.KEYWORD_SCORING_EXTENSION))
                     .FirstOrDefault();
+            string topKFile = Directory.GetFiles(directory)
+                    .Where(dir => Path.GetFileName(dir).EndsWith(SynsetFramesIOBase.SYNSET_FRAMES_EXTENSION))
+                    .FirstOrDefault();
 
             if (inputFile != null)
             {
-                return new KeywordScoringProvider(inputFile, topKScoreCount);
+                return new KeywordScoringProvider(inputFile, topKFile);
             }
             else
             {
