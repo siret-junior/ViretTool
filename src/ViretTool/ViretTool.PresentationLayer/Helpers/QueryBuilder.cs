@@ -32,13 +32,9 @@ namespace ViretTool.PresentationLayer.Helpers
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
                     new KeywordQuery(
-                        query1.KeywordQueryResult?.Query?.Select(parts => new SynsetClause(parts.Select(p => new Synset(query1.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
-                              .ToArray() ??
-                        new SynsetClause[0]),
+                        query1.KeywordQueryResult?.Query ?? new SynsetClause[0]),
                     new KeywordQuery(
-                        query2.KeywordQueryResult?.Query?.Select(parts => new SynsetClause(parts.Select(p => new Synset(query2.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
-                              .ToArray() ??
-                        new SynsetClause[0]));
+                        query2.KeywordQueryResult?.Query ?? new SynsetClause[0]));
 
             BiTemporalModelQuery<ColorSketchQuery> biTemporalColorSketchQuery =
                 new BiTemporalModelQuery<ColorSketchQuery>(

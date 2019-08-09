@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using ViretTool.BusinessLayer.RankingModels.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
@@ -127,8 +128,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return;
             }
 
-            List<List<int>> expanded = ExpandQuery(query, mLabelProviders[annotationSource]);
-            QueryResult = new KeywordQueryResult(expanded, string.Join(" ", query.Cast<TextBlock>().Select(t => t.Text)), annotationSource);
+            SynsetClause[] translatedQuery = TranslateQuery(query, mLabelProviders[annotationSource]);
+            QueryResult = new KeywordQueryResult(translatedQuery, string.Join(" ", query.Cast<TextBlock>().Select(t => t.Text)), annotationSource);
+        }
+
+        private SynsetClause[] TranslateQuery(IEnumerable<IQueryPart> query, LabelProvider lp)
+        {
+            List<List<int>> queryExanded = ExpandQuery(query, lp);
+            List<SynsetClause> resultClauses = new List<SynsetClause>();
+            foreach (List<int> clauseList in queryExanded)
+            {
+                SynsetClause clause = new SynsetClause(clauseList.Select(x => new Synset("TODO", x)).ToArray());
+                resultClauses.Add(clause);
+            }
+
+            return resultClauses.ToArray();
         }
 
         private void SuggestionTextBox_SuggestionFilterChangedEvent(string filter, string annotationSource)
@@ -163,7 +177,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 {
                     if (item.UseChildren)
                     {
-                        IEnumerable<int> synsetIds = ExpandLabel(new int[] { item.Id }, lp);
+                        //IEnumerable<int> synsetIds = ExpandLabel(new int[] { item.Id }, lp);
+                        IEnumerable<int> synsetIds = new int[] { item.Id }; // we do not need to expand, it is precomputed
 
                         foreach (int synId in synsetIds)
                         {
@@ -198,26 +213,26 @@ namespace ViretTool.PresentationLayer.Controls.Common
             return list; // formula is array of clauses
         }
 
-        private List<int> ExpandLabel(IEnumerable<int> ids, LabelProvider lp)
-        {
-            var list = new List<int>();
-            foreach (var item in ids)
-            {
-                var label = lp.Labels[item];
+        //private List<int> ExpandLabel(IEnumerable<int> ids, LabelProvider lp)
+        //{
+        //    var list = new List<int>();
+        //    foreach (var item in ids)
+        //    {
+        //        var label = lp.Labels[item];
 
-                if (!label.IsOnlyHypernym)
-                {
-                    list.Add(label.SynsetId);
-                }
+        //        if (!label.IsOnlyHypernym)
+        //        {
+        //            list.Add(label.SynsetId);
+        //        }
 
-                if (label.Hyponyms != null)
-                {
-                    list.AddRange(ExpandLabel(label.Hyponyms, lp));
-                }
-            }
+        //        if (label.Hyponyms != null)
+        //        {
+        //            list.AddRange(ExpandLabel(label.Hyponyms, lp));
+        //        }
+        //    }
 
-            return list.Distinct().ToList();
-        }
+        //    return list.Distinct().ToList();
+        //}
 
         #endregion
     }
