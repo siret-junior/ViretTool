@@ -19,7 +19,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         public LabelProvider(string filePath)
         {
             FilePath = filePath;
-            LoadTask = Task.Factory.StartNew(LoadFromFile);
+            LoadFromFile();
         }
 
         /// <summary>
@@ -30,7 +30,13 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         /// <summary>
         /// Mapping of WordNet synset ids to labels
         /// </summary>
-        public Dictionary<int, Label> Labels { get { return (LoadTask.Status == TaskStatus.RanToCompletion) ? Labels_ : null; } }
+        public Dictionary<int, Label> Labels
+        {
+            get
+            {
+                return Labels_;
+            }
+        }
 
         /// <summary>
         /// Task responsible for filling <see cref="Labels"/>. Access <see cref="Labels"/> only after completion.
@@ -88,8 +94,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 
                     var label = new Label()
                                 {
-                                    //Id = id,
-                                    IsOnlyHypernym = (id == -1),
+                                    Id = id,
                                     SynsetId = int.Parse(parts[1]),
                                     Name = string.Join(", ", nameParts),
                                     Names = nameParts,

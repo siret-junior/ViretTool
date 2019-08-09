@@ -167,35 +167,35 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
                         foreach (int synId in synsetIds)
                         {
-                            int id = lp.Labels[synId].Id;
+                            int id = lp.Labels[synId].SynsetId;
 
-                            list[list.Count - 1].Add(id);
+                            list[list.Count - 1].Add(id); //new synset
                         }
                     }
                     else
                     {
-                        int id = lp.Labels[item.Id].Id;
+                        int id = lp.Labels[item.Id].SynsetId;
 
-                        list[list.Count - 1].Add(id);
+                        list[list.Count - 1].Add(id); // new synset
                     }
                 }
                 else if (item.Type == TextBlockType.AND)
                 {
-                    list.Add(new List<int>());
+                    list.Add(new List<int>()); //finalize clause
                 }
             }
 
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list.Count; i++) // iterate clauses
             {
-                if (list[i].Count == 0)
+                if (list[i].Count == 0) // if a single clause is empty, return null
                 {
                     return null;
                 }
 
-                list[i] = list[i].Distinct().ToList();
+                list[i] = list[i].Distinct().ToList(); // remove duplicates from each clause
             }
 
-            return list;
+            return list; // formula is array of clauses
         }
 
         private List<int> ExpandLabel(IEnumerable<int> ids, LabelProvider lp)
@@ -205,7 +205,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 var label = lp.Labels[item];
 
-                if (label.Id != -1)
+                if (!label.IsOnlyHypernym)
                 {
                     list.Add(label.SynsetId);
                 }
@@ -216,7 +216,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 }
             }
 
-            return list;
+            return list.Distinct().ToList();
         }
 
         #endregion

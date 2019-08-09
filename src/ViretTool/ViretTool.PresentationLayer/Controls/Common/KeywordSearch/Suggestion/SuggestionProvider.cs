@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.TextSearch;
@@ -206,18 +207,17 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                     }
                 }
 
-                IKeywordModel keywordModel = _datasetServicesManager.CurrentDataset.RankingService.BiTemporalRankingModule.BiTemporalSimilarityModule.KeywordModel
-                                                                    .FormerSimilarityModel;
-                Dictionary<int, float> ranks = keywordModel.GetRankForOneSynsetGroup(ExpandLabel(new[] { item.SynsetId }));
-                IEnumerable<byte[]> images = ranks.OrderByDescending(r => r.Value)
-                                  .Take(5)
-                                  .Select(
-                                      r =>
-                                      {
-                                          int frameNumber = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(r.Key);
-                                          int videoId = _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(r.Key);
-                                          return _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnail(videoId, frameNumber).Image;
-                                      });
+                IKeywordScoringProvider keywordScoringModel = _datasetServicesManager.CurrentDataset.KeywordScoringProvider;
+                (int frameId, float score)[] topScoring = keywordScoringModel.GetTopScoring(item.SynsetId);
+                IEnumerable<byte[]> images = topScoring
+                    .Take(5)
+                    .Select(
+                        x =>
+                        {
+                            int frameNumber = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(x.frameId);
+                            int videoId = _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(x.frameId);
+                            return _datasetServicesManager.CurrentDataset.ThumbnailService.GetThumbnail(videoId, frameNumber).Image;
+                        });
 
                 return new SuggestionResultItem
                        {
@@ -238,25 +238,25 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
             return null;
         }
 
-        private List<int> ExpandLabel(IEnumerable<int> ids)
-        {
-            var list = new List<int>();
-            foreach (var item in ids)
-            {
-                var label = mLabelProvider.Labels[item];
-                if (label.Id != -1)
-                {
-                    list.Add(label.Id);
-                }
+        //private List<int> ExpandLabel(IEnumerable<int> ids)
+        //{
+        //    var list = new List<int>();
+        //    foreach (var item in ids)
+        //    {
+        //        var label = mLabelProvider.Labels[item];
+        //        if (label.Id != -1)
+        //        {
+        //            list.Add(label.Id);
+        //        }
 
-                if (label.Hyponyms != null)
-                {
-                    list.AddRange(ExpandLabel(label.Hyponyms));
-                }
-            }
+        //        if (label.Hyponyms != null)
+        //        {
+        //            list.AddRange(ExpandLabel(label.Hyponyms));
+        //        }
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
         private struct HighlightedStringWithRelevance
         {

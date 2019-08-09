@@ -21,6 +21,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -30,6 +31,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -61,9 +63,11 @@
     <Compile Include="Descriptors\IBoolSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IFaceSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IKeywordLabelProvider.cs" />
+    <Compile Include="Descriptors\IKeywordScoringProvider.cs" />
     <Compile Include="Descriptors\ITextSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\KeywordDescriptorProvider.cs" />
     <Compile Include="Descriptors\KeywordLabelProvider.cs" />
+    <Compile Include="Descriptors\KeywordScoringProvider.cs" />
     <Compile Include="Descriptors\LifelogDescriptorProvider.cs" />
     <Compile Include="Descriptors\Models\LifelogFrameMetadata.cs" />
     <Compile Include="Descriptors\TextSignatureDescriptorProvider.cs" />
@@ -71,6 +75,7 @@
     <Compile Include="RankingModels\Filtering\Filters\LifelogFilter.cs" />
     <Compile Include="RankingModels\Queries\LifelogQuery.cs" />
     <Compile Include="RankingModels\Similarity\Models\BoolSketchModelSkeleton.cs" />
+    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\FaceSketchModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\FaceSketchModelSkeleton.cs" />
     <Compile Include="RankingModels\Similarity\Models\TextSketchModel.cs" />

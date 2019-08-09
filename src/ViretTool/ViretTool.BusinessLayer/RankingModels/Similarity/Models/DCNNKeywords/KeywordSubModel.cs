@@ -12,7 +12,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
     /// <summary>
     /// Searches an index file and displays results
     /// </summary>
-    public class KeywordSubModel : IKeywordModel
+    ///
+    // TODO: obsolete code
+    public class KeywordSubModel
     {
         private const string KEYWORD_MODEL_EXTENSION = ".keyword";
 
@@ -119,7 +121,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         private bool IsQueryEmpty(KeywordQuery query)
         {
-            return query == null || !query.SynsetGroups.Any();
+            return query == null || !query.SynsetFormulaCnf.Any();
         }
 
         #endregion
@@ -208,7 +210,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             // TODO
             RankingBuffer result = RankingBuffer.AllFiltered("TODO", InputRanking.Ranks.Length);
             
-            List<Dictionary<int, float>> clauses = ResolveClauses(query.SynsetGroups);
+            List<Dictionary<int, float>> clauses = ResolveClauses(query.SynsetFormulaCnf);
             Dictionary<int, float> queryClause = UniteClauses(clauses);
 
             foreach (KeyValuePair<int, float> pair in queryClause)
@@ -238,8 +240,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             return result;
         }
 
-        private List<Dictionary<int, float>> ResolveClauses(SynsetGroup[] synsetGroups) {
-            List<List<int>> ids = synsetGroups.Select(g => g.Synsets.Select(s => s.SynsetId).ToList()).ToList();
+        private List<Dictionary<int, float>> ResolveClauses(SynsetClause[] synsetClauses) {
+            List<List<int>> ids = synsetClauses.Select(g => g.SynsetLiterals.Select(s => s.SynsetId).ToList()).ToList();
 
             var list = new List<Dictionary<int, float>>();
 
@@ -247,29 +249,29 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             // http://alicebobandmallory.com/articles/2012/10/18/merge-collections-without-duplicates-in-c
             foreach (List<int> listOfIds in ids)
             {
-                Dictionary<int, float> dict = GetRankForOneSynsetGroup(listOfIds);
+                Dictionary<int, float> dict = GetRankForOneSynsetClause(listOfIds);
                 list.Add(dict);
             }
             return list;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)] //cannot run in parallel
-        public Dictionary<int, float> GetRankForOneSynsetGroup(List<int> listOfIds)
+        public Dictionary<int, float> GetRankForOneSynsetClause(List<int> listOfSynsetIds)
         {
-            if (mClauseCache.TryGetValue(listOfIds, out var dict))
+            if (mClauseCache.TryGetValue(listOfSynsetIds, out var dict))
             {
                 return dict;
             }
 
             dict = new Dictionary<int, float>();
-            for (int i = 0; i < listOfIds.Count; i++)
+            for (int i = 0; i < listOfSynsetIds.Count; i++)
             {
-                var classFrames = ReadClassFromFile(listOfIds[i]);
+                var classFrames = ReadClassFromFile(listOfSynsetIds[i]);
                 if (classFrames.Count == 0) return dict;
 
                 if (mUseIDF)
                 {
-                    float idf = IDF[listOfIds[i]];
+                    float idf = IDF[listOfSynsetIds[i]];
                     foreach (KeywordSearchFrame f in classFrames)
                     {
                         if (dict.ContainsKey(f.Id))
@@ -304,9 +306,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
                 mClauseCache.Remove(randClass);
             }
 
-            mClauseCache.Add(listOfIds, dict);
+            mClauseCache.Add(listOfSynsetIds, dict);
             return dict;
         }
+        
 
         #endregion
 

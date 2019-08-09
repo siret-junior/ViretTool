@@ -9,6 +9,7 @@ namespace ViretTool.BusinessLayer.Descriptors
 {
     /// <summary>
     /// Reused and modified from "ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion.LabelProvider"
+    /// TODO: merge these 2 pieces of code
     /// </summary>
     public class KeywordLabelProvider : IKeywordLabelProvider<string>
     {

@@ -32,13 +32,13 @@ namespace ViretTool.PresentationLayer.Helpers
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
                     new KeywordQuery(
-                        query1.KeywordQueryResult?.Query?.Select(parts => new SynsetGroup(parts.Select(p => new Synset(query1.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
+                        query1.KeywordQueryResult?.Query?.Select(parts => new SynsetClause(parts.Select(p => new Synset(query1.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
                               .ToArray() ??
-                        new SynsetGroup[0]),
+                        new SynsetClause[0]),
                     new KeywordQuery(
-                        query2.KeywordQueryResult?.Query?.Select(parts => new SynsetGroup(parts.Select(p => new Synset(query2.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
+                        query2.KeywordQueryResult?.Query?.Select(parts => new SynsetClause(parts.Select(p => new Synset(query2.KeywordQueryResult?.AnnotationSource, p)).ToArray()))
                               .ToArray() ??
-                        new SynsetGroup[0]));
+                        new SynsetClause[0]));
 
             BiTemporalModelQuery<ColorSketchQuery> biTemporalColorSketchQuery =
                 new BiTemporalModelQuery<ColorSketchQuery>(
@@ -197,7 +197,7 @@ namespace ViretTool.PresentationLayer.Helpers
                                 : FusionQuery.SimilarityModels.None,
 
                     new ThresholdFilteringQuery(
-                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
+                        (biTemporalKeywordQuery.FormerQuery.SynsetFormulaCnf.Any() || biTemporalKeywordQuery.LatterQuery.SynsetFormulaCnf.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.KeywordValue * 0.01),
@@ -244,7 +244,7 @@ namespace ViretTool.PresentationLayer.Helpers
                                 ? FusionQuery.SimilarityModels.SemanticExample
                                 : FusionQuery.SimilarityModels.None,
                     new ThresholdFilteringQuery(
-                        (biTemporalKeywordQuery.FormerQuery.SynsetGroups.Any() || biTemporalKeywordQuery.LatterQuery.SynsetGroups.Any())
+                        (biTemporalKeywordQuery.FormerQuery.SynsetFormulaCnf.Any() || biTemporalKeywordQuery.LatterQuery.SynsetFormulaCnf.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.KeywordValue * 0.01),

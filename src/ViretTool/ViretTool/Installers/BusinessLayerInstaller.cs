@@ -57,6 +57,9 @@ namespace ViretTool.Installers
                 Component.For<IKeywordLabelProvider<string>>()
                          .UsingFactoryMethod((_, context) => KeywordLabelProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
+                Component.For<IKeywordScoringProvider>()
+                         .UsingFactoryMethod((_, context) => KeywordScoringProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], 5))
+                         .LifestyleBoundTo<DatasetServices>(),
 
 
                 Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
@@ -103,9 +106,7 @@ namespace ViretTool.Installers
                 //Component.For<IRankFusion>().ImplementedBy<RankFusionSum>().LifestyleTransient(),
 
                 // similarity used by IBiTemporalSimilarityModel
-                Component.For<IKeywordModel>() //TODO this is both model and provider - data are loaded each time a ranking module is instantiated
-                         .UsingFactoryMethod((_, context) => KeywordSubModel.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
-                         .LifestyleTransient(),
+                Component.For<IKeywordModel>().ImplementedBy<KeywordModel>().LifestyleTransient(),
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
                 // FaceSketchModel disabled for LSC as it is not very useful there
                 // TODO: ignore missing data transparently

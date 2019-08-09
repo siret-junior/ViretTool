@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
-    public class SynsetGroup
+    public class SynsetClause
     {
-        public Synset[] Synsets { get; private set; }
+        public Synset[] SynsetLiterals { get; private set; }
 
 
-        public SynsetGroup(Synset[] synsets)
+        public SynsetClause(Synset[] synsetLiterals)
         {
-            Synsets = synsets;
+            SynsetLiterals = synsetLiterals;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is SynsetGroup group && Synsets.SequenceEqual(group.Synsets);
+            return obj is SynsetClause clause && SynsetLiterals.SequenceEqual(clause.SynsetLiterals);
         }
 
         public override int GetHashCode()
         {
-            return 1603870344 + EqualityComparer<Synset[]>.Default.GetHashCode(Synsets);
+            return 1603870344 + EqualityComparer<Synset[]>.Default.GetHashCode(SynsetLiterals);
         }
     }
 }

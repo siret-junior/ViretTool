@@ -25,12 +25,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         /// <summary>
         /// Id in an inverted index (neural network)
         /// </summary>
-        //public int Id { get; set; }
-
-        /// <summary>
-        /// Whether is only a hypernym (network was not trained to predict this one)
-        /// </summary>
-        public bool IsOnlyHypernym { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Text representation of a label

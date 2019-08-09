@@ -120,7 +120,7 @@ namespace KisQueryResultUpdater
             return !GetQueryModel(qSim.ColorSketchQuery, isQueryFormer).ColorSketchEllipses.Any() &&
                    !GetQueryModel(qSim.FaceSketchQuery, isQueryFormer).ColorSketchEllipses.Any() &&
                    !GetQueryModel(qSim.TextSketchQuery, isQueryFormer).ColorSketchEllipses.Any() &&
-                   !GetQueryModel(qSim.KeywordQuery, isQueryFormer).SynsetGroups.Any() &&
+                   !GetQueryModel(qSim.KeywordQuery, isQueryFormer).SynsetFormulaCnf.Any() &&
                    !semanticExampleQuery.PositiveExampleIds.Any() &&
                    !semanticExampleQuery.ExternalImages.Any();
         }

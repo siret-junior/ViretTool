@@ -24,7 +24,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         }
 
         public bool HasChildren => Label.Hyponyms != null;
-        public bool HasOnlyChildren => Label.Id == -1; // is only hypernym
+        public bool HasOnlyChildren => Label.IsOnlyHypernym; // is only hypernym
         public IEnumerable<int> Children => Label.Hyponyms;
 
         public int Id => Label.SynsetId;
