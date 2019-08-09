@@ -135,6 +135,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private SynsetClause[] TranslateQuery(IEnumerable<IQueryPart> query, LabelProvider lp)
         {
             List<List<int>> queryExanded = ExpandQuery(query, lp);
+            if (queryExanded == null)
+            {
+                return new SynsetClause[0];
+            }
+
             List<SynsetClause> resultClauses = new List<SynsetClause>();
             foreach (List<int> clauseList in queryExanded)
             {
