@@ -578,17 +578,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         private async Task OnSubmittedFramesChanged(IList<FrameViewModel> submittedFrames)
         {
-            _submitControlViewModel.Initialize(submittedFrames);
-            if (_windowManager.ShowDialog(_submitControlViewModel) != true)
-            {
-                return;
-            }
-
-            _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
-
             IsBusy = true;
+            bool isDetailVisible = IsDetailVisible;
+            IsDetailVisible = false;
+            
             try
             {
+                _submitControlViewModel.Initialize(submittedFrames);
+                if (_windowManager.ShowDialog(_submitControlViewModel) != true)
+                {
+                    return;
+                }
+
+                _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
+
                 List<FrameToSubmit> framesToSubmit = _submitControlViewModel.SubmittedFrames.Select(f => new FrameToSubmit(f.VideoId, f.FrameNumber)).ToList();
                 foreach (FrameToSubmit frameToSubmit in framesToSubmit)
                 {
@@ -603,7 +606,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
             finally
             {
-                IsBusy = false;
+                IsBusy = isDetailVisible;
+                IsDetailVisible = isDetailVisible;
             }
         }
 

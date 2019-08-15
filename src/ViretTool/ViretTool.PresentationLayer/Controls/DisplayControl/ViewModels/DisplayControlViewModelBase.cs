@@ -236,7 +236,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void OnFramesSubmitted(FrameViewModel frameViewModel)
         {
-            BeforeEventAction();
             SubmittedFramesChanged?.Invoke(
                 this,
                 _loadedFrames.Where(f => f.IsSelectedForQuery)
