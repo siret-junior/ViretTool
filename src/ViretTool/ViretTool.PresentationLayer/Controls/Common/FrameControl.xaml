@@ -20,15 +20,7 @@
             <Grid x:Key="CommonControls" x:Shared="False" ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" ToolTipService.Placement="Top">
 
                 <Grid.ToolTip >
-                    <!-- Printed only when DEBUG is defined. -->
-                    <mc:AlternateContent>
-                        <mc:Choice Requires="debug">
-                            <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
-                        </mc:Choice>
-                        <mc:Fallback>
-                            <!-- nothing -->
-                        </mc:Fallback>
-                    </mc:AlternateContent>
+                    <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
                 </Grid.ToolTip>
 
                 <Image Name="Image" Stretch="Fill">
