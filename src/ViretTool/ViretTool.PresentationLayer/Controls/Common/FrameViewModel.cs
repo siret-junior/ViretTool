@@ -8,6 +8,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
 {
     public class FrameViewModel : PropertyChangedBase
     {
+        private const string EmptyKeywordsLabel = "-";
+
         private readonly int _originalFrameNumber;
         private readonly Lazy<int[]> _framesInTheVideo;
         private readonly IDatasetServicesManager _servicesManager;
@@ -33,12 +35,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get
             {
-                if (!_servicesManager.IsDatasetOpened)
-                {
-                    return string.Empty;
-                }
-
-                if (!_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+                if (!_servicesManager.IsDatasetOpened || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
                 {
                     return string.Empty;
                 }
@@ -132,18 +129,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get
             {
-                int frameId = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+                if (!_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+                {
+                    return EmptyKeywordsLabel;
+                }
+
                 (int synsetId, float probability)[] synsets = _servicesManager.CurrentDataset.KeywordSynsetProvider.GetDescriptor(frameId);
                 if (synsets == null || synsets.Length == 0)
                 {
-                    return "-";
+                    return EmptyKeywordsLabel;
                 }
-                else
-                {
-                    int synsetId = synsets.First().synsetId;
-                    string label = _servicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsetId);
-                    return label;
-                }
+
+                return _servicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsets.First().synsetId);
             }
         }
 
@@ -179,6 +176,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
             NotifyOfPropertyChange(nameof(FrameMetadata));
+            NotifyOfPropertyChange(nameof(Label));
         }
 
         public void ScrollNext()
@@ -206,6 +204,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
             NotifyOfPropertyChange(nameof(FrameMetadata));
+            NotifyOfPropertyChange(nameof(Label));
         }
     }
 }

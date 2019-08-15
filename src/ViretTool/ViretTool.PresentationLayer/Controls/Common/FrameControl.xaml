@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:ViretTool.PresentationLayer.Converters"
              mc:Ignorable="d"
              xmlns:debug="debug-mode"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:FrameViewModel}">
     <UserControl.Resources>
@@ -16,7 +17,20 @@
             <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
             <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
             <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
-            <Grid x:Key="CommonControls" x:Shared="False">
+            <Grid x:Key="CommonControls" x:Shared="False" ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" ToolTipService.Placement="Top">
+
+                <Grid.ToolTip >
+                    <!-- Printed only when DEBUG is defined. -->
+                    <mc:AlternateContent>
+                        <mc:Choice Requires="debug">
+                            <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
+                        </mc:Choice>
+                        <mc:Fallback>
+                            <!-- nothing -->
+                        </mc:Fallback>
+                    </mc:AlternateContent>
+                </Grid.ToolTip>
+
                 <Image Name="Image" Stretch="Fill">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
@@ -44,17 +58,6 @@
                 </Border>
 
                 <TextBlock Name="VideoIdLabel" FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}" />
-                
-                <!-- Printed only when DEBUG is defined. -->
-                <mc:AlternateContent>
-                    <mc:Choice Requires="debug">
-                        <TextBlock Name="KeywordLabel" FontSize="8" Padding="1" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Black" Foreground="White" Text="{Binding Label, IsAsync=True}" />
-                    </mc:Choice>
-                    <mc:Fallback>
-                        <!-- nothing -->
-                    </mc:Fallback>
-                </mc:AlternateContent>
-
 
                 <TextBlock FontSize="8" Padding="1" Margin="0,0,3,0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <TextBlock.Style>
