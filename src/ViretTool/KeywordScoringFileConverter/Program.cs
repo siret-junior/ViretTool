@@ -59,7 +59,9 @@ namespace KeywordScoringFileConverter
 
                     // fill holes in sequence with global minimal probability
                     int itemCountV3C1Temp = 1041365;
-                    for (int i = 0; i < itemCountV3C1Temp; i++)
+                    int itemCountLSC2018Temp = 41763;
+                    // TODO: LSC/VBS switch
+                    for (int i = 0; i < itemCountLSC2018Temp; i++)
                     {
                         if (!ranks.ContainsKey(i))
                         {
