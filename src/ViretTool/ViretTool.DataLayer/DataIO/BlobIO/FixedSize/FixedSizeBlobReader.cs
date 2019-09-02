@@ -36,7 +36,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
 
         public byte[] ReadByteBlob(int blobId)
         {
-            long position = DataStartOffset + blobId * BlobLength;
+            long position = DataStartOffset + blobId * (long)BlobLength;
             lock (_lockObject)
             {
                 SeekIfNeccessary(position);

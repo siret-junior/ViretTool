@@ -14,17 +14,21 @@ namespace KeywordScoringFileConverter
     class Program
     {
         private static Random mRandom = new Random();
-        private const int MAX_CLAUSE_CACHE_SIZE = 2000;
+        private const int MAX_CLAUSE_CACHE_SIZE = 1000;
         private static Dictionary<List<int>, Dictionary<int, float>> mClauseCache;
         private static Dictionary<int, List<KeywordSearchFrame>> mClassCache;
         private static BinaryReader mReader;
         private static Dictionary<int, int> mClassLocations;
         private static LabelProvider mLabelProvider;
+        private static float mMinProbability;
 
         static void Main(string[] args)
         {
             Console.WriteLine("Preloading keywords...");
             LoadFromFile(args[0]);
+
+            Console.WriteLine("Calculating minimal probability value...");
+            mMinProbability = GetMinProbability();
 
             Console.WriteLine("Loading labels...");
             mLabelProvider = new LabelProvider(args[1]);
@@ -35,12 +39,12 @@ namespace KeywordScoringFileConverter
 
             int[] idToSynsetMapping = mLabelProvider.Labels.Keys.OrderBy(x => x).ToArray();
 
-            //Dictionary<int, float> test = GetRankForOneSynsetClause(ExpandLabel(new List<int>() { 2084071 }));
+            Dictionary<int, float> test = GetRankForOneSynsetClause(ExpandLabel(new List<int>() { 2084071 }));
             int topK = int.Parse(args[5]);
 
-            //using (KeywordScoringWriter writer = new KeywordScoringWriter(args[3], dataset.DatasetId,
-            //    dataset.Frames.Count, idToSynsetMapping.Length, synsetToIdMapping))
             int writtenCounter = 0;
+            using (KeywordScoringWriter writer = new KeywordScoringWriter(args[3], dataset.DatasetId,
+                dataset.Frames.Count, idToSynsetMapping.Length, idToSynsetMapping))
             using (SynsetFramesWriter topKWriter = new SynsetFramesWriter(args[4], dataset.DatasetId,
                 topK, idToSynsetMapping.Length, idToSynsetMapping))
             {
@@ -53,6 +57,16 @@ namespace KeywordScoringFileConverter
 
                     Dictionary<int, float> ranks = GetRankForOneSynsetClause(hypernymSynsetIds);
 
+                    // fill holes in sequence with global minimal probability
+                    int itemCountV3C1Temp = 1041365;
+                    for (int i = 0; i < itemCountV3C1Temp; i++)
+                    {
+                        if (!ranks.ContainsKey(i))
+                        {
+                            ranks.Add(i, mMinProbability);
+                        }
+                    }
+
                     float[] scoring = ranks.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
                     if (lengthSameCheck != -1 && lengthSameCheck != scoring.Length)
                     {
@@ -63,7 +77,7 @@ namespace KeywordScoringFileConverter
                         lengthSameCheck = scoring.Length;
                     }
 
-                    //writer.WriteScoring(scoring);
+                    writer.WriteScoring(scoring);
 
 
                     (int synsetId, float probability)[] topKScoring = scoring
@@ -114,6 +128,18 @@ namespace KeywordScoringFileConverter
                 }
                 else break;
             }
+        }
+
+        private static float GetMinProbability()
+        {
+            float minProbability = float.MaxValue;
+            foreach (int synsetId in mClassLocations.Keys)
+            {
+                List<KeywordSearchFrame> keyValuePairs = ReadClassFromFile(synsetId);
+                float localMinProbability = keyValuePairs.Select(x => x.Rank).Min();
+                minProbability = (localMinProbability < minProbability) ? localMinProbability : minProbability;
+            }
+            return minProbability;
         }
 
         private static List<int> ExpandLabel(IEnumerable<int> ids)
