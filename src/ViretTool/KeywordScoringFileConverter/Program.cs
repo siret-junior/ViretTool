@@ -58,10 +58,7 @@ namespace KeywordScoringFileConverter
                     Dictionary<int, float> ranks = GetRankForOneSynsetClause(hypernymSynsetIds);
 
                     // fill holes in sequence with global minimal probability
-                    int itemCountV3C1Temp = 1041365;
-                    int itemCountLSC2018Temp = 41763;
-                    // TODO: LSC/VBS switch
-                    for (int i = 0; i < itemCountLSC2018Temp; i++)
+                    for (int i = 0; i < dataset.Frames.Count; i++)
                     {
                         if (!ranks.ContainsKey(i))
                         {
