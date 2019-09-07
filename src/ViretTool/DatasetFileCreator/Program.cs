@@ -15,7 +15,7 @@ namespace DatasetFileCreator
             string inputFile = Path.GetFullPath(args[1]);
             string outputFile = Path.GetFullPath(args[2]);
             bool isLSC = false;
-            if (args.Length >= 3 && args[3].Equals("LSC")) isLSC = true;
+            if (args.Length > 3 && args[3].Equals("LSC")) isLSC = true;
 
             Dataset dataset;
             if (isLSC)
@@ -28,6 +28,7 @@ namespace DatasetFileCreator
                 DatasetFilelistDeserializer datasetDeserializer = new DatasetFilelistDeserializer();
                 dataset = datasetDeserializer.Deserialize(new StreamReader(inputFile), datasetName);
             }
+            Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
             DatasetBinarySerializer.Serialize(File.OpenWrite(outputFile), dataset);
         }
     }

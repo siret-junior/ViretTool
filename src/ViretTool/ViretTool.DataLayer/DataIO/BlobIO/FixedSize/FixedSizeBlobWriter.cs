@@ -21,6 +21,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
         public FixedSizeBlobWriter(string filePath, byte[] datasetHeader, int blobCount, int blobLength, 
             byte[] filetypeMetadata = null)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             BaseBinaryWriter = new BinaryWriter(
                 File.Open(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None));
 

@@ -30,6 +30,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
 
         public VariableSizeBlobWriter(string outputFile, byte[] datasetHeader, int blobCount, byte[] filetypeMetadata)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
             BaseBinaryWriter = new BinaryWriter(
                 File.Open(outputFile, FileMode.CreateNew, FileAccess.Write, FileShare.None));
             
