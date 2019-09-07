@@ -254,14 +254,14 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
                 + @"[Ff](?<shotEndFrame>[0-9]+)"
                 + @"\)"
             + @"_"
-            + @"[Gg](?<groupId>[0-9]+)"
-            + @"_"
+            //+ @"[Gg](?<groupId>[0-9]+)"
+            //+ @"_"
             + @"[Ff](?<frameNumber>[0-9]+)"
             + @"\.(?<extension>.*)$",
             System.Text.RegularExpressions.RegexOptions.ExplicitCapture);
 
 
-        private static void ParseFrameHeirarchy(string inputString,
+        public static void ParseFrameHeirarchy(string inputString,
             out int videoId, 
             out int shotId, 
             out int shotStartFrame,
@@ -280,7 +280,8 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             shotId = int.Parse(match.Groups["shotId"].Value);
             shotStartFrame = int.Parse(match.Groups["shotStartFrame"].Value);
             shotEndFrame = int.Parse(match.Groups["shotEndFrame"].Value);
-            groupId = int.Parse(match.Groups["groupId"].Value);
+            //groupId = int.Parse(match.Groups["groupId"].Value);
+            groupId = shotId;
             frameNumber = int.Parse(match.Groups["frameNumber"].Value);
             extension = match.Groups["extension"].Value;
 

@@ -13,7 +13,7 @@ namespace BlackAndWhiteFilterExtractor
 {
     /// <summary>
     /// V3C1 arguments:
-    /// 32 "V3C1.dataset" "V3C1\KeyFrames\images" "V3C1\KeyFrames\filelist.txt" "V3C1_first750"
+    /// 32 "V3C1.dataset" "V3C1\KeyFrames\images" "V3C1\KeyFrames\filelist.txt" "V3C1"
     /// </summary>
     class Program
     {

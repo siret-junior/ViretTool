@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define LEGACY
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,20 +36,30 @@ namespace FloatVectorFileConverter
 
             // load input data
             List<(int id, float[] vector)> descriptors = new List<(int id, float[] vector)> ();
-            //int vectorCount; // the commented lines were used to convert an old format (LSC)
+#if LEGACY
+            int vectorCount; // the commented lines were used to convert an old format (LSC)
+#endif
             int vectorLength;
             using (BinaryReader reader = new BinaryReader(
                 File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
+#if LEGACY
+                vectorCount = reader.ReadInt32();
+#else
                 reader.ReadBytes(36);   // header
-                //vectorCount = reader.ReadInt32();
+#endif
                 vectorLength = reader.ReadInt32();
 
-                //int iVector = 0;
+#if LEGACY
+                int iVector = 0;
+#endif
                 while (reader.BaseStream.Position != reader.BaseStream.Length)
                 {
+#if LEGACY
+                    int id = iVector++;
+#else
                     int id = reader.ReadInt32();
-                    //int id = iVector++;
+#endif
                     float[] vector = new float[vectorLength];
                     for (int i = 0; i < vectorLength; i++)
                     {

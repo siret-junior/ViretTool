@@ -1,4 +1,6 @@
-﻿using Castle.Facilities.TypedFactory;
+﻿//#define NO_FACES
+//#define NO_TEXT
+using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -110,9 +112,17 @@ namespace ViretTool.Installers
                 Component.For<IColorSketchModel>().ImplementedBy<ColorSignatureModel>().LifestyleTransient(),
                 // FaceSketchModel disabled for LSC as it is not very useful there
                 // TODO: ignore missing data transparently
+#if NO_FACES
+                Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
+#else
                 Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModel>().LifestyleTransient(),
-                //Component.For<IFaceSketchModel>().ImplementedBy<FaceSketchModelSkeleton>().LifestyleTransient(),
+#endif
+
+#if NO_TEXT
+                Component.For<ITextSketchModel>().ImplementedBy<TextSketchModelSkeleton>().LifestyleTransient(),
+#else
                 Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
+#endif
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
 
                 // fusion used by IBiTemporalSimilarityModel

@@ -203,6 +203,7 @@ namespace KeywordScoringFileConverter
             if (!mClassLocations.ContainsKey(classId))
             {
                 throw new InvalidDataException("Class ID is incorrect.");
+                //Console.WriteLine($"Missing class ID: {classId}");
                 //return new List<KeywordSearchFrame>();
             }
 
