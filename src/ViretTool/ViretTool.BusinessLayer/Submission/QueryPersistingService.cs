@@ -37,6 +37,7 @@ namespace ViretTool.BusinessLayer.Submission
 
         public long SaveQuery(BiTemporalQuery query)
         {
+            // TODO: lock on Log object
             lock (this)
             {
                 long lastTimeStamp = _interactionLogger.Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
