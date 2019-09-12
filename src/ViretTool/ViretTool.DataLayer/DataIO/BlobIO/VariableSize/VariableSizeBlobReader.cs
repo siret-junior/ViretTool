@@ -46,6 +46,10 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             {
                 SeekIfNeccessary(position);
                 int blobLength = BaseBinaryReader.ReadInt32();
+                if (blobLength != GetBlobSize(blobId))
+                {
+                    throw new InvalidDataException("VariableSize blob lengths are not equal!");
+                }
                 return BaseBinaryReader.ReadBytes(blobLength);
             }
         }

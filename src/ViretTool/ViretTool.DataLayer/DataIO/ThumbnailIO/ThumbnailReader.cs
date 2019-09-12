@@ -49,11 +49,11 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
                 VideoCount = reader.ReadInt32();
                 int thumbnailCount = reader.ReadInt32();
-                if (thumbnailCount != ThumbnailCount)
+                if (thumbnailCount != BaseBlobReader.BlobCount)
                 {
                     throw new IOException(
                         $"Thumbnail count mismatch between ThumbnailReader ({thumbnailCount})" +
-                        $" and underlying BlobReader ({ThumbnailCount})");
+                        $" and underlying BlobReader ({BaseBlobReader.BlobCount})");
                 }
                 FramesPerSecond = reader.ReadInt32();
 
