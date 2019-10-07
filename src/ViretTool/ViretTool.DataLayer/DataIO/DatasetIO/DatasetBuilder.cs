@@ -17,7 +17,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
         public Dataset Build()
         {
-            return new Dataset(_dataset.DatasetId, _dataset.Videos.ToArray(), _shots.ToArray(), _dataset.Groups.ToArray(), _dataset.Frames.ToArray());
+            return new Dataset(_dataset.DatasetId, _dataset.Videos.ToArray(), _shots.ToArray(), /*_dataset.Groups.ToArray(), */_dataset.Frames.ToArray());
         }
 
         public void ClearShots()

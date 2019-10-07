@@ -11,11 +11,11 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
     {
         private List<Video> _videos;
         private List<Shot> _shots;
-        private List<Group> _groups;
+        //private List<Group> _groups;
         private List<Frame> _frames;
 
         private List<List<Shot>> _videoShotMappings;
-        private List<List<Group>> _videoGroupMappings;
+        //private List<List<Group>> _videoGroupMappings;
         private List<List<Frame>> _videoFrameMappings;
         private List<List<Frame>> _shotFrameMappings;
         private List<List<Frame>> _groupFrameMappings;
@@ -35,7 +35,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
                     out int shotId,
                     out int shotStartFrame,
                     out int shotEndFrame,
-                    out int groupId,
+                    //out int groupId,
                     out int frameNumber,
                     out string datetime,
                     out string extension);
@@ -45,23 +45,23 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
                 Shot shot = GetOrAppendShot(video, shotId, shotStartFrame, shotEndFrame);
 
-                Group group = GetOrAppendGroup(video, groupId);
+                //Group group = GetOrAppendGroup(video, groupId);
 
-                Frame frame = AppendFrame(video, shot, group, frameNumber);
+                Frame frame = AppendFrame(video, shot, /*group, */frameNumber);
 
             }
 
             // TODO: set mappings
             SetVideoShotMappings();
-            SetVideoGroupMappings();
+            //SetVideoGroupMappings();
             SetVideoFrameMappings();
             SetShotFrameMappings();
-            SetGroupFrameMappings();
+            //SetGroupFrameMappings();
 
             byte[] datasetId = null; //FileHeaderUtilities.EncodeDatasetID(datasetName, DateTime.Now);
 
             Dataset dataset = new Dataset(datasetId,
-                _videos.ToArray(), _shots.ToArray(), _groups.ToArray(), _frames.ToArray());
+                _videos.ToArray(), _shots.ToArray(), /*_groups.ToArray(),*/ _frames.ToArray());
             return dataset;
         }
 
@@ -83,7 +83,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
                 // prepare for children
                 _videoShotMappings.Add(new List<Shot>());
-                _videoGroupMappings.Add(new List<Group>());
+                //_videoGroupMappings.Add(new List<Group>());
                 _videoFrameMappings.Add(new List<Frame>());
 
                 return video;
@@ -134,40 +134,40 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private Group GetOrAppendGroup(Video video, int groupId)
-        {
-            List<Group> videoGroups = _videoGroupMappings[video.Id];
+        //private Group GetOrAppendGroup(Video video, int groupId)
+        //{
+        //    List<Group> videoGroups = _videoGroupMappings[video.Id];
 
-            int lastGroupId = videoGroups.Count - 1;
+        //    int lastGroupId = videoGroups.Count - 1;
 
-            if (lastGroupId == groupId)
-            {
-                // this is the last added group
-                return videoGroups[groupId];
-            }
-            else if (lastGroupId + 1 == groupId)
-            {
-                // this is a newly added shot
-                Group group = new Group(_groups.Count);
-                _groups.Add(group);
+        //    if (lastGroupId == groupId)
+        //    {
+        //        // this is the last added group
+        //        return videoGroups[groupId];
+        //    }
+        //    else if (lastGroupId + 1 == groupId)
+        //    {
+        //        // this is a newly added shot
+        //        Group group = new Group(_groups.Count);
+        //        _groups.Add(group);
 
-                // append to parent
-                videoGroups.Add(group);
+        //        // append to parent
+        //        videoGroups.Add(group);
 
-                // prepare for children
-                _groupFrameMappings.Add(new List<Frame>());
+        //        // prepare for children
+        //        _groupFrameMappings.Add(new List<Frame>());
 
-                return group;
-            }
-            else
-            {
-                // IDs do not increment sequentially!
-                throw new ArgumentException(string.Format(
-                    "Input group IDs do not increment sequentially: last {0}, current: {1}", lastGroupId, groupId));
-            }
-        }
+        //        return group;
+        //    }
+        //    else
+        //    {
+        //        // IDs do not increment sequentially!
+        //        throw new ArgumentException(string.Format(
+        //            "Input group IDs do not increment sequentially: last {0}, current: {1}", lastGroupId, groupId));
+        //    }
+        //}
 
-        private Frame AppendFrame(Video video, Shot shot, Group group, int frameNumber)
+        private Frame AppendFrame(Video video, Shot shot, /*Group group, */int frameNumber)
         {
             Frame frame = new Frame(_frames.Count, frameNumber);
             _frames.Add(frame);
@@ -175,7 +175,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             // append to parents
             _videoFrameMappings[video.Id].Add(frame);
             _shotFrameMappings[shot.Id].Add(frame);
-            _groupFrameMappings[group.Id].Add(frame);
+            //_groupFrameMappings[group.Id].Add(frame);
 
             return frame;
         }
@@ -191,14 +191,14 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private void SetVideoGroupMappings()
-        {
-            foreach (Video video in _videos)
-            {
-                Group[] groupMappings = _videoGroupMappings[video.Id].ToArray();
-                video.SetGroupMappings(groupMappings);
-            }
-        }
+        //private void SetVideoGroupMappings()
+        //{
+        //    foreach (Video video in _videos)
+        //    {
+        //        Group[] groupMappings = _videoGroupMappings[video.Id].ToArray();
+        //        video.SetGroupMappings(groupMappings);
+        //    }
+        //}
 
         private void SetVideoFrameMappings()
         {
@@ -218,24 +218,24 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private void SetGroupFrameMappings()
-        {
-            foreach (Group group in _groups)
-            {
-                Frame[] frameMappings = _groupFrameMappings[group.Id].ToArray();
-                group.SetFrameMappings(frameMappings);
-            }
-        }
+        //private void SetGroupFrameMappings()
+        //{
+        //    foreach (Group group in _groups)
+        //    {
+        //        Frame[] frameMappings = _groupFrameMappings[group.Id].ToArray();
+        //        group.SetFrameMappings(frameMappings);
+        //    }
+        //}
 
         private void ResetLists()
         {
             _videos = new List<Video>();
             _shots = new List<Shot>();
-            _groups = new List<Group>();
+            //_groups = new List<Group>();
             _frames = new List<Frame>();
 
             _videoShotMappings = new List<List<Shot>>();
-            _videoGroupMappings = new List<List<Group>>();
+            //_videoGroupMappings = new List<List<Group>>();
             _videoFrameMappings = new List<List<Frame>>();
             _shotFrameMappings = new List<List<Frame>>();
             _groupFrameMappings = new List<List<Frame>>();
@@ -269,7 +269,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             out int shotId,
             out int shotStartFrame,
             out int shotEndFrame,
-            out int groupId,
+            //out int groupId,
             out int frameNumber,
             out string datetime,
             out string extension)
@@ -287,7 +287,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             shotId = frameNumber; //int.Parse(match.Groups["shotId"].Value);
             shotStartFrame = -1; //int.Parse(match.Groups["shotStartFrame"].Value);
             shotEndFrame = -1; //int.Parse(match.Groups["shotEndFrame"].Value);
-            groupId = frameNumber; //int.Parse(match.Groups["groupId"].Value);
+            //groupId = frameNumber; //int.Parse(match.Groups["groupId"].Value);
             extension = match.Groups["extension"].Value;
 
             // TODO: other checks

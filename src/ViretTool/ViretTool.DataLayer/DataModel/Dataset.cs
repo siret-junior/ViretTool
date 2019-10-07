@@ -45,7 +45,7 @@ namespace ViretTool.DataLayer.DataModel
         // heirarchy
         public readonly ReadOnlyCollection<Video> Videos;
         public readonly ReadOnlyCollection<Shot> Shots;
-        public readonly ReadOnlyCollection<Group> Groups;
+        //public readonly ReadOnlyCollection<Group> Groups;
         public readonly ReadOnlyCollection<Frame> Frames;
         
         
@@ -58,7 +58,7 @@ namespace ViretTool.DataLayer.DataModel
         /// <param name="shots">Objects holding individual shots of videos (sequentially ordered).</param>
         /// <param name="groups">Groups of similar representative frames.</param>
         /// <param name="frames">Representative frames of shots (sequentially ordered).</param>
-        public Dataset(byte[] datasetId, Video[] videos, Shot[] shots, Group[] groups, Frame[] frames)
+        public Dataset(byte[] datasetId, Video[] videos, Shot[] shots, /*Group[] groups, */Frame[] frames)
         {
             // TODO: validate datasetId
             DatasetId = datasetId;
@@ -66,7 +66,7 @@ namespace ViretTool.DataLayer.DataModel
             // wrap input arrays into readonly collections.
             Videos = new ReadOnlyCollection<Video>(videos);
             Shots = new ReadOnlyCollection<Shot>(shots);
-            Groups = new ReadOnlyCollection<Group>(groups);
+            //Groups = new ReadOnlyCollection<Group>(groups);
             Frames = new ReadOnlyCollection<Frame>(frames);
 
             foreach (Video video in videos)

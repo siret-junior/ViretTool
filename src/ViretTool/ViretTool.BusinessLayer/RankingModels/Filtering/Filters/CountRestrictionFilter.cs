@@ -63,7 +63,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
             // sort ranks in descending order
             Array.Sort(ranks, indexes, Comparer<float>.Create((x, y) => y.CompareTo(x)));
             
-            int[] groupHitCounter = new int[DatasetService.Dataset.Groups.Count];
+            //int[] groupHitCounter = new int[DatasetService.Dataset.Groups.Count];
             int[] shotHitCounter = new int[DatasetService.Dataset.Shots.Count];
             int[] videoHitCounter = new int[DatasetService.Dataset.Videos.Count];
             
@@ -78,7 +78,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                 }
 
                 Frame frame = DatasetService.Dataset.Frames[indexes[i]];
-                int groupId = frame.ParentGroup.Id;
+                //int groupId = frame.ParentGroup.Id;
                 int shotId = frame.ParentShot.Id;
                 int videoId = frame.ParentVideo.Id;
 
@@ -104,16 +104,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                     shotHitCounter[shotId]++;
                 }
 
-                // group
-                if (query.MaxPerGroup > 0 && groupHitCounter[groupId] >= query.MaxPerGroup)
-                {
-                    outputRanking.Ranks[indexes[i]] = float.MinValue;
-                    continue;
-                }
-                else
-                {
-                    groupHitCounter[shotId]++;
-                }
+                //// group
+                //if (query.MaxPerGroup > 0 && groupHitCounter[groupId] >= query.MaxPerGroup)
+                //{
+                //    outputRanking.Ranks[indexes[i]] = float.MinValue;
+                //    continue;
+                //}
+                //else
+                //{
+                //    groupHitCounter[shotId]++;
+                //}
 
                 outputRanking.Ranks[indexes[i]] = ranks[i];
             }

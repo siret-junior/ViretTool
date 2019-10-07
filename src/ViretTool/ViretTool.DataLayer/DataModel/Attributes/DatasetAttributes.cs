@@ -8,7 +8,7 @@
 
         public int VideoCount => ParentDataset.Videos.Count;
         public int ShotCount => ParentDataset.Shots.Count;
-        public int GroupCount => ParentDataset.Groups.Count;
+        //public int GroupCount => ParentDataset.Groups.Count;
         public int FrameCount => ParentDataset.Frames.Count;
 
         public DatasetAttributes(Dataset parentDataset)

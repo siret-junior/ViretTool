@@ -26,7 +26,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
             ReadBlobMetadata();
             //ReadFiletypeMetadata();
             // TODO: fix (it has to be updated in wrapping reader after reading metadata)
-            BaseBlobReader.MarkDataStartOffset();
+            MarkDataStartOffset();
         }
 
         public override void Dispose()

@@ -19,10 +19,10 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             using (BinaryReader reader = new BinaryReader(serializationStream))
             {
                 byte[] datasetId = LoadAndCheckFileHeader(reader);
-                LoadDatasetItems(reader, out Video[] videos, out Shot[] shots, out Group[] groups, out Frame[] frames);
-                LoadItemMappings(reader, videos, shots, groups, frames);
+                LoadDatasetItems(reader, out Video[] videos, out Shot[] shots, /*out Group[] groups, */out Frame[] frames);
+                LoadItemMappings(reader, videos, shots, /*groups, */frames);
 
-                Dataset dataset = new Dataset(datasetId, videos, shots, groups, frames);
+                Dataset dataset = new Dataset(datasetId, videos, shots, /*groups, */frames);
                 return dataset;
             }
         }
@@ -66,7 +66,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
 
         private static void LoadDatasetItems(BinaryReader reader, 
-            out Video[] videos, out Shot[] shots, out Group[] groups, out Frame[] frames)
+            out Video[] videos, out Shot[] shots, /*out Group[] groups, */out Frame[] frames)
         {
             int videoCount = reader.ReadInt32();
             int shotCount = reader.ReadInt32();
@@ -75,12 +75,12 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
             videos = new Video[videoCount];
             shots = new Shot[shotCount];
-            groups = new Group[groupCount];
+            //groups = new Group[groupCount];
             frames = new Frame[frameCount];
 
             InitializeArray(videos, i => new Video(i));
             InitializeArray(shots, i => new Shot(i));
-            InitializeArray(groups, i => new Group(i));
+            //InitializeArray(groups, i => new Group(i));
             InitializeArray(frames, i => new Frame(i));
         }
 
@@ -94,14 +94,14 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
         }
 
         private static void LoadItemMappings(BinaryReader reader,
-            Video[] videos, Shot[] shots, Group[] groups, Frame[] frames)
+            Video[] videos, Shot[] shots, /*Group[] groups, */Frame[] frames)
         {
             LoadVideoShotMappings(reader, videos, shots);
-            LoadVideoGroupMappings(reader, videos, groups);
+            //LoadVideoGroupMappings(reader, videos, groups);
             LoadVideoFrameMappings(reader, videos, frames);
 
             LoadShotFrameMappings(reader, shots, frames);
-            LoadGroupFrameMappings(reader, groups, frames);
+            //LoadGroupFrameMappings(reader, groups, frames);
         }
 
         private static void LoadVideoShotMappings(BinaryReader reader, Video[] videos, Shot[] shots)
@@ -113,14 +113,14 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private static void LoadVideoGroupMappings(BinaryReader reader, Video[] videos, Group[] groups)
-        {
-            foreach (Video video in videos)
-            {
-                Group[] groupMappings = LoadChildrenMappings(reader, video, groups);
-                video.SetGroupMappings(groupMappings);
-            }
-        }
+        //private static void LoadVideoGroupMappings(BinaryReader reader, Video[] videos/*, Group[] groups*/)
+        //{
+        //    foreach (Video video in videos)
+        //    {
+        //        Group[] groupMappings = LoadChildrenMappings(reader, video, groups);
+        //        video.SetGroupMappings(groupMappings);
+        //    }
+        //}
 
         private static void LoadVideoFrameMappings(BinaryReader reader, Video[] videos, Frame[] frames)
         {
@@ -140,14 +140,14 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private static void LoadGroupFrameMappings(BinaryReader reader, Group[] groups, Frame[] frames)
-        {
-            foreach (Group group in groups)
-            {
-                Frame[] frameMappings = LoadChildrenMappings(reader, group, frames);
-                group.SetFrameMappings(frameMappings);
-            }
-        }
+        //private static void LoadGroupFrameMappings(BinaryReader reader, Group[] groups, Frame[] frames)
+        //{
+        //    foreach (Group group in groups)
+        //    {
+        //        Frame[] frameMappings = LoadChildrenMappings(reader, group, frames);
+        //        group.SetFrameMappings(frameMappings);
+        //    }
+        //}
 
         
         private static byte[] ReadNullTerminatedStringBytes(BinaryReader reader)

@@ -25,10 +25,10 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             byte[] datasetId = UpdateDatasetId(inputDataset, maxVideos);
             Video[] videos = TrimVideos(inputDataset, maxVideos);
             Shot[] shots = TrimShots(inputDataset, maxVideos);
-            Group[] groups = TrimGroups(inputDataset, maxVideos);
+            //Group[] groups = TrimGroups(inputDataset, maxVideos);
             Frame[] frames = TrimFrames(inputDataset, maxVideos);
             
-            return new Dataset(datasetId, videos, shots, groups, frames);
+            return new Dataset(datasetId, videos, shots, /*groups, */frames);
         }
 
 
@@ -53,11 +53,11 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             return inputDataset.Shots.Take(shotCount).ToArray();
         }
 
-        private static Group[] TrimGroups(Dataset inputDataset, int maxVideos)
-        {
-            int groupCount = inputDataset.Videos[maxVideos - 1].Groups.Last().Id + 1;
-            return inputDataset.Groups.Take(groupCount).ToArray();
-        }
+        //private static Group[] TrimGroups(Dataset inputDataset, int maxVideos)
+        //{
+        //    int groupCount = inputDataset.Videos[maxVideos - 1].Groups.Last().Id + 1;
+        //    return inputDataset.Groups.Take(groupCount).ToArray();
+        //}
 
         private static Frame[] TrimFrames(Dataset inputDataset, int maxVideos)
         {

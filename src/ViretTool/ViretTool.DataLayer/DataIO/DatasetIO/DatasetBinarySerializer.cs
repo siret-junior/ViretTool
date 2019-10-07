@@ -38,19 +38,19 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
         {
             writer.Write(dataset.Videos.Count);
             writer.Write(dataset.Shots.Count);
-            writer.Write(dataset.Groups.Count);
+            //writer.Write(dataset.Groups.Count);
             writer.Write(dataset.Frames.Count);
         }
 
         private static void StoreItemMappings(BinaryWriter writer, Dataset dataset)
         {
             StoreVideoShotMappings(writer, dataset);
-            StoreVideoGroupMappings(writer, dataset);
+            //StoreVideoGroupMappings(writer, dataset);
             StoreVideoFrameMappings(writer, dataset);
 
             StoreShotFrameMappings(writer, dataset);
 
-            StoreGroupFrameMappings(writer, dataset);
+            //StoreGroupFrameMappings(writer, dataset);
         }
 
 
@@ -67,18 +67,18 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private static void StoreVideoGroupMappings(BinaryWriter writer, Dataset dataset)
-        {
-            foreach (Video video in dataset.Videos)
-            {
-                writer.Write(video.Groups.Count);
+        //private static void StoreVideoGroupMappings(BinaryWriter writer, Dataset dataset)
+        //{
+        //    foreach (Video video in dataset.Videos)
+        //    {
+        //        writer.Write(video.Groups.Count);
 
-                foreach (Group group in video.Groups)
-                {
-                    writer.Write(group.Id);
-                }
-            }
-        }
+        //        foreach (Group group in video.Groups)
+        //        {
+        //            writer.Write(group.Id);
+        //        }
+        //    }
+        //}
 
         private static void StoreVideoFrameMappings(BinaryWriter writer, Dataset dataset)
         {
@@ -106,17 +106,17 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             }
         }
 
-        private static void StoreGroupFrameMappings(BinaryWriter writer, Dataset dataset)
-        {
-            foreach (Group group in dataset.Groups)
-            {
-                writer.Write(group.Frames.Count);
+        //private static void StoreGroupFrameMappings(BinaryWriter writer, Dataset dataset)
+        //{
+        //    foreach (Group group in dataset.Groups)
+        //    {
+        //        writer.Write(group.Frames.Count);
 
-                foreach (Frame frame in group.Frames)
-                {
-                    writer.Write(frame.Id);
-                }
-            }
-        }
+        //        foreach (Frame frame in group.Frames)
+        //        {
+        //            writer.Write(frame.Id);
+        //        }
+        //    }
+        //}
     }
 }

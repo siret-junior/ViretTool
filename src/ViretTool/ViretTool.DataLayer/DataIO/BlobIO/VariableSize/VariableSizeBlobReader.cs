@@ -113,8 +113,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
                 BlobOffsets = new long[BlobCount];
                 for (int i = 0; i < BlobCount; i++)
                 {
-                    //BlobOffsets[i] = reader.ReadInt64();
-                    BlobOffsets[i] = reader.ReadInt32();
+                    BlobOffsets[i] = reader.ReadInt64();
                 }
                 BlobLengths = new int[BlobCount];
                 for (int i = 0; i < BlobCount; i++)
