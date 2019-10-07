@@ -74,10 +74,12 @@ namespace ViretTool.DataLayer.DataModel
                 video.ParentDataset = this;
             }
 
-            FileHeaderUtilities.DecodeDatasetID(DatasetId,
-                    out string datasetName, out DateTime creationTime);
-            DatasetName = datasetName;
-            DatasetCreationTime = creationTime;
+            //FileHeaderUtilities.DecodeDatasetID(DatasetId,
+            //        out string datasetName, out DateTime creationTime);
+            //DatasetName = datasetName;
+            //DatasetCreationTime = creationTime;
+            DatasetName = "TODO: dataset name";
+            DatasetCreationTime = DateTime.Now;
         }
     }
 }

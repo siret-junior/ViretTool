@@ -162,7 +162,7 @@ namespace ViretTool.Installers
                 // used by IFilteringModule
                 Component.For<IColorSaturationFilter>()
                     .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(
-                        (string)context.AdditionalArguments["datasetDirectory"], ".bwfilter"))
+                        (string)context.AdditionalArguments["datasetDirectory"], ".csfilter"))
                     .LifestyleTransient(),
                 Component.For<IPercentOfBlackFilter>()
                     .UsingFactoryMethod((_, context) => ThresholdFilter.FromDirectory(

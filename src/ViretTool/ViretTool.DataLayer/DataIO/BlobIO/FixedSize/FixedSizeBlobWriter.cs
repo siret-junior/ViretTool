@@ -26,13 +26,13 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
                 File.Open(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None));
 
             //**** dataset header
-            DatasetHeader = datasetHeader;
-            BaseBinaryWriter.Write(datasetHeader.Length);
-            BaseBinaryWriter.Write(datasetHeader);
+            //DatasetHeader = datasetHeader;
+            //BaseBinaryWriter.Write(datasetHeader.Length);
+            //BaseBinaryWriter.Write(datasetHeader);
 
             //**** blob header
-            BaseBinaryWriter.Write(FIXED_SIZE_BLOBS_FILETYPE_ID);
-            BaseBinaryWriter.Write(FIXED_SIZE_BLOBS_VERSION);
+            //BaseBinaryWriter.Write(FIXED_SIZE_BLOBS_FILETYPE_ID);
+            //BaseBinaryWriter.Write(FIXED_SIZE_BLOBS_VERSION);
 
             //**** blob metadata
             // metadata length placeholder

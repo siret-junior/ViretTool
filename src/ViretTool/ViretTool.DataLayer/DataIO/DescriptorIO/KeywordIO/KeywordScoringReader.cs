@@ -26,8 +26,9 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
             IdToSynsetIdMapping = new int[ScoringCount];
             SynsetIdToIdMapping = new Dictionary<int, int>();
 
-            byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            BinaryReader reader = BaseBlobReader.BaseBinaryReader;
             {
                 // id -> synsetId mapping
                 for (int i = 0; i < ScoringCount; i++)
@@ -37,6 +38,8 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
                     SynsetIdToIdMapping[synsetId] = i;
                 }
             }
+
+            BaseBlobReader.MarkDataStartOffset();
         }
 
         public override void Dispose()

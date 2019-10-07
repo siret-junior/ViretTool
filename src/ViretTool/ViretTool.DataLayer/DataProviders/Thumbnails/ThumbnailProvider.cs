@@ -6,7 +6,7 @@ namespace ViretTool.DataLayer.DataProviders.Thumbnails
 {
     public class ThumbnailProvider
     {
-        public const string FILE_EXTENSION = ".thumbs";
+        public const string FILE_EXTENSION = ".thumbnails";
 
         public ThumbnailReader FromDirectory(string inputDirectory)
         {

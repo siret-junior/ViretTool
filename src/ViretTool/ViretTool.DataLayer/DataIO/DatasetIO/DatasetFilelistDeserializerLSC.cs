@@ -58,7 +58,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             SetShotFrameMappings();
             SetGroupFrameMappings();
 
-            byte[] datasetId = FileHeaderUtilities.EncodeDatasetID(datasetName, DateTime.Now);
+            byte[] datasetId = null; //FileHeaderUtilities.EncodeDatasetID(datasetName, DateTime.Now);
 
             Dataset dataset = new Dataset(datasetId,
                 _videos.ToArray(), _shots.ToArray(), _groups.ToArray(), _frames.ToArray());

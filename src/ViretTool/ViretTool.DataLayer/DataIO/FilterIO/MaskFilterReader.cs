@@ -19,11 +19,14 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
         {
             BaseBlobReader = new FixedSizeBlobReader(filePath);
 
-            byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            {
-                ReadAndVerifyFiletypeAndVersion(reader);
-            }
+            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            //BinaryReader reader = BaseBlobReader.BaseBinaryReader;
+            //{
+            //    ReadAndVerifyFiletypeAndVersion(reader);
+            //}
+
+            BaseBlobReader.MarkDataStartOffset();
         }
 
 
@@ -48,21 +51,21 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
         }
 
         
-        private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
-        {
-            string filetype = reader.ReadString();
-            if (!filetype.Equals(MASK_FILTER_FILETYPE_ID))
-            {
-                throw new IOException($"Filetype error: {filetype} (expected {MASK_FILTER_FILETYPE_ID})");
-            }
+        //private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
+        //{
+        //    string filetype = reader.ReadString();
+        //    if (!filetype.Equals(MASK_FILTER_FILETYPE_ID))
+        //    {
+        //        throw new IOException($"Filetype error: {filetype} (expected {MASK_FILTER_FILETYPE_ID})");
+        //    }
 
-            int version = reader.ReadInt32();
-            if (version != MASK_FILTER_VERSION)
-            {
-                throw new IOException($"Incorrect \"{MASK_FILTER_FILETYPE_ID}\" filetype version: "
-                    + $"{version} (expected {MASK_FILTER_VERSION})");
-            }
-        }
+        //    int version = reader.ReadInt32();
+        //    if (version != MASK_FILTER_VERSION)
+        //    {
+        //        throw new IOException($"Incorrect \"{MASK_FILTER_FILETYPE_ID}\" filetype version: "
+        //            + $"{version} (expected {MASK_FILTER_VERSION})");
+        //    }
+        //}
 
     }
 }

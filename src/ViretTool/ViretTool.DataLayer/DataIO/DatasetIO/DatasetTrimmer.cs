@@ -34,11 +34,12 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
         private static byte[] UpdateDatasetId(Dataset inputDataset, int maxVideos)
         {
-            FileHeaderUtilities.DecodeDatasetID(inputDataset.DatasetId,
-                            out string datasetName, out DateTime creationTime);
-            byte[] datasetId = FileHeaderUtilities.EncodeDatasetID(
-                datasetName + "_first" + maxVideos, DateTime.Now);
-            return datasetId;
+            throw new NotImplementedException("Requires refactoring.");
+            //FileHeaderUtilities.DecodeDatasetID(inputDataset.DatasetId,
+            //                out string datasetName, out DateTime creationTime);
+            //byte[] datasetId = FileHeaderUtilities.EncodeDatasetID(
+            //    datasetName + "_first" + maxVideos, DateTime.Now);
+            //return datasetId;
         }
 
         private static Video[] TrimVideos(Dataset inputDataset, int maxVideos)

@@ -17,7 +17,7 @@ namespace ViretTool.DataLayer.DataProviders.Dataset
             string[] files = Directory.GetFiles(inputDirectory);
             string datasetFile = files.Single(path => path.EndsWith(FILE_EXTENSION));
             string frameAttributesFile = files.Single(path => path.EndsWith(FRAME_ATTRIBUTES_EXTENSION));
-            return FromBinaryFile(datasetFile, frameAttributesFile);
+            return FromFilelist(datasetFile, "TODO: dataset name");
         }
 
         public DataModel.Dataset FromBinaryFile(string datasetPath, string frameAttributesPath = null)

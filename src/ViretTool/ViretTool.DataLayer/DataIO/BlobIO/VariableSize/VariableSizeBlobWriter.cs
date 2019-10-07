@@ -35,13 +35,13 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
                 File.Open(outputFile, FileMode.CreateNew, FileAccess.Write, FileShare.None));
             
             //**** dataset header
-            DatasetHeader = datasetHeader;
-            BaseBinaryWriter.Write(datasetHeader.Length);
-            BaseBinaryWriter.Write(datasetHeader);
+            //DatasetHeader = datasetHeader;
+            //BaseBinaryWriter.Write(datasetHeader.Length);
+            //BaseBinaryWriter.Write(datasetHeader);
 
             //**** blob header
-            BaseBinaryWriter.Write(VARIABLE_SIZE_BLOBS_FILETYPE_ID);
-            BaseBinaryWriter.Write(VARIABLE_SIZE_BLOBS_VERSION);
+            //BaseBinaryWriter.Write(VARIABLE_SIZE_BLOBS_FILETYPE_ID);
+            //BaseBinaryWriter.Write(VARIABLE_SIZE_BLOBS_VERSION);
 
             //**** blob metadata
             // metadata length placeholder
@@ -61,7 +61,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             BaseBinaryWriter.BaseStream.Seek(BlobCount * sizeof(int), SeekOrigin.Current);
 
             // reserve space
-            BaseBinaryWriter.Seek(METADATA_RESERVE_SPACE_SIZE, SeekOrigin.Current);
+            //BaseBinaryWriter.Seek(METADATA_RESERVE_SPACE_SIZE, SeekOrigin.Current);
 
             // rewrite metadata size placeholder
             long currentOffset = BaseBinaryWriter.BaseStream.Position;

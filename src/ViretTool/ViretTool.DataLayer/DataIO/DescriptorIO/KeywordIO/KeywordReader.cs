@@ -19,11 +19,11 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
         {
             BaseBlobReader = new VariableSizeBlobReader(inputFile);
 
-            byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            {
-                // TODO if needed    
-            }
+            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            //{
+            //    // TODO if needed    
+            //}
         }
 
 

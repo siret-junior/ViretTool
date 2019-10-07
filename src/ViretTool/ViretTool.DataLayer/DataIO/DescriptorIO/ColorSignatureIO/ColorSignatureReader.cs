@@ -26,14 +26,17 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
         {
             BaseBlobReader = new FixedSizeBlobReader(filePath);
 
-            byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
+            BinaryReader reader = BaseBlobReader.BaseBinaryReader;
             {
-                ReadAndVerifyFiletypeAndVersion(reader);
+                //ReadAndVerifyFiletypeAndVersion(reader);
 
                 SignatureWidth = reader.ReadInt32();
                 SignatureHeight = reader.ReadInt32();
             }
+
+            BaseBlobReader.MarkDataStartOffset();
         }
 
         public override void Dispose()
@@ -47,21 +50,21 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
         }
 
 
-        private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
-        {
-            string filetype = reader.ReadString();
-            if (!filetype.Equals(COLOR_SIGNATURES_FILETYPE_ID))
-            {
-                throw new IOException($"Filetype error: {filetype} (expected {COLOR_SIGNATURES_FILETYPE_ID})");
-            }
+        //private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
+        //{
+        //    string filetype = reader.ReadString();
+        //    if (!filetype.Equals(COLOR_SIGNATURES_FILETYPE_ID))
+        //    {
+        //        throw new IOException($"Filetype error: {filetype} (expected {COLOR_SIGNATURES_FILETYPE_ID})");
+        //    }
 
-            int version = reader.ReadInt32();
-            if (version != COLOR_SIGNATURES_VERSION)
-            {
-                throw new IOException($"Incorrect \"{COLOR_SIGNATURES_FILETYPE_ID}\" filetype version: "
-                    + $"{version} (expected {COLOR_SIGNATURES_VERSION})");
-            }
-        }
+        //    int version = reader.ReadInt32();
+        //    if (version != COLOR_SIGNATURES_VERSION)
+        //    {
+        //        throw new IOException($"Incorrect \"{COLOR_SIGNATURES_FILETYPE_ID}\" filetype version: "
+        //            + $"{version} (expected {COLOR_SIGNATURES_VERSION})");
+        //    }
+        //}
 
 
     }

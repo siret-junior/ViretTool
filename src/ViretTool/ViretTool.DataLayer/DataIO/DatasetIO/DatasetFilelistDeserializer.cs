@@ -24,40 +24,39 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
         public virtual Dataset Deserialize(StreamReader reader, string datasetName)
         {
             ResetLists();
-            
+
             while (!reader.EndOfStream)
             {
                 string relativePath = reader.ReadLine();
                 string filename = Path.GetFileName(relativePath);
 
                 ParseFrameHeirarchy(filename,
-                    out int videoId, 
-                    out int shotId, 
-                    out int shotStartFrame, 
+                    out int videoId,
+                    out int shotId,
+                    out int shotStartFrame,
                     out int shotEndFrame,
-                    out int groupId, 
+                    out int groupId,
                     out int frameNumber,
                     out string extension);
 
 
                 Video video = GetOrAppendVideo(videoId);
-                
+
                 Shot shot = GetOrAppendShot(video, shotId, shotStartFrame, shotEndFrame);
 
                 Group group = GetOrAppendGroup(video, groupId);
 
                 Frame frame = AppendFrame(video, shot, group, frameNumber);
-
             }
 
-            // TODO: set mappings
+            // set mappings
             SetVideoShotMappings();
             SetVideoGroupMappings();
             SetVideoFrameMappings();
             SetShotFrameMappings();
             SetGroupFrameMappings();
 
-            byte[] datasetId = FileHeaderUtilities.EncodeDatasetID(datasetName, DateTime.Now);
+            byte[] datasetId = null; //FileHeaderUtilities.EncodeDatasetID(datasetName, DateTime.Now);
 
             Dataset dataset = new Dataset(datasetId, 
                 _videos.ToArray(), _shots.ToArray(), _groups.ToArray(), _frames.ToArray());
@@ -286,10 +285,11 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             extension = match.Groups["extension"].Value;
 
             // TODO: other checks
-            if (frameNumber < shotStartFrame || frameNumber > shotEndFrame)
-            {
-                throw new ArgumentException("Frame number not in shot range!");
-            }
+            // TODO: re-enable
+            //if (frameNumber < shotStartFrame || frameNumber > shotEndFrame)
+            //{
+            //    throw new ArgumentException($"Frame number {frameNumber} not in shot range {shotStartFrame}-{shotEndFrame}!");
+            //}
         }
     }
 }
