@@ -60,13 +60,16 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
                 using (MemoryStream stream = new MemoryStream(blob))
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    int itemCount = BaseBlobReader.BlobLength / (sizeof(int) + sizeof(float));
+                    // TODO: hack fix
+                    int itemCount = BaseBlobReader.BlobLength / (/*sizeof(int) + */sizeof(float));
 
                     List<(int frameId, float probability)> result = new List<(int frameId, float probability)>();
                     for (int i = 0; i < itemCount; i++)
                     {
-                        int frameId = reader.ReadInt32();
-                        float probability = reader.ReadSingle();
+                        //int frameId = reader.ReadInt32(); TODO hack fix
+                        int frameId = Convert.ToInt32(reader.ReadSingle());
+                        //float probability = reader.ReadSingle();
+                        float probability = 1.0f;
                         result.Add((frameId, probability));
                     }
 

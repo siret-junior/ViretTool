@@ -3,11 +3,10 @@ using System.IO;
 
 namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
 {
+    // TODO: document blob size limitations (expectations for format checking)
     public class VariableSizeBlobReader : VariableSizeBlobIOBase
     {
         public BinaryReader BaseBinaryReader { get; private set; }
-        private object _lockObject = new object();
-
         // common for all files extracted from the same dataset at the same time
         public byte[] DatasetHeader { get; private set; }
 
@@ -19,6 +18,11 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
         // blob filetype interpretation metadata
         //public byte[] FiletypeMetadata { get; private set; }
 
+        private object _lockObject = new object();
+
+        private const int BLOBLENGTH_LIMIT = 100_000;
+        private const int BLOBCOUNT_LIMIT = 10_000_000;
+        private const long FILEOFFSET_LIMIT = 1_000_000_000_000;
         
 
         public VariableSizeBlobReader(string filePath)
@@ -110,18 +114,25 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             BinaryReader reader = BaseBinaryReader;
             {
                 BlobCount = reader.ReadInt32();
+                FileFormatUtilities.CheckValueInRange("BlobCount", BlobCount, 1, BLOBCOUNT_LIMIT);
+
                 BlobOffsets = new long[BlobCount];
                 for (int i = 0; i < BlobCount; i++)
                 {
                     BlobOffsets[i] = reader.ReadInt64();
                 }
+                FileFormatUtilities.CheckValuesInRange("BlobOffsets", BlobOffsets, 1, FILEOFFSET_LIMIT);
+                FileFormatUtilities.CheckValuesIncrement("BlobOffsets", BlobOffsets);
+
                 BlobLengths = new int[BlobCount];
                 for (int i = 0; i < BlobCount; i++)
                 {
                     BlobLengths[i] = reader.ReadInt32();
                 }
-            }    
+                FileFormatUtilities.CheckValuesInRange("BlobLengths", BlobLengths, 0, BLOBLENGTH_LIMIT);
+            }
         }
+        
 
         //private void ReadFiletypeMetadata()
         //{

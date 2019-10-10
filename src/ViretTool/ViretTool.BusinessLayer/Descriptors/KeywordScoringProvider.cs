@@ -66,14 +66,34 @@ namespace ViretTool.BusinessLayer.Descriptors
         }
 
 
-        public float[] GetScoring(int scoringIndex)
+        public float[] GetScoring(int frameId)
         {
-            return Scorings[scoringIndex];
+            float[] result;
+            try
+            {
+                Scorings.TryGetValue(frameId, out result);
+            }
+            catch
+            {
+                throw new ArgumentNullException($"No keyword scoring found for frameId {frameId}");
+                //return new float[0];
+            }
+            return result;
         }
 
         public (int frameId, float scoring)[] GetTopScoring(int synsetId)
         {
-            return TopScorings[synsetId];
+            (int frameId, float scoring)[] result;
+            try
+            {
+                TopScorings.TryGetValue(synsetId, out result);
+            }
+            catch
+            {
+                throw new ArgumentNullException($"No keyword scoring found for synsetId {synsetId}");
+                //return new (int frameId, float scoring)[0];
+            }
+            return result;
         }
     }
 }

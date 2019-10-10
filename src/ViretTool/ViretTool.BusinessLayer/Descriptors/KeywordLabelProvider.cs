@@ -89,8 +89,8 @@ namespace ViretTool.BusinessLayer.Descriptors
                     //};
 
                     // TODO: label ID numbered from 0 sequentially is used here instead of the actual synset ID -> fix that
-                    int synsetId = id;
-                    //int synsetId = int.Parse(parts[1]);
+                    //int synsetId = id;
+                    int synsetId = int.Parse(parts[1]);
                     string synsetName = string.Join(", ", nameParts);
 
                     // TODO: label ID numbered from 0 sequentially is used here instead of the actual synset ID -> fix that

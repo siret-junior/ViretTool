@@ -33,8 +33,12 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public int[] VideoFrameCounts { get; private set; }
 
         private readonly Dictionary<int, Dictionary<int,int>> _videoFramenumberToGlobalId;
-        
-        
+
+        private const int RESOLUTION_LIMIT = 7680; // 8K UHD
+        private const int VIDEOCOUNT_LIMIT = 100_000;
+        private const int FRAMECOUNT_LIMIT = 1_000_000;
+        private const int FPS_LIMIT = 30;
+
         public ThumbnailReader(string filePath)
         {
             BaseBlobReader = new VariableSizeBlobReader(filePath);
@@ -47,31 +51,41 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 
                 ThumbnailWidth = reader.ReadInt32();
                 ThumbnailHeight = reader.ReadInt32();
+                CheckThumbnailResolution(ThumbnailWidth, ThumbnailHeight);
 
                 VideoCount = reader.ReadInt32();
-                int thumbnailCount = reader.ReadInt32();
-                if (thumbnailCount != BaseBlobReader.BlobCount)
-                {
-                    throw new IOException(
-                        $"Thumbnail count mismatch between ThumbnailReader ({thumbnailCount})" +
-                        $" and underlying BlobReader ({BaseBlobReader.BlobCount})");
-                }
+                FileFormatUtilities.CheckValueInRange("VideoCount", VideoCount, 1, VIDEOCOUNT_LIMIT);
+                //int thumbnailCount = reader.ReadInt32();
+                //if (thumbnailCount != BaseBlobReader.BlobCount)
+                //{
+                //    throw new IOException(
+                //        $"Thumbnail count mismatch between ThumbnailReader ({thumbnailCount})" +
+                //        $" and underlying BlobReader ({BaseBlobReader.BlobCount})");
+                //}
                 FramesPerSecond = reader.ReadInt32();
+                FileFormatUtilities.CheckValueInRange("FramesPerSecond", FramesPerSecond, 1, FPS_LIMIT);
 
                 VideoOffsets = DataConversionUtilities.TranslateToIntArray(
                     reader.ReadBytes(VideoCount * sizeof(int)));
+                FileFormatUtilities.CheckValuesInRange("VideoOffsets", VideoOffsets, 0, ThumbnailCount - 1);
+                FileFormatUtilities.CheckValuesIncrement("VideoOffsets", VideoOffsets);
+
                 VideoFrameCounts = DataConversionUtilities.TranslateToIntArray(
                     reader.ReadBytes(VideoCount * sizeof(int)));
-
+                FileFormatUtilities.CheckValuesInRange("VideoFrameCounts", VideoFrameCounts, 1, ThumbnailCount);
+                
                 // load globalId <-> (videoId, frameId) mappings
                 GlobalIdToVideoFramenumber = new (int videoId, int frameNumber)[ThumbnailCount];
                 _videoFramenumberToGlobalId = new Dictionary<int, Dictionary<int, int>>();
                 
                 for (int iThumb = 0; iThumb < ThumbnailCount; iThumb++)
                 {
-                    int globalId = reader.ReadInt32();
+                    int globalId = iThumb;// reader.ReadInt32(); // TODO: remove? should be equal to iThumb
                     int videoId = reader.ReadInt32();
                     int frameNumber = reader.ReadInt32();
+                    //FileFormatUtilities.CheckValueInRange("globalId", globalId, 0, ThumbnailCount - 1);
+                    FileFormatUtilities.CheckValueInRange("videoId", videoId, 0, VideoCount - 1);
+                    FileFormatUtilities.CheckValueInRange("frameNumber", frameNumber, 0, FRAMECOUNT_LIMIT);
 
                     if (!_videoFramenumberToGlobalId.ContainsKey(videoId))
                     {
@@ -81,6 +95,17 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                     _videoFramenumberToGlobalId[videoId].Add(frameNumber, globalId);
                     GlobalIdToVideoFramenumber[globalId] = (videoId, frameNumber);
                 }
+            }
+        }
+
+        private void CheckThumbnailResolution(int width, int height)
+        {
+            FileFormatUtilities.CheckValueInRange("Thumbnail width", width, 1, RESOLUTION_LIMIT);
+            FileFormatUtilities.CheckValueInRange("Thumbnail height", height, 1, RESOLUTION_LIMIT);
+            
+            if (width < height)
+            {
+                throw new InvalidDataException($"Thumbnail orientation {width} x {height} is expected to be in landscape (width > height).");
             }
         }
 

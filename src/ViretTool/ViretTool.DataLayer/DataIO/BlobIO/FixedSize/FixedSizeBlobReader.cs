@@ -2,6 +2,7 @@
 using System.IO;
 namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
 {
+    // TODO: document blob size limitations (expectations for format checking)
     public class FixedSizeBlobReader : FizedSizeBlobIOBase
     {
         public BinaryReader BaseBinaryReader { get; private set; }
@@ -13,6 +14,10 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
         //public byte[] FiletypeMetadata { get; private set; }
 
         private readonly object _lockObject = new object();
+
+        private const int BLOBLENGTH_LIMIT = 100_000;
+        private const int BLOBCOUNT_LIMIT = 10_000_000;
+        private const long FILEOFFSET_LIMIT = 1_000_000_000_000;
 
 
         public FixedSizeBlobReader(string filePath)
@@ -98,6 +103,24 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
             //}
             BlobCount = BaseBinaryReader.ReadInt32();
             BlobLength = BaseBinaryReader.ReadInt32();
+
+            CheckDataFormat();
+        }
+
+        private void CheckDataFormat()
+        {
+            FileFormatUtilities.CheckValueInRange("BlobCount", BlobCount, 1, BLOBCOUNT_LIMIT);
+            FileFormatUtilities.CheckValueInRange("BlobLength", BlobLength, 1, BLOBLENGTH_LIMIT);
+            
+            try
+            {
+                long totalBytes = (long)BlobCount * BlobLength;
+                FileFormatUtilities.CheckValueInRange($"Total data ({BlobCount} count) x ({BlobLength} bytes) == ", totalBytes, 1, FILEOFFSET_LIMIT);
+            }
+            catch (OverflowException)
+            {
+                throw new InvalidDataException($"Total data ({BlobCount} count) x ({BlobLength} bytes) caused an overflow.");
+            }
         }
 
         //private void ReadFiletypeMetadata()
