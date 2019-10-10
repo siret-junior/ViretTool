@@ -82,6 +82,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeywordFileDeinverter", "Ke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeywordScoringFileConverter", "KeywordScoringFileConverter\KeywordScoringFileConverter.csproj", "{8E58B0B6-4F10-490E-BB67-7E3DE9A3A67D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoolSignatureVisualizationTest", "BoolSignatureVisualizationTest\BoolSignatureVisualizationTest.csproj", "{5875519B-4973-496B-AEBB-B52E47EE8270}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug RAM|x64 = Debug RAM|x64
@@ -274,6 +276,14 @@ Global
 		{8E58B0B6-4F10-490E-BB67-7E3DE9A3A67D}.Release RAM|x64.Build.0 = Release|x64
 		{8E58B0B6-4F10-490E-BB67-7E3DE9A3A67D}.Release|x64.ActiveCfg = Release|x64
 		{8E58B0B6-4F10-490E-BB67-7E3DE9A3A67D}.Release|x64.Build.0 = Release|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug RAM|x64.ActiveCfg = Debug|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug RAM|x64.Build.0 = Debug|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug|x64.ActiveCfg = Debug|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug|x64.Build.0 = Debug|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release RAM|x64.ActiveCfg = Release|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release RAM|x64.Build.0 = Release|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release|x64.ActiveCfg = Release|x64
+		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -299,6 +309,7 @@ Global
 		{E542B6C5-75DC-49C4-8DA4-F1E6367FC00D} = {ABC14DBB-EDB6-48ED-8B32-0A78ACE58662}
 		{E4522BF0-179E-49B4-BA09-0EA7CC0BB505} = {BF158285-9F97-4B1C-BEC7-AB0D49B4F98D}
 		{8E58B0B6-4F10-490E-BB67-7E3DE9A3A67D} = {BF158285-9F97-4B1C-BEC7-AB0D49B4F98D}
+		{5875519B-4973-496B-AEBB-B52E47EE8270} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}

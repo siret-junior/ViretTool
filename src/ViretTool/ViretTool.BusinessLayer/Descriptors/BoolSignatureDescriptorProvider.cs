@@ -57,5 +57,11 @@ namespace ViretTool.BusinessLayer.Descriptors
                 throw new IOException($"No file with extension \"{extension}\" in directory \"{directory}\"");
             }
         }
+
+        public static BoolSignatureDescriptorProvider FromFile(string inputFile)
+        {
+            return new BoolSignatureDescriptorProvider(inputFile);
+        }
+
     }
 }
