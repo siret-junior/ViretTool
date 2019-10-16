@@ -67,6 +67,8 @@ namespace ColorSignatureVisualizationTest
                 using (Graphics gfx = Graphics.FromImage(outputBitmap))
                 {
                     gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
+                    gfx.PixelOffsetMode = PixelOffsetMode.Half;
+
                     gfx.DrawImage(thumbnailBitmap,
                                      new Rectangle(0, 0, outputBitmap.Width, outputBitmap.Height / 2),
                                      new Rectangle(0, 0, thumbnailBitmap.Width, thumbnailBitmap.Height),
