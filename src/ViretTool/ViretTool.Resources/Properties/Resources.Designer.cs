@@ -19,7 +19,7 @@ namespace ViretTool.Resources.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -448,6 +448,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zoom.
+        /// </summary>
+        public static string ShowZoomDisplayText {
+            get {
+                return ResourceManager.GetString("ShowZoomDisplayText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Color.
         /// </summary>
         public static string SketchModelName {
@@ -633,6 +642,15 @@ namespace ViretTool.Resources.Properties {
         public static string WorkingText {
             get {
                 return ResourceManager.GetString("WorkingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom display.
+        /// </summary>
+        public static string ZoomDisplayText {
+            get {
+                return ResourceManager.GetString("ZoomDisplayText", resourceCulture);
             }
         }
     }

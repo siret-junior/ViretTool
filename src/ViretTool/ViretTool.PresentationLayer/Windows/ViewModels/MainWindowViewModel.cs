@@ -55,6 +55,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public MainWindowViewModel(
             ILogger logger,
             IWindowManager windowManager,
+            ZoomDisplayControlViewModel zoomDisplay,
             PageDisplayControlViewModel queryResults,
             ScrollDisplayControlViewModel detailView,
             DetailViewModel detailViewModel,
@@ -88,21 +89,27 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _externalImageProvider = externalImageProvider;
 
             QueryResults = queryResults;
+            ZoomDisplay = zoomDisplay;
             DetailView = detailView;
             DetailViewModel = detailViewModel;
             Query1 = query1;
             Query2 = query2;
             LifelogFilterViewModel = lifelogFilterViewModel;
 
-            Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged)
+            Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged, ZoomDisplay.QuerySettingsChanged)
                       .Where(_ => !IsBusy)
                       .Throttle(TimeSpan.FromMilliseconds(50))
                       .ObserveOn(SynchronizationContext.Current)
                       .Subscribe(async _ => await OnQuerySettingsChanged());
 
+            /**** Assign events and event handlers **************************/
+
+            // Right scroll panel (shot view)
             queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
-            
-            DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
+            zoomDisplay.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
+
+            // FrameViewModel events (buttons, etc.)
+            DisplayControlViewModelBase[] displays = { queryResults, zoomDisplay, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
             {
                 display.FramesForQueryChanged += (sender, framesToQuery) =>
@@ -114,6 +121,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 display.FrameForGpsChanged += (sender, selectedFrame) => queryResults.GpsFrame = selectedFrame.Clone();
             }
 
+            // Miscelaneous windows
             DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
             _testControlViewModel.Deactivated += (sender, args) => TestFramesPosition = string.Empty;
         }
@@ -123,6 +131,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public LifelogFilterViewModel LifelogFilterViewModel { get; }
 
         public PageDisplayControlViewModel QueryResults { get; }
+        public ZoomDisplayControlViewModel ZoomDisplay { get; }
         public DisplayControlViewModelBase DetailView { get; }
         public DetailViewModel DetailViewModel { get; }
 
@@ -310,6 +319,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 IsBusy = true;
                 await QueryResults.LoadInitialDisplay();
+                IsBusy = false;
+            }
+        }
+
+        public async void ShowZoomDisplay()
+        {
+            if (_datasetServicesManager.IsDatasetOpened)
+            {
+                IsBusy = true;
+                await ZoomDisplay.LoadFramesForIds(new[] { 10 });
                 IsBusy = false;
             }
         }

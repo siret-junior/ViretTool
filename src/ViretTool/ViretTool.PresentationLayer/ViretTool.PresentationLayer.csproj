@@ -129,11 +129,15 @@
     <Compile Include="Controls\DisplayControl\ViewModels\PageDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollableDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollDisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\ZoomDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml.cs">
       <DependentUpon>PageDisplayControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml.cs">
       <DependentUpon>ScrollDisplayControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DisplayControl\Views\ZoomDisplayControlView.xaml.cs">
+      <DependentUpon>ZoomDisplayControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Query\ViewModels\QueryViewModel.cs" />
     <Compile Include="Controls\Common\FilterControl.xaml.cs">
@@ -234,6 +238,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DisplayControl\Views\ZoomDisplayControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
