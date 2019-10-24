@@ -117,6 +117,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                          framesToQuery);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
+                display.FrameForZoomChanged += async (sender, selectedFrame) => await OnFrameForZoomChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
                 display.FrameForGpsChanged += (sender, selectedFrame) => queryResults.GpsFrame = selectedFrame.Clone();
             }
@@ -328,7 +329,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (_datasetServicesManager.IsDatasetOpened)
             {
                 IsBusy = true;
-                await ZoomDisplay.LoadFramesForIds(new[] { 10 });
+                await ZoomDisplay.LoadInitialDisplay();
                 IsBusy = false;
             }
         }
@@ -653,6 +654,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
             IsDetailVisible = true;
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
+        }
+
+        private async Task OnFrameForZoomChanged(FrameViewModel selectedFrame)
+        {
+            // TODO: logging
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            await ZoomDisplay.LoadDisplayForFrame(selectedFrame);
         }
 
         private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)

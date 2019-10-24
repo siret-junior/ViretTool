@@ -14,8 +14,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class ZoomDisplayControlViewModel : DisplayControlViewModelBase
     {
-        private bool _isLargeFramesChecked;
         private FrameViewModel _gpsFrame;
+
+        private IZoomDisplayProvider _zoomDisplayProvider;
 
         public ZoomDisplayControlViewModel(
             ILogger logger,
@@ -25,6 +26,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             datasetServicesManager.DatasetOpened += (_, services) =>
             {
+                _zoomDisplayProvider = datasetServicesManager.CurrentDataset.ZoomDisplayProvider;
             };
         }
 
@@ -60,6 +62,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await base.LoadInitialDisplay();
         }
 
+        public async Task LoadDisplayForFrame(FrameViewModel selectedFrame)
+        {
+            await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
+        }
+
         public override async Task LoadFramesForIds(IEnumerable<int> inputFrameIds)
         {
             // TODO: populate display based on the lowest level of SOM, with the first item of input seqence in the middle.
@@ -87,8 +94,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             // extract a segment with the same length as column count, centered around the input frame
             int inputFrameIndex = Array.IndexOf(videoFrameIds, inputFrameId);
-            int startIndex = Math.Max(0, inputFrameIndex - (ColumnCount / 2));
-            int endIndex = Math.Min(videoFrameIds.Length - 1, inputFrameIndex + (ColumnCount / 2) - 1);
+            int startIndex = Math.Max(0, inputFrameIndex - (ColumnCount / 2) + 1);
+            int endIndex = Math.Min(videoFrameIds.Length - 1, inputFrameIndex + (ColumnCount / 2));
             int segmentLength = endIndex - startIndex + 1;
             if (segmentLength > ColumnCount)
             {

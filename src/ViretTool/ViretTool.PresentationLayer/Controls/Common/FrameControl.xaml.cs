@@ -46,6 +46,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
+        public static readonly RoutedEvent ZoomDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(ZoomDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
         public static readonly RoutedEvent VideoDisplayEvent = EventManager.RegisterRoutedEvent(
             nameof(VideoDisplay),
             RoutingStrategy.Bubble,
@@ -162,6 +168,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(SortDisplayEvent, value);
         }
 
+        public event RoutedEventHandler ZoomDisplay
+        {
+            add => AddHandler(ZoomDisplayEvent, value);
+            remove => RemoveHandler(ZoomDisplayEvent, value);
+        }
+
         public event RoutedEventHandler VideoDisplay
         {
             add => AddHandler(VideoDisplayEvent, value);
@@ -276,6 +288,11 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private void SortedClicked(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
+        }
+
+        private void ZoomClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ZoomDisplayEvent));
         }
 
         private void VideoClicked(object sender, RoutedEventArgs e)

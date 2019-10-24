@@ -154,7 +154,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
         public event EventHandler<FrameViewModel> FrameForSortChanged;
         public event EventHandler<FrameViewModel> FrameForGpsChanged;
-        //public event EventHandler<FrameViewModel> FrameForZoomChanged;
+        public event EventHandler<FrameViewModel> FrameForZoomChanged;
         public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;
 
         public int[] GetTopFrameIds(int count) => _loadedFrames.Select(GetFrameId).Where(id => id.HasValue).Take(count).Cast<int>().ToArray();
@@ -251,6 +251,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             BeforeEventAction();
             FrameForSortChanged?.Invoke(this, frameViewModel);
+        }
+
+        public void OnZoomDisplay(FrameViewModel frameViewModel)
+        {
+            BeforeEventAction();
+            FrameForZoomChanged?.Invoke(this, frameViewModel);
         }
 
         public void OnVideoDisplay(FrameViewModel frameViewModel)

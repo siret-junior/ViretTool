@@ -56,6 +56,7 @@
                                                                                    [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
                                                                                    [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                                    [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
+                                                                                   [Event ZoomDisplay] = [Action OnZoomDisplay($dataContext)];
                                                                                    [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
                                                                                    [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
                                                                                    [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];"

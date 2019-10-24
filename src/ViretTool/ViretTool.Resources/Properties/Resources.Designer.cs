@@ -646,6 +646,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Z.
+        /// </summary>
+        public static string ZoomButtonText {
+            get {
+                return ResourceManager.GetString("ZoomButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zoom display.
         /// </summary>
         public static string ZoomDisplayText {
