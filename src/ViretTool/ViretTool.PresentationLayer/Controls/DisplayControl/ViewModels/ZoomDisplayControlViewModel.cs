@@ -8,6 +8,7 @@ using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
+using ViretTool.BusinessLayer.Datasets;
 using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
@@ -55,11 +56,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
-        
+
         public override async Task LoadInitialDisplay()
         {
-            // TODO: load the highest level of SOM
-            await base.LoadInitialDisplay();
+            IsInitialDisplayShown = false;
+            //Get first layer of SOM
+            int[][] ids = _zoomDisplayProvider.GetFirstLayerOfSOM();
+            _loadedFrames = await Task.Run(() => ids.SelectMany(x=>x).Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+            // UpdateVisibleFrames() loads frames to screen
+            UpdateVisibleFrames();
+            IsInitialDisplayShown = true;
         }
 
         public async Task LoadDisplayForFrame(FrameViewModel selectedFrame)
@@ -69,7 +75,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public override async Task LoadFramesForIds(IEnumerable<int> inputFrameIds)
         {
-            // TODO: populate display based on the lowest level of SOM, with the first item of input seqence in the middle.
+            // TODO: populate display based on the lowest level of SOM, with the first item of input sequence in the middle.
             
             // Converts the input set of integer frameIds into a set of displayed FrameViewModels
             // Here we will consider only a single input frameId that will be in the center of the grid display
@@ -79,13 +85,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             // we expect exactly one frameId
             // (change to .First() to have a more robust code taking any nonzero number of inputs but considering only the first one)
-            int inputFrameId = inputFrameIds.Single();
+            int inputFrameId = inputFrameIds.First();
 
             // for now, it is required to precompute row and column counts
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
 
-
+            /*
             // get parent videoId of the input frameId
             int videoId = _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(inputFrameId);
             
@@ -102,16 +108,22 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 throw new IndexOutOfRangeException($"segmentLength = {segmentLength} is more than ColumnCount = {ColumnCount}.");
             }
             int[] expandedFrameIds = new int[segmentLength];
-            Array.Copy(videoFrameIds, startIndex, expandedFrameIds, 0, segmentLength);
 
+            Array.Copy(videoFrameIds, startIndex, expandedFrameIds, 0, segmentLength);
+            */
             // base class will convert the expanded set of frameIds into FrameViewModels that are ready to be displayed (stored it _loadedFrames).
-            await base.LoadFramesForIds(expandedFrameIds);
+            
+
+            int[] ids = _zoomDisplayProvider.ZoomIntoLastLayer(inputFrameId, RowCount, ColumnCount);
+            _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+
+            UpdateVisibleFrames();
+            IsInitialDisplayShown = false;
         }
 
 
         protected override void UpdateVisibleFrames()
         {
-            // TODO: Populate display frames using _loadedFrames
             // Contents of _loadedFrames depend on context. 
             // As an example, it could be entire 1M dataset sorted by relevance from which we select only the top RowCount*ColumnCount items.
 

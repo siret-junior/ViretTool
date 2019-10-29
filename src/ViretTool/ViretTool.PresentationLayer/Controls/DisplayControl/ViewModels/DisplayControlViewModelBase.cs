@@ -336,7 +336,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return datasetService.GetFrameNumbersForVideo(videoId).Select(frameNumber => ConvertThumbnailToViewModel(videoId, frameNumber));
         }
         
-        private FrameViewModel GetFrameViewModelForFrameId(int frameId)
+        protected FrameViewModel GetFrameViewModelForFrameId(int frameId)
         {
             IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
             int videoId = datasetService.GetVideoIdForFrameId(frameId);
