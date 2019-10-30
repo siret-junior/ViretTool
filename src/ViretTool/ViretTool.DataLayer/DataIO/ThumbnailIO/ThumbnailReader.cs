@@ -43,9 +43,8 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         {
             BaseBlobReader = new VariableSizeBlobReader(filePath);
 
-            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            BinaryReader reader = BaseBlobReader.BaseBinaryReader;
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
                 //ReadAndVerifyFiletypeAndVersion(reader);
 

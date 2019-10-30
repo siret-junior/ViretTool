@@ -26,17 +26,14 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
         {
             BaseBlobReader = new FixedSizeBlobReader(filePath);
 
-            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            BinaryReader reader = BaseBlobReader.BaseBinaryReader;
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
                 //ReadAndVerifyFiletypeAndVersion(reader);
 
                 SignatureWidth = reader.ReadInt32();
                 SignatureHeight = reader.ReadInt32();
             }
-
-            BaseBlobReader.MarkDataStartOffset();
         }
 
         public override void Dispose()

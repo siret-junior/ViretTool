@@ -25,8 +25,8 @@ namespace ViretTool.BusinessLayer.Descriptors
             {
                 DatasetHeader = reader.DatasetHeader;
 
-                DescriptorCount = reader.FrameCount;
-                DescriptorLength = 1;
+                DescriptorCount = reader.DescriptorCount;
+                DescriptorLength = reader.DescriptorLength;
 
                 Descriptors = reader.ReadFilter();
             }

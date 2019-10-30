@@ -16,7 +16,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
         public int[] BlobLengths { get; private set; }
 
         // blob filetype interpretation metadata
-        //public byte[] FiletypeMetadata { get; private set; }
+        public byte[] FiletypeMetadata { get; private set; }
 
         private object _lockObject = new object();
 
@@ -34,7 +34,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             //ReadAndVerifyFiletypeHeader();
             
             ReadBlobMetadata();
-            //ReadFiletypeMetadata();
+            ReadFiletypeMetadata();
         }
 
         public override void Dispose()
@@ -132,12 +132,12 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
                 FileFormatUtilities.CheckValuesInRange("BlobLengths", BlobLengths, 0, BLOBLENGTH_LIMIT);
             }
         }
-        
 
-        //private void ReadFiletypeMetadata()
-        //{
-        //    int metadataLength = BaseBinaryReader.ReadInt32();
-        //    FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
-        //}
+
+        private void ReadFiletypeMetadata()
+        {
+            int metadataLength = BaseBinaryReader.ReadInt32();
+            FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
+        }
     }
 }

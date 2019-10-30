@@ -11,7 +11,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
         public long DataStartOffset { get; private set; }
         public int BlobCount { get; private set; }
         public int BlobLength { get; private set; }
-        //public byte[] FiletypeMetadata { get; private set; }
+        public byte[] FiletypeMetadata { get; private set; }
 
         private readonly object _lockObject = new object();
 
@@ -29,19 +29,13 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
             //ReadAndVerifyFiletypeHeader();
 
             ReadBlobMetadata();
-            //ReadFiletypeMetadata();
-            // TODO: fix (it has to be updated in wrapping reader after reading metadata)
-            MarkDataStartOffset();
+            ReadFiletypeMetadata();
+            DataStartOffset = BaseBinaryReader.BaseStream.Position;
         }
 
         public override void Dispose()
         {
             ((IDisposable)BaseBinaryReader).Dispose();
-        }
-
-        public void MarkDataStartOffset()
-        {
-            DataStartOffset = BaseBinaryReader.BaseStream.Position;
         }
 
         public byte[] ReadByteBlob(int blobId)
@@ -123,10 +117,10 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
             }
         }
 
-        //private void ReadFiletypeMetadata()
-        //{
-        //    int metadataLength = BaseBinaryReader.ReadInt32();
-        //    FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
-        //}
+        private void ReadFiletypeMetadata()
+        {
+            int metadataLength = BaseBinaryReader.ReadInt32();
+            FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
+        }
     }
 }
