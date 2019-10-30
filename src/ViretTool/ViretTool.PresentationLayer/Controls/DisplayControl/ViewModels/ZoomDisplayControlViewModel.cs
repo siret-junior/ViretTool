@@ -60,7 +60,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public override async Task LoadInitialDisplay()
         {
             IsInitialDisplayShown = false;
-            //Get first layer of SOM
+            // Get first layer of SOM
             int[][] ids = _zoomDisplayProvider.GetFirstLayerOfSOM();
             _loadedFrames = await Task.Run(() => ids.SelectMany(x=>x).Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
             // UpdateVisibleFrames() loads frames to screen
@@ -75,44 +75,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public override async Task LoadFramesForIds(IEnumerable<int> inputFrameIds)
         {
-            // TODO: populate display based on the lowest level of SOM, with the first item of input sequence in the middle.
-            
-            // Converts the input set of integer frameIds into a set of displayed FrameViewModels
-            // Here we will consider only a single input frameId that will be in the center of the grid display
-            // and we will populate its surroundings based on the lowest level of SOM
-
-            // Example code populating the first row of the display grid with temporal context around the input frame from its video:
-
-            // we expect exactly one frameId
-            // (change to .First() to have a more robust code taking any nonzero number of inputs but considering only the first one)
             int inputFrameId = inputFrameIds.First();
 
             // for now, it is required to precompute row and column counts
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
-
-            /*
-            // get parent videoId of the input frameId
-            int videoId = _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(inputFrameId);
-            
-            // get all frameIds of the video
-            int[] videoFrameIds = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(videoId);
-
-            // extract a segment with the same length as column count, centered around the input frame
-            int inputFrameIndex = Array.IndexOf(videoFrameIds, inputFrameId);
-            int startIndex = Math.Max(0, inputFrameIndex - (ColumnCount / 2) + 1);
-            int endIndex = Math.Min(videoFrameIds.Length - 1, inputFrameIndex + (ColumnCount / 2));
-            int segmentLength = endIndex - startIndex + 1;
-            if (segmentLength > ColumnCount)
-            {
-                throw new IndexOutOfRangeException($"segmentLength = {segmentLength} is more than ColumnCount = {ColumnCount}.");
-            }
-            int[] expandedFrameIds = new int[segmentLength];
-
-            Array.Copy(videoFrameIds, startIndex, expandedFrameIds, 0, segmentLength);
-            */
-            // base class will convert the expanded set of frameIds into FrameViewModels that are ready to be displayed (stored it _loadedFrames).
-            
 
             int[] ids = _zoomDisplayProvider.ZoomIntoLastLayer(inputFrameId, RowCount, ColumnCount);
             _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
