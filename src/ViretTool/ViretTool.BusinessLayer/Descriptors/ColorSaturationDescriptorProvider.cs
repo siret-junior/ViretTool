@@ -23,8 +23,6 @@ namespace ViretTool.BusinessLayer.Descriptors
         {
             using (MaskFilterReader reader = new MaskFilterReader(inputFile))
             {
-                DatasetHeader = reader.DatasetHeader;
-
                 DescriptorCount = reader.DescriptorCount;
                 DescriptorLength = reader.DescriptorLength;
 

@@ -11,8 +11,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
     public class ColorSignatureReader : ColorSignatureIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-
+        
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength;
 

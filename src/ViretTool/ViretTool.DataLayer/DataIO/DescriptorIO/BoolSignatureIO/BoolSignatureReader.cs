@@ -11,8 +11,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
     public class BoolSignatureReader : BoolSignatureIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-
+        
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength;
 

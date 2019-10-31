@@ -22,8 +22,6 @@ namespace ViretTool.BusinessLayer.Descriptors
         {
             using (FloatVectorReader reader = new FloatVectorReader(inputFile))
             {
-                DatasetHeader = reader.DatasetHeader;
-                
                 DescriptorCount = reader.DescriptorCount;
                 DescriptorLength = reader.DescriptorLength;
 

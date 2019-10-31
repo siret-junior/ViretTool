@@ -11,7 +11,6 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
     public class MaskFilterReader : MaskFilterIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength / sizeof(float);
 

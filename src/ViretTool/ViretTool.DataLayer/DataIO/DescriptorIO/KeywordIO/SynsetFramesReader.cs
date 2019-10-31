@@ -13,8 +13,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
         private object _lockObject = new object();
 
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-
+        
         public int ScoringCount => BaseBlobReader.BlobCount;
         public int ScoringVectorSize => BaseBlobReader.BlobLength / (sizeof(int) + sizeof(float));
 

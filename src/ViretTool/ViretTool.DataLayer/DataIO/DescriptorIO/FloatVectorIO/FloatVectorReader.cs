@@ -11,8 +11,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
     public class FloatVectorReader : FloatVectorIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-
+        
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength / sizeof(float);
         

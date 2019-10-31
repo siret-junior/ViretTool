@@ -1,51 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
+﻿// TODO: fix format and refactor
 
-namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
-{
-    public class KeywordScoringWriter : KeywordScoringIOBase
-    {
-        public FixedSizeBlobWriter BaseBlobWriter { get; private set; }
-        public byte[] DatasetHeader => BaseBlobWriter.DatasetHeader;
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
 
-
-        public KeywordScoringWriter(string outputFile, byte[] datasetHeader,
-            int scoringVectorSize, int scoringCount, int[] idToSynsetIdMapping)
-        {
-            byte[] fileMetadata = null;
-            int blobLength = scoringVectorSize * sizeof(float);
-
-            using (MemoryStream metadataStream = new MemoryStream())
-            using (BinaryWriter writer = new BinaryWriter(metadataStream))
-            {
-                // id -> synsetId mapping
-                for (int i = 0; i < idToSynsetIdMapping.Length; i++)
-                {
-                    writer.Write(idToSynsetIdMapping[i]);
-                }
-                
-                fileMetadata = metadataStream.ToArray();
-            }
-
-            BaseBlobWriter = new FixedSizeBlobWriter(
-                outputFile, datasetHeader, scoringCount, blobLength, fileMetadata);
-        }
-
-        public override void Dispose()
-        {
-            BaseBlobWriter.Dispose();
-        }
+//namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
+//{
+//    public class KeywordScoringWriter : KeywordScoringIOBase
+//    {
+//        public FixedSizeBlobWriter BaseBlobWriter { get; private set; }
+//        public byte[] DatasetHeader => BaseBlobWriter.DatasetHeader;
 
 
-        public void WriteScoring(float[] scoringVector)
-        {
-            byte[] byteBlob = DataConversionUtilities.TranslateToByteArray(scoringVector);
-            BaseBlobWriter.WriteBlob(byteBlob);
-        }
-    }
-}
+//        public KeywordScoringWriter(string outputFile, byte[] datasetHeader,
+//            int scoringVectorSize, int scoringCount, int[] idToSynsetIdMapping)
+//        {
+//            byte[] fileMetadata = null;
+//            int blobLength = scoringVectorSize * sizeof(float);
+
+//            using (MemoryStream metadataStream = new MemoryStream())
+//            using (BinaryWriter writer = new BinaryWriter(metadataStream))
+//            {
+//                // id -> synsetId mapping
+//                for (int i = 0; i < idToSynsetIdMapping.Length; i++)
+//                {
+//                    writer.Write(idToSynsetIdMapping[i]);
+//                }
+
+//                fileMetadata = metadataStream.ToArray();
+//            }
+
+//            BaseBlobWriter = new FixedSizeBlobWriter(
+//                outputFile, datasetHeader, scoringCount, blobLength, fileMetadata);
+//        }
+
+//        public override void Dispose()
+//        {
+//            BaseBlobWriter.Dispose();
+//        }
+
+
+//        public void WriteScoring(float[] scoringVector)
+//        {
+//            byte[] byteBlob = DataConversionUtilities.ConvertToByteArray(scoringVector);
+//            BaseBlobWriter.WriteBlob(byteBlob);
+//        }
+//    }
+//}

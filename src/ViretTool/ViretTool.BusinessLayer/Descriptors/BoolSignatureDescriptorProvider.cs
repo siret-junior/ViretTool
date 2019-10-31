@@ -25,8 +25,6 @@ namespace ViretTool.BusinessLayer.Descriptors
         {
             using (BoolSignatureReader reader = new BoolSignatureReader(inputFile))
             {
-                DatasetHeader = reader.DatasetHeader;
-
                 SignatureWidth = reader.SignatureWidth;
                 SignatureHeight = reader.SignatureHeight;
 
