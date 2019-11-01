@@ -117,7 +117,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                          framesToQuery);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
-                display.FrameForZoomChanged += async (sender, selectedFrame) => await OnFrameForZoomChanged(selectedFrame);
+                display.FrameForZoomIntoChanged += async (sender, selectedFrame) => await OnFrameForZoomIntoChanged(selectedFrame);
+                display.FrameForZoomOutChanged += async (sender, selectedFrame) => await OnFrameForZoomOutChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
                 display.FrameForGpsChanged += (sender, selectedFrame) => queryResults.GpsFrame = selectedFrame.Clone();
             }
@@ -656,11 +657,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
         }
 
-        private async Task OnFrameForZoomChanged(FrameViewModel selectedFrame)
+        private async Task OnFrameForZoomIntoChanged(FrameViewModel selectedFrame)
         {
             // TODO: logging
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
-            await ZoomDisplay.LoadDisplayForFrame(selectedFrame);
+            await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+        }
+
+        private async Task OnFrameForZoomOutChanged(FrameViewModel selectedFrame)
+        {
+            // TODO: logging
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
         }
 
         private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)

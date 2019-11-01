@@ -68,8 +68,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IsInitialDisplayShown = true;
         }
 
-        public async Task LoadDisplayForFrame(FrameViewModel selectedFrame)
+        public async Task LoadZoomIntoDisplayForFrame(FrameViewModel selectedFrame)
         {
+            Console.WriteLine("Zoom Into");
+            await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
+        }
+
+        public async Task LoadZoomOutDisplayForFrame(FrameViewModel selectedFrame)
+        {
+            Console.WriteLine("Zoom Out");
+            // TODO: Change functionality to ZoomOut
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
         }
 

@@ -46,8 +46,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
-        public static readonly RoutedEvent ZoomDisplayEvent = EventManager.RegisterRoutedEvent(
-            nameof(ZoomDisplay),
+        public static readonly RoutedEvent ZoomIntoDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(ZoomIntoDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
+        public static readonly RoutedEvent ZoomOutDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(ZoomOutDisplay),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
@@ -168,10 +174,16 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(SortDisplayEvent, value);
         }
 
-        public event RoutedEventHandler ZoomDisplay
+        public event RoutedEventHandler ZoomIntoDisplay
         {
-            add => AddHandler(ZoomDisplayEvent, value);
-            remove => RemoveHandler(ZoomDisplayEvent, value);
+            add => AddHandler(ZoomIntoDisplayEvent, value);
+            remove => RemoveHandler(ZoomIntoDisplayEvent, value);
+        }
+
+        public event RoutedEventHandler ZoomOutDisplay
+        {
+            add => AddHandler(ZoomOutDisplayEvent, value);
+            remove => RemoveHandler(ZoomOutDisplayEvent, value);
         }
 
         public event RoutedEventHandler VideoDisplay
@@ -290,11 +302,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
         }
 
-        private void ZoomClicked(object sender, RoutedEventArgs e)
+        private void ZoomIntoClicked(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(ZoomDisplayEvent));
+            RaiseEvent(new RoutedEventArgs(ZoomIntoDisplayEvent));
         }
-
+        private void ZoomOutClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ZoomOutDisplayEvent));
+        }
         private void VideoClicked(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(VideoDisplayEvent));

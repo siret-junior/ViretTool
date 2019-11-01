@@ -315,7 +315,10 @@
   <data name="ShowZoomDisplayText" xml:space="preserve">
     <value>Zoom</value>
   </data>
-  <data name="ZoomButtonText" xml:space="preserve">
-    <value>Z</value>
+  <data name="ZoomIntoButtonText" xml:space="preserve">
+    <value>Z+</value>
+  </data>
+  <data name="ZoomOutButtonText" xml:space="preserve">
+    <value>Z-</value>
   </data>
 </root>
