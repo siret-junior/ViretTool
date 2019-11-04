@@ -19,7 +19,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
         public Dataset Deserialize(StreamReader serializationStream, string datasetName)
         {
             // TODO: singleton
-            return new DatasetFilelistDeserializer().Deserialize(serializationStream, datasetName);
+            return new DatasetReader().ReadDataset(serializationStream);
         }
     }
 }

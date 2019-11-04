@@ -25,7 +25,7 @@ namespace DatasetFileCreator
             }
             else
             {
-                DatasetFilelistDeserializer datasetDeserializer = new DatasetFilelistDeserializer();
+                DatasetReader datasetDeserializer = new DatasetReader();
                 dataset = datasetDeserializer.Deserialize(new StreamReader(inputFile), datasetName);
             }
             Directory.CreateDirectory(Path.GetDirectoryName(outputFile));

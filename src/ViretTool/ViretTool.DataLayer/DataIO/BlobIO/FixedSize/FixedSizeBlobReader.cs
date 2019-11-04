@@ -20,7 +20,7 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.FixedSize
     public class FixedSizeBlobReader : FizedSizeBlobIOBase
     {
         // debug limits (values are not expected to exceed these limits)
-        private const int BLOBLENGTH_LIMIT = 100_000;
+        private const int BLOBLENGTH_LIMIT = 10_000_000;
         private const int BLOBCOUNT_LIMIT = 10_000_000;
         private const long FILEOFFSET_LIMIT = 1_000_000_000_000;
 

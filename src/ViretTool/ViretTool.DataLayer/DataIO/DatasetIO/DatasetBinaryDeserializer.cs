@@ -20,9 +20,9 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
             {
                 byte[] datasetId = LoadAndCheckFileHeader(reader);
                 LoadDatasetItems(reader, out Video[] videos, out Shot[] shots, /*out Group[] groups, */out Frame[] frames);
-                LoadItemMappings(reader, videos, shots, /*groups, */frames);
+                LoadItemMappings(reader, videos, shots, frames);
 
-                Dataset dataset = new Dataset(datasetId, videos, shots, /*groups, */frames);
+                Dataset dataset = new Dataset(videos, shots, frames);
                 return dataset;
             }
         }

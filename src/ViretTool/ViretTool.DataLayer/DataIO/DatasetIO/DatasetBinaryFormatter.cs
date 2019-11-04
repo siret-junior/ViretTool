@@ -22,7 +22,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
         public void Serialize(Stream serializationStream, Dataset dataset)
         {
-            DatasetBinarySerializer.Serialize(serializationStream, dataset);
+            //DatasetBinarySerializer.Serialize(serializationStream, dataset);
         }
         
         public Dataset Deserialize(Stream serializationStream)
