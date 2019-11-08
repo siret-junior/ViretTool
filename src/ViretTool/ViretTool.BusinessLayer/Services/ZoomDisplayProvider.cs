@@ -85,7 +85,7 @@ namespace ViretTool.BusinessLayer.Services
         private static (int rowStart, int rowEnd) ComputeRowBoundaries(int layerHeight, int positionInLayerRow, int targetRowCount)
         {
             // normal situation
-            int rowStart = Math.Max(0, positionInLayerRow - (targetRowCount / 2));
+            int rowStart = Math.Max(0, positionInLayerRow - (targetRowCount / 2) + 1);
             int rowEnd = rowStart + targetRowCount;
 
             // if the surounding would overstep the SOM layer borders, then we have to adjust the rowStart, rowEnd
@@ -101,7 +101,7 @@ namespace ViretTool.BusinessLayer.Services
         private static (int colStart, int colEnd) ComputeColBoundaries(int layerWidth, int positionInLayerCol, int targetColumnCount)
         {
             // normal situation
-            int colStart = Math.Max(0, positionInLayerCol - (targetColumnCount / 2));
+            int colStart = Math.Max(0, positionInLayerCol - (targetColumnCount / 2) + 1);
             int colEnd = colStart + targetColumnCount;
 
             // if the surounding would overstep the layer borders, then we have to adjust the X_start,X_end
