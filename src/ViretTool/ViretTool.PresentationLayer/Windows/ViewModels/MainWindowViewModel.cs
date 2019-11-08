@@ -373,6 +373,22 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CloseDetailViewModel();
             }
+            if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                ZoomDisplay.KeyPressed(e.Key);
+            }
+            if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyPressed(e.Key);
+            }
+            if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyPressed(e.Key);
+            }
+            if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyPressed(e.Key);
+            }
         }
 
         public async void OnDrop(DragEventArgs e)

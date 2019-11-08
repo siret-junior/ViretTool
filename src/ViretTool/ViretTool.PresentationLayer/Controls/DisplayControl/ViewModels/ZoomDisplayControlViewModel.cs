@@ -10,6 +10,7 @@ using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.BusinessLayer.Datasets;
 using Action = System.Action;
+using System.Windows.Input;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -60,12 +61,49 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public override async Task LoadInitialDisplay()
         {
             IsInitialDisplayShown = false;
+
             // Get first layer of SOM
             int[][] ids = _zoomDisplayProvider.GetFirstLayerOfSOM();
             _loadedFrames = await Task.Run(() => ids.SelectMany(x=>x).Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+
+            
+            RowCount = DisplayHeight / ImageHeight;
+            ColumnCount = DisplayWidth / ImageWidth;
+
             // UpdateVisibleFrames() loads frames to screen
             UpdateVisibleFrames();
             IsInitialDisplayShown = true;
+        }
+        
+        public async void KeyPressed(Key key)
+        {
+            int _oldCenter = ColumnCount * (RowCount / 2 - 1) + (ColumnCount / 2) - 1;
+            int _newCenter;
+            switch (key)
+            {
+                case Key.Right:
+                    _newCenter = _oldCenter + 1;
+                    await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[_newCenter]);
+                    break;
+                case Key.Up:
+                    _newCenter = _oldCenter - ColumnCount;
+                    await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[_newCenter]);
+                    break;
+                case Key.Left:
+                    _newCenter = _oldCenter - 1;
+                    await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[_newCenter]);
+                    break;
+                case Key.Down:
+                    _newCenter = _oldCenter + ColumnCount;
+                    await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[_newCenter]);
+                    break;
+            }
+        }
+
+        public async Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame)
+        {
+            Console.WriteLine("Move");
+            await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
         }
 
         public async Task LoadZoomIntoDisplayForFrame(FrameViewModel selectedFrame)
