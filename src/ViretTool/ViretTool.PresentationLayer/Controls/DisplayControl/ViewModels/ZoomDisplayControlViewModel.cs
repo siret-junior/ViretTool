@@ -18,6 +18,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         private FrameViewModel _gpsFrame;
 
+        /// <summary>
+        /// Indicates the layer of SOM, in which the ZoomDisplay is currently located. Zero-based numbering.
+        /// </summary>
+        private int _currentLayer;
+
         private IZoomDisplayProvider _zoomDisplayProvider;
 
         public ZoomDisplayControlViewModel(
@@ -62,8 +67,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             IsInitialDisplayShown = false;
 
+            _currentLayer = 0;
+
             // Get first layer of SOM
-            int[][] ids = _zoomDisplayProvider.GetFirstLayerOfSOM();
+            int[][] ids = _zoomDisplayProvider.GetInitialLayer();
             _loadedFrames = await Task.Run(() => ids.SelectMany(x=>x).Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
             
@@ -77,8 +84,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         
         public async void KeyPressed(Key key)
         {
+            // old center of SOM display
             int _oldCenter = ColumnCount * (RowCount / 2 - 1) + (ColumnCount / 2) - 1;
+
+            // to be calculated
             int _newCenter;
+
             switch (key)
             {
                 case Key.Right:
@@ -109,12 +120,14 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public async Task LoadZoomIntoDisplayForFrame(FrameViewModel selectedFrame)
         {
             Console.WriteLine("Zoom Into");
+            _currentLayer++;
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
         }
 
         public async Task LoadZoomOutDisplayForFrame(FrameViewModel selectedFrame)
         {
             Console.WriteLine("Zoom Out");
+            _currentLayer--;
             // TODO: Change functionality to ZoomOut
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
         }
@@ -127,7 +140,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
 
-            int[] ids = _zoomDisplayProvider.ZoomIntoLastLayer(inputFrameId, RowCount, ColumnCount);
+            int[] ids = _zoomDisplayProvider.ZoomIntoLayer(_currentLayer,inputFrameId, RowCount, ColumnCount);
             _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
             UpdateVisibleFrames();

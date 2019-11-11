@@ -6,8 +6,9 @@
         /// Returns the first layer of SOM needed for initialization
         /// </summary>
         /// <returns></returns>
-        int[][] GetFirstLayerOfSOM();
+        int[][] GetInitialLayer();
 
+        int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
         /// <summary>
         /// Finds particular frame in lowest SOM layer (determined by "frameId" parameter) and returns its surounding frames 
         /// </summary>

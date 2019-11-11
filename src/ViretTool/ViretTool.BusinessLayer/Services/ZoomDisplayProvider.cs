@@ -28,11 +28,14 @@ namespace ViretTool.BusinessLayer.Services
         }
 
 
-        public int[][] GetFirstLayerOfSOM()
+        public int[][] GetInitialLayer()
         {
             return LayersIds[0];
         }
-
+        public int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount)
+        {
+            return ZoomIntoLayer(LayersIds[layerIndex], frameId, rowCount, columnCount);
+        }
         public int[] ZoomIntoLayer(int[][] layer, int frameId, int rowCount, int columnCount)
         {
             // check display fits layer size
