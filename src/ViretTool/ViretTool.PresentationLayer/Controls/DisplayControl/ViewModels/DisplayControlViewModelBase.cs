@@ -148,7 +148,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public Action ResetGrid { protected get; set; }
 
         public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
-
         public event EventHandler<FramesToQuery> FramesForQueryChanged;
         public event EventHandler<FrameViewModel> FrameForVideoChanged;
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
