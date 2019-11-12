@@ -36,6 +36,35 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             };
         }
 
+
+        public bool ShowZoomIntoButton
+        {
+            get
+            {
+                if(_currentLayer == 2)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        public bool ShowZoomOutButton
+        {
+            get
+            {
+                if (_currentLayer == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
         public FrameViewModel GpsFrame
         {
             get => _gpsFrame;
@@ -49,7 +78,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 _gpsFrame = value;
                 _interactionLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
                 NotifyQuerySettingsChanged();
-                NotifyOfPropertyChange();
+                
             }
         }
 
@@ -67,6 +96,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IsInitialDisplayShown = false;
 
             _currentLayer = 0;
+            this.NotifyOfPropertyChange("ShowZoomOutButton");
+            this.NotifyOfPropertyChange("ShowZoomIntoButton");
 
             // Get first layer of SOM
             int[][] ids = _zoomDisplayProvider.GetInitialLayer();
@@ -114,12 +145,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public async Task LoadZoomIntoDisplayForFrame(FrameViewModel selectedFrame)
         {
             _currentLayer++;
+            this.NotifyOfPropertyChange("ShowZoomOutButton");
+            this.NotifyOfPropertyChange("ShowZoomIntoButton");
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
         }
 
         public async Task LoadZoomOutDisplayForFrame(FrameViewModel selectedFrame)
         {
             _currentLayer--;
+            this.NotifyOfPropertyChange("ShowZoomOutButton");
+            this.NotifyOfPropertyChange("ShowZoomIntoButton");
             // TODO: Change functionality to ZoomOut
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) });
         }

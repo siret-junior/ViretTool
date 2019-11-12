@@ -61,7 +61,11 @@
                                                                                    [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
                                                                                    [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
                                                                                    [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];"
-                                         IsSelectable="True" >
+                                         IsSelectable="True" 
+                                         ShowZoomOut="{Binding RelativeSource={RelativeSource FindAncestor, 
+                    AncestorType={x:Type UserControl}}, Path=DataContext.ShowZoomOutButton, UpdateSourceTrigger=PropertyChanged}"
+                                         ShowZoomInto="{Binding RelativeSource={RelativeSource FindAncestor, 
+                    AncestorType={x:Type UserControl}}, Path=DataContext.ShowZoomIntoButton, UpdateSourceTrigger=PropertyChanged}">
 
                         <!-- Display style selector -->
                         <common:FrameControl.Style>

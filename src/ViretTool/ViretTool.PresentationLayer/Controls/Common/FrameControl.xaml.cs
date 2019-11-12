@@ -83,6 +83,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(FrameControl),
             null);
 
+        public static readonly DependencyProperty ShowZoomOutProperty = DependencyProperty.Register(
+            nameof(ShowZoomOut),
+            typeof(bool),
+            typeof(FrameControl),
+            null);
+
+        public static readonly DependencyProperty ShowZoomIntoProperty = DependencyProperty.Register(
+            nameof(ShowZoomInto),
+            typeof(bool),
+            typeof(FrameControl),
+            null);
+
         public static readonly DependencyProperty IsClickedProperty = DependencyProperty.Register(
             nameof(IsClicked),
             typeof(bool),
@@ -110,6 +122,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get => (bool)GetValue(IsMouseOverFrameProperty);
             private set => SetValue(IsMouseOverFrameProperty, value);
+        }
+
+        public bool ShowZoomOut
+        {
+            get => (bool)GetValue(ShowZoomOutProperty);
+            set => SetValue(ShowZoomOutProperty, value);
+        }
+
+        public bool ShowZoomInto
+        {
+            get => (bool)GetValue(ShowZoomIntoProperty);
+            set => SetValue(ShowZoomIntoProperty, value);
         }
 
         public bool IsSelectable
