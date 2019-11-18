@@ -6,9 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Facilities.Logging;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Proxy;
+using Castle.Services.Logging.NLogIntegration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Newtonsoft.Json;
@@ -32,9 +34,19 @@ namespace KisQueryResultExtraction
             Directory.CreateDirectory(Directory.GetParent(outputFilePath).FullName);
 
             // load tasks
-            dynamic[] tasks = File.ReadAllLines(tasksFilePath)
-                .Select(jsonLine => JsonConvert.DeserializeObject(jsonLine))
-                .ToArray();
+            //dynamic[] tasks = File.ReadAllLines(tasksFilePath)
+            //    .Select(jsonLine => JsonConvert.DeserializeObject(jsonLine))
+            //    .ToArray();
+            var tasks = JsonConvert.DeserializeObject<string[]>(File.ReadAllLines(tasksFilePath)[0])
+                .Select(line => line.Split(';'))
+                .Select(item => new
+                {
+                    videoId = int.Parse(item[3]),
+                    startFrame = int.Parse(item[4]),
+                    endFrame = int.Parse(item[5]),
+                    startTimeStamp = long.Parse(item[6] + "000"),
+                    endTimeStamp = long.Parse(item[7] + "000")
+                });
 
             using (WindsorContainer container = new WindsorContainer(
                     new DefaultKernel(
@@ -45,6 +57,7 @@ namespace KisQueryResultExtraction
                 // init business layer
                 Console.WriteLine("Initializing ranking service...");
                 container.AddFacility<TypedFactoryFacility>();
+                container.AddFacility<LoggingFacility>(x => x.LogUsing<NLogFactory>().WithAppConfig());
                 container.Install(FromAssembly.This());
                 IDatasetServicesManager datasetServiceManager = container.Resolve<IDatasetServicesManager>();
                 datasetServiceManager.OpenDataset(datasetDirectory);
@@ -54,6 +67,10 @@ namespace KisQueryResultExtraction
                 IQueryPersistingService queryPersistingService = container.Resolve<IQueryPersistingService>();
                 IBiTemporalRankingService rankingService = dataset.RankingService;
 
+                // accumulators
+                Dictionary<int, int> videoAccumulator = new Dictionary<int, int>();
+                Dictionary<int, int> shotAccumulator = new Dictionary<int, int>();
+
                 // compute result set for each query in query directory
                 using (StreamWriter writer = new StreamWriter(outputFilePath))
                 {
@@ -61,7 +78,9 @@ namespace KisQueryResultExtraction
                     foreach (string queryFile in queryFiles)
                     {
                         Console.WriteLine($"Computing ranking for {Path.GetFileName(queryFile)}");
-                        long queryTimestamp = long.Parse(Path.GetFileNameWithoutExtension(queryFile));
+                        string queryTimestampString = Path.GetFileNameWithoutExtension(queryFile)
+                            .Split('_')[1];
+                        long queryTimestamp = long.Parse(queryTimestampString);
                         
                         // find correct task based on timestamp
                         dynamic task = tasks
@@ -70,12 +89,51 @@ namespace KisQueryResultExtraction
                         if (task == null)
                         {
                             // TODO
-                            Console.WriteLine("SKIPPED");
+                            //Console.WriteLine("SKIPPED");
                             continue;
                         }
 
                         // compute ranking
                         BiTemporalQuery query = queryPersistingService.LoadQuery(queryFile);
+
+                        //**** no filter ****/
+                        //query.FormerFilteringQuery.CountFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.CountFilteringQuery.State.Disabled;
+                        //query.LatterFilteringQuery.CountFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.CountFilteringQuery.State.Disabled;
+                        //query.FormerFusionQuery.KeywordFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        //query.FormerFusionQuery.ColorSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        //query.FormerFusionQuery.SemanticExampleFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        query.FormerFusionQuery.TextSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        query.FormerFusionQuery.FaceSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+
+                        //query.LatterFusionQuery.KeywordFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        //query.LatterFusionQuery.ColorSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        //query.LatterFusionQuery.SemanticExampleFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        query.LatterFusionQuery.TextSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+                        query.LatterFusionQuery.FaceSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.Off;
+
+                        //**** filters middle ****/
+                        query.FormerFilteringQuery.CountFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.CountFilteringQuery.State.Enabled;
+                        query.FormerFilteringQuery.CountFilteringQuery.MaxPerVideo = 10;
+                        query.FormerFilteringQuery.CountFilteringQuery.MaxPerShot = 3;
+                        query.LatterFilteringQuery.CountFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.CountFilteringQuery.State.Enabled;
+                        query.LatterFilteringQuery.CountFilteringQuery.MaxPerVideo = 10;
+                        query.LatterFilteringQuery.CountFilteringQuery.MaxPerShot = 3;
+
+                        query.FormerFusionQuery.KeywordFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                        query.FormerFusionQuery.KeywordFilteringQuery.Threshold = 0.3;
+                        query.FormerFusionQuery.ColorSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                        query.FormerFusionQuery.ColorSketchFilteringQuery.Threshold = 0.3;
+                        query.FormerFusionQuery.SemanticExampleFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                        query.FormerFusionQuery.SemanticExampleFilteringQuery.Threshold = 0.3;
+
+                        query.LatterFusionQuery.KeywordFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                        query.LatterFusionQuery.KeywordFilteringQuery.Threshold = 0.3;
+                        query.LatterFusionQuery.ColorSketchFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                        query.LatterFusionQuery.ColorSketchFilteringQuery.Threshold = 0.3;
+                        query.LatterFusionQuery.SemanticExampleFilteringQuery.FilterState = ViretTool.BusinessLayer.RankingModels.Queries.ThresholdFilteringQuery.State.IncludeAboveThreshold;
+                        query.LatterFusionQuery.SemanticExampleFilteringQuery.Threshold = 0.3;
+
+
                         BiTemporalRankedResultSet resultSet = rankingService.ComputeRankedResultSet(query);
 
                         // extract intermediate ranks
@@ -121,31 +179,82 @@ namespace KisQueryResultExtraction
 
 
                         // find top video/shot positions in the result set
-                        int[] videoFrameSet = task.videoFrameSet.ToObject<int[]>();
-                        int[] shotFrameSet = task.shotFrameSet.ToObject<int[]>();
+                        //int[] videoFrameSet = task.videoFrameSet.ToObject<int[]>();
+                        //int[] shotFrameSet = task.shotFrameSet.ToObject<int[]>();
+                        int[] videoFrameSet = datasetServiceManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(task.videoId);
+                        int[] shotFrameSet = videoFrameSet
+                            .Where(frameId => datasetServiceManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(frameId) >= task.startFrame
+                                && datasetServiceManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(frameId) <= task.endFrame)
+                            .ToArray();
 
                         int topVideoPosition = GetFramesetTopPosition(videoFrameSet, outputRanks);
                         int topShotPosition = GetFramesetTopPosition(shotFrameSet, outputRanks);
 
                         // find where the video/shot was filtered
-                        string filteredBy = "TODO";
+                        //string filteredBy = "TODO";
 
                         // write result
-                        dynamic Result = new ExpandoObject();
+                        //dynamic Result = new ExpandoObject();
 
-                        Result.taskName = (string)task.name;
-                        Result.taskStartTimeStamp = (string)task.startTimeStamp;
-                        Result.taskEndTimeStamp = (string)task.endTimeStamp;
-                        Result.videoId = (int)task.videoId;
-                        Result.startFrame = (int)task.startFrame;
-                        Result.endFrame = (int)task.endFrame;
+                        //Result.taskName = (string)task.name;
+                        //Result.taskStartTimeStamp = (string)task.startTimeStamp;
+                        //Result.taskEndTimeStamp = (string)task.endTimeStamp;
+                        //Result.videoId = (int)task.videoId;
+                        //Result.startFrame = (int)task.startFrame;
+                        //Result.endFrame = (int)task.endFrame;
 
-                        Result.queryTimestamp = queryTimestamp;
-                        Result.topVideoPosition = topVideoPosition;
-                        Result.topShotPosition = topShotPosition;
-                        Result.filteredBy = filteredBy;
+                        //Result.queryTimestamp = queryTimestamp;
+                        //Result.topVideoPosition = topVideoPosition;
+                        //Result.topShotPosition = topShotPosition;
+                        //Result.filteredBy = filteredBy;
+
+                        //writer.WriteLine(JsonConvert.SerializeObject(Result));
+
+                        writer.WriteLine($"{queryTimestamp};{topVideoPosition};{topShotPosition}");
+
                         
-                        writer.WriteLine(JsonConvert.SerializeObject(Result));
+                        if (videoAccumulator.ContainsKey(topVideoPosition))
+                        {
+                            videoAccumulator[topVideoPosition]++;
+                        }
+                        else
+                        {
+                            videoAccumulator[topVideoPosition] = 1;
+                        }
+
+                        if (shotAccumulator.ContainsKey(topShotPosition))
+                        {
+                            shotAccumulator[topShotPosition]++;
+                        }
+                        else
+                        {
+                            shotAccumulator[topShotPosition] = 1;
+                        }
+                    }
+                }
+
+                // cumulative graph
+                //videoAccumulator.Remove(-1);
+                //shotAccumulator.Remove(-1);
+
+                int videoRankSum = 0;
+                int shotRankSum = 0;
+
+                using (StreamWriter writer = new StreamWriter(outputFilePath + ".v.txt"))
+                {
+                    foreach (KeyValuePair<int, int> keyValue in videoAccumulator.OrderBy(x => x.Key))
+                    {
+                        videoRankSum += keyValue.Value;
+                        writer.WriteLine($"{keyValue.Key};{videoRankSum}");
+                    }
+                }
+
+                using (StreamWriter writer = new StreamWriter(outputFilePath + ".s.txt"))
+                {
+                    foreach (KeyValuePair<int, int> keyValue in shotAccumulator.OrderBy(x => x.Key))
+                    {
+                        shotRankSum += keyValue.Value;
+                        writer.WriteLine($"{keyValue.Key};{shotRankSum}");
                     }
                 }
             }

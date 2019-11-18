@@ -5,11 +5,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     public class CountFilteringQuery : IEquatable<CountFilteringQuery>
     {
         public enum State { Enabled, Disabled }
-        public State FilterState { get; private set; }
+        public State FilterState { get; set; }
 
-        public int MaxPerVideo { get; private set; }
-        public int MaxPerShot { get; private set; }
-        public int MaxPerGroup { get; private set; }
+        public int MaxPerVideo { get; set; }
+        public int MaxPerShot { get; set; }
+        public int MaxPerGroup { get; set; }
 
 
         public CountFilteringQuery(State filterState, int maxPerVideo, int maxPerShot, int maxPerGroup)
