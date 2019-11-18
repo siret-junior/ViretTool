@@ -8,14 +8,14 @@
         /// <returns></returns>
         int[][] GetInitialLayer();
 
-        int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
         /// <summary>
-        /// Finds particular frame in lowest SOM layer (determined by "frameId" parameter) and returns its surounding frames 
+        /// Calculate number of layers
         /// </summary>
-        /// <param name="frameId"></param>
-        /// <param name="rowCount"></param>
-        /// <param name="columnCount"></param>
-        /// <returns>2D array concatenated into 1D array (dimension is rowCount*columnCount)</returns>
-        int[] ZoomIntoLastLayer(int frameId, int rowCount, int columnCount);
+        /// <returns></returns>
+        int GetMaxDepth();
+
+        int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
+
+        int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount);
     }
 }

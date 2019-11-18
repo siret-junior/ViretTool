@@ -27,6 +27,10 @@ namespace ViretTool.BusinessLayer.Services
             LayersIds = zoomDisplayReader.ReadLayersIdsFromFile();
         }
 
+        public int GetMaxDepth()
+        {
+            return LayersIds.Count - 1;
+        }
 
         public int[][] GetInitialLayer()
         {
@@ -49,6 +53,12 @@ namespace ViretTool.BusinessLayer.Services
             // positionInArray[XY] is tuple determining position of frameId in last SOM layer
             (int positionInLayerCol, int positionInLayerRow) = GetArrayItemPosition(frameId, layer);
 
+            // if frame wasn't found
+            if(positionInLayerCol == -1)
+            {
+                throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
+            }
+
             // get display boundaries in the SOM layer
             (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, positionInLayerRow, rowCount);
             (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, positionInLayerCol, columnCount);
@@ -58,15 +68,117 @@ namespace ViretTool.BusinessLayer.Services
             return resultDisplay.ToArray();
         }
 
-        public int[] ZoomIntoLastLayer(int frameId, int rowCount, int columnCount)
+        public int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
-            // pointer to last SOM layer
-            int[][] lastLayer = LayersIds.Last();
 
-            return ZoomIntoLayer(lastLayer, frameId, rowCount, columnCount);
+            int [][] higherLayer = LayersIds[layerIndex];
+            int higherLayerHeight = higherLayer.Length;
+            int higherLayerWidth = higherLayer[0].Length;
+
+            int[][] lowerLayer = LayersIds[layerIndex + 1];
+            int lowerLayerHeight = lowerLayer.Length;
+            int lowerLayerWidth = lowerLayer[0].Length;
+
+
+            if (rowCount > higherLayerHeight || columnCount > higherLayerWidth)
+            {
+                throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {higherLayerWidth}x{higherLayerHeight}.");
+            }
+
+
+            (int positionInLayerCol, int positionInLayerRow) = GetArrayItemPosition(frameId, higherLayer);
+
+            // if original frame is not in the higher layer
+            if (positionInLayerCol == -1)
+            {
+                (int centerCol, int centerRow) = GetArrayItemPosition(frameId, lowerLayer);
+                for (int distance = 1; distance <= Math.Max(lowerLayerHeight, lowerLayerWidth); distance++)
+                {
+                    (positionInLayerCol, positionInLayerRow) = SearchVerticalMargin(distance, lowerLayer, higherLayer, centerCol, centerRow);
+                    if(positionInLayerCol != -1)
+                    {
+                        break;
+                    }
+                    (positionInLayerCol, positionInLayerRow) = SearchHorizontalMargin(distance, lowerLayer, higherLayer, centerCol, centerRow);
+                    if (positionInLayerCol != -1)
+                    {
+                        break;
+                    } 
+                }
+            }
+
+            if (positionInLayerCol == -1)
+            {
+                throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the higher SOM layer.");
+            }
+
+            (int rowStart, int rowEnd) = ComputeRowBoundaries(higherLayerHeight, positionInLayerRow, rowCount);
+            (int colStart, int colEnd) = ComputeColBoundaries(higherLayerWidth, positionInLayerCol, columnCount);
+
+            List<int> resultDisplay = ExtractDisplayItems(higherLayer, rowStart, rowEnd, colStart, colEnd);
+
+            return resultDisplay.ToArray();
         }
 
+        private (int positionInLayerCol, int positionInLayerRow) SearchVerticalMargin(int distanceFromCenter, int[][] layer, int[][] higherLayer, int centerCol, int centerRow)
+        {
+            (int ColumnToBeSearched1, int ColumnToBeSearched2) = (centerCol - distanceFromCenter, centerCol + distanceFromCenter);
+            int StartOfColumnIterator = centerRow - distanceFromCenter;
+            for(int i = 0; i < 2 * distanceFromCenter + 1; i++)
+            {
+                int ColumnIterator = StartOfColumnIterator + i;
+                if(ColumnIterator >= 0 && ColumnIterator < layer.Length)
+                {
+                    if(ColumnToBeSearched1 >= 0)
+                    {
+                        (int resultCol, int resultRow) = GetArrayItemPosition(layer[ColumnIterator][ColumnToBeSearched1], higherLayer);
+                        if(resultCol != -1)
+                        {
+                            return (resultCol, resultRow);
+                        }
+                    }
+                    if (ColumnToBeSearched2 < layer[0].Length)
+                    {
+                        (int resultCol, int resultRow) = GetArrayItemPosition(layer[ColumnIterator][ColumnToBeSearched2], higherLayer);
+                        if (resultCol != -1)
+                        {
+                            return (resultCol, resultRow);
+                        }
+                    }
+                }
+            }
+            return (-1, -1);
+        }
 
+        private (int positionInLayerCol, int positionInLayerRow) SearchHorizontalMargin(int distanceFromCenter, int[][] layer, int[][] higherLayer, int centerCol, int centerRow)
+        {
+            (int RowToBeSearched1, int RowToBeSearched2) = (centerRow - distanceFromCenter, centerRow + distanceFromCenter);
+            int StartOfRowIterator = centerRow - distanceFromCenter + 1;
+            for(int i = 0;i < 2 * (distanceFromCenter - 1) + 1; i++)
+            {
+                int RowIterator = StartOfRowIterator + i;
+                if(RowIterator >= 0 && RowIterator < layer[0].Length)
+                {
+                    if(RowToBeSearched1 >= 0)
+                    {
+                        (int resultCol, int resultRow) = GetArrayItemPosition(layer[RowToBeSearched1][RowIterator], higherLayer);
+                        if(resultCol != -1)
+                        {
+                            return (resultCol, resultRow);
+                        }
+                    }
+                    if (RowToBeSearched2 < layer.Length)
+                    {
+                        (int resultCol, int resultRow) = GetArrayItemPosition(layer[RowToBeSearched2][RowIterator], higherLayer);
+                        if (resultCol != -1)
+                        {
+                            return (resultCol, resultRow);
+                        }
+                    }
+                }
+            }
+            return (-1, -1);
+        }
         private static (int resultCol, int resultRow) GetArrayItemPosition(int arrayItem, int[][] inputArray)
         {
             int resultCol;
@@ -82,7 +194,7 @@ namespace ViretTool.BusinessLayer.Services
                 }
             }
 
-            throw new ArgumentOutOfRangeException($"FrameID: {arrayItem} was not found in the SOM layer.");
+            return (-1, -1);
         }
 
         private static (int rowStart, int rowEnd) ComputeRowBoundaries(int layerHeight, int positionInLayerRow, int targetRowCount)
