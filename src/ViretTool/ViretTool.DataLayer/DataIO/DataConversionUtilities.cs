@@ -1,58 +1,84 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ViretTool.DataLayer.DataIO
 {
+    /// <summary>
+    /// Provides helper routines for conversion between data formats (mainly between array types).
+    /// </summary>
     internal static class DataConversionUtilities
     {
-        public static float[] TranslateToFloatArray(byte[] byteBuffer)
+        #region --[ Conversion from byte array ]--
+
+        public static float[] ConvertToFloatArray(byte[] byteArray)
         {
-            float[] floats = new float[byteBuffer.Length / sizeof(float)];
-            Buffer.BlockCopy(byteBuffer, 0, floats, 0, byteBuffer.Length);
+            if (byteArray.Length % sizeof(float) != 0)
+            {
+                throw new ArgumentException($"Length of byte array ({byteArray.Length}) is not divisible by float size ({sizeof(float)}).");
+            }
+
+            float[] floats = new float[byteArray.Length / sizeof(float)];
+            Buffer.BlockCopy(byteArray, 0, floats, 0, byteArray.Length);
             return floats;
         }
 
-        public static int[] TranslateToIntArray(byte[] byteBuffer)
+        public static int[] ConvertToIntArray(byte[] byteArray)
         {
-            int[] integers = new int[byteBuffer.Length / sizeof(int)];
-            Buffer.BlockCopy(byteBuffer, 0, integers, 0, byteBuffer.Length);
+            if (byteArray.Length % sizeof(int) != 0)
+            {
+                throw new ArgumentException($"Length of byte array ({byteArray.Length}) is not divisible by int size ({sizeof(int)}).");
+            }
+
+            int[] integers = new int[byteArray.Length / sizeof(int)];
+            Buffer.BlockCopy(byteArray, 0, integers, 0, byteArray.Length);
             return integers;
         }
 
-        public static long[] TranslateToLongArray(byte[] byteBuffer)
+        public static long[] ConvertToLongArray(byte[] byteArray)
         {
-            long[] longs = new long[byteBuffer.Length / sizeof(long)];
-            Buffer.BlockCopy(byteBuffer, 0, longs, 0, byteBuffer.Length);
+            if (byteArray.Length % sizeof(long) != 0)
+            {
+                throw new ArgumentException($"Length of byte array ({byteArray.Length}) is not divisible by long size ({sizeof(long)}).");
+            }
+
+            long[] longs = new long[byteArray.Length / sizeof(long)];
+            Buffer.BlockCopy(byteArray, 0, longs, 0, byteArray.Length);
             return longs;
         }
 
-        public static byte[] TranslateToByteArray(float[] floatArray)
+        public static bool[] ConvertToBoolArray(byte[] byteArray)
+        {
+            if (byteArray.Length % sizeof(bool) != 0)
+            {
+                throw new ArgumentException($"Length of byte array ({byteArray.Length}) is not divisible by bool size ({sizeof(bool)}).");
+            }
+            
+            bool[] bools = new bool[byteArray.Length / sizeof(bool)];
+            Buffer.BlockCopy(byteArray, 0, bools, 0, byteArray.Length);
+            return bools;
+        }
+
+        #endregion --[ Conversion from byte array ]--
+
+
+        #region --[ Conversion to byte array ]--
+
+        public static byte[] ConvertToByteArray(float[] floatArray)
         {
             byte[] bytes = new byte[floatArray.Length * sizeof(float)];
             Buffer.BlockCopy(floatArray, 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        public static bool[] TranslateToBoolArray(byte[] byteBuffer)
-        {
-            bool[] bools = new bool[byteBuffer.Length / sizeof(bool)];
-            Buffer.BlockCopy(byteBuffer, 0, bools, 0, byteBuffer.Length);
-            return bools;
-        }
-
-        public static byte[] TranslateToByteArray(bool[] boolArray)
+        public static byte[] ConvertToByteArray(bool[] boolArray)
         {
             byte[] bytes = new byte[boolArray.Length * sizeof(bool)];
-            Buffer.BlockCopy(boolArray, 0, bytes, 0, boolArray.Length);
+            Buffer.BlockCopy(boolArray, 0, bytes, 0, bytes.Length);
             return bytes;
         }
         
-        // TODO: find an efficient solution
-        public static byte[] TranslateToByteArray((int synsetId, float rank)[] synsetRanks)
+        // TODO: find an efficient solution (also Buffer.BlockCopy()?)
+        public static byte[] ConvertToByteArray((int synsetId, float rank)[] synsetRanks)
         {
             using (MemoryStream stream = new MemoryStream(synsetRanks.Length * (sizeof(int) + sizeof(float))))
             using (BinaryWriter writer = new BinaryWriter(stream))
@@ -67,5 +93,6 @@ namespace ViretTool.DataLayer.DataIO
             }
         }
 
+        #endregion --[ Conversion to byte array ]--
     }
 }

@@ -11,8 +11,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
     public class BoolSignatureReader : BoolSignatureIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-
+        
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength;
 
@@ -24,17 +23,14 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
         {
             BaseBlobReader = new FixedSizeBlobReader(filePath);
 
-            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            BinaryReader reader = BaseBlobReader.BaseBinaryReader;
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
                 //ReadAndVerifyFiletypeAndVersion(reader);
 
                 SignatureWidth = reader.ReadInt32();
                 SignatureHeight = reader.ReadInt32();
             }
-
-            BaseBlobReader.MarkDataStartOffset();
         }
         
         public override void Dispose()

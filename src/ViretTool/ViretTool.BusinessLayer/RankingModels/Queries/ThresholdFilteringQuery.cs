@@ -6,8 +6,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
     {
         public enum State { IncludeAboveThreshold, ExcludeAboveThreshold, Off }
 
-        public State FilterState { get; private set; }
-        public double Threshold { get; private set; }
+        public State FilterState { get; set; }
+        public double Threshold { get; set; }
 
 
         public ThresholdFilteringQuery(State filterState, double threshold)

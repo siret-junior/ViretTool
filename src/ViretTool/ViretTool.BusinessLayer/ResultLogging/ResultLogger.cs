@@ -38,8 +38,6 @@ namespace ViretTool.BusinessLayer.ResultLogging
                     using (StreamWriter writer = new StreamWriter(Path.Combine(LogDirectory, filename)))
                     {
                         Dataset dataset = _datasetServicesManager.CurrentDataset.DatasetService.Dataset;
-                        writer.WriteLine($"Dataset name: {dataset.DatasetName}");
-                        writer.WriteLine($"Creation time: {dataset.DatasetCreationTime}");
                         writer.WriteLine($"Videos: {dataset.Videos.Count}, Shots: {dataset.Shots.Count}, Frames: {dataset.Frames.Count}");
 
                         writer.WriteLine($"Former temporal result set: { string.Join("; ", SampleResultSet(resultSet.FormerTemporalResultSet))}");

@@ -127,13 +127,21 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
             // transform [x, y] to a list of investigated positions in mGridRadius
             (int[] offsets, bool color) = PrepareQuery(ellipse);
 
+#if !DEBUG
             Parallel.For(0, distances.Length, i =>
+#else
+            for (int i = 0; i < distances.Length; i++)
+#endif
             {
                 // ignore filtered frames
                 if (InputRanking.Ranks[i] == float.MinValue)
                 {
                     distances[i] = float.MinValue;
+#if !DEBUG
                     return;
+#else
+                    continue;
+#endif
                 }
                 
                 bool[] signature = Signatures[i];
@@ -171,7 +179,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
                     default:
                         throw new NotImplementedException();
                 }
-            });
+            }
+#if !DEBUG
+            );
+#endif
             
             return distances;
         }

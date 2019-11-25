@@ -11,8 +11,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
     public class FloatVectorReader : FloatVectorIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-
+        
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength / sizeof(float);
         
@@ -24,9 +23,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
         public FloatVectorReader(string filePath)
         {
             BaseBlobReader = new FixedSizeBlobReader(filePath);
-            // not really necessary when no additional metadata is read (but it is wise to keep it here as a reminder)
-            BaseBlobReader.MarkDataStartOffset();
-
+            
             //byte[] metadata = BaseBlobReader.FiletypeMetadata;
             //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             //{

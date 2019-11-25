@@ -11,7 +11,6 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
     public class ThumbnailReader : ThumbnailIOBase
     {
         public VariableSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
         
         /// <summary>
         /// Width of stored thumbnail images.
@@ -43,9 +42,8 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         {
             BaseBlobReader = new VariableSizeBlobReader(filePath);
 
-            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            BinaryReader reader = BaseBlobReader.BaseBinaryReader;
+            byte[] metadata = BaseBlobReader.FiletypeMetadata;
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
                 //ReadAndVerifyFiletypeAndVersion(reader);
 
@@ -65,12 +63,12 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 FramesPerSecond = reader.ReadInt32();
                 FileFormatUtilities.CheckValueInRange("FramesPerSecond", FramesPerSecond, 1, FPS_LIMIT);
 
-                VideoOffsets = DataConversionUtilities.TranslateToIntArray(
+                VideoOffsets = DataConversionUtilities.ConvertToIntArray(
                     reader.ReadBytes(VideoCount * sizeof(int)));
                 FileFormatUtilities.CheckValuesInRange("VideoOffsets", VideoOffsets, 0, ThumbnailCount - 1);
                 FileFormatUtilities.CheckValuesIncrement("VideoOffsets", VideoOffsets);
 
-                VideoFrameCounts = DataConversionUtilities.TranslateToIntArray(
+                VideoFrameCounts = DataConversionUtilities.ConvertToIntArray(
                     reader.ReadBytes(VideoCount * sizeof(int)));
                 FileFormatUtilities.CheckValuesInRange("VideoFrameCounts", VideoFrameCounts, 1, ThumbnailCount);
                 

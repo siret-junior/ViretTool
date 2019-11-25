@@ -25,8 +25,6 @@ namespace ViretTool.BusinessLayer.Descriptors
         {
             using (ColorSignatureReader reader = new ColorSignatureReader(inputFile))
             {
-                DatasetHeader = reader.DatasetHeader;
-
                 SignatureWidth = reader.SignatureWidth;
                 SignatureHeight = reader.SignatureHeight;
 

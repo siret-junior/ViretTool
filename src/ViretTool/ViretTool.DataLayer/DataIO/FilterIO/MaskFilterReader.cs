@@ -11,9 +11,9 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
     public class MaskFilterReader : MaskFilterIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
-        public byte[] DatasetHeader => BaseBlobReader.DatasetHeader;
-        public int FrameCount => BaseBlobReader.BlobLength / sizeof(float);
-        
+        public int DescriptorCount => BaseBlobReader.BlobCount;
+        public int DescriptorLength => BaseBlobReader.BlobLength / sizeof(float);
+
 
         public MaskFilterReader(string filePath)
         {
@@ -25,8 +25,6 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
             //{
             //    ReadAndVerifyFiletypeAndVersion(reader);
             //}
-
-            BaseBlobReader.MarkDataStartOffset();
         }
 
 
@@ -46,8 +44,12 @@ namespace ViretTool.DataLayer.DataIO.FilterIO
 
         public float[] ReadFilter()
         {
-            // there is only one blob with all filter values
-            return BaseBlobReader.ReadFloatBlob(0);
+            float[] resultFilter = new float[DescriptorCount];
+            for (int i = 0; i < DescriptorCount; i++)
+            {
+                resultFilter[i] = BaseBlobReader.ReadFloatBlob(i)[0];
+            }
+            return resultFilter;
         }
 
         

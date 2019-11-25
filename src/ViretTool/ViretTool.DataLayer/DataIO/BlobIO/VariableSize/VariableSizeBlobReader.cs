@@ -3,38 +3,70 @@ using System.IO;
 
 namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
 {
-    // TODO: document blob size limitations (expectations for format checking)
+    /// <summary>
+    /// Lower level file format reader that is used to read binary blobs of variable size.
+    /// It can be used by higher level reader wrappers to read and interpret stored blobs.
+    /// Furthermore, it allows storage of filetype specific metadata that can also be
+    /// interpreted by wrapping higher level reader.
+    /// 
+    /// The reader can be used concurrently.
+    /// 
+    /// For debug purposes there are imposed some limits that are not expected to be reached.
+    /// Reaching those limits trips an exception. The limits are:
+    /// - length of a blob is limited to 100 000 bytes.
+    /// - count of blobs is limited to 10 000 000.
+    /// - limit of file offsets (maximum file length) is limited to 1 000 000 000 000 bytes (approximately 1TB).
+    /// </summary>
     public class VariableSizeBlobReader : VariableSizeBlobIOBase
     {
-        public BinaryReader BaseBinaryReader { get; private set; }
-        // common for all files extracted from the same dataset at the same time
-        public byte[] DatasetHeader { get; private set; }
-
-        // blob specific metadata
-        public int BlobCount { get; private set; }
-        public long[] BlobOffsets { get; private set; }
-        public int[] BlobLengths { get; private set; }
-
-        // blob filetype interpretation metadata
-        //public byte[] FiletypeMetadata { get; private set; }
-
-        private object _lockObject = new object();
-
         private const int BLOBLENGTH_LIMIT = 100_000;
         private const int BLOBCOUNT_LIMIT = 10_000_000;
         private const long FILEOFFSET_LIMIT = 1_000_000_000_000;
-        
 
+        /// <summary>
+        /// Underlying binary reader used for reading binary data.
+        /// </summary>
+        public BinaryReader BaseBinaryReader { get; private set; }
+
+        /// <summary>
+        /// Number of stored blobs. 
+        /// </summary>
+        public int BlobCount { get; private set; }
+        
+        /// <summary>
+        /// File stream offsets for each blob.
+        /// Because blobs have variable length, we need to store offset of each blob individually.
+        /// </summary>
+        public long[] BlobOffsets { get; private set; }
+        
+        /// <summary>
+        /// Blob lengths in bytes.
+        /// </summary>
+        public int[] BlobLengths { get; private set; }
+
+        /// <summary>
+        /// Filetype specific metadata that is interpreted by wrapping reader.
+        /// </summary>
+        public byte[] FiletypeMetadata { get; private set; }
+
+        /// <summary>
+        /// Lock object used when performing reading operations.
+        /// Allows concurrent usage of the reader.
+        /// </summary>
+        private object _lockObject = new object();
+
+
+        /// <summary>
+        /// Constructor opening the underlying binary reader and reading file header (metadata).
+        /// </summary>
+        /// <param name="filePath">Path to the input file.</param>
         public VariableSizeBlobReader(string filePath)
         {
             BaseBinaryReader = new BinaryReader(
                 File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
 
-            //DatasetHeader = FileHeaderUtilities.ReadDatasetHeader(BaseBinaryReader);
-            //ReadAndVerifyFiletypeHeader();
-            
             ReadBlobMetadata();
-            //ReadFiletypeMetadata();
+            ReadFiletypeMetadata();
         }
 
         public override void Dispose()
@@ -43,28 +75,43 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
         }
 
 
+        /// <summary>
+        /// Reads specified blob by seeking to its offset in the file and reading its number of bytes.
+        /// </summary>
+        /// <param name="blobId">ID (position) of the blob.</param>
+        /// <returns>Blob as byte array.</returns>
         public byte[] ReadByteBlob(int blobId)
         {
             long position = BlobOffsets[blobId];
             lock (_lockObject)
             {
                 SeekIfNeccessary(position);
-                //int blobLength = BaseBinaryReader.ReadInt32();
-                //if (blobLength != GetBlobSize(blobId))
-                //{
-                //    throw new InvalidDataException("VariableSize blob lengths are not equal!");
-                //}
-                return BaseBinaryReader.ReadBytes(GetBlobSize(blobId));
+                return BaseBinaryReader.ReadBytes(GetBlobLength(blobId));
             }
         }
 
+        /// <summary>
+        /// Reads the specified byte blob and converts it to float array.
+        /// </summary>
+        /// <param name="blobId">ID of the blob.</param>
+        /// <returns>Blob as float array.</returns>
         public float[] ReadFloatBlob(int blobId)
         {
-            return DataConversionUtilities.TranslateToFloatArray(ReadByteBlob(blobId));
+            return DataConversionUtilities.ConvertToFloatArray(ReadByteBlob(blobId));
         }
 
+        /// <summary>
+        /// Seeks to the starting offset of the specified blob.
+        /// Used when the blob has a complex format that needs to be read differently by wrapping higher level reader.
+        /// </summary>
+        /// <param name="blobId">ID of the blob.</param>
         public void SeekToBlob(int blobId)
         {
+            if (blobId < 0 || blobId >= BlobCount)
+            {
+                throw new ArgumentOutOfRangeException($"Trying to read blob ID {blobId} out of range [{0}, {BlobCount - 1}].");
+            }
+
             long position = BlobOffsets[blobId];
             lock (_lockObject)
             {
@@ -72,12 +119,21 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             }
         }
 
-        public int GetBlobSize(int blobId)
+        /// <summary>
+        /// Returns length of the specified blob.
+        /// </summary>
+        /// <param name="blobId">ID of the blob.</param>
+        /// <returns>Length of the specified blob in bytes.</returns>
+        public int GetBlobLength(int blobId)
         {
             return BlobLengths[blobId];
         }
 
 
+        /// <summary>
+        /// Seeks the underlying binary reader to the desired position if necessary.
+        /// </summary>
+        /// <param name="position"></param>
         private void SeekIfNeccessary(long position)
         {
             if (position != BaseBinaryReader.BaseStream.Position)
@@ -86,58 +142,41 @@ namespace ViretTool.DataLayer.DataIO.BlobIO.VariableSize
             }
         }
 
-        
-        //private void ReadAndVerifyFiletypeHeader()
-        //{
-        //    string filetypeId = BaseBinaryReader.ReadString();
-        //    if (!filetypeId.Equals(VARIABLE_SIZE_BLOBS_FILETYPE_ID))
-        //    {
-        //        throw new IOException($"Fixed-size blob filetype mismatch: {filetypeId}" 
-        //            + $" ({VARIABLE_SIZE_BLOBS_FILETYPE_ID} expected)");
-        //    }
-
-        //    int filetypeVersion = BaseBinaryReader.ReadInt32();
-        //    if (!filetypeVersion.Equals(VARIABLE_SIZE_BLOBS_VERSION))
-        //    {
-        //        throw new IOException($"Fixed-size blob version mismatch: {filetypeVersion}"
-        //            + $" ({VARIABLE_SIZE_BLOBS_VERSION} expected)");
-        //    }
-        //}
-        
+        /// <summary>
+        /// Reads variable size blob metadata (blob count, blob offsets and blob lengths).
+        /// </summary>
         private void ReadBlobMetadata()
         {
-            //int metadataLength = BaseBinaryReader.ReadInt32();
-            //byte[] blobMetadata = BaseBinaryReader.ReadBytes(metadataLength);
+            // blob count
+            BlobCount = BaseBinaryReader.ReadInt32();
+            FileFormatUtilities.CheckValueInRange("BlobCount", BlobCount, 1, BLOBCOUNT_LIMIT);
 
-            //using (MemoryStream metadataStream = new MemoryStream(blobMetadata))
-            //using (BinaryReader reader = new BinaryReader(metadataStream))
-            BinaryReader reader = BaseBinaryReader;
+            // blob offsets
+            BlobOffsets = new long[BlobCount];
+            for (int i = 0; i < BlobCount; i++)
             {
-                BlobCount = reader.ReadInt32();
-                FileFormatUtilities.CheckValueInRange("BlobCount", BlobCount, 1, BLOBCOUNT_LIMIT);
-
-                BlobOffsets = new long[BlobCount];
-                for (int i = 0; i < BlobCount; i++)
-                {
-                    BlobOffsets[i] = reader.ReadInt64();
-                }
-                FileFormatUtilities.CheckValuesInRange("BlobOffsets", BlobOffsets, 1, FILEOFFSET_LIMIT);
-                FileFormatUtilities.CheckValuesIncrement("BlobOffsets", BlobOffsets);
-
-                BlobLengths = new int[BlobCount];
-                for (int i = 0; i < BlobCount; i++)
-                {
-                    BlobLengths[i] = reader.ReadInt32();
-                }
-                FileFormatUtilities.CheckValuesInRange("BlobLengths", BlobLengths, 0, BLOBLENGTH_LIMIT);
+                BlobOffsets[i] = BaseBinaryReader.ReadInt64();
             }
-        }
-        
+            FileFormatUtilities.CheckValuesInRange("BlobOffsets", BlobOffsets, 1, FILEOFFSET_LIMIT);
+            FileFormatUtilities.CheckValuesIncrement("BlobOffsets", BlobOffsets);
 
-        //private void ReadFiletypeMetadata()
-        //{
-        //    int metadataLength = BaseBinaryReader.ReadInt32();
-        //    FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
-        //}
+            // blob lengths
+            BlobLengths = new int[BlobCount];
+            for (int i = 0; i < BlobCount; i++)
+            {
+                BlobLengths[i] = BaseBinaryReader.ReadInt32();
+            }
+            FileFormatUtilities.CheckValuesInRange("BlobLengths", BlobLengths, 0, BLOBLENGTH_LIMIT);
+        }
+
+        /// <summary>
+        /// Reads filetype specific metadata as a byte array without understanding its meaning.
+        /// The filetype specific metadata will be interpreted by wrapping higher level reader.
+        /// </summary>
+        private void ReadFiletypeMetadata()
+        {
+            int metadataLength = BaseBinaryReader.ReadInt32();
+            FiletypeMetadata = BaseBinaryReader.ReadBytes(metadataLength);
+        }
     }
 }

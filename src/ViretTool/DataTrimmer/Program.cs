@@ -31,6 +31,7 @@ namespace DataTrimmer
             int maxVideos = int.Parse(args[0]);
             string datasetDirectory = args[1];
             string outputDirectory = args[2];
+
             Directory.CreateDirectory(outputDirectory);
             _filenameSuffix += maxVideos;
 
@@ -39,15 +40,15 @@ namespace DataTrimmer
             int frameCount = dataset.Frames.Count;
             _datasetHeader = dataset.DatasetId;
 
-            TrimKeywordFile(directoryFiles, frameCount, outputDirectory);
+            //TrimKeywordFile(directoryFiles, frameCount, outputDirectory);
             TrimColorFile(directoryFiles, frameCount, outputDirectory);
             TrimFloatVectorFile(directoryFiles, frameCount, outputDirectory);
-            TrimMaskFilterFile(directoryFiles, ".bwfilter", frameCount, outputDirectory);
-            TrimMaskFilterFile(directoryFiles, ".pbcfilter", frameCount, outputDirectory);
+            //TrimMaskFilterFile(directoryFiles, ".bwfilter", frameCount, outputDirectory);
+            //TrimMaskFilterFile(directoryFiles, ".pbcfilter", frameCount, outputDirectory);
             TrimBoolFile(directoryFiles, ".faces", frameCount, outputDirectory);
             TrimBoolFile(directoryFiles, ".text", frameCount, outputDirectory);
-            TrimFrameattributeFile(directoryFiles, frameCount, outputDirectory);
-            TrimThumbnailsFile(directoryFiles, maxVideos, outputDirectory);
+            //TrimFrameattributeFile(directoryFiles, frameCount, outputDirectory);
+            //TrimThumbnailsFile(directoryFiles, maxVideos, outputDirectory);
         }
 
 
@@ -223,7 +224,10 @@ namespace DataTrimmer
                 _datasetHeader, frameCount))
             {
                 float[] filterValues = reader.ReadFilter().Take(frameCount).ToArray();
-                writer.WriteFilter(filterValues);
+                for (int i = 0; i < filterValues.Length; i++)
+                {
+                    writer.WriteFilter(new float[] { filterValues[i] });
+                }
             }
 
             Console.WriteLine("DONE");

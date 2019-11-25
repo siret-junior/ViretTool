@@ -98,10 +98,9 @@
     <Compile Include="DataIO\DescriptorIO\KeywordIO\KeywordWriter.cs" />
     <Compile Include="DataIO\DescriptorIO\KeywordIO\SynsetFramesReader.cs" />
     <Compile Include="DataIO\DescriptorIO\KeywordIO\SynsetFramesWriter.cs" />
-    <Compile Include="DataIO\FileHeaderUtilities.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinaryFormatter.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinaryDeserializer.cs" />
-    <Compile Include="DataIO\DatasetIO\DatasetFilelistDeserializer.cs" />
+    <Compile Include="DataIO\DatasetIO\DatasetReader.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetSerializationBase.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetBinarySerializer.cs" />
     <Compile Include="DataIO\FilterIO\MaskFilterIOBase.cs" />

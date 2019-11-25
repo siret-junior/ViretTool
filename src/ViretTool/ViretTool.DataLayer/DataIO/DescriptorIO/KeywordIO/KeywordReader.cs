@@ -31,10 +31,10 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
         {
             lock (_lockObject)
             {
-                int blobSizeBytes = BaseBlobReader.GetBlobSize(frameId);
+                int blobSizeBytes = BaseBlobReader.GetBlobLength(frameId);
                 int synsetCount = blobSizeBytes / (sizeof(int) + sizeof(float)); // synsetId + probability
                 BaseBlobReader.SeekToBlob(frameId);
-                int blobSizeBytes2 = BaseBlobReader.BaseBinaryReader.ReadInt32(); // TODO: double check or remove
+                //int blobSizeBytes2 = BaseBlobReader.BaseBinaryReader.ReadInt32(); // TODO: double check or remove
 
                 List<(int synsetId, float probability)> result = new List<(int synsetId, float probability)>();
                 for (int i = 0; i < synsetCount; i++)
