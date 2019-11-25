@@ -24,7 +24,7 @@ namespace ViretTool.DataLayer.DataModel
     /// </summary>
     public class Dataset
     {
-        // heirarchy
+        // hierarchy
         public readonly ReadOnlyCollection<Video> Videos;
         public readonly ReadOnlyCollection<Shot> Shots;
         public readonly ReadOnlyCollection<Frame> Frames;

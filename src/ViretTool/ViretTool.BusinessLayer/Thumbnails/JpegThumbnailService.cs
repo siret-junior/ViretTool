@@ -1,32 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.ThumbnailIO;
-using ViretTool.DataLayer.DataProviders.Thumbnails;
 
 namespace ViretTool.BusinessLayer.Thumbnails
 {
     public class JpegThumbnailService : IThumbnailService<Thumbnail<byte[]>>
     {
+        public const string FILE_EXTENSION = ".thumbnails";
+
         private readonly ThumbnailReader _baseThumbnailReader;
+
 
         public JpegThumbnailService(string datasetDirectory)
         {
-            _baseThumbnailReader = new ThumbnailProvider().FromDirectory(datasetDirectory);
+            string[] files = Directory.GetFiles(datasetDirectory);
+            string inputFile = files.Single(path => path.EndsWith(FILE_EXTENSION));
+
+#if PRELOAD_THUMBNAILS
+            _baseThumbnailReader = new ThumbnailReaderPreloaded(inputFile);
+#else
+            _baseThumbnailReader = new ThumbnailReader(inputFile);
+#endif
         }
 
 
         public Thumbnail<byte[]> GetThumbnail(int videoId, int frameNumber)
         {
-            ThumbnailRaw thumbnailRaw = _baseThumbnailReader.ReadVideoThumbnail(videoId, frameNumber);
+            ThumbnailDataJpeg thumbnailRaw = _baseThumbnailReader.ReadVideoThumbnail(videoId, frameNumber);
             return new Thumbnail<byte[]>(videoId, frameNumber, thumbnailRaw.JpegData);
         }
 
         public Thumbnail<byte[]>[] GetThumbnails(int videoId)
         {
-            ThumbnailRaw[] thumbnailsRaw = _baseThumbnailReader.ReadVideoThumbnails(videoId);
+            ThumbnailDataJpeg[] thumbnailsRaw = _baseThumbnailReader.ReadVideoThumbnails(videoId);
             Thumbnail<byte[]>[] thumbnails = new Thumbnail<byte[]>[thumbnailsRaw.Length];
             for (int i = 0; i < thumbnails.Length; i++)
             {

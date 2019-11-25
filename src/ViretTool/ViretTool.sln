@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2041
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool", "ViretTool\ViretTool.csproj", "{F935EF6A-5FD9-4FF3-9513-6F6A881FCB06}"
 EndProject
@@ -108,12 +108,12 @@ Global
 		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Release RAM|x64.Build.0 = Release|x64
 		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Release|x64.ActiveCfg = Release|x64
 		{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}.Release|x64.Build.0 = Release|x64
-		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug RAM|x64.ActiveCfg = Debug|x64
-		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug RAM|x64.Build.0 = Debug|x64
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug RAM|x64.ActiveCfg = Debug RAM|x64
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug RAM|x64.Build.0 = Debug RAM|x64
 		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug|x64.ActiveCfg = Debug|x64
 		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Debug|x64.Build.0 = Debug|x64
-		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release RAM|x64.ActiveCfg = Release|x64
-		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release RAM|x64.Build.0 = Release|x64
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release RAM|x64.ActiveCfg = Release RAM|x64
+		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release RAM|x64.Build.0 = Release RAM|x64
 		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release|x64.ActiveCfg = Release|x64
 		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}.Release|x64.Build.0 = Release|x64
 		{F7058311-7616-4EA5-B2D2-35E502782537}.Debug RAM|x64.ActiveCfg = Debug RAM|x64

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
 
 namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
 {
+    /// <summary>
+    /// Reader for bool signature data using an underlying FixedSizeBlobReader.
+    /// A bool signature is a 2D bit mask (boolean) where true values (number 1, white color) 
+    /// mark regions containing a feature (text, face, etc).
+    /// </summary>
     public class BoolSignatureReader : BoolSignatureIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
@@ -26,8 +26,6 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
             byte[] metadata = BaseBlobReader.FiletypeMetadata;
             using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
-                //ReadAndVerifyFiletypeAndVersion(reader);
-
                 SignatureWidth = reader.ReadInt32();
                 SignatureHeight = reader.ReadInt32();
             }
@@ -42,22 +40,5 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.BoolSignatureIO
         {
             return BaseBlobReader.ReadBoolBlob(id);
         }
-
-
-        //private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
-        //{
-        //    string filetype = reader.ReadString();
-        //    if (!filetype.Equals(BOOL_SIGNATURES_FILETYPE_ID))
-        //    {
-        //        throw new IOException($"Filetype error: {filetype} (expected {BOOL_SIGNATURES_FILETYPE_ID})");
-        //    }
-
-        //    int version = reader.ReadInt32();
-        //    if (version != BOOL_SIGNATURES_VERSION)
-        //    {
-        //        throw new IOException($"Incorrect \"{BOOL_SIGNATURES_FILETYPE_ID}\" filetype version: "
-        //            + $"{version} (expected {BOOL_SIGNATURES_VERSION})");
-        //    }
-        //}
     }
 }

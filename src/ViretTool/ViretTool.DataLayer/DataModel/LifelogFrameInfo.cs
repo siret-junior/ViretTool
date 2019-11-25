@@ -2,6 +2,9 @@
 
 namespace ViretTool.DataLayer.DataModel
 {
+    /// <summary>
+    /// Additional Frame attributes used in Lifelog Search Challenge (LSC).
+    /// </summary>
     public class LifelogFrameInfo
     {
         public LifelogFrameInfo(string fileName, bool fromVideo, DayOfWeek dayOfWeek, TimeSpan time, int? heartRate, string gpsLocation, double? gpsLatitude, double? gpsLongitude)

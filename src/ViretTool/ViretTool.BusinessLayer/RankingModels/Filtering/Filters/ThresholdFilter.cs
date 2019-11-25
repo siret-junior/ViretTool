@@ -26,7 +26,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         {
             string filterFilename = Directory.GetFiles(inputDirectory)
                 .Where(file => file.EndsWith(extension)).First();
-            float[] filterAttributes = MaskFilterReader.ReadFilter(filterFilename);
+            float[] filterAttributes = ThresholdFilterReader.ReadFilter(filterFilename);
             ThresholdFilter thresholdFilter = new ThresholdFilter(filterAttributes);
             return thresholdFilter;
         }

@@ -21,7 +21,7 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         public ColorSaturationDescriptorProvider(string inputFile)
         {
-            using (MaskFilterReader reader = new MaskFilterReader(inputFile))
+            using (ThresholdFilterReader reader = new ThresholdFilterReader(inputFile))
             {
                 DescriptorCount = reader.DescriptorCount;
                 DescriptorLength = reader.DescriptorLength;

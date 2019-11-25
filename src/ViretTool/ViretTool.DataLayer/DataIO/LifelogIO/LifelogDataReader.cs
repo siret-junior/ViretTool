@@ -7,6 +7,9 @@ using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.DataLayer.DataIO.LifelogIO
 {
+    /// <summary>
+    /// Reads data that is specific to Lifelog Search Challenge (LSC).
+    /// </summary>
     public class LifelogDataReader
     {
         public IEnumerable<LifelogFrameInfo> Read(string lifelogDataFileName)

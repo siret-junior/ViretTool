@@ -13,17 +13,17 @@ namespace ViretTool.DataLayer.DataModel
         public int IdInVideo { get; private set; }
 
         public ReadOnlyCollection<Frame> Frames { get; private set; }
-        
-        //public int StartFrameNumber { get; internal set; }
-        //public int EndFrameNumber { get; internal set; }
+
+        public int StartFrameNumber { get; internal set; }
+        public int EndFrameNumber { get; internal set; }
 
 
         public Shot(int globalId, int idInVideo = -1, int startFrameNumber = -1, int endFrameNumber = -1)
         {
             Id = globalId;
             IdInVideo = idInVideo;
-            //StartFrameNumber = startFrameNumber;
-            //EndFrameNumber = endFrameNumber;
+            StartFrameNumber = startFrameNumber;
+            EndFrameNumber = endFrameNumber;
         }
 
         public override string ToString()
@@ -47,22 +47,20 @@ namespace ViretTool.DataLayer.DataModel
                 Frame frame = frames[i];
                 frame.SetParentShotMapping(this, i);
             }
-
-            // TODO: check attributes (frame count) equals frame count?
         }
 
-        
-        //internal Shot WithStartFrameNumber(int startFrameNumber)
-        //{
-        //    StartFrameNumber = startFrameNumber;
-        //    return this;
-        //}
 
-        //internal Shot WithEndFrameNumber(int endFrameNumber)
-        //{
-        //    EndFrameNumber = endFrameNumber;
-        //    return this;
-        //}
+        internal Shot WithStartFrameNumber(int startFrameNumber)
+        {
+            StartFrameNumber = startFrameNumber;
+            return this;
+        }
+
+        internal Shot WithEndFrameNumber(int endFrameNumber)
+        {
+            EndFrameNumber = endFrameNumber;
+            return this;
+        }
 
     }
 }

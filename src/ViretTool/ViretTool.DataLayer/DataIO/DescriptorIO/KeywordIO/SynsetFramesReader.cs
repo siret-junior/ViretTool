@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
 
 namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
 {
+    /// <summary>
+    /// Reads a small set (typically 5) of tuples (frameId, probability)
+    /// for an input keyword (encoded as synsetId)
+    /// sorted descending by probability.
+    /// Used primarily in example visualizion of the top K results for each keyword.
+    /// </summary>
     public class SynsetFramesReader : SynsetFramesIOBase
     {
-        private object _lockObject = new object();
+        private readonly object _lockObject = new object();
 
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
         
@@ -56,7 +58,7 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
                 using (MemoryStream stream = new MemoryStream(blob))
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    // one item is tuple of int frameId and float probability
+                    // one item is tuple of (int) frameId and (float) probability
                     int itemCount = BaseBlobReader.BlobLength / (sizeof(int) + sizeof(float));
 
                     List<(int frameId, float probability)> result = new List<(int frameId, float probability)>();

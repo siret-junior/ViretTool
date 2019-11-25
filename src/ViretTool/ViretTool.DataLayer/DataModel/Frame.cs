@@ -39,7 +39,6 @@
             return "FrameId: " + Id.ToString()
                 + ", Video: " + ParentVideo.Id.ToString("00000")
                 + ", Shot: " + ParentShot.Id.ToString("00000");
-                //+ ", Group: " + ParentGroup.Id.ToString("00000");
         }
 
 
@@ -54,12 +53,6 @@
             ParentShot = parentShot;
             IdInShot = idInShot;
         }
-
-        //internal void SetParentGroupMapping(Group parentGroup, int idInGroup)
-        //{
-        //    ParentGroup = parentGroup;
-        //    IdInGroup = idInGroup;
-        //}
 
 
         internal void WithFrameNumber(int frameNumber)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using ViretTool.DataLayer.DataModel;
 
 namespace ViretTool.DataLayer.DataIO.DatasetIO
@@ -11,7 +10,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
     /// The heirarchy is encoded in the filelist filenames.
     /// Each filename corresponds to a single frame.
     /// Each filename specifies video, shot, shot boundaries and frame number of the frame.
-    /// FrameId corresponds to the filelist line number numbered from 0.
+    /// FrameId corresponds to the filelist line number starting from 0.
     /// </summary>    
     public class DatasetReader
     {
@@ -145,11 +144,6 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
                 return shot;
             }
-            else if (lastShotId + 1 < shotId)
-            {
-                // TODO: missing shot fix
-                return GetOrAppendShot(video, lastShotId + 1, shotEndFrame, shotEndFrame);
-            }
             else
             {
                 throw new ArgumentException($"Input shot IDs do not increment sequentially (last: {lastShotId}, current: {shotId}).");
@@ -240,8 +234,6 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
         }
 
 
-
-        // TODO: change to property to allow inheritance redefinition        
         private static readonly System.Text.RegularExpressions.Regex _tokenFormatRegex
             = new System.Text.RegularExpressions.Regex(
             @"^[Vv](?<videoId>[0-9]+)"

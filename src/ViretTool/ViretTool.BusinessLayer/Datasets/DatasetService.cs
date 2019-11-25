@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ViretTool.DataLayer.DataModel;
-using ViretTool.DataLayer.DataProviders.Dataset;
+using ViretTool.DataLayer.DataIO.DatasetIO;
 
 namespace ViretTool.BusinessLayer.Datasets
 {

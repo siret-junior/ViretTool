@@ -23,7 +23,7 @@ namespace ViretTool.BusinessLayer.Descriptors
         
         public PercentOfBlackDescriptorProvider(string inputFile)
         {
-            using (MaskFilterReader reader = new MaskFilterReader(inputFile))
+            using (ThresholdFilterReader reader = new ThresholdFilterReader(inputFile))
             {
                 DescriptorCount = reader.DescriptorCount;
                 DescriptorLength = reader.DescriptorLength;

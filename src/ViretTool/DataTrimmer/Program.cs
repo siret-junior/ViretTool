@@ -219,7 +219,7 @@ namespace DataTrimmer
             string inputPath = directoryFiles.Where(path => path.EndsWith(fileExtension)).Single();
             string outputPath = GenerateOutputPath(inputPath, outputDirectory, fileExtension);
 
-            using (MaskFilterReader reader = new MaskFilterReader(inputPath))
+            using (ThresholdFilterReader reader = new ThresholdFilterReader(inputPath))
             using (MaskFilterWriter writer = new MaskFilterWriter(outputPath,
                 _datasetHeader, frameCount))
             {

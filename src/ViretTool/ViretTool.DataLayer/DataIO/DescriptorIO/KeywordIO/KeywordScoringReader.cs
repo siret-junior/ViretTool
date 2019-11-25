@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
 
 namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
 {
+    /// <summary>
+    /// Reads and array of scores for each keyframe using an input keyword (encoded as synsetId).
+    /// </summary>
     public class KeywordScoringReader : KeywordScoringIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
@@ -43,8 +42,6 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
             BaseBlobReader.Dispose();
         }
 
-        // TODO: consider adding an option to read a subset of values from the array
-        // (e.g. only first 5 items of the result float[] vector)
         public float[] ReadScoring(int synsetId)
         {
             return BaseBlobReader.ReadFloatBlob(synsetId);

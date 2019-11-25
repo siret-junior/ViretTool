@@ -11,7 +11,6 @@ namespace ViretTool.DataLayer.DataModel
 
         public Dataset ParentDataset { get; internal set; }
         public ReadOnlyCollection<Shot> Shots { get; private set; }
-        //public ReadOnlyCollection<Group> Groups { get; private set; }
         public ReadOnlyCollection<Frame> Frames { get; private set; }
 
 
@@ -36,16 +35,6 @@ namespace ViretTool.DataLayer.DataModel
                 shot.SetParentVideoMapping(this, i);
             }
         }
-
-        //internal void SetGroupMappings(Group[] groups)
-        //{
-        //    Groups = new ReadOnlyCollection<Group>(groups);
-        //    for (int i = 0; i < groups.Length; i++)
-        //    {
-        //        Group group = groups[i];
-        //        group.SetParentVideoMapping(this, i);
-        //    }
-        //}
 
         internal void SetFrameMappings(Frame[] frames)
         {

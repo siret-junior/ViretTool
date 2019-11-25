@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
+﻿using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
 
 namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
 {
+    /// <summary>
+    /// Reads an array of float values for each keyframe using an underlaying FixedSizeBlobReader.
+    /// The float array is semantically an (array length)-dimensional vector with its length normalized to 1.
+    /// </summary>
     public class FloatVectorReader : FloatVectorIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
@@ -15,29 +13,10 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
         public int DescriptorCount => BaseBlobReader.BlobCount;
         public int DescriptorLength => BaseBlobReader.BlobLength / sizeof(float);
         
-        public string Source { get; }
-
-        //public float[][] Descriptors { get; }
-
 
         public FloatVectorReader(string filePath)
         {
             BaseBlobReader = new FixedSizeBlobReader(filePath);
-            
-            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            //{
-            //    ReadAndVerifyFiletypeAndVersion(reader);
-
-            //    Source = reader.ReadString();
-            //}
-
-            //// load descriptors
-            //Descriptors = new float[VectorCount][];
-            //for (int iVector = 0; iVector < VectorCount; iVector++)
-            //{
-            //    Descriptors[iVector] = blobReader.ReadFloatBlob(iVector);
-            //}
         }
 
         
@@ -50,22 +29,5 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.FloatVectorIO
         {
             return BaseBlobReader.ReadFloatBlob(id);
         }
-
-
-        //private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
-        //{
-        //    string filetype = reader.ReadString();
-        //    if (!filetype.Equals(FLOAT_VECTOR_FILETYPE_ID))
-        //    {
-        //        throw new IOException($"Filetype error: {filetype} (expected {FLOAT_VECTOR_FILETYPE_ID})");
-        //    }
-
-        //    int version = reader.ReadInt32();
-        //    if (version != FLOAT_VECTOR_VERSION)
-        //    {
-        //        throw new IOException($"Incorrect \"{FLOAT_VECTOR_FILETYPE_ID}\" filetype version: "
-        //            + $"{version} (expected {FLOAT_VECTOR_VERSION})");
-        //    }
-        //}
     }
 }

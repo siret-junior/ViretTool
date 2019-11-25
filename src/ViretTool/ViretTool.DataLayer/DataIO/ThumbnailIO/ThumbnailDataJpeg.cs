@@ -1,13 +1,13 @@
 ﻿namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 {
-    public class ThumbnailRaw
+    public class ThumbnailDataJpeg
     {
         public int VideoId { get; private set; }
         public int FrameNumber { get; private set; }
         public byte[] JpegData { get; private set; }
 
 
-        public ThumbnailRaw(int videoId, int frameNumber, byte[] jpegData)
+        public ThumbnailDataJpeg(int videoId, int frameNumber, byte[] jpegData)
         {
             VideoId = videoId;
             FrameNumber = frameNumber;

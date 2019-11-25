@@ -17,19 +17,19 @@ namespace ViretTool.BusinessLayer.Descriptors
         public (int synsetId, float probability)[][] Descriptors => throw new NotImplementedException();
 
         //private readonly Dictionary<int, (int synsetId, int probability)> _descriptorCache;
-        private readonly KeywordReader _reader;
+        private readonly FrameSynsetsReader _reader;
 
         public KeywordDescriptorProvider(string inputFile)
         {
             //_descriptorCache = new Dictionary<int, (int synsetId, int probability)>();
-            _reader = new KeywordReader(inputFile);
+            _reader = new FrameSynsetsReader(inputFile);
         }
 
 
         public static KeywordDescriptorProvider FromDirectory(string directory)
         {
             string inputFile = Directory.GetFiles(directory)
-                    .Where(dir => Path.GetFileName(dir).EndsWith(KeywordIOBase.KEYWORD_EXTENSION))
+                    .Where(dir => Path.GetFileName(dir).EndsWith(FrameSynsetsIOBase.KEYWORD_EXTENSION))
                     .FirstOrDefault();
 
             if (inputFile != null)

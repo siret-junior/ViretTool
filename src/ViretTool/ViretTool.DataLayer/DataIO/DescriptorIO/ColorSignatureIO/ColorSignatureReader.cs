@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using ViretTool.DataLayer.DataIO.BlobIO.FixedSize;
 
 namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
 {
+    /// <summary>
+    /// Reads color signatures from an input file.
+    /// Color signature is a 2D bitmap where color of each pixel corresponds 
+    /// to a dominant color of a region in the source frame image.
+    /// </summary>
     public class ColorSignatureReader : ColorSignatureIOBase
     {
         public FixedSizeBlobReader BaseBlobReader { get; private set; }
@@ -18,8 +18,6 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
         public int SignatureWidth { get; }
         public int SignatureHeight { get; }
 
-        //public byte[][] Descriptors { get; }
-        
 
         public ColorSignatureReader(string filePath)
         {
@@ -28,8 +26,6 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
             byte[] metadata = BaseBlobReader.FiletypeMetadata;
             using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
-                //ReadAndVerifyFiletypeAndVersion(reader);
-
                 SignatureWidth = reader.ReadInt32();
                 SignatureHeight = reader.ReadInt32();
             }
@@ -44,24 +40,5 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO
         {
             return BaseBlobReader.ReadByteBlob(id);
         }
-
-
-        //private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
-        //{
-        //    string filetype = reader.ReadString();
-        //    if (!filetype.Equals(COLOR_SIGNATURES_FILETYPE_ID))
-        //    {
-        //        throw new IOException($"Filetype error: {filetype} (expected {COLOR_SIGNATURES_FILETYPE_ID})");
-        //    }
-
-        //    int version = reader.ReadInt32();
-        //    if (version != COLOR_SIGNATURES_VERSION)
-        //    {
-        //        throw new IOException($"Incorrect \"{COLOR_SIGNATURES_FILETYPE_ID}\" filetype version: "
-        //            + $"{version} (expected {COLOR_SIGNATURES_VERSION})");
-        //    }
-        //}
-
-
     }
 }

@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.BlobIO.VariableSize;
 
 namespace ViretTool.DataLayer.DataIO.ThumbnailIO
 {
+    /// <summary>
+    /// Reads thumbnail images encoded in JPEG format.
+    /// Uses two level Dictionary for mapping between (videoId, frameNumber) tuple 
+    /// to globalId that indexes thumbnails sequentially.
+    /// </summary>
     public class ThumbnailReader : ThumbnailIOBase
     {
+        private const int RESOLUTION_LIMIT = 7680; // 8K UHD
+        private const int VIDEOCOUNT_LIMIT = 100_000;
+        private const int FRAMECOUNT_LIMIT = 1_000_000;
+        private const int FPS_LIMIT = 30;
+        
+        private readonly Dictionary<int, Dictionary<int, int>> _videoFramenumberToGlobalId;
+
         public VariableSizeBlobReader BaseBlobReader { get; private set; }
         
         /// <summary>
@@ -31,12 +39,6 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
         public int[] VideoOffsets { get; private set; }
         public int[] VideoFrameCounts { get; private set; }
 
-        private readonly Dictionary<int, Dictionary<int,int>> _videoFramenumberToGlobalId;
-
-        private const int RESOLUTION_LIMIT = 7680; // 8K UHD
-        private const int VIDEOCOUNT_LIMIT = 100_000;
-        private const int FRAMECOUNT_LIMIT = 1_000_000;
-        private const int FPS_LIMIT = 30;
 
         public ThumbnailReader(string filePath)
         {
@@ -45,21 +47,13 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             byte[] metadata = BaseBlobReader.FiletypeMetadata;
             using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
             {
-                //ReadAndVerifyFiletypeAndVersion(reader);
-
                 ThumbnailWidth = reader.ReadInt32();
                 ThumbnailHeight = reader.ReadInt32();
                 CheckThumbnailResolution(ThumbnailWidth, ThumbnailHeight);
 
                 VideoCount = reader.ReadInt32();
                 FileFormatUtilities.CheckValueInRange("VideoCount", VideoCount, 1, VIDEOCOUNT_LIMIT);
-                //int thumbnailCount = reader.ReadInt32();
-                //if (thumbnailCount != BaseBlobReader.BlobCount)
-                //{
-                //    throw new IOException(
-                //        $"Thumbnail count mismatch between ThumbnailReader ({thumbnailCount})" +
-                //        $" and underlying BlobReader ({BaseBlobReader.BlobCount})");
-                //}
+
                 FramesPerSecond = reader.ReadInt32();
                 FileFormatUtilities.CheckValueInRange("FramesPerSecond", FramesPerSecond, 1, FPS_LIMIT);
 
@@ -76,12 +70,10 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
                 GlobalIdToVideoFramenumber = new (int videoId, int frameNumber)[ThumbnailCount];
                 _videoFramenumberToGlobalId = new Dictionary<int, Dictionary<int, int>>();
                 
-                for (int iThumb = 0; iThumb < ThumbnailCount; iThumb++)
+                for (int globalId = 0; globalId < ThumbnailCount; globalId++)
                 {
-                    int globalId = iThumb;// reader.ReadInt32(); // TODO: remove? should be equal to iThumb
                     int videoId = reader.ReadInt32();
                     int frameNumber = reader.ReadInt32();
-                    //FileFormatUtilities.CheckValueInRange("globalId", globalId, 0, ThumbnailCount - 1);
                     FileFormatUtilities.CheckValueInRange("videoId", videoId, 0, VideoCount - 1);
                     FileFormatUtilities.CheckValueInRange("frameNumber", frameNumber, 0, FRAMECOUNT_LIMIT);
 
@@ -107,41 +99,26 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             }
         }
 
-        //private void ReadAndVerifyFiletypeAndVersion(BinaryReader reader)
-        //{
-        //    string filetype = reader.ReadString();
-        //    if (!filetype.Equals(THUMBNAILS_FILETYPE_ID))
-        //    {
-        //        throw new IOException($"Filetype error: {filetype} (expected {THUMBNAILS_FILETYPE_ID})");
-        //    }
 
-        //    int version = reader.ReadInt32();
-        //    if (version != THUMBNAILS_VERSION)
-        //    {
-        //        throw new IOException($"Incorrect \"{THUMBNAILS_FILETYPE_ID}\" filetype version: "
-        //            + $"{version} (expected {THUMBNAILS_VERSION})");
-        //    }
-        //}
-
-        public ThumbnailRaw[] ReadVideoThumbnails(int videoId)
+        public virtual ThumbnailDataJpeg[] ReadVideoThumbnails(int videoId)
         {
             int globalIdStart = VideoOffsets[videoId];
             int videoLength = VideoFrameCounts[videoId];
             int globalIdEnd = globalIdStart + videoLength;
-            ThumbnailRaw[] thumbnails = new ThumbnailRaw[videoLength];
+            ThumbnailDataJpeg[] thumbnails = new ThumbnailDataJpeg[videoLength];
 
             for (int globalId = globalIdStart; globalId < globalIdEnd; globalId++)
             {
                 int frameNumber = GlobalIdToVideoFramenumber[globalId].frameNumber;
                 byte[] jpegData = BaseBlobReader.ReadByteBlob(globalId);
 
-                thumbnails[globalId - globalIdStart] = new ThumbnailRaw(videoId, frameNumber, jpegData);
+                thumbnails[globalId - globalIdStart] = new ThumbnailDataJpeg(videoId, frameNumber, jpegData);
             }
 
             return thumbnails;
         }
 
-        public ThumbnailRaw ReadVideoThumbnail(int videoId, int frameNumber)
+        public ThumbnailDataJpeg ReadVideoThumbnail(int videoId, int frameNumber)
         {
             if (_videoFramenumberToGlobalId.TryGetValue(videoId, out Dictionary<int, int> dict)
                 && dict.TryGetValue(frameNumber, out int globalId))
@@ -150,28 +127,16 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             }
             else
             {
-                // TODO: seek closest frame (this should not happen though)
-                //int firstFrameGlobalId = _videoFramenumberToGlobalId[videoId][0];
-                //for (int i = 0; i < VideoFrameCounts[videoId]; i++)
-                //{
-                //    if (GlobalIdToVideoFramenumber[firstFrameGlobalId + i].frameNumber >= frameNumber)
-                //    {
-                //        return ReadVideoThumbnail(firstFrameGlobalId + i);
-                //    }
-                //}
-
-                // TODO: return an error image instead of raising an exception
-                //throw new ArgumentException($"Trying to read thumbnail that is not stored [video: {videoId}, frame: {frameNumber}].");
-                return new ThumbnailRaw(videoId, frameNumber, ERROR_THUMBNAIL);
+                return new ThumbnailDataJpeg(videoId, frameNumber, ERROR_THUMBNAIL);
             }
         }
 
-        public virtual ThumbnailRaw ReadVideoThumbnail(int globalId)
+        public virtual ThumbnailDataJpeg ReadVideoThumbnail(int globalId)
         {
             byte[] jpegData = BaseBlobReader.ReadByteBlob(globalId);
             int videoId = GlobalIdToVideoFramenumber[globalId].videoId;
             int frameNumber = GlobalIdToVideoFramenumber[globalId].frameNumber;
-            return new ThumbnailRaw(videoId, frameNumber, jpegData);
+            return new ThumbnailDataJpeg(videoId, frameNumber, jpegData);
         }
 
         public override void Dispose()
@@ -179,6 +144,9 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
             BaseBlobReader.Dispose();
         }
 
+        /// <summary>
+        /// Byte encoded JPEG image file with an error image.
+        /// </summary>
         private readonly byte[] ERROR_THUMBNAIL = new byte[] 
         {
             0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x01, 0x00, 0xf0,

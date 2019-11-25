@@ -1,29 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ViretTool.DataLayer.DataIO.BlobIO.VariableSize;
 
 namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
 {
-    public class KeywordReader : KeywordIOBase
+    /// <summary>
+    /// Reads top K (typically 10) tuples of (synsetId, probability) for each input keyframe.
+    /// Used primarily in visualization of keyword predictions for each keyframe.
+    /// </summary>
+    public class FrameSynsetsReader : FrameSynsetsIOBase
     {
         public VariableSizeBlobReader BaseBlobReader { get; private set; }
 
-        private object _lockObject = new object();
+        private readonly object _lockObject = new object();
 
 
-        public KeywordReader(string inputFile)
+        public FrameSynsetsReader(string inputFile)
         {
             BaseBlobReader = new VariableSizeBlobReader(inputFile);
-
-            //byte[] metadata = BaseBlobReader.FiletypeMetadata;
-            //using (BinaryReader reader = new BinaryReader(new MemoryStream(metadata)))
-            //{
-            //    // TODO if needed    
-            //}
         }
 
 
@@ -31,13 +24,13 @@ namespace ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO
         {
             lock (_lockObject)
             {
-                int blobSizeBytes = BaseBlobReader.GetBlobLength(frameId);
-                int synsetCount = blobSizeBytes / (sizeof(int) + sizeof(float)); // synsetId + probability
+                // one item is tuple of (int) synsetId and (float) probability
+                int blobLengthBytes = BaseBlobReader.GetBlobLength(frameId);
+                int tupleCount = blobLengthBytes / (sizeof(int) + sizeof(float));
+                
                 BaseBlobReader.SeekToBlob(frameId);
-                //int blobSizeBytes2 = BaseBlobReader.BaseBinaryReader.ReadInt32(); // TODO: double check or remove
-
                 List<(int synsetId, float probability)> result = new List<(int synsetId, float probability)>();
-                for (int i = 0; i < synsetCount; i++)
+                for (int i = 0; i < tupleCount; i++)
                 {
                     int synsetId = BaseBlobReader.BaseBinaryReader.ReadInt32();
                     float probability = BaseBlobReader.BaseBinaryReader.ReadSingle();
