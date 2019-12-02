@@ -10,6 +10,7 @@ using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.BusinessLayer.Datasets;
 using Action = System.Action;
+using System.Windows.Media;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -108,6 +109,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
 
+            InitBorders();
+
             // UpdateVisibleFrames() loads frames to screen
             UpdateVisibleFrames();
             IsInitialDisplayShown = true;
@@ -160,7 +163,46 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, _zoomDisplayProvider.ZoomOutOfLayer);
         }
 
-        
+        private void InitBorders()
+        {
+            foreach(FrameViewModel f in _loadedFrames)
+            {
+                int frameID = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(f.VideoId, f.FrameNumber);
+                (float BottomBorderSimilarity, float RightBorderSimilarity) = _zoomDisplayProvider.GetColorSimilarity(_currentLayer, frameID);
+                if(BottomBorderSimilarity > 0.5f)
+                {
+                    f.BottomBorderColor = Colors.Red;
+                }
+                else
+                {
+                    f.BottomBorderColor = Colors.Green;
+                }
+                if (RightBorderSimilarity > 0.5f)
+                {
+                    f.RightBorderColor = Colors.Blue;
+                }
+                else
+                {
+                    f.RightBorderColor = Colors.Yellow;
+                }
+            }
+            // Make bottom border invisible for the last row
+            for (int i = 1; i <= ColumnCount; i++)
+            {
+                if (_loadedFrames.Count() - 1 - ColumnCount + i >= _loadedFrames.Count())
+                    break;
+                _loadedFrames[_loadedFrames.Count() - 1 - ColumnCount + i].IsBottomBorderVisible = false;
+
+            }
+
+            // Make right border invisible for the last column
+            for (int i = 1; i <= RowCount; i++)
+            {
+                if ((i * ColumnCount) - 1 >= _loadedFrames.Count())
+                    break;
+                _loadedFrames[(i * ColumnCount) - 1].IsRightBorderVisible = false;
+            }
+        }
         public async Task LoadFramesForIds(IEnumerable<int> inputFrameIds, Func<int,int,int,int,int[]> TypeOfZoom)
         {
             int inputFrameId = inputFrameIds.First();
@@ -171,6 +213,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             int[] ids = TypeOfZoom(_currentLayer,inputFrameId, RowCount, ColumnCount);
             _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+
+            InitBorders();
+            
+            // TODO: disable async loading for consistent loading when scrolling
 
             UpdateVisibleFrames();
             IsInitialDisplayShown = false;

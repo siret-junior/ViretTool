@@ -13,9 +13,8 @@
         /// </summary>
         /// <returns></returns>
         int GetMaxDepth();
-
+        (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameIndex);
         int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
-
         int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount);
     }
 }

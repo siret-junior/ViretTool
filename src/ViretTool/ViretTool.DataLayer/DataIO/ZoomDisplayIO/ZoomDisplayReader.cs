@@ -40,23 +40,26 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns>List of 2D arrays, each array represents one layer in SOM map</returns>
-        public List<int[][]> ReadLayersIdsFromFile()
+        public (List<int[][]>,List<float[][]>) ReadLayersIdsFromFile()
         {
             // Read content of textfile to array
             string[] lines = File.ReadAllLines(_filePath);
 
             List<int[][]> resultLayers = new List<int[][]>();
-            for (int i = 0; i < lines.Length; i += 3)
+            List<float[][]> colorSimilarity = new List<float[][]>();
+            for (int i = 0; i < lines.Length; i += 4)
             {
                 // parse height, width and 1D array and transform it to 2D array, then add it to result layers
                 int layerHeight = int.Parse(lines[i]);
                 int layerWidth = int.Parse(lines[i + 1]);
                 int[] layerItems = lines[i + 2].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-                
+                float[] layerSimilarities = lines[i + 3].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(float.Parse).ToArray();
+
                 resultLayers.Add(ReshapeTo2DArray(layerItems, layerHeight, layerWidth));
+                colorSimilarity.Add(ReshapeTo2DArray(layerSimilarities, layerHeight, layerWidth * 2));
             }
 
-            return resultLayers;
+            return (resultLayers,colorSimilarity);
         }
 
 
@@ -67,7 +70,7 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
         /// <param name="outputHeight"></param>
         /// <param name="outputWidth"></param>
         /// <returns></returns>
-        private int[][] ReshapeTo2DArray(int[] input1DArray, int outputHeight, int outputWidth)
+        private T[][] ReshapeTo2DArray<T>(T[] input1DArray, int outputHeight, int outputWidth)
         {
             // argument check
             if (outputWidth * outputHeight != input1DArray.Length)
@@ -78,10 +81,10 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
             }
 
             // reshaping
-            int[][] output2DArray = new int [outputHeight][];
+            T[][] output2DArray = new T [outputHeight][];
             for (int iCol = 0; iCol < outputHeight; iCol++)
             {
-                int[] row = new int[outputWidth];
+                T[] row = new T[outputWidth];
                 for (int iRow = 0; iRow < outputWidth; iRow++)
                 {
                     row[iRow] = input1DArray[iCol * outputWidth + iRow];

@@ -11,6 +11,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:FrameViewModel}">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -18,15 +19,14 @@
             <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
             <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
             <Grid x:Key="CommonControls" x:Shared="False" ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" ToolTipService.Placement="Top">
-
                 <Grid.ToolTip >
                     <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
                 </Grid.ToolTip>
-
+                
                 <Image Name="Image" Stretch="Fill">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
-                            <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay, IsAsync=True}"/>
+                            <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay, IsAsync=False}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay, IsAsync=True}" Value="True">
                                     <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay}"/>
@@ -47,6 +47,16 @@
                             <Binding Path="IsClicked" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Converter="{StaticResource InvertedBooleanConverter}" IsAsync="True"/>
                         </MultiBinding>
                     </Border.Visibility>
+                </Border>
+                <Border BorderThickness="0,0,0,10" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{Binding BottomBorderColor}" Opacity="0.5"/>
+                    </Border.BorderBrush>
+                </Border>
+                <Border BorderThickness="0,0,10,0" Visibility="{Binding IsRightBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{Binding RightBorderColor}" Opacity="0.5"/>
+                    </Border.BorderBrush>
                 </Border>
 
                 <TextBlock Name="VideoIdLabel" FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}" />

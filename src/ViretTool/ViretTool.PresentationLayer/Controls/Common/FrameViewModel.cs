@@ -3,6 +3,7 @@ using System.Linq;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
+using System.Windows.Media;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -16,6 +17,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private bool _isSelectedForDetail;
         private bool _isSelectedForQuery;
         private bool _isVisible = true;
+        private bool _isRightBorderVisible = true;
+        private bool _isBottomBorderVisible = true;
+        private Color _rightBorderColor = Colors.Brown;
+        private Color _bottomBorderColor = Colors.Green;
         private bool _isLastInVideo;
 
         public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
@@ -122,7 +127,62 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
+        public bool IsRightBorderVisible
+        {
+            get => _isRightBorderVisible;
+            set
+            {
+                if (_isRightBorderVisible == value)
+                {
+                    return;
+                }
 
+                _isRightBorderVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public Color RightBorderColor
+        {
+            get => _rightBorderColor;
+            set
+            {
+                if (_rightBorderColor == value)
+                {
+                    return;
+                }
+
+                _rightBorderColor = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsBottomBorderVisible
+        {
+            get => _isBottomBorderVisible;
+            set
+            {
+                if (_isBottomBorderVisible == value)
+                {
+                    return;
+                }
+
+                _isBottomBorderVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public Color BottomBorderColor
+        {
+            get => _bottomBorderColor;
+            set
+            {
+                if (_bottomBorderColor == value)
+                {
+                    return;
+                }
+
+                _bottomBorderColor = value;
+                NotifyOfPropertyChange();
+            }
+        }
         public int VideoId { get; }
 
         public string Label

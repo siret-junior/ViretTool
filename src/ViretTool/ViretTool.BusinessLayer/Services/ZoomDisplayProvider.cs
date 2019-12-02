@@ -16,6 +16,7 @@ namespace ViretTool.BusinessLayer.Services
         /// Each element of List is a 2D array, each array represents SOM layer
         /// </summary>
         public List<int[][]> LayersIds;
+        public List<float[][]> ColorSimilarity;
 
 
         public ZoomDisplayProvider(IDatasetParameters datasetParameters, string datasetDirectory)
@@ -24,9 +25,15 @@ namespace ViretTool.BusinessLayer.Services
             ZoomDisplayReader zoomDisplayReader = new ZoomDisplayReader(filePath);
 
             // Read the SOM map from file
-            LayersIds = zoomDisplayReader.ReadLayersIdsFromFile();
+            (LayersIds, ColorSimilarity) = zoomDisplayReader.ReadLayersIdsFromFile();
         }
 
+        public (float BottomBorder,float RightBorder) GetColorSimilarity(int layerIndex, int frameID)
+        {
+            float[][] layerSimilarities = ColorSimilarity[layerIndex];
+            (int Col, int Row) = GetArrayItemPosition(frameID, LayersIds[layerIndex]);
+            return (layerSimilarities[Row][Col * 2], layerSimilarities[Row][Col * 2 + 1]);
+        }
         public int GetMaxDepth()
         {
             return LayersIds.Count - 1;
