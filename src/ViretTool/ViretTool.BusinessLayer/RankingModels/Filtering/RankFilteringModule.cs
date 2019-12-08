@@ -15,7 +15,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         private Random _random = new Random(RANDOM_SEED);
         private int[] _sampleIndexes;
         private double[] _sampleValues;
-        List<float> notFilteredRanks;
+        private List<float> _notFilteredRanks;
 
         public ThresholdFilteringQuery CachedQuery { get; private set; }
 
@@ -142,13 +142,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             _random = new Random(RANDOM_SEED);
 
             // prepare list for not filtered ranks
-            if (notFilteredRanks == null || notFilteredRanks.Capacity < InputRanking.Ranks.Length)
+            if (_notFilteredRanks == null || _notFilteredRanks.Capacity < InputRanking.Ranks.Length)
             {
-                notFilteredRanks = new List<float>(InputRanking.Ranks.Length);
+                _notFilteredRanks = new List<float>(InputRanking.Ranks.Length);
             }
             else
             {
-                notFilteredRanks.Clear();
+                _notFilteredRanks.Clear();
             }
 
             // extract not filtered ranks
@@ -157,17 +157,17 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 float rank = InputRanking.Ranks[i];
                 if (rank != float.MinValue)
                 {
-                    notFilteredRanks.Add(rank);
+                    _notFilteredRanks.Add(rank);
                 }
             }
 
-            float nonFilteredPercentage = ((float)notFilteredRanks.Count()) / InputRanking.Ranks.Length;
+            float nonFilteredPercentage = ((float)_notFilteredRanks.Count()) / InputRanking.Ranks.Length;
             if (nonFilteredPercentage > percentageOfDatabase)
             {
                 // too much results, sample
-                for (int i = 0; i < SAMPLE_SIZE && i < notFilteredRanks.Count; i++)
+                for (int i = 0; i < SAMPLE_SIZE && i < _notFilteredRanks.Count; i++)
                 {
-                    _sampleValues[i] = notFilteredRanks[_random.Next(notFilteredRanks.Count)];
+                    _sampleValues[i] = _notFilteredRanks[_random.Next(_notFilteredRanks.Count)];
                 }
                 float percentageInSubset = percentageOfDatabase / nonFilteredPercentage;
                 Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
@@ -178,11 +178,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             {
                 // too few results, return all (set threshold to the smallest value)
                 float minValue = float.MaxValue;
-                for (int i = 0; i < SAMPLE_SIZE && i < notFilteredRanks.Count; i++)
+                for (int i = 0; i < SAMPLE_SIZE && i < _notFilteredRanks.Count; i++)
                 {
-                    if (notFilteredRanks[i] != float.MinValue && notFilteredRanks[i] < minValue)
+                    if (_notFilteredRanks[i] != float.MinValue && _notFilteredRanks[i] < minValue)
                     {
-                        minValue = notFilteredRanks[i];
+                        minValue = _notFilteredRanks[i];
                     }
                 }
                 return minValue;

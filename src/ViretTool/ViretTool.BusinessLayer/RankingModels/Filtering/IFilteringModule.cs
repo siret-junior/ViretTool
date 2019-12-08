@@ -1,7 +1,7 @@
 ﻿using ViretTool.BusinessLayer.RankingModels.Filtering.Filters;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
-namespace ViretTool.BusinessLayer.RankingModels
+namespace ViretTool.BusinessLayer.RankingModels.Filtering
 {
     public interface IFilteringModule
     {

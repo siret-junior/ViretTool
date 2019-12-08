@@ -125,10 +125,21 @@ namespace ViretTool.BusinessLayer.RankingModels.Fusion
                     // no model for sorting is selected, just filter results
                     sortingRanks = null;
                     break;
-                    //throw new NotImplementedException(
-                    //    "Model for rank sorting " +
-                    //    Enum.GetName(typeof(FilterState), query.SortingSimilarityModel) +
-                    //    " not expected.");
+                //throw new NotImplementedException(
+                //    "Model for rank sorting " +
+                //    Enum.GetName(typeof(FilterState), query.SortingSimilarityModel) +
+                //    " not expected.");
+
+                // TODO: use this
+                //case FusionQuery.SimilarityModels.None:
+                //    // no model for sorting is selected, just filter results
+                //    sortingRanks = null;
+                //    break;
+                //default:
+                //    throw new NotImplementedException(
+                //        "Model for rank sorting " +
+                //        Enum.GetName(typeof(FilterState), query.SortingSimilarityModel) +
+                //        " not expected.");
             }
 
             // filter/rank aggregation (float.MinValue means that the rank it is filtered)

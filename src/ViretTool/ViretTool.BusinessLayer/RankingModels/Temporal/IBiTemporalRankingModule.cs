@@ -1,4 +1,5 @@
-﻿using ViretTool.BusinessLayer.RankingModels.Fusion;
+﻿using ViretTool.BusinessLayer.RankingModels.Filtering;
+using ViretTool.BusinessLayer.RankingModels.Fusion;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Temporal
