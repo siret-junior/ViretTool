@@ -22,6 +22,8 @@ namespace ViretTool.PresentationLayer.Helpers
             ColorHSV hsvFrom = new ColorHSV(rgbFrom);
             ColorHSV hsvTo = new ColorHSV(rgbTo);
 
+            (hsvFrom, hsvTo) = FixDesaturatedColors(hsvFrom, hsvTo);
+
             double resultHue = InterpolateHue(interpolation, hsvFrom, hsvTo, useShortRotation);
             double resultSaturation = InterpolateSaturation(interpolation, hsvFrom, hsvTo);
             double resultValue = InterpolateValue(interpolation, hsvFrom, hsvTo);
@@ -30,6 +32,31 @@ namespace ViretTool.PresentationLayer.Helpers
             ColorRGB rgbResult = new ColorRGB(hsvResult);
 
             return Color.FromArgb((int)(rgbResult.R * 255), (int)(rgbResult.G * 255), (int)(rgbResult.B * 255));
+        }
+
+        private static (ColorHSV hsvFrom, ColorHSV hsvTo) FixDesaturatedColors(ColorHSV hsvFrom, ColorHSV hsvTo)
+        {
+            // both desaturated
+            if (double.IsNaN(hsvFrom.H) && double.IsNaN(hsvTo.H))
+            {
+                return (new ColorHSV(0, 0, hsvFrom.V), new ColorHSV(0, 0, hsvTo.V));
+            }
+
+            // one desaturated, copy H value from the other
+            else if (double.IsNaN(hsvFrom.H))
+            {
+                return (new ColorHSV(hsvTo.H, 0, hsvFrom.V), hsvTo);
+            }
+            else if (double.IsNaN(hsvTo.H))
+            {
+                return (hsvFrom, new ColorHSV(hsvFrom.H, 0, hsvTo.V));
+            }
+
+            // no fix required
+            else
+            {
+                return (hsvFrom, hsvTo);
+            }
         }
 
         private static double InterpolateHue(double interpolation, ColorHSV hsvFrom, ColorHSV hsvTo, bool useShortRotation)
@@ -49,7 +76,7 @@ namespace ViretTool.PresentationLayer.Helpers
 
             // switch to longer difference vector if needed
             double hueDifferenceLong;
-            if (hueDifferenceShort >= 0)
+            if (hueDifferenceShort > 0)
             {
                 hueDifferenceLong = hueDifferenceShort - 1;
             }
