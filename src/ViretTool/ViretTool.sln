@@ -26,24 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThumbnailVisualizationTest", "ThumbnailVisualizationTest\ThumbnailVisualizationTest.csproj", "{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorSignatureVisualizationTest", "ColorSignatureVisualizationTest\ColorSignatureVisualizationTest.csproj", "{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.BusinessLayer.ExternalDescriptors", "ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj", "{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Analysis", "Analysis", "{2430B804-617A-4539-970A-7ED8E9885E82}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KisQueryResultExtraction", "KisQueryResultExtraction\KisQueryResultExtraction.csproj", "{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F7058311-7616-4EA5-B2D2-35E502782537} = {F7058311-7616-4EA5-B2D2-35E502782537}
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF} = {9EB09F6E-E474-4FB4-B7DE-017C91C198FF}
-		{737B3FB5-E62B-4ED8-A75F-EC16470B94C9} = {737B3FB5-E62B-4ED8-A75F-EC16470B94C9}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoolSignatureVisualizationTest", "BoolSignatureVisualizationTest\BoolSignatureVisualizationTest.csproj", "{5875519B-4973-496B-AEBB-B52E47EE8270}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,22 +84,6 @@ Global
 		{5B076C61-E554-4B37-98F0-63169881A426}.Release RAM|x64.Build.0 = Release|x64
 		{5B076C61-E554-4B37-98F0-63169881A426}.Release|x64.ActiveCfg = Release|x64
 		{5B076C61-E554-4B37-98F0-63169881A426}.Release|x64.Build.0 = Release|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Debug RAM|x64.ActiveCfg = Debug|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Debug RAM|x64.Build.0 = Debug|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Debug|x64.ActiveCfg = Debug|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Debug|x64.Build.0 = Debug|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Release RAM|x64.ActiveCfg = Release|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Release RAM|x64.Build.0 = Release|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Release|x64.ActiveCfg = Release|x64
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7}.Release|x64.Build.0 = Release|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug RAM|x64.ActiveCfg = Debug|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug RAM|x64.Build.0 = Debug|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug|x64.ActiveCfg = Debug|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Debug|x64.Build.0 = Debug|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release RAM|x64.ActiveCfg = Release|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release RAM|x64.Build.0 = Release|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release|x64.ActiveCfg = Release|x64
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF}.Release|x64.Build.0 = Release|x64
 		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug RAM|x64.ActiveCfg = Debug|x64
 		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug RAM|x64.Build.0 = Debug|x64
 		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug|x64.ActiveCfg = Debug|x64
@@ -125,31 +92,9 @@ Global
 		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release RAM|x64.Build.0 = Release|x64
 		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release|x64.ActiveCfg = Release|x64
 		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release|x64.Build.0 = Release|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Debug RAM|x64.ActiveCfg = Debug|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Debug RAM|x64.Build.0 = Debug|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Debug|x64.ActiveCfg = Debug|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Debug|x64.Build.0 = Debug|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Release RAM|x64.ActiveCfg = Release|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Release RAM|x64.Build.0 = Release|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Release|x64.ActiveCfg = Release|x64
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078}.Release|x64.Build.0 = Release|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug RAM|x64.ActiveCfg = Debug|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug RAM|x64.Build.0 = Debug|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug|x64.ActiveCfg = Debug|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Debug|x64.Build.0 = Debug|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release RAM|x64.ActiveCfg = Release|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release RAM|x64.Build.0 = Release|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release|x64.ActiveCfg = Release|x64
-		{5875519B-4973-496B-AEBB-B52E47EE8270}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{ACBE4284-4DC9-47BF-8D38-CF3BF3E8A5F7} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
-		{55795C16-BB09-4BE1-8DFA-BA4BC11A1BCF} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
-		{B63C28A3-5F49-4C7B-9CA6-14134D6FD078} = {2430B804-617A-4539-970A-7ED8E9885E82}
-		{5875519B-4973-496B-AEBB-B52E47EE8270} = {C2A8FDE7-06BD-4C36-8531-3D90C1FB78FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC0C9166-CC20-4355-80C8-ACF9C7D045E3}
