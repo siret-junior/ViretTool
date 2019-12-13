@@ -1,9 +1,0 @@
-http://172.16.3.245/vbs/submit?team=4&member=1&video=1916&frame=5064
-{
-  "teamname": "VIRET",
-  "teamid": 4,
-  "memberid": 1,
-  "timestamp": 1546954819998,
-  "type": "Submit",
-  "events": []
-}

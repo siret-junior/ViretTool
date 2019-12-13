@@ -1,9 +1,0 @@
-http://demo2.itec.aau.at:80/vbs/submit?team=4&member=1&video=2702&frame=1462
-{
-  "teamname": "VIRET",
-  "teamid": 4,
-  "memberid": 1,
-  "timestamp": 1546948944373,
-  "type": "Submit",
-  "events": []
-}
