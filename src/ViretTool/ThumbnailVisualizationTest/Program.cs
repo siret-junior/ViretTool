@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.DataLayer.DataModel;
-using ViretTool.DataLayer.DataProviders.Dataset;
+using ViretTool.DataLayer.DataIO.DatasetIO;
 
 namespace ThumbnailVisualizationTest
 {

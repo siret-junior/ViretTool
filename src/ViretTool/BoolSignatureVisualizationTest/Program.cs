@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Thumbnails;
 using ViretTool.DataLayer.DataModel;
-using ViretTool.DataLayer.DataProviders.Dataset;
+using ViretTool.DataLayer.DataIO.DatasetIO;
 
 
 namespace BoolSignatureVisualizationTest
