@@ -15,16 +15,27 @@ namespace ViretTool.BusinessLayer.ExternalDescriptors
         private readonly float[][] PCAComponents;
         private readonly float[] PCAMean;
 
+
         public NasNetScorer(string modelLocation, string pcaComponetsLocation, string pcaMeanLocation)
         {
-            Model = LoadModel(modelLocation);
-            PCAMean = LoadPCAMean(pcaMeanLocation);
-            PCAComponents = LoadPCAComponents(pcaComponetsLocation);
+            try
+            {
+                Model = LoadModel(modelLocation);
+                PCAMean = LoadPCAMean(pcaMeanLocation);
+                PCAComponents = LoadPCAComponents(pcaComponetsLocation);
+            }
+            catch (Exception)
+            {
+                // if the model could not be loaded, fail transparently
+            }
         }
 
         // TODO: add option to set root directory for relative input file location
         public float[] GetReducedFeatures(string inputFileLocation)
         {
+            // if the model could not be loaded, fail transparently
+            if (Model == null) return new float[128];
+
             var f = GetFullFeatures(inputFileLocation);
 
             for (int i = 0; i < 1056; i++)
