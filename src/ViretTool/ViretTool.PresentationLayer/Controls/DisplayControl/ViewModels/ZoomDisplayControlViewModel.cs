@@ -103,13 +103,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             this.NotifyOfPropertyChange("ShowZoomOutButton");
             this.NotifyOfPropertyChange("ShowZoomIntoButton");
 
-            // Get first layer of SOM
-            int[][] ids = _zoomDisplayProvider.GetInitialLayer();
-            _loadedFrames = await Task.Run(() => ids.SelectMany(x=>x).Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
-            
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
+
+            // Get first layer of SOM
+            int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
+            _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
             InitBorders();
 
@@ -169,7 +169,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             foreach(FrameViewModel frame in _loadedFrames)
             {
-                // Load frameID and find its similaryti in zoomDisplayProvider
+                // Load frameID and find its similarity in zoom DisplayProvider
                 int frameID = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber);
                 (float BottomBorderSimilarity, float RightBorderSimilarity) = _zoomDisplayProvider.GetColorSimilarity(_currentLayer, frameID);
 
@@ -185,21 +185,22 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 frame.RightBorderColor = System.Windows.Media.Color.FromArgb(rightColor.A, rightColor.R, rightColor.G, rightColor.B);
 
             }
-            // Make bottom border invisible for the last row
-            for (int i = 1; i <= ColumnCount; i++)
-            {
-                if (_loadedFrames.Count() - 1 - ColumnCount + i >= _loadedFrames.Count())
-                    break;
-                _loadedFrames[_loadedFrames.Count() - 1 - ColumnCount + i].IsBottomBorderVisible = false;
 
+
+            // Make bottom border invisible for the last row
+            // Iterate over whole grid except the last row
+            for (int i = 0; i < _loadedFrames.Count() - ColumnCount; i++)
+            {
+                _loadedFrames[i].IsBottomBorderVisible = true;
             }
 
             // Make right border invisible for the last column
-            for (int i = 1; i <= RowCount; i++)
+            // Iterate over whole grid
+            for (int i = 0; i < _loadedFrames.Count(); i++)
             {
-                if ((i * ColumnCount) - 1 >= _loadedFrames.Count())
-                    break;
-                _loadedFrames[(i * ColumnCount) - 1].IsRightBorderVisible = false;
+                // If iterator is not the last element in row then set Visibility to true
+                if ((i % ColumnCount) != ColumnCount - 1)
+                    _loadedFrames[i].IsRightBorderVisible = true;
             }
         }
         public async Task LoadFramesForIds(IEnumerable<int> inputFrameIds, Func<int,int,int,int,int[]> TypeOfZoom)

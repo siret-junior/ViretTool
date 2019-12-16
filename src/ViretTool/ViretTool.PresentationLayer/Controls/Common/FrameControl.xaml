@@ -23,7 +23,7 @@
                     <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
                 </Grid.ToolTip>
                 
-                <Image Name="Image" Stretch="Fill" Margin="0,0,10,10">
+                <Image Name="Image" Stretch="Fill" Margin="0,0,4,4">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay, IsAsync=False}"/>
@@ -48,14 +48,14 @@
                         </MultiBinding>
                     </Border.Visibility>
                 </Border>
-                <Border BorderThickness="0,0,0,10" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
+                <Border BorderThickness="0,0,0,4" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
                     <Border.BorderBrush>
-                        <SolidColorBrush Color="{Binding BottomBorderColor}" Opacity="0.5"/>
+                        <SolidColorBrush Color="{Binding BottomBorderColor}"/>
                     </Border.BorderBrush>
                 </Border>
-                <Border BorderThickness="0,0,10,0" Visibility="{Binding IsRightBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
+                <Border BorderThickness="0,0,4,0" Visibility="{Binding IsRightBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
                     <Border.BorderBrush>
-                        <SolidColorBrush Color="{Binding RightBorderColor}" Opacity="0.5"/>
+                        <SolidColorBrush Color="{Binding RightBorderColor}" />
                     </Border.BorderBrush>
                 </Border>
 

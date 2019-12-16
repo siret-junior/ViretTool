@@ -17,8 +17,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private bool _isSelectedForDetail;
         private bool _isSelectedForQuery;
         private bool _isVisible = true;
-        private bool _isRightBorderVisible = true;
-        private bool _isBottomBorderVisible = true;
+        private bool _isRightBorderVisible = false;
+        private bool _isBottomBorderVisible = false;
         private Color _rightBorderColor = Colors.Brown;
         private Color _bottomBorderColor = Colors.Green;
         private bool _isLastInVideo;

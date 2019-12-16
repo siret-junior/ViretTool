@@ -6,7 +6,7 @@
         /// Returns the first layer of SOM needed for initialization
         /// </summary>
         /// <returns></returns>
-        int[][] GetInitialLayer();
+        int[] GetInitialLayer(int RowCount, int ColumnCount);
 
         /// <summary>
         /// Calculate number of layers

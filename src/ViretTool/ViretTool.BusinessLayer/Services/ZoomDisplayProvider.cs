@@ -39,9 +39,9 @@ namespace ViretTool.BusinessLayer.Services
             return LayersIds.Count - 1;
         }
 
-        public int[][] GetInitialLayer()
+        public int[] GetInitialLayer(int rowCount, int columnCount)
         {
-            return LayersIds[0];
+            return ZoomIntoLayer(0, LayersIds[0][0][0], rowCount, columnCount);
         }
         public int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {

@@ -39,7 +39,7 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
         /// Reads content of each layer from file
         /// </summary>
         /// <param name="filePath"></param>
-        /// <returns>List of 2D arrays, each array represents one layer in SOM map</returns>
+        /// <returns>two Lists of 2D arrays, each array in first list represents one layer in SOM map, each array in second list represents right & bottom similarity with surrounding elements</returns>
         public (List<int[][]>,List<float[][]>) ReadLayersIdsFromFile()
         {
             // Read content of textfile to array
@@ -49,7 +49,7 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
             List<float[][]> colorSimilarity = new List<float[][]>();
             for (int i = 0; i < lines.Length; i += 4)
             {
-                // parse height, width and 1D array and transform it to 2D array, then add it to result layers
+                // parse height, width, 1D array (of indexes) and 1D array (of similarities) and transform them to 2D arrays, then add them to lists
                 int layerHeight = int.Parse(lines[i]);
                 int layerWidth = int.Parse(lines[i + 1]);
                 int[] layerItems = lines[i + 2].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
