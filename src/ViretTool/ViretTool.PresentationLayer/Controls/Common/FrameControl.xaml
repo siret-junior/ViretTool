@@ -23,7 +23,7 @@
                     <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
                 </Grid.ToolTip>
                 
-                <Image Name="Image" Stretch="Fill">
+                <Image Name="Image" Stretch="Fill" Margin="0,0,10,10">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay, IsAsync=False}"/>

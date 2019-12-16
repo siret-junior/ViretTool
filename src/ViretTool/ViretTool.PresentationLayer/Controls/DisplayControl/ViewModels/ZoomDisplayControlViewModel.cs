@@ -11,6 +11,8 @@ using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.BusinessLayer.Datasets;
 using Action = System.Action;
 using System.Windows.Media;
+using System.Drawing;
+using ViretTool.PresentationLayer.Helpers;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -165,26 +167,23 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         private void InitBorders()
         {
-            foreach(FrameViewModel f in _loadedFrames)
+            foreach(FrameViewModel frame in _loadedFrames)
             {
-                int frameID = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(f.VideoId, f.FrameNumber);
+                // Load frameID and find its similaryti in zoomDisplayProvider
+                int frameID = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber);
                 (float BottomBorderSimilarity, float RightBorderSimilarity) = _zoomDisplayProvider.GetColorSimilarity(_currentLayer, frameID);
-                if(BottomBorderSimilarity > 0.5f)
-                {
-                    f.BottomBorderColor = Colors.Red;
-                }
-                else
-                {
-                    f.BottomBorderColor = Colors.Green;
-                }
-                if (RightBorderSimilarity > 0.5f)
-                {
-                    f.RightBorderColor = Colors.Blue;
-                }
-                else
-                {
-                    f.RightBorderColor = Colors.Yellow;
-                }
+
+                System.Drawing.Color colorSimilar = System.Drawing.Color.Lime;
+                System.Drawing.Color colorDissimilar = System.Drawing.Color.Red;
+
+                // Map the similarity into Color
+                System.Drawing.Color bottomColor = ColorInterpolationHelper.InterpolateColorHSV(colorSimilar, colorDissimilar, 1 - BottomBorderSimilarity, true);
+                System.Drawing.Color rightColor = ColorInterpolationHelper.InterpolateColorHSV(colorSimilar, colorDissimilar, 1 - RightBorderSimilarity, true);
+
+                // Convert System.Drawing.Color (used by ColorInterpolationHelper) to System.Windows.Media.Color (used by WPF)
+                frame.BottomBorderColor = System.Windows.Media.Color.FromArgb(bottomColor.A, bottomColor.R, bottomColor.G, bottomColor.B);
+                frame.RightBorderColor = System.Windows.Media.Color.FromArgb(rightColor.A, rightColor.R, rightColor.G, rightColor.B);
+
             }
             // Make bottom border invisible for the last row
             for (int i = 1; i <= ColumnCount; i++)
