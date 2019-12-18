@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.IO;
+using System.Globalization;
 
 namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
 {
@@ -53,7 +54,7 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
                 int layerHeight = int.Parse(lines[i]);
                 int layerWidth = int.Parse(lines[i + 1]);
                 int[] layerItems = lines[i + 2].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-                float[] layerSimilarities = lines[i + 3].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(float.Parse).ToArray();
+                float[] layerSimilarities = lines[i + 3].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(x => float.Parse(x, CultureInfo.InvariantCulture)).ToArray();
 
                 resultLayers.Add(ReshapeTo2DArray(layerItems, layerHeight, layerWidth));
                 colorSimilarity.Add(ReshapeTo2DArray(layerSimilarities, layerHeight, layerWidth * 2));
