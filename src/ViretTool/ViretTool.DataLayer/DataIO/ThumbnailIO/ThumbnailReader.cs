@@ -13,7 +13,7 @@ namespace ViretTool.DataLayer.DataIO.ThumbnailIO
     {
         private const int RESOLUTION_LIMIT = 7680; // 8K UHD
         private const int VIDEOCOUNT_LIMIT = 100_000;
-        private const int FRAMECOUNT_LIMIT = 1_000_000;
+        private const int FRAMECOUNT_LIMIT = 100_000_000;
         private const int FPS_LIMIT = 30;
         
         private readonly Dictionary<int, Dictionary<int, int>> _videoFramenumberToGlobalId;

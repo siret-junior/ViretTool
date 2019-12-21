@@ -130,7 +130,7 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
                 // this is the last added shot
                 return videoShots[shotId];
             }
-            else if (lastShotId + 1 == shotId)
+            else //if (lastShotId + 1 == shotId)
             {
                 // this is a newly added shot
                 Shot shot = new Shot(_shots.Count, shotId, shotStartFrame, shotEndFrame);
@@ -144,10 +144,13 @@ namespace ViretTool.DataLayer.DataIO.DatasetIO
 
                 return shot;
             }
-            else
-            {
-                throw new ArgumentException($"Input shot IDs do not increment sequentially (last: {lastShotId}, current: {shotId}).");
-            }
+            
+            // ignore for now
+            //else
+            //{
+            //    throw new ArgumentException($"Input shot IDs do not increment sequentially"
+            //        + $" (last: {lastShotId}, current: {shotId}, video: {video.Id}).");
+            //}
         }
 
         /// <summary>
