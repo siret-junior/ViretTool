@@ -44,7 +44,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             get
             {
-                if(_currentLayer == _zoomDisplayProvider.GetMaxDepth())
+                if(_currentLayer >= _zoomDisplayProvider.GetMaxDepth())
                 {
                     return false;
                 }
@@ -109,13 +109,26 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             // Get first layer of SOM
             int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
-            _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+            if(ids != null) 
+            {
+                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
-            InitBorders();
+                InitBorders();
 
-            // UpdateVisibleFrames() loads frames to screen
-            UpdateVisibleFrames();
-            IsInitialDisplayShown = true;
+                // UpdateVisibleFrames() loads frames to screen
+                UpdateVisibleFrames();
+                IsInitialDisplayShown = true;
+            }
+            else
+            {
+                Random rnd = new Random((int)DateTime.Now.Ticks);
+                ids = Enumerable.Range(0, RowCount*ColumnCount).Select(_ => rnd.Next(0, _datasetServicesManager.CurrentDataset.DatasetService.FrameCount)).ToArray();
+                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+                
+                // UpdateVisibleFrames() loads frames to screen
+                UpdateVisibleFrames();
+                IsInitialDisplayShown = true;
+            }
         }
 
         /// <summary>
@@ -212,14 +225,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             ColumnCount = DisplayWidth / ImageWidth;
 
             int[] ids = TypeOfZoom(_currentLayer,inputFrameId, RowCount, ColumnCount);
-            _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+            if (ids != null)
+            {
+                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
-            InitBorders();
-            
-            // TODO: disable async loading for consistent loading when scrolling
+                InitBorders();
 
-            UpdateVisibleFrames();
+                // TODO: disable async loading for consistent loading when scrolling
+
+                UpdateVisibleFrames();
+            }
             IsInitialDisplayShown = false;
+
         }
 
 

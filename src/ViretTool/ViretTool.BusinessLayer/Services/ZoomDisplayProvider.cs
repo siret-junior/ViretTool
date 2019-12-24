@@ -41,38 +41,52 @@ namespace ViretTool.BusinessLayer.Services
 
         public int[] GetInitialLayer(int rowCount, int columnCount)
         {
-            return ZoomIntoLayer(0, LayersIds[0][0][0], rowCount, columnCount);
+            // if any IO exception occured while reading file, then LayersIds could be null
+            if (LayersIds.Count() > 0) { 
+                return ZoomIntoLayer(0, LayersIds[0][0][0], rowCount, columnCount);
+            }
+            return null;
         }
         public int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
-            return ZoomIntoLayer(LayersIds[layerIndex], frameId, rowCount, columnCount);
+            // if any IO exception occured while reading file, then LayersIds could be null
+            if (layerIndex < LayersIds.Count())
+            {
+                return ZoomIntoLayer(LayersIds[layerIndex], frameId, rowCount, columnCount);
+            }
+            return null;
         }
         public int[] ZoomIntoLayer(int[][] layer, int frameId, int rowCount, int columnCount)
         {
-            // check display fits layer size
-            int layerHeight = layer.Length;
-            int layerWidth = layer[0].Length;
-            if (rowCount > layerHeight || columnCount > layerWidth)
+            // if any IO exception occured while reading file, then LayersIds could be null
+            if (layer.Length != 0)
             {
-                throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
+                // check display fits layer size
+                int layerHeight = layer.Length;
+                int layerWidth = layer[0].Length;
+                if (rowCount > layerHeight || columnCount > layerWidth)
+                {
+                    throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
+                }
+
+                // (positionInLayerCol, positionInLayerRow) is tuple determining position of frameId in last SOM layer
+                (int positionInLayerCol, int positionInLayerRow) = GetArrayItemPosition(frameId, layer);
+
+                // if frame wasn't found
+                if (positionInLayerCol == -1)
+                {
+                    throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
+                }
+
+                // get display boundaries in the SOM layer
+                (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, positionInLayerRow, rowCount);
+                (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, positionInLayerCol, columnCount);
+
+                List<int> resultDisplay = ExtractDisplayItems(layer, rowStart, rowEnd, colStart, colEnd);
+
+                return resultDisplay.ToArray();
             }
-
-            // positionInArray[XY] is tuple determining position of frameId in last SOM layer
-            (int positionInLayerCol, int positionInLayerRow) = GetArrayItemPosition(frameId, layer);
-
-            // if frame wasn't found
-            if(positionInLayerCol == -1)
-            {
-                throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
-            }
-
-            // get display boundaries in the SOM layer
-            (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, positionInLayerRow, rowCount);
-            (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, positionInLayerCol, columnCount);
-
-            List<int> resultDisplay = ExtractDisplayItems(layer, rowStart, rowEnd, colStart, colEnd);
-
-            return resultDisplay.ToArray();
+            else return null;
         }
 
         public int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount)

@@ -16,14 +16,17 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
     /// {height} of 1st layer 
     /// {width} of 1st layer 
     /// 1D array of 1st layer (has to be tranformed to 2D)
+    /// 1D float array of similarities between bottom element and right element of 1st layer (bottom is first, right is second)
     /// 
     /// {height} of 2nd layer
     /// {width} of 2nd layer
     /// 1D array of 2nd layer (has to be tranformed to 2D)
+    /// 1D float array of similarities between bottom element and right element of 2nd layer (bottom is first, right is second)
     /// 
     /// {height} of 3rd layer
     /// {width} of 3rd layer
     /// 1D array of 3rd layer (has to be tranformed to 2D)
+    /// 1D float array of similarities between bottom element and right element of 3rd layer (bottom is first, right is second)
     /// etc.
     /// </summary>
     public class ZoomDisplayReader
@@ -40,14 +43,24 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
         /// Reads content of each layer from file
         /// </summary>
         /// <param name="filePath"></param>
-        /// <returns>two Lists of 2D arrays, each array in first list represents one layer in SOM map, each array in second list represents right & bottom similarity with surrounding elements</returns>
+        /// <returns>two Lists of 2D arrays, each array in first list represents one layer in SOM map, each array in second list represents right & bottom similarity with surrounding elements, returns </returns>
         public (List<int[][]>,List<float[][]>) ReadLayersIdsFromFile()
         {
             // Read content of textfile to array
-            string[] lines = File.ReadAllLines(_filePath);
+            string[] lines = null;
 
             List<int[][]> resultLayers = new List<int[][]>();
             List<float[][]> colorSimilarity = new List<float[][]>();
+
+            try
+            {
+                lines = File.ReadAllLines(_filePath);
+            }
+            catch(IOException)
+            {
+                return (resultLayers, colorSimilarity);
+            }
+
             for (int i = 0; i < lines.Length; i += 4)
             {
                 // parse height, width, 1D array (of indexes) and 1D array (of similarities) and transform them to 2D arrays, then add them to lists
