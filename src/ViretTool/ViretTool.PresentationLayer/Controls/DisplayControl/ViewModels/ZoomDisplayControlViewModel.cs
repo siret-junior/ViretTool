@@ -115,20 +115,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
                 InitBorders();
 
-                // UpdateVisibleFrames() loads frames to screen
-                UpdateVisibleFrames();
-                IsInitialDisplayShown = true;
             }
             else
             {
-                Random rnd = new Random((int)DateTime.Now.Ticks);
-                ids = Enumerable.Range(0, RowCount*ColumnCount).Select(_ => rnd.Next(0, _datasetServicesManager.CurrentDataset.DatasetService.FrameCount)).ToArray();
-                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-                
-                // UpdateVisibleFrames() loads frames to screen
-                UpdateVisibleFrames();
-                IsInitialDisplayShown = true;
+                await RandomGridDisplay();
             }
+
+            // UpdateVisibleFrames() loads frames to screen
+            UpdateVisibleFrames();
+            IsInitialDisplayShown = true;
         }
 
         /// <summary>
@@ -231,14 +226,64 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
                 InitBorders();
 
-                // TODO: disable async loading for consistent loading when scrolling
-
-                UpdateVisibleFrames();
+                
             }
+            else
+            {
+                await RandomGridDisplay();
+            }
+            // TODO: disable async loading for consistent loading when scrolling
+
+            UpdateVisibleFrames();
+
             IsInitialDisplayShown = false;
 
         }
+        private async Task ResizeDisplay()
+        {
+            RowCount = DisplayHeight / ImageHeight;
+            ColumnCount = DisplayWidth / ImageWidth;
+            if(_loadedFrames.Count > 0)
+            {
+                int frameNumber = _loadedFrames.First().FrameNumber;
+                int videoId = _loadedFrames.First().VideoId;
+                int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(videoId, frameNumber);
 
+                int[] ids = _zoomDisplayProvider.Resize(_currentLayer, frameId, RowCount, ColumnCount);
+                if(ids != null)
+                {
+                    _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+
+                    InitBorders();
+
+                    // TODO: disable async loading for consistent loading when scrolling
+                }
+                else
+                {
+                    await RandomGridDisplay();
+                }
+                UpdateVisibleFrames();
+            }
+        }
+
+        public async Task RandomGridDisplay()
+        {
+
+            RowCount = DisplayHeight / ImageHeight;
+            ColumnCount = DisplayWidth / ImageWidth;
+
+            Random rnd = new Random((int)DateTime.Now.Ticks);
+            int[] ids = Enumerable.Range(0, RowCount * ColumnCount).Select(_ => rnd.Next(0, _datasetServicesManager.CurrentDataset.DatasetService.FrameCount)).ToArray();
+            _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+
+        }
+
+        public new Action DisplaySizeChangedHandler => async () =>
+        {
+            ResetGrid?.Invoke();
+            await ResizeDisplay();
+            UpdateVisibleFrames();
+        };
 
         protected override void UpdateVisibleFrames()
         {

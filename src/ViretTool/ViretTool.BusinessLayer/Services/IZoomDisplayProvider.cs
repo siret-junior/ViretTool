@@ -14,6 +14,15 @@
         /// <returns></returns>
         int GetMaxDepth();
         (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameIndex);
+        /// <summary>
+        /// Calculates grid from layer. This grid is specified by the most top-left frame of the grid, then by row length and column length
+        /// </summary>
+        /// <param name="layerIndex"></param>
+        /// <param name="frameId">frameID of the most tope-left frame in grid</param>
+        /// <param name="rowCount">Row length</param>
+        /// <param name="columnCount">Column length</param>
+        /// <returns></returns>
+        int[] Resize(int layerIndex, int frameId, int rowCount, int columnCount);
         int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
         int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount);
     }

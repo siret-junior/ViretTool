@@ -89,6 +89,51 @@ namespace ViretTool.BusinessLayer.Services
             else return null;
         }
 
+        public int[] Resize(int layerIndex, int frameId, int rowCount, int columnCount)
+        {
+            // if any IO exception occured while reading file, then LayersIds could be null
+            if (layerIndex < LayersIds.Count())
+            {
+                int layerHeight = LayersIds[layerIndex].Length;
+                int layerWidth = LayersIds[layerIndex][0].Length;
+                if (rowCount > layerHeight || columnCount > layerWidth)
+                {
+                    throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
+                }
+                
+                (int colStart, int rowStart) = GetArrayItemPosition(frameId, LayersIds[layerIndex]);
+
+                // if frame wasn't found
+                if (colStart == -1)
+                {
+                    throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
+                }
+                int rowEnd, columnEnd;
+                if(rowStart + rowCount <= layerHeight)
+                {
+                    rowEnd = rowStart + rowCount;
+                }
+                else
+                {
+                    rowEnd = layerHeight;
+                    rowStart = rowEnd - rowCount;
+                }
+                if (colStart + columnCount <= layerWidth)
+                {
+                    columnEnd = colStart + columnCount;
+                }
+                else
+                {
+                    columnEnd = layerWidth;
+                    colStart = columnEnd - columnCount;
+                }
+                List<int> resultDisplay = ExtractDisplayItems(LayersIds[layerIndex], rowStart, rowEnd, colStart, columnEnd);
+
+                return resultDisplay.ToArray();
+
+            }
+            else return null;
+        }
         public int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
 
