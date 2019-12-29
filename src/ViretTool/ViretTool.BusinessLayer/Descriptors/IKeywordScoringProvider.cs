@@ -11,7 +11,7 @@ namespace ViretTool.BusinessLayer.Descriptors
         int ScoringVectorSize { get; }
         int ScoringCount { get; }
 
-        Dictionary<int, float[]> Scorings { get; }
+        //Dictionary<int, float[]> Scorings { get; }
         Dictionary<int, (int frameId, float score)[]> TopScorings { get; }
 
         //float[] GetScoring(string[] query);

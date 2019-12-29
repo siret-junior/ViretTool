@@ -10,7 +10,7 @@ namespace ViretTool.BusinessLayer.Descriptors
     // (provides precomputed score for a query)
     public class KeywordScoringProvider : IKeywordScoringProvider
     {
-        public Dictionary<int, float[]> Scorings { get; }
+        //public Dictionary<int, float[]> Scorings { get; }
         public Dictionary<int, (int frameId, float score)[]> TopScorings { get; }
 
         public int ScoringVectorSize { get; private set; }
@@ -19,24 +19,27 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         public KeywordScoringProvider(string inputFile, string topKFile)
         {
-            using (KeywordScoringReader reader = new KeywordScoringReader(inputFile))
-            {
-                ScoringVectorSize = reader.ScoringVectorSize;
-                ScoringCount = reader.ScoringCount;
+            //using (KeywordScoringReader reader = new KeywordScoringReader(inputFile))
+            //{
+            //    ScoringVectorSize = reader.ScoringVectorSize;
+            //    ScoringCount = reader.ScoringCount;
 
-                Scorings = new Dictionary<int, float[]>();
-                for (int i = 0; i < ScoringCount; i++)
-                {
-                    int synsetId = reader.IdToSynsetIdMapping[i];
-                    Scorings[synsetId] = reader.ReadScoring(i);
-                }
-            }
+            //    Scorings = new Dictionary<int, float[]>();
+            //    for (int i = 0; i < reader.ScoringCount; i++)
+            //    {
+            //        int synsetId = reader.IdToSynsetIdMapping[i];
+            //        Scorings[synsetId] = reader.ReadScoring(i);
+            //    }
+            //}
 
             // read top scores per synset
             TopScorings = new Dictionary<int, (int frameId, float score)[]>();
             using (SynsetFramesReader reader = new SynsetFramesReader(topKFile))
             {
-                for (int i = 0; i < ScoringCount; i++)
+                ScoringVectorSize = reader.ScoringVectorSize;
+                ScoringCount = reader.ScoringCount;
+
+                for (int i = 0; i < reader.ScoringCount; i++)
                 {
                     int synsetId = reader.IdToSynsetIdMapping[i];
                     TopScorings[synsetId] = reader.ReadSynsetFrames(i);
