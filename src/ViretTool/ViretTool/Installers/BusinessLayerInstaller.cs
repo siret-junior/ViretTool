@@ -62,6 +62,9 @@ namespace ViretTool.Installers
                 Component.For<IKeywordScoringProvider>()
                          .UsingFactoryMethod((_, context) => KeywordScoringProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], 5))
                          .LifestyleBoundTo<DatasetServices>(),
+                Component.For<IW2VVQueryToVectorProvider>()
+                         .UsingFactoryMethod((_, context) => W2VVQueryToVectorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
 
 
                 Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
@@ -124,6 +127,8 @@ namespace ViretTool.Installers
                 Component.For<ITextSketchModel>().ImplementedBy<TextSketchModel>().LifestyleTransient(),
 #endif
                 Component.For<ISemanticExampleModel>().ImplementedBy<FloatVectorModel>().LifestyleTransient(),
+
+
 
                 // fusion used by IBiTemporalSimilarityModel
                 Component.For<IBiTemporalRankFusionSum>()

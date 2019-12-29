@@ -50,21 +50,21 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 
             float[] queryData = mFloatVectors[queryId];
 
-            float[] results = ComputeSimilarity(queryData);
+            float[] results = ComputeSimilarity(queryData, InputRanking.Ranks);
 
             mCache.Add(queryId, results);
             return mCache[queryId];
         }
 
-        private float[] ComputeSimilarity(float[] queryData)
+        public float[] ComputeSimilarity(float[] queryData, float[] inputRanks)
         {
-            float[] results = new float[InputRanking.Ranks.Length];
+            float[] results = new float[inputRanks.Length];
             Parallel.For(
                 0,
                 results.Length,
                 i =>
                 {
-                    if (InputRanking.Ranks[i] == float.MinValue)
+                    if (inputRanks[i] == float.MinValue)
                     {
                         // ignore filtered frames
                         return;
@@ -113,7 +113,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             foreach (string externalImageRotated in query.ExternalImages)
             {
                 float[] reducedFeatures = _nasNetScorer.GetReducedFeatures(externalImageRotated);
-                float[] partialResults = ComputeSimilarity(reducedFeatures);
+                float[] partialResults = ComputeSimilarity(reducedFeatures, InputRanking.Ranks);
                 Parallel.For(0, InputRanking.Ranks.Length, i =>
                                                            {
                                                                ranking[i] += partialResults[i];

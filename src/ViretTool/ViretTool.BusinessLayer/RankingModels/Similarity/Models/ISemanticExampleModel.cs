@@ -9,5 +9,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
     public interface ISemanticExampleModel : ISimilarityModel<SemanticExampleQuery>
     {
+        float[] ComputeSimilarity(float[] queryData, float[] inputRanks);
     }
 }

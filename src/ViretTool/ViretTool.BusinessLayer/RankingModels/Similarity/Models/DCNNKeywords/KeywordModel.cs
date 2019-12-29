@@ -16,11 +16,17 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         public RankingBuffer OutputRanking { get; set; }
 
         private IKeywordScoringProvider _keywordScoringProvider;
+        private IW2VVQueryToVectorProvider _w2vvQueryToVectorProvider;
+        private ISemanticExampleModel _semanticExampleModel;
 
-
-        public KeywordModel(IKeywordScoringProvider keywordScoringProvider)
+        public KeywordModel(
+            IKeywordScoringProvider keywordScoringProvider, 
+            IW2VVQueryToVectorProvider w2vvQueryToVectorProvider,
+            ISemanticExampleModel semanticExampleModel)
         {
             _keywordScoringProvider = keywordScoringProvider;
+            _w2vvQueryToVectorProvider = w2vvQueryToVectorProvider;
+            _semanticExampleModel = semanticExampleModel;
         }
 
 
@@ -61,8 +67,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             else
             {
                 // compute scoring
-                //float[] scoring = GetScoring(query.Query);
-                float[] scoring = inputRanking.Ranks;
+                float[] queryVector = _w2vvQueryToVectorProvider.TextToVector(query.Query);
+                float[] scoring = _semanticExampleModel.ComputeSimilarity(queryVector, InputRanking.Ranks);
+
+                // TODO:
+                if (scoring == null)
+                {
+                    scoring = inputRanking.Ranks;
+                }
 
                 // propagate filtered frames
                 Parallel.For(0, inputRanking.Ranks.Length, i =>
@@ -95,6 +107,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         public float[] GetScoring(string[] query)
         {
+            //float[] queryVector = 
+
+            // vector, scoring
+
+
             throw new NotImplementedException();
         }
 

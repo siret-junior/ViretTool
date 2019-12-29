@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO;
 
 namespace ViretTool.BusinessLayer.Descriptors
@@ -14,7 +12,7 @@ namespace ViretTool.BusinessLayer.Descriptors
     {
         public Dictionary<int, float[]> Scorings { get; }
         public Dictionary<int, (int frameId, float score)[]> TopScorings { get; }
-        
+
         public int ScoringVectorSize { get; private set; }
         public int ScoringCount { get; private set; }
 
@@ -66,20 +64,22 @@ namespace ViretTool.BusinessLayer.Descriptors
         }
 
 
-        public float[] GetScoring(int frameId)
-        {
-            float[] result;
-            try
-            {
-                Scorings.TryGetValue(frameId, out result);
-            }
-            catch
-            {
-                throw new ArgumentNullException($"No keyword scoring found for frameId {frameId}");
-                //return new float[0];
-            }
-            return result;
-        }
+        
+
+        //public float[] GetScoring(int frameId)
+        //{
+        //    float[] result;
+        //    try
+        //    {
+        //        Scorings.TryGetValue(frameId, out result);
+        //    }
+        //    catch
+        //    {
+        //        throw new ArgumentNullException($"No keyword scoring found for frameId {frameId}");
+        //        //return new float[0];
+        //    }
+        //    return result;
+        //}
 
         public (int frameId, float scoring)[] GetTopScoring(int synsetId)
         {
