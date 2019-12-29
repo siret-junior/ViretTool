@@ -9,9 +9,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
     public interface IKeywordModel : ISimilarityModel<KeywordQuery>
     {
-        float[] GetScoring(int synsetId);
-        float[] GetScoring(Synset synsetLiteral);
-        float[] GetScoring(SynsetClause synsetClause);
-        float[] GetScoring(SynsetClause[] synsetFormula);
+        float[] GetScoring(string[] query);
+        //float[] GetScoring(int synsetId);
+        //float[] GetScoring(Synset synsetLiteral);
+        //float[] GetScoring(SynsetClause synsetClause);
+        //float[] GetScoring(SynsetClause[] synsetFormula);
     }
 }

@@ -32,9 +32,9 @@ namespace ViretTool.PresentationLayer.Helpers
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
                     new KeywordQuery(
-                        query1.KeywordQueryResult?.Query ?? new SynsetClause[0]),
+                        query1.KeywordQueryResult?.Query ?? new string[] { }),
                     new KeywordQuery(
-                        query2.KeywordQueryResult?.Query ?? new SynsetClause[0]));
+                        query2.KeywordQueryResult?.Query ?? new string[] { }));
 
             BiTemporalModelQuery<ColorSketchQuery> biTemporalColorSketchQuery =
                 new BiTemporalModelQuery<ColorSketchQuery>(
@@ -193,7 +193,7 @@ namespace ViretTool.PresentationLayer.Helpers
                                 : FusionQuery.SimilarityModels.None,
 
                     new ThresholdFilteringQuery(
-                        (biTemporalKeywordQuery.FormerQuery.SynsetFormulaCnf.Any() || biTemporalKeywordQuery.LatterQuery.SynsetFormulaCnf.Any())
+                        (biTemporalKeywordQuery.FormerQuery.Query.Any() || biTemporalKeywordQuery.LatterQuery.Query.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query1.KeywordValue * 0.01),
@@ -240,7 +240,7 @@ namespace ViretTool.PresentationLayer.Helpers
                                 ? FusionQuery.SimilarityModels.SemanticExample
                                 : FusionQuery.SimilarityModels.None,
                     new ThresholdFilteringQuery(
-                        (biTemporalKeywordQuery.FormerQuery.SynsetFormulaCnf.Any() || biTemporalKeywordQuery.LatterQuery.SynsetFormulaCnf.Any())
+                        (biTemporalKeywordQuery.FormerQuery.Query.Any() || biTemporalKeywordQuery.LatterQuery.Query.Any())
                             ? ThresholdFilteringQuery.State.IncludeAboveThreshold
                             : ThresholdFilteringQuery.State.Off,
                         query2.KeywordValue * 0.01),

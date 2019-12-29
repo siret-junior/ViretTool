@@ -5,23 +5,23 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
     public class KeywordQuery : ISimilarityQuery
     {
-        public SynsetClause[] SynsetFormulaCnf { get; private set; }
+        public string[] Query { get; private set; }
 
-        public KeywordQuery(SynsetClause[] synsetFormulaCnf)
+        public KeywordQuery(string[] query)
         {
-            SynsetFormulaCnf = synsetFormulaCnf;
+            Query = query;
         }
 
 
         public override bool Equals(object obj)
         {
             return obj is KeywordQuery query &&
-                   SynsetFormulaCnf.SequenceEqual(query.SynsetFormulaCnf);
+                   Query.Equals(query.Query);
         }
 
         public override int GetHashCode()
         {
-            return -1424445349 + EqualityComparer<SynsetClause[]>.Default.GetHashCode(SynsetFormulaCnf);
+            return Query.GetHashCode();
         }
     }
 }

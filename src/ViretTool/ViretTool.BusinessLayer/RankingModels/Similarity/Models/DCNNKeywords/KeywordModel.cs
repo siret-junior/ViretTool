@@ -61,7 +61,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
             else
             {
                 // compute scoring
-                float[] scoring = GetScoring(query.SynsetFormulaCnf);
+                //float[] scoring = GetScoring(query.Query);
+                float[] scoring = inputRanking.Ranks;
 
                 // propagate filtered frames
                 Parallel.For(0, inputRanking.Ranks.Length, i =>
@@ -88,57 +89,57 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         private bool IsQueryEmpty(KeywordQuery query)
         {
-            return query == null || !query.SynsetFormulaCnf.Any();
+            return query == null || !query.Query.Any();
         }
 
 
-        public float[] GetScoring(int synsetId)
+        public float[] GetScoring(string[] query)
         {
-            return _keywordScoringProvider.GetScoring(synsetId);
+            throw new NotImplementedException();
         }
 
-        public float[] GetScoring(Synset synsetLiteral)
-        {
-            return _keywordScoringProvider.GetScoring(synsetLiteral.SynsetId);
-        }
+        //public float[] GetScoring(Synset synsetLiteral)
+        //{
+        //    return _keywordScoringProvider.GetScoring(synsetLiteral.SynsetId);
+        //}
 
-        public float[] GetScoring(SynsetClause synsetClause)
-        {
-            // initialize
-            float[] result = new float[InputRanking.Ranks.Length];
+        //public float[] GetScoring(SynsetClause synsetClause)
+        //{
+        //    // initialize
+        //    float[] result = new float[InputRanking.Ranks.Length];
 
-            // accumulate
-            foreach (Synset synsetLiteral in synsetClause.SynsetLiterals)
-            {
-                float[] scoring = GetScoring(synsetLiteral);
-                Parallel.For(0, scoring.Length, index =>
-                {
-                    result[index] += scoring[index];
-                });
-            }
-            return result;
-        }
+        //    // accumulate
+        //    foreach (Synset synsetLiteral in synsetClause.SynsetLiterals)
+        //    {
+        //        float[] scoring = GetScoring(synsetLiteral);
+        //        Parallel.For(0, scoring.Length, index =>
+        //        {
+        //            result[index] += scoring[index];
+        //        });
+        //    }
+        //    return result;
+        //}
 
-        public float[] GetScoring(SynsetClause[] synsetFormula)
-        {
-            // initialize
-            float[] result = new float[InputRanking.Ranks.Length];
-            Parallel.For(0, result.Length, index =>
-            {
-                result[index] = 1;
-            });
+        //public float[] GetScoring(SynsetClause[] synsetFormula)
+        //{
+        //    // initialize
+        //    float[] result = new float[InputRanking.Ranks.Length];
+        //    Parallel.For(0, result.Length, index =>
+        //    {
+        //        result[index] = 1;
+        //    });
 
-            // accumulate
-            foreach (SynsetClause synsetClause in synsetFormula)
-            {
-                float[] scoring = GetScoring(synsetClause);
-                Parallel.For(0, scoring.Length, index =>
-                {
-                    result[index] *= scoring[index];
-                });
-            }
-            return result;
-        }
+        //    // accumulate
+        //    foreach (SynsetClause synsetClause in synsetFormula)
+        //    {
+        //        float[] scoring = GetScoring(synsetClause);
+        //        Parallel.For(0, scoring.Length, index =>
+        //        {
+        //            result[index] *= scoring[index];
+        //        });
+        //    }
+        //    return result;
+        //}
 
     }
 }

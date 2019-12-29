@@ -121,15 +121,19 @@ namespace ViretTool.PresentationLayer.Controls.Common
             return mSuggestionProviders[annotationSource].GetSuggestions(subtree, filter);
         }
 
-        private void SuggestionTextBox_QueryChangedEvent(IEnumerable<IQueryPart> query, string annotationSource)
+        private void SuggestionTextBox_QueryChangedEvent(string query, string annotationSource)
         {
             if (annotationSource == null)
             {
                 return;
             }
 
-            SynsetClause[] translatedQuery = TranslateQuery(query, mLabelProviders[annotationSource]);
-            QueryResult = new KeywordQueryResult(translatedQuery, string.Join(" ", query.Cast<TextBlock>().Select(t => t.Text)), annotationSource);
+            //SynsetClause[] translatedQuery = TranslateQuery(query, mLabelProviders[annotationSource]);
+            //QueryResult = new KeywordQueryResult(translatedQuery, string.Join(" ", query.Cast<TextBlock>().Select(t => t.Text)), annotationSource);
+            QueryResult = new KeywordQueryResult(
+                query.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
+                query,
+                annotationSource);
         }
 
         private SynsetClause[] TranslateQuery(IEnumerable<IQueryPart> query, LabelProvider lp)

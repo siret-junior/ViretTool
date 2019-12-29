@@ -70,7 +70,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
         #region Properties
 
-        public delegate void QueryChangedHandler(IEnumerable<IQueryPart> query, string annotationSource);
+        public delegate void QueryChangedHandler(string query, string annotationSource);
         public event QueryChangedHandler QueryChangedEvent;
 
         public delegate void SuggestionFilterChangedHandler(string filter, string annotationSource);
@@ -213,11 +213,12 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         /// </summary>
         private void TextBox_OnKeyDown(object sender, KeyEventArgs e) {
             if (!Popups_[0].IsPopupOpen) {
-                //if (e.Key == Key.Enter) {
-                //    SearchProvider?.Search(TextBox_.Text);
-                //    e.Handled = true;
-                //} else 
-                if (e.Key == Key.Back && TextBox_.Text == string.Empty) {
+                if (e.Key == Key.Enter)
+                {
+                    QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Back && TextBox_.Text == string.Empty) {
                     if (Query_.Count > 0) {
                         RasultStack_.Children.Remove(Query_[Query_.Count - 1]);
                         Query_.RemoveAt(Query_.Count - 1);
@@ -226,7 +227,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                             Query_.RemoveAt(Query_.Count - 1);
                         }
                         e.Handled = true;
-                        QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+                        //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
                     }
                 } else if ((e.Key == Key.Up || e.Key == Key.Down) && TextBox_.Text != string.Empty) {
                     Popup_Open();
@@ -246,28 +247,29 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         }
 
         private void Popup_OnItemSelected(object sender, SuggestionPopup.SelectedItemRoutedEventArgs e) {
-            IIdentifiable item = e.SelectedItem;
+            //IIdentifiable item = e.SelectedItem;
 
-            QueryTextBlock b = new QueryTextBlock(item, e.CtrlKeyPressed);
+            //QueryTextBlock b = new QueryTextBlock(item, e.CtrlKeyPressed);
 
-            if (Query_.Count > 0) {
-                QueryTextBlock c = new QueryTextBlock(TextBlockType.AND);
-                RasultStack_.Children.Add(c);
-                Query_.Add(c);
-                c.MouseUp += QueryOperator_MouseUp;
-            }
+            //if (Query_.Count > 0) {
+            //    QueryTextBlock c = new QueryTextBlock(TextBlockType.AND);
+            //    RasultStack_.Children.Add(c);
+            //    Query_.Add(c);
+            //    c.MouseUp += QueryOperator_MouseUp;
+            //}
 
-            RasultStack_.Children.Add(b);
-            Query_.Add(b);
-            b.MouseUp += QueryClass_MouseUp;
+            //RasultStack_.Children.Add(b);
+            //Query_.Add(b);
+            //b.MouseUp += QueryClass_MouseUp;
 
 
-            TextBox_.Text = string.Empty;
+            //TextBox_.Text = string.Empty;
             //TextBox_.Text = item.TextRepresentation;
             //TextBox_.SelectionStart = TextBox_.Text.Length;
             Popup_CloseAll();
 
-            QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+            //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+            QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
 
             e.Handled = true;
         }
@@ -321,7 +323,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         public void ClearQuery() {
             RasultStack_.Children.Clear();
             Query_.Clear();
-            QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+            //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+            QueryChangedEvent?.Invoke("", AnnotationSource);
         }
 
         private void QueryClass_MouseUp(object sender, MouseButtonEventArgs e) {
@@ -344,7 +347,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 }
             }
 
-            QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+            //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
         }
 
         private void QueryOperator_MouseUp(object sender, MouseButtonEventArgs e) {
@@ -353,7 +356,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             b.Type = b.Type == TextBlockType.AND ? TextBlockType.OR : TextBlockType.AND;
             b.Text = b.Type == TextBlockType.AND ? "AND" : "OR";
 
-            QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+            //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
         }
     }
 
