@@ -108,8 +108,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             ColumnCount = DisplayWidth / ImageWidth;
 
             // Get first layer of SOM
-            int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
-            if(ids != null) 
+            int[] ids = null;
+            try
+            {
+                _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
+            }
+            if (ids != null) 
             {
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
@@ -219,7 +227,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
 
-            int[] ids = TypeOfZoom(_currentLayer,inputFrameId, RowCount, ColumnCount);
+            int[] ids = null;
+            try
+            {
+                ids = TypeOfZoom(_currentLayer, inputFrameId, RowCount, ColumnCount);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
+            }
             if (ids != null)
             {
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
@@ -248,8 +264,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 int frameNumber = _loadedFrames.First().FrameNumber;
                 int videoId = _loadedFrames.First().VideoId;
                 int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(videoId, frameNumber);
-
-                int[] ids = _zoomDisplayProvider.Resize(_currentLayer, frameId, RowCount, ColumnCount);
+                int[] ids = null;
+                try
+                {
+                    ids = _zoomDisplayProvider.Resize(_currentLayer, frameId, RowCount, ColumnCount);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    (ids,ColumnCount,RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
+                }
                 if(ids != null)
                 {
                     _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
@@ -290,9 +313,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             // Contents of _loadedFrames depend on context. 
             // As an example, it could be entire 1M dataset sorted by relevance from which we select only the top RowCount*ColumnCount items.
 
-            // for now, it is required to set row and column counts (do not remove this)
-            RowCount = DisplayHeight / ImageHeight;
-            ColumnCount = DisplayWidth / ImageWidth;
+            
 
             // In the example code in LoadFramesForIds we already precomputed frames that are ready to be displayed.
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);

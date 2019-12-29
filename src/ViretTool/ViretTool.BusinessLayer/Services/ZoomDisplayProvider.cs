@@ -47,6 +47,18 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+
+        public (int[] Array, int Width, int Height) GetSmallLayer(int layerIndex, int rowCount, int columnCount)
+        {
+            int layerHeight = LayersIds[layerIndex].Length;
+            int layerWidth = LayersIds[layerIndex][0].Length;
+
+            int Height = Math.Min(rowCount, layerHeight);
+            int Width = Math.Min(columnCount, layerWidth);
+
+            int[] Array = LayersIds[layerIndex].Take(layerHeight).SelectMany(x => x.Take(Width).ToArray()).ToArray() ;//Enumerable.Range(0, Height).SelectMany(x => Enumerable.Range(0, Width).Select(y => y).ToArray()).ToArray();
+            return (Array, Width, Height);
+        }
         public int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null

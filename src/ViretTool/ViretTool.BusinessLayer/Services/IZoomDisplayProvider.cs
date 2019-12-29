@@ -25,5 +25,6 @@
         int[] Resize(int layerIndex, int frameId, int rowCount, int columnCount);
         int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
         int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount);
+        (int[] Array, int Width, int Height) GetSmallLayer(int layerIndex, int rowCount, int columnCount);
     }
 }
