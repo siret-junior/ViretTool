@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Caliburn.Micro;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
 
@@ -140,7 +141,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     return EmptyKeywordsLabel;
                 }
 
-                return _servicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsets.First().synsetId);
+                // Top 1
+                // return _servicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsets.First().synsetId);
+
+                // Top 3
+                IKeywordLabelProvider<string> labelProvider = _servicesManager.CurrentDataset.KeywordLabelProvider;
+                string label = string.Join(", ", synsets
+                    .Take(3)
+                    .Select(synset => 
+                        $"{labelProvider.GetLabel(synset.synsetId)} ({(int)(synset.probability * 100)}%)")
+                    );
+                return label;
             }
         }
 
