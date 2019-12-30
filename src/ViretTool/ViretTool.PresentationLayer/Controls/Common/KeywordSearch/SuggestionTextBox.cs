@@ -142,7 +142,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         /// <param name="filter">A string, the suggestions are for</param>
         public void OnSuggestionResultsReady(IEnumerable<IIdentifiable> suggestions, string filter) {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate {
-                if (Popups_[0].IsPopupOpen && filter == TextBox_.Text) {
+                if (Popups_[0].IsPopupOpen && filter == GetLastWord(TextBox_.Text)) {
                     Popups_[0].Open(MaxNumberOfElements < 0 ? suggestions : suggestions.Take(MaxNumberOfElements));
                 }
             });
@@ -165,7 +165,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             Popups_[0].Open(null);
 
             SuggestionsNotNeededEvent?.Invoke();
-            SuggestionFilterChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
+            SuggestionFilterChangedEvent?.Invoke(GetLastWord(TextBox_.Text), AnnotationSource);
         }
 
         private void Popup_CloseAll() {
@@ -358,6 +358,11 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             b.Text = b.Type == TextBlockType.AND ? "AND" : "OR";
 
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
+        }
+
+        private string GetLastWord(string inputString)
+        {
+            return inputString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
         }
     }
 
