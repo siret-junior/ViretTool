@@ -309,4 +309,7 @@
   <data name="FetchTaskList" xml:space="preserve">
     <value>Fetch task list</value>
   </data>
+  <data name="TranscriptFilterLabel" xml:space="preserve">
+    <value>Transcript filter</value>
+  </data>
 </root>

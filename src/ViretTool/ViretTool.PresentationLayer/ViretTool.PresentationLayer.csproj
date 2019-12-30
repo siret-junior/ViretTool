@@ -122,6 +122,10 @@
     </Compile>
     <Compile Include="Controls\Common\Sketches\SketchColorPoint.cs" />
     <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
+    <Compile Include="Controls\Common\TranscriptFilter\TranscriptFilterView.xaml.cs">
+      <DependentUpon>TranscriptFilterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Common\TranscriptFilter\TranscriptFilterViewModel.cs" />
     <Compile Include="Controls\Common\VirtualizedUniformGrid.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModelBase.cs" />
     <Compile Include="Controls\Common\FrameViewModel.cs" />
@@ -222,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Common\Sketches\SketchColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Common\TranscriptFilter\TranscriptFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -23,6 +23,7 @@ using ViretTool.BusinessLayer.Submission;
 using ViretTool.BusinessLayer.TaskLogging;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.LifelogFilters;
+using ViretTool.PresentationLayer.Controls.Common.TranscriptFilter;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 using ViretTool.PresentationLayer.Helpers;
@@ -63,6 +64,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             QueryViewModel query1,
             QueryViewModel query2,
             LifelogFilterViewModel lifelogFilterViewModel,
+            TranscriptFilterViewModel transcriptFilterViewModel,
             IDatasetServicesManager datasetServicesManager,
             IGridSorter gridSorter,
             ISubmissionService submissionService,
@@ -93,6 +95,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query1 = query1;
             Query2 = query2;
             LifelogFilterViewModel = lifelogFilterViewModel;
+            TranscriptFilterViewModel = transcriptFilterViewModel;
 
             Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged)
                       .Where(_ => !IsBusy)
@@ -121,6 +124,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public QueryViewModel Query1 { get; }
         public QueryViewModel Query2 { get; }
         public LifelogFilterViewModel LifelogFilterViewModel { get; }
+
+        public TranscriptFilterViewModel TranscriptFilterViewModel { get; }
+
 
         public PageDisplayControlViewModel QueryResults { get; }
         public DisplayControlViewModelBase DetailView { get; }

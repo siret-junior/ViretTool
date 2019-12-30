@@ -69,6 +69,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
@@ -117,13 +118,17 @@
                             <ContentControl x:Name="LifelogFilterViewModel" />
                         </GroupBox>
 
-                        <GroupBox Grid.Row="2" Margin="6">
+                        <GroupBox Grid.Row="2" Margin="6" Header="{x:Static properties:Resources.TranscriptFilterLabel}" >
+                            <ContentControl x:Name="TranscriptFilterViewModel" />
+                        </GroupBox>
+
+                        <GroupBox Grid.Row="3" Margin="6">
                             <GroupBox.Header>
                                 <CheckBox IsChecked="{Binding IsFirstQueryPrimary}" Style="{StaticResource PrimaryCheckBoxStyle}" />
                             </GroupBox.Header>
                             <ContentControl x:Name="Query1" />
                         </GroupBox>
-                        <GroupBox Grid.Row="3" Margin="6">
+                        <GroupBox Grid.Row="4" Margin="6">
                             <GroupBox.Header>
                                 <CheckBox IsChecked="{Binding IsFirstQueryPrimary, Converter={StaticResource InvertedBooleanConverter}}" Style="{StaticResource PrimaryCheckBoxStyle}" />
                             </GroupBox.Header>
