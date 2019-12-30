@@ -176,6 +176,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             {
                 if (_keywordQueryResult == value)
                 {
+                    NotifyOfPropertyChange();
                     return;
                 }
 

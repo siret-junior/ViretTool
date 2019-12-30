@@ -323,6 +323,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         public void ClearQuery() {
             RasultStack_.Children.Clear();
             Query_.Clear();
+            TextBox_.Text = "";
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke("", AnnotationSource);
         }
