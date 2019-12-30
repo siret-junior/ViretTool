@@ -144,12 +144,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 // Top 1
                 // return _servicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsets.First().synsetId);
 
-                // Top 3
+                // Top 5
                 IKeywordLabelProvider<string> labelProvider = _servicesManager.CurrentDataset.KeywordLabelProvider;
                 string label = string.Join(", ", synsets
-                    .Take(3)
+                    .Take(5)
                     .Select(synset => 
-                        $"{labelProvider.GetLabel(synset.synsetId)} ({(int)(synset.probability * 100)}%)")
+                        $"{labelProvider.GetLabel(synset.synsetId)}")
                     );
                 return label;
             }
