@@ -17,7 +17,7 @@ namespace ViretTool.BusinessLayer.Descriptors
         public int ScoringCount { get; private set; }
 
 
-        public KeywordScoringProvider(string inputFile, string topKFile)
+        public KeywordScoringProvider(/*string inputFile, */string topKFile)
         {
             //using (KeywordScoringReader reader = new KeywordScoringReader(inputFile))
             //{
@@ -49,21 +49,22 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         public static KeywordScoringProvider FromDirectory(string directory, int topKScoreCount = 0)
         {
-            string inputFile = Directory.GetFiles(directory)
-                    .Where(dir => Path.GetFileName(dir).EndsWith(KeywordScoringIOBase.KEYWORD_SCORING_EXTENSION))
-                    .FirstOrDefault();
+            //string inputFile = Directory.GetFiles(directory)
+            //        .Where(dir => Path.GetFileName(dir).EndsWith(KeywordScoringIOBase.KEYWORD_SCORING_EXTENSION))
+            //        .FirstOrDefault();
             string topKFile = Directory.GetFiles(directory)
                     .Where(dir => Path.GetFileName(dir).EndsWith(SynsetFramesIOBase.SYNSET_FRAMES_EXTENSION))
                     .FirstOrDefault();
 
-            if (inputFile != null)
-            {
-                return new KeywordScoringProvider(inputFile, topKFile);
-            }
-            else
-            {
-                return null;
-            }
+            //if (topKFile != null)
+            //{
+            //    return new KeywordScoringProvider(/*inputFile, */topKFile);
+            //}
+            //else
+            //{
+            //    return null;
+            //}
+            return new KeywordScoringProvider(topKFile);
         }
 
 
