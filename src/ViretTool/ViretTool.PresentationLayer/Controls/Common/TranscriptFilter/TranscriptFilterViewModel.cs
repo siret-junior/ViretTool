@@ -25,14 +25,5 @@ namespace ViretTool.PresentationLayer.Controls.Common.TranscriptFilter
                 NotifyOfPropertyChange();
             }
         }
-
-
-        public void Execute(KeyEventArgs keyArgs)
-        {
-            if (keyArgs.Key == Key.Enter)
-            {
-                // Do Stuff
-            }
-        }
     }
 }
