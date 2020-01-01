@@ -21,7 +21,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="DarkGray">
+    <Grid Background="DarkGray" FocusVisualStyle="{x:Null}">
         <Grid.RowDefinitions>
             <RowDefinition Height="32" />
             <RowDefinition Height="1*" />
