@@ -194,7 +194,7 @@
     </UserControl.Resources>
     <Grid Background="White" MouseDown="FrameControl_OnMouseDown" MouseWheel="FrameControl_OnMouseWheel" MouseMove="FrameControl_OnMouseMove" MouseLeave="FrameControl_OnMouseLeave"
           Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
-        <ContentControl x:Name="MainTile" Content="{StaticResource CommonControls}" />
+        <ContentControl x:Name="MainTile" Content="{StaticResource CommonControls}" Focusable="False" />
         <Popup IsOpen="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay, IsAsync=True}" 
                Placement="Center" MouseLeave="Popup_OnMouseLeave"
                Width="{Binding ActualWidth, ElementName=MainTile, Mode=OneWay, IsAsync=True}" Height="{Binding ActualHeight, ElementName=MainTile, Mode=OneWay, IsAsync=True}">
