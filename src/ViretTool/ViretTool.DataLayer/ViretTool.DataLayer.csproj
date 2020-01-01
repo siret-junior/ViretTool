@@ -94,6 +94,7 @@
     <Compile Include="DataIO\ThumbnailIO\ThumbnailIOBase.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailReader.cs" />
     <Compile Include="DataIO\ThumbnailIO\ThumbnailReaderPreloaded.cs" />
+    <Compile Include="DataIO\ZoomDisplayIO\ZoomDisplayReader.cs" />
     <Compile Include="DataModel\LifelogFrameInfo.cs" />
     <Compile Include="DataIO\DatasetIO\DatasetProvider.cs" />
     <Compile Include="DataModel\Dataset.cs" />

@@ -309,6 +309,18 @@
   <data name="FetchTaskList" xml:space="preserve">
     <value>Fetch task list</value>
   </data>
+  <data name="ZoomDisplayText" xml:space="preserve">
+    <value>Zoom display</value>
+  </data>
+  <data name="ShowZoomDisplayText" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="ZoomIntoButtonText" xml:space="preserve">
+    <value>Z+</value>
+  </data>
+  <data name="ZoomOutButtonText" xml:space="preserve">
+    <value>Z-</value>
+  </data>
   <data name="TranscriptFilterLabel" xml:space="preserve">
     <value>Transcript filter</value>
   </data>

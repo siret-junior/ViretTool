@@ -46,6 +46,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
+        public static readonly RoutedEvent ZoomIntoDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(ZoomIntoDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
+        public static readonly RoutedEvent ZoomOutDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(ZoomOutDisplay),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(FrameControl));
+
         public static readonly RoutedEvent VideoDisplayEvent = EventManager.RegisterRoutedEvent(
             nameof(VideoDisplay),
             RoutingStrategy.Bubble,
@@ -67,6 +79,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.Register(
             nameof(IsSelectable),
+            typeof(bool),
+            typeof(FrameControl),
+            null);
+
+        public static readonly DependencyProperty ShowZoomOutProperty = DependencyProperty.Register(
+            nameof(ShowZoomOut),
+            typeof(bool),
+            typeof(FrameControl),
+            null);
+
+        public static readonly DependencyProperty ShowZoomIntoProperty = DependencyProperty.Register(
+            nameof(ShowZoomInto),
             typeof(bool),
             typeof(FrameControl),
             null);
@@ -98,6 +122,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             get => (bool)GetValue(IsMouseOverFrameProperty);
             private set => SetValue(IsMouseOverFrameProperty, value);
+        }
+
+        public bool ShowZoomOut
+        {
+            get => (bool)GetValue(ShowZoomOutProperty);
+            set => SetValue(ShowZoomOutProperty, value);
+        }
+
+        public bool ShowZoomInto
+        {
+            get => (bool)GetValue(ShowZoomIntoProperty);
+            set => SetValue(ShowZoomIntoProperty, value);
         }
 
         public bool IsSelectable
@@ -160,6 +196,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             add => AddHandler(SortDisplayEvent, value);
             remove => RemoveHandler(SortDisplayEvent, value);
+        }
+
+        public event RoutedEventHandler ZoomIntoDisplay
+        {
+            add => AddHandler(ZoomIntoDisplayEvent, value);
+            remove => RemoveHandler(ZoomIntoDisplayEvent, value);
+        }
+
+        public event RoutedEventHandler ZoomOutDisplay
+        {
+            add => AddHandler(ZoomOutDisplayEvent, value);
+            remove => RemoveHandler(ZoomOutDisplayEvent, value);
         }
 
         public event RoutedEventHandler VideoDisplay
@@ -278,6 +326,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
             RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
         }
 
+        private void ZoomIntoClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ZoomIntoDisplayEvent));
+        }
+        private void ZoomOutClicked(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ZoomOutDisplayEvent));
+        }
         private void VideoClicked(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(VideoDisplayEvent));

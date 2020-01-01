@@ -52,10 +52,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private bool _isFirstQueryPrimary = true;
         private Task<int[]> _sortingTask;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private Visibility _resultDisplayVisibility;
+        private Visibility _zoomDisplayVisibility;
 
         public MainWindowViewModel(
             ILogger logger,
             IWindowManager windowManager,
+            ZoomDisplayControlViewModel zoomDisplay,
             PageDisplayControlViewModel queryResults,
             ScrollDisplayControlViewModel detailView,
             DetailViewModel detailViewModel,
@@ -90,6 +93,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _externalImageProvider = externalImageProvider;
 
             QueryResults = queryResults;
+            ZoomDisplay = zoomDisplay;
+            //ResultDisplayVisibility = Visibility.Visible;
+            //ZoomDisplayVisibility = Visibility.Hidden;
+            ResultDisplayVisibility = Visibility.Hidden;
+            ZoomDisplayVisibility = Visibility.Visible;
+
             DetailView = detailView;
             DetailViewModel = detailViewModel;
             Query1 = query1;
@@ -97,15 +106,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             LifelogFilterViewModel = lifelogFilterViewModel;
             TranscriptFilterViewModel = transcriptFilterViewModel;
 
-            Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged)
+            Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged, ZoomDisplay.QuerySettingsChanged)
                       .Where(_ => !IsBusy)
                       .Throttle(TimeSpan.FromMilliseconds(50))
                       .ObserveOn(SynchronizationContext.Current)
                       .Subscribe(async _ => await OnQuerySettingsChanged());
 
+            /**** Assign events and event handlers **************************/
+
+            // Right scroll panel (shot view)
             queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
-            
-            DisplayControlViewModelBase[] displays = { queryResults, detailView, detailViewModel };
+            zoomDisplay.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
+
+            // FrameViewModel events (buttons, etc.)
+            DisplayControlViewModelBase[] displays = { queryResults, zoomDisplay, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
             {
                 display.FramesForQueryChanged += (sender, framesToQuery) =>
@@ -113,10 +127,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                          framesToQuery);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
+                display.FrameForZoomIntoChanged += async (sender, selectedFrame) => await OnFrameForZoomIntoChanged(selectedFrame);
+                display.FrameForZoomOutChanged += async (sender, selectedFrame) => await OnFrameForZoomOutChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
                 display.FrameForGpsChanged += (sender, selectedFrame) => queryResults.GpsFrame = selectedFrame.Clone();
             }
 
+            // Miscelaneous windows
             DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
             _testControlViewModel.Deactivated += (sender, args) => TestFramesPosition = string.Empty;
         }
@@ -129,6 +146,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
 
         public PageDisplayControlViewModel QueryResults { get; }
+        public ZoomDisplayControlViewModel ZoomDisplay { get; }
         public DisplayControlViewModelBase DetailView { get; }
         public DetailViewModel DetailViewModel { get; }
 
@@ -256,6 +274,35 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
         public bool InitialDisplayAvailable => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed;
 
+        public Visibility ResultDisplayVisibility 
+        {
+            get => _resultDisplayVisibility;
+            set
+            {
+                if (_resultDisplayVisibility == value)
+                {
+                    return;
+                }
+
+                _resultDisplayVisibility = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public Visibility ZoomDisplayVisibility 
+        {
+            get => _zoomDisplayVisibility;
+            set
+            {
+                if (_zoomDisplayVisibility == value)
+                {
+                    return;
+                }
+
+                _zoomDisplayVisibility = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public async void OpenDatabase()
         {
             string datasetDirectory = GetDatasetDirectory();
@@ -315,7 +362,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (_datasetServicesManager.IsDatasetOpened)
             {
                 IsBusy = true;
-                await QueryResults.LoadInitialDisplay();
+                ResultDisplayVisibility = Visibility.Hidden;
+                await ZoomDisplay.LoadInitialDisplay();
+                ZoomDisplayVisibility = Visibility.Visible;
                 IsBusy = false;
             }
         }
@@ -357,6 +406,22 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (e.Key == Key.Escape)
             {
                 CloseDetailViewModel();
+            }
+            if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyRightPressed();
+            }
+            if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyLeftPressed();
+            }
+            if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyUpPressed();
+            }
+            if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                ZoomDisplay.KeyDownPressed();
             }
         }
 
@@ -475,6 +540,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 return;
             }
+
+            ZoomDisplayVisibility = Visibility.Hidden;
+            ResultDisplayVisibility = Visibility.Visible;
 
             IsBusy = true;
             try
@@ -640,6 +708,24 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
             IsDetailVisible = true;
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
+        }
+
+        private async Task OnFrameForZoomIntoChanged(FrameViewModel selectedFrame)
+        {
+            // TODO: logging
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            ResultDisplayVisibility = Visibility.Hidden;
+            ZoomDisplayVisibility = Visibility.Visible;
+            await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+        }
+
+        private async Task OnFrameForZoomOutChanged(FrameViewModel selectedFrame)
+        {
+            // TODO: logging
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            ResultDisplayVisibility = Visibility.Hidden;
+            ZoomDisplayVisibility = Visibility.Visible; 
+            await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
         }
 
         private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)

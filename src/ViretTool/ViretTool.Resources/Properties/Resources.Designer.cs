@@ -448,6 +448,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zoom.
+        /// </summary>
+        public static string ShowZoomDisplayText {
+            get {
+                return ResourceManager.GetString("ShowZoomDisplayText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Color.
         /// </summary>
         public static string SketchModelName {
@@ -642,6 +651,33 @@ namespace ViretTool.Resources.Properties {
         public static string WorkingText {
             get {
                 return ResourceManager.GetString("WorkingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom display.
+        /// </summary>
+        public static string ZoomDisplayText {
+            get {
+                return ResourceManager.GetString("ZoomDisplayText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z+.
+        /// </summary>
+        public static string ZoomIntoButtonText {
+            get {
+                return ResourceManager.GetString("ZoomIntoButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z-.
+        /// </summary>
+        public static string ZoomOutButtonText {
+            get {
+                return ResourceManager.GetString("ZoomOutButtonText", resourceCulture);
             }
         }
     }

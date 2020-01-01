@@ -109,6 +109,8 @@
     <Compile Include="ResultLogging\ResultLogger.cs" />
     <Compile Include="Services\IDatasetParameters.cs" />
     <Compile Include="Services\IInitialDisplayProvider.cs" />
+    <Compile Include="Services\IZoomDisplayProvider.cs" />
+    <Compile Include="Services\ZoomDisplayProvider.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />

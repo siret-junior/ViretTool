@@ -110,7 +110,7 @@
 
                             <Button x:Name="ClearAll" Grid.Column="1" Margin="0,4,0,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
                             <Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />
-                            <Button x:Name="ShowInitialDisplay" Grid.Column="3" Margin="2,4,6,0" Padding="4" Content="{x:Static properties:Resources.ShowInitialDisplayText}" IsEnabled="{Binding InitialDisplayAvailable}" />
+                            <Button x:Name="ShowInitialDisplay" Grid.Column="3" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.ShowInitialDisplayText}" />
 
                         </Grid>
 
@@ -153,7 +153,8 @@
                             <ColumnDefinition Width="162" />
                         </Grid.ColumnDefinitions>
 
-                        <ContentControl Grid.Column="0" x:Name="QueryResults" />
+                        <ContentControl Grid.Column="0" x:Name="QueryResults" Visibility="{Binding ResultDisplayVisibility}" />
+                        <ContentControl Grid.Column="0" x:Name="ZoomDisplay" Visibility="{Binding ZoomDisplayVisibility}" />
                         <TextBlock Grid.Column="0" x:Name="TestFramesPosition" Margin="330,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
 
                         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />

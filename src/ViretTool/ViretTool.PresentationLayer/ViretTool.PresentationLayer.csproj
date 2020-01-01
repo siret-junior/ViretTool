@@ -46,6 +46,9 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Colorspace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Colorspace.1.0.2\lib\net40\Colorspace.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero2" />
@@ -133,11 +136,15 @@
     <Compile Include="Controls\DisplayControl\ViewModels\PageDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollableDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollDisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\ZoomDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml.cs">
       <DependentUpon>PageDisplayControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml.cs">
       <DependentUpon>ScrollDisplayControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DisplayControl\Views\ZoomDisplayControlView.xaml.cs">
+      <DependentUpon>ZoomDisplayControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Query\ViewModels\QueryViewModel.cs" />
     <Compile Include="Controls\Common\FilterControl.xaml.cs">
@@ -152,6 +159,7 @@
     <Compile Include="Controls\DisplayControl\ViewModels\DetailViewModel.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\DayOfWeekLableConverter.cs" />
+    <Compile Include="Helpers\ColorInterpolationHelper.cs" />
     <Compile Include="Helpers\QueryBuilder.cs" />
     <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\DetailView.xaml.cs">
@@ -242,6 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DisplayControl\Views\ZoomDisplayControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -17,6 +17,7 @@ namespace ViretTool.BusinessLayer.Services
     {
         public InitialDisplayProvider(IDatasetParameters datasetParameters, string datasetDirectory)
         {
+            // TODO: change name from "precomputed" to "present"
             if (datasetParameters.IsInitialDisplayPrecomputed)
             {
                 InitialDisplayReader initialDisplayReader = new InitialDisplayReader();

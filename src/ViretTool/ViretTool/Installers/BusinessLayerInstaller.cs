@@ -70,6 +70,7 @@ namespace ViretTool.Installers
                 Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<ILifelogFilter>().ImplementedBy<LifelogFilter>().LifestyleBoundTo<DatasetServices>(),
                 Component.For<IInitialDisplayProvider>().ImplementedBy<InitialDisplayProvider>().LifestyleBoundTo<DatasetServices>(),
+                Component.For<IZoomDisplayProvider>().ImplementedBy<ZoomDisplayProvider>().LifestyleBoundTo<DatasetServices>(),
 
                 Component.For<IFaceSignatureDescriptorProvider>()
                          .UsingFactoryMethod((_, context) => BoolSignatureDescriptorProvider
