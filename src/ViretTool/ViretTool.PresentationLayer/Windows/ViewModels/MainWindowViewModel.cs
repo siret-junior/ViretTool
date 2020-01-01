@@ -94,10 +94,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             QueryResults = queryResults;
             ZoomDisplay = zoomDisplay;
-            //ResultDisplayVisibility = Visibility.Visible;
-            //ZoomDisplayVisibility = Visibility.Hidden;
-            ResultDisplayVisibility = Visibility.Hidden;
-            ZoomDisplayVisibility = Visibility.Visible;
+            ResultDisplayVisibility = Visibility.Visible;
+            ZoomDisplayVisibility = Visibility.Hidden;
 
             DetailView = detailView;
             DetailViewModel = detailViewModel;
@@ -407,19 +405,19 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CloseDetailViewModel();
             }
-            if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Right)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 ZoomDisplay.KeyRightPressed();
             }
-            if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Left)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 ZoomDisplay.KeyLeftPressed();
             }
-            if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Up)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 ZoomDisplay.KeyUpPressed();
             }
-            if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Down)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 ZoomDisplay.KeyDownPressed();
             }
