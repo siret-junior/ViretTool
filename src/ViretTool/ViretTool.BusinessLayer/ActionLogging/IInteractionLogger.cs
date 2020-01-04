@@ -25,7 +25,6 @@ namespace ViretTool.BusinessLayer.ActionLogging
         RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll,
         // none
         None
-
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

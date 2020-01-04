@@ -96,20 +96,36 @@ namespace ViretTool.BusinessLayer.Submission
             //}
 
             HttpResponseMessage response = await _client.GetAsync(url);
+            string responseString;
             if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
             {
                 response = await _client.GetAsync(url);
+                responseString = await response.Content.ReadAsStringAsync();
             }
             else
             {
                 // submission is sent separately to a submission endpoint without interaction logs
                 StringContent content = new StringContent("{}", Encoding.UTF8, "application/json");
-                await PostAsyncLogged(url, content);
+
+                //Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the semaphore is released 
+                await _semaphoreSlim.WaitAsync();
+                try
+                {
+                    await PostAsyncLogged(url, content);
+                    responseString = await response.Content.ReadAsStringAsync();
+                }
+                finally
+                {
+                    //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                    //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
+                    _semaphoreSlim.Release();
+                }
+                
                 // interaction logs are sent separately to a different logging endpoint
                 await SubmitLogAsync();
             }
 
-            return await response.Content.ReadAsStringAsync();
+            return responseString;
         }
 
         public async Task<string> SubmitLogAsync()
@@ -146,11 +162,23 @@ namespace ViretTool.BusinessLayer.Submission
                 Result[] results = ConvertResults(resultSet);
                 ResultLog resultLog = new ResultLog(query, results);
                 string url = GetUrlForLogging(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId);
+                StoreResultLog(resultLog.GetContentIndented(unixTimestamp), unixTimestamp);
                 string jsonResultLog = resultLog.GetContent(unixTimestamp);
                 StringContent content = new StringContent(jsonResultLog, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await PostAsyncLogged(url, content);
-                StoreResultLog(resultLog.GetContentIndented(unixTimestamp), unixTimestamp);
-                return await response.Content.ReadAsStringAsync();
+                
+                //Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the semaphore is released 
+                await _semaphoreSlim.WaitAsync();
+                try
+                {
+                    HttpResponseMessage response = await PostAsyncLogged(url, content);
+                    return await response.Content.ReadAsStringAsync();
+                }
+                finally
+                {
+                    //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                    //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
+                    _semaphoreSlim.Release();
+                }
             }
             catch (Exception ex)
             {
