@@ -70,49 +70,93 @@ namespace ViretTool.BusinessLayer.Submission
 
         public async Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit)
         {
-            if (!_datasetServicesManager.IsDatasetOpened)
+            try
             {
-                throw new InvalidOperationException("Dataset is not opened");
+                if (!_datasetServicesManager.IsDatasetOpened)
+                {
+                    throw new InvalidOperationException("Dataset is not opened");
+                }
+
+                _interactionLogger.Log.Type = SubmissionType.Submit;
+                string url = GetUrlForSubmission(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
+
+                //HttpResponseMessage response;
+                //if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+                //{
+                //    response = await _client.GetAsync(url);
+                //}
+                //else
+                //{
+                //    string jsonInteractionLog = _interactionLogger.GetContent();
+                //    StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
+                //    //response = await _client.PostAsync(url, content);
+                //    response = await PostAsyncLogged(url, content);
+                //    if (response.IsSuccessStatusCode)
+                //    {
+                //        _interactionLogger.ResetLog();
+                //    }
+                //}
+
+                HttpResponseMessage response = await _client.GetAsync(url);
+                string responseString;
+                if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+                {
+                    response = await _client.GetAsync(url);
+                    responseString = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    // submission is sent separately to a submission endpoint without interaction logs
+                    StringContent content = new StringContent("{}", Encoding.UTF8, "application/json");
+
+                    //Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the semaphore is released 
+                    await _semaphoreSlim.WaitAsync();
+                    try
+                    {
+                        await PostAsyncLogged(url, content);
+                        responseString = await response.Content.ReadAsStringAsync();
+                    }
+                    finally
+                    {
+                        //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                        //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
+                        _semaphoreSlim.Release();
+                    }
+
+                    // interaction logs are sent separately to a different logging endpoint
+                    await SubmitLogAsync();
+                }
+
+                return responseString;
             }
-
-            _interactionLogger.Log.Type = SubmissionType.Submit;
-            string url = GetUrlForSubmission(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
-
-            //HttpResponseMessage response;
-            //if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
-            //{
-            //    response = await _client.GetAsync(url);
-            //}
-            //else
-            //{
-            //    string jsonInteractionLog = _interactionLogger.GetContent();
-            //    StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
-            //    //response = await _client.PostAsync(url, content);
-            //    response = await PostAsyncLogged(url, content);
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        _interactionLogger.ResetLog();
-            //    }
-            //}
-
-            HttpResponseMessage response = await _client.GetAsync(url);
-            string responseString;
-            if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+            catch (Exception ex)
             {
-                response = await _client.GetAsync(url);
-                responseString = await response.Content.ReadAsStringAsync();
+                string message = "Error while submitting a searched frame.";
+                _logger.Error(message, ex);
+                return message;
             }
-            else
+        }
+
+        public async Task<string> SubmitLogAsync()
+        {
+            try
             {
-                // submission is sent separately to a submission endpoint without interaction logs
-                StringContent content = new StringContent("{}", Encoding.UTF8, "application/json");
+                _interactionLogger.Log.Type = SubmissionType.Flush;
+                string url = GetUrlForLogging(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId);
+                string jsonInteractionLog = _interactionLogger.GetContent();
+                StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
+                //HttpResponseMessage response = await _client.PostAsync(url, content);
 
                 //Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the semaphore is released 
                 await _semaphoreSlim.WaitAsync();
                 try
                 {
-                    await PostAsyncLogged(url, content);
-                    responseString = await response.Content.ReadAsStringAsync();
+                    HttpResponseMessage response = await PostAsyncLogged(url, content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        _interactionLogger.ResetLog();
+                    }
+                    return await response.Content.ReadAsStringAsync();
                 }
                 finally
                 {
@@ -120,38 +164,12 @@ namespace ViretTool.BusinessLayer.Submission
                     //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
                     _semaphoreSlim.Release();
                 }
-                
-                // interaction logs are sent separately to a different logging endpoint
-                await SubmitLogAsync();
             }
-
-            return responseString;
-        }
-
-        public async Task<string> SubmitLogAsync()
-        {
-            _interactionLogger.Log.Type = SubmissionType.Flush;
-            string url = GetUrlForLogging(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId);
-            string jsonInteractionLog = _interactionLogger.GetContent();
-            StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
-            //HttpResponseMessage response = await _client.PostAsync(url, content);
-
-            //Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the semaphore is released 
-            await _semaphoreSlim.WaitAsync();
-            try
+            catch (Exception ex)
             {
-                HttpResponseMessage response = await PostAsyncLogged(url, content);
-                if (response.IsSuccessStatusCode)
-                {
-                    _interactionLogger.ResetLog();
-                }
-                return await response.Content.ReadAsStringAsync();
-            }
-            finally
-            {
-                //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
-                //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
-                _semaphoreSlim.Release();
+                string message = "Error while submitting interaction log.";
+                _logger.Error(message, ex);
+                return message;
             }
         }
 
@@ -182,8 +200,9 @@ namespace ViretTool.BusinessLayer.Submission
             }
             catch (Exception ex)
             {
-                _logger.Error("Error while storing result logs to disk.", ex);
-                throw;
+                string message = "Error while submitting result logs.";
+                _logger.Error(message, ex);
+                return message;
             }
 }
 
