@@ -14,7 +14,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
 {
     public class ResultLogger : IResultLogger
     {
-        private const string LogDirectory = "ResultLogs";
+        private readonly string LogDirectory = Path.Combine("Logs", "ResultSampledLogs");
         private readonly ILogger _logger;
         private readonly IDatasetServicesManager _datasetServicesManager;
 
@@ -34,7 +34,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 try
                 {
                     Directory.CreateDirectory(LogDirectory);
-                    string filename = $"ResultLog_{Environment.MachineName}_{unixTimestamp}.txt";
+                    string filename = $"ResultSampledLog_{Environment.MachineName}_{unixTimestamp}.txt";
                     using (StreamWriter writer = new StreamWriter(Path.Combine(LogDirectory, filename)))
                     {
                         Dataset dataset = _datasetServicesManager.CurrentDataset.DatasetService.Dataset;

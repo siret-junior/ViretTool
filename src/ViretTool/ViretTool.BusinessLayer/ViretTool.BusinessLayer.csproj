@@ -106,6 +106,8 @@
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionFilters.cs" />
     <Compile Include="ResultLogging\IResultLogger.cs" />
+    <Compile Include="ResultLogging\Result.cs" />
+    <Compile Include="ResultLogging\ResultLog.cs" />
     <Compile Include="ResultLogging\ResultLogger.cs" />
     <Compile Include="Services\IDatasetParameters.cs" />
     <Compile Include="Services\IInitialDisplayProvider.cs" />

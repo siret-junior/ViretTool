@@ -11,7 +11,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
     {
         // TODO: elaborate what is this delay used for
         private const int TimeDelayMiliseconds = 1000;
-        private const string LogDirectory = "InteractionLogs";
+        private readonly string LogDirectory = Path.Combine("Logs", "InteractionLogs");
 
         private readonly object _lockObject = new object();
         private readonly ILogger _logger;
@@ -51,7 +51,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
                         Action action = new Action(currentTime, category, type, value, attributes);
                         Log.Events.Add(action);
 
-                        StoreLog(LowercaseJsonSerializer.SerializeObject(action));
+                        StoreLog(LowercaseJsonSerializer.SerializeObjectIndented(action));
                     }
                 });
         }

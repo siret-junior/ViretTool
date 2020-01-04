@@ -1,16 +1,20 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ViretTool.BusinessLayer.ActionLogging
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum LogCategory
     {
         Text, Image, Sketch, Filter, Browsing
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum LogType
     {
         //text
-        Concept, LocalizedObject,
+        JointEmbedding, LocalizedObject,
         //image
         GlobalFeatures,
         //sketch
@@ -18,13 +22,16 @@ namespace ViretTool.BusinessLayer.ActionLogging
         //Filter
         BW, MaxFrames, Lifelog,
         //browsing
-        RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll
+        RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll,
+        // none
+        None
 
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum SubmissionType
     {
-        Submit, Flush
+        Submit, Flush, Result
     }
 
     public interface IInteractionLogger : IDisposable

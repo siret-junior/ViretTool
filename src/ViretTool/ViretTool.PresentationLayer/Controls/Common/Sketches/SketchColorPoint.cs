@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Media;
 
 namespace ViretTool.PresentationLayer.Controls.Common.Sketches
@@ -23,9 +24,9 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
         public override string ToString()
         {
             return "[P(" +
-                Position.X +
+                Position.X.ToString(CultureInfo.InvariantCulture) +
                 "; " +
-                Position.Y +
+                Position.Y.ToString(CultureInfo.InvariantCulture) +
                 "), " +
                 "C(" +
                 FillColor.R +
@@ -35,9 +36,9 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
                 FillColor.B +
                 "), " +
                 "E(" +
-                EllipseAxis.X +
+                EllipseAxis.X.ToString(CultureInfo.InvariantCulture) +
                 "; " +
-                EllipseAxis.Y +
+                EllipseAxis.Y.ToString(CultureInfo.InvariantCulture) +
                 "), " +
                 (Area ? "all" : "any") +
                 "]";

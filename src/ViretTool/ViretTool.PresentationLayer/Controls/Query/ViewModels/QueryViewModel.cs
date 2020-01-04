@@ -30,7 +30,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private double _percentageBlackFilterValue = 65;
 
         // keyword query
-        private double _keywordValue = 50;
+        private double _keywordValue = 10;
         private bool _keywordUseForSorting = false;
         private KeywordQueryResult _keywordQueryResult;
 
@@ -42,7 +42,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         private int _canvasHeight = 320;
 
         // semantic example query
-        private double _semanticValue = 30;
+        private double _semanticValue = 10;
         private bool _semanticUseForSorting = false;
         private bool _isBwFilterVisible;
 
@@ -181,7 +181,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                _interationLogger.LogInteraction(LogCategory.Text, LogType.Concept, _keywordQueryResult?.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
+                _interationLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
                 
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();

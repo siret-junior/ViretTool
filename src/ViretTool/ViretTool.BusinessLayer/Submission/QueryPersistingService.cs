@@ -19,8 +19,8 @@ namespace ViretTool.BusinessLayer.Submission
     public class QueryPersistingService : IQueryPersistingService
     {
         private readonly IInteractionLogger _interactionLogger;
-        private const string QueryHistoryDirectory = "QueriesLog";
-        private const string TestDirectory = "TestsLog";
+        private readonly string QueryHistoryDirectory = Path.Combine("Logs", "QueryLogs");
+        private readonly string TestDirectory = Path.Combine("Logs", "TestsLog");
 
         public QueryPersistingService(IInteractionLogger interactionLogger)
         {
@@ -40,16 +40,20 @@ namespace ViretTool.BusinessLayer.Submission
             // TODO: lock on Log object
             lock (this)
             {
-                long lastTimeStamp = _interactionLogger.Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
-                long actualTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                long lastInteractionTimeStamp = _interactionLogger.Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
+                long currentQueryTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
                 Task.Run(() => 
                 {
-                    string jsonQuery = LowercaseJsonSerializer.SerializeObject(query);
-                    File.WriteAllText(Path.Combine(QueryHistoryDirectory, $"{lastTimeStamp}_{actualTimeStamp}.json"), jsonQuery);
+                    string jsonQuery = LowercaseJsonSerializer.SerializeObjectIndented(query);
+                    File.WriteAllText(
+                        Path.Combine(
+                            QueryHistoryDirectory, 
+                            $"QueryLog_{Environment.MachineName}_{lastInteractionTimeStamp}_{currentQueryTimeStamp}.json"), 
+                        jsonQuery);
                 });
                 
-                return actualTimeStamp;
+                return currentQueryTimeStamp;
             }
         }
 
@@ -58,7 +62,7 @@ namespace ViretTool.BusinessLayer.Submission
             lock (this)
             {
                 long actualTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                string jsonTestData = LowercaseJsonSerializer.SerializeObject(new { VideoId = videoId, FrameNumbers = frameNumbers });
+                string jsonTestData = LowercaseJsonSerializer.SerializeObjectIndented(new { VideoId = videoId, FrameNumbers = frameNumbers });
 
                 File.WriteAllText(Path.Combine(TestDirectory, $"{actualTimeStamp}.json"), jsonTestData);
             }

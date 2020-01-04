@@ -11,9 +11,14 @@ namespace ViretTool.BusinessLayer.Submission
                                                                       NullValueHandling = NullValueHandling.Ignore
                                                                   };
 
-        public static string SerializeObject(object obj)
+        public static string SerializeObjectIndented(object obj)
         {
             return JsonConvert.SerializeObject(obj, Formatting.Indented, Settings);
+        }
+
+        public static string SerializeObject(object obj)
+        {
+            return JsonConvert.SerializeObject(obj, Formatting.None, Settings);
         }
 
         public static T DeserializeObject<T>(string objectData)

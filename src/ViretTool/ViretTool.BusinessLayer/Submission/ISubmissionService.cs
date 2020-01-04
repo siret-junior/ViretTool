@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using ViretTool.BusinessLayer.RankingModels.Temporal;
+using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 
 namespace ViretTool.BusinessLayer.Submission
 {
@@ -6,6 +8,7 @@ namespace ViretTool.BusinessLayer.Submission
     {
         string SubmissionUrl { get; set; }
         Task<string> SubmitFrameAsync(FrameToSubmit frameToSubmit);
-        Task<string> SubmitLog();
+        Task<string> SubmitLogAsync();
+        Task<string> SubmitResultsAsync(BiTemporalQuery query, BiTemporalRankedResultSet results, long unixTimestamp);
     }
 }

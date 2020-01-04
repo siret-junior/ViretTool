@@ -270,7 +270,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         }
 
         public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
-        public bool InitialDisplayAvailable => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed;
+        //public bool InitialDisplayAvailable => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed;
 
         public Visibility ResultDisplayVisibility 
         {
@@ -311,7 +311,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             await OpenDataset(datasetDirectory);
             NotifyOfPropertyChange(nameof(LscFiltersVisible));
-            NotifyOfPropertyChange(nameof(InitialDisplayAvailable));
+            //NotifyOfPropertyChange(nameof(InitialDisplayAvailable));
         }
 
         public void OpenTestWindow()
@@ -352,14 +352,21 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 await QueryResults.LoadInitialDisplay();
             }
 
-            ZoomDisplay.LoadInitialDisplay();
+            await ZoomDisplay.LoadInitialDisplay();
             ResultDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible;
 
             IsBusy = false;
         }
 
-        public async void ShowInitialDisplay()
+        public async void ShowInitialDisplayClicked()
+        {
+            await ShowInitialDisplay();
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                    $"ZoomInitial|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+        }
+
+        private async Task ShowInitialDisplay()
         {
             if (_datasetServicesManager.IsDatasetOpened)
             {
@@ -381,7 +388,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public async void SendLogs()
         {
-            string response = await _submissionService.SubmitLog();
+            string response = await _submissionService.SubmitLogAsync();
             _logger.Info($"Sending logs: {response}");
             MessageBox.Show(Resources.Properties.Resources.LogsWereSentText);
         }
@@ -409,25 +416,35 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CloseDetailViewModel();
             }
-            if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+
+            if (_datasetServicesManager.IsDatasetOpened)
             {
-                // TODO: logging
-                ZoomDisplay.KeyRightPressed();
-            }
-            if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-            {
-                // TODO: logging
-                ZoomDisplay.KeyLeftPressed();
-            }
-            if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-            {
-                // TODO: logging
-                ZoomDisplay.KeyUpPressed();
-            }
-            if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-            {
-                // TODO: logging
-                ZoomDisplay.KeyDownPressed();
+                if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    ZoomDisplay.KeyRightPressed();
+                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                        $"ZoomScrollRight|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+
+                }
+                if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    ZoomDisplay.KeyLeftPressed();
+                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                        $"ZoomScrollLeft|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                }
+                if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    ZoomDisplay.KeyUpPressed();
+                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                        $"ZoomScrollUp|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+
+                }
+                if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                {
+                    ZoomDisplay.KeyDownPressed();
+                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                        $"ZoomScrollDown|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                }
             }
         }
 
@@ -547,10 +564,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 return;
             }
 
+            IsBusy = true;
             ZoomDisplayVisibility = Visibility.Hidden;
             ResultDisplayVisibility = Visibility.Visible;
-
-            IsBusy = true;
             try
             {
                 CancelSortingTaskIfNecessary();
@@ -568,16 +584,17 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                             _datasetServicesManager.CurrentDataset.DatasetParameters,
                             QueryResults.GpsFrame,
                             LifelogFilterViewModel);
-                        
+
                         // log the query object (save unix timestamp to match queries with results)
                         long unixTimestamp = _queryPersistingService.SaveQuery(biTemporalQuery);
                         
                         // compute ranked result
                         BiTemporalRankedResultSet resultSet = _datasetServicesManager.CurrentDataset.RankingService.ComputeRankedResultSet(biTemporalQuery);
-                        
+
                         // log result set
                         Task.Run(() => _resultLogger.LogResultSet(resultSet, unixTimestamp));
-                        
+                        Task.Run(() => _submissionService.SubmitResultsAsync(biTemporalQuery, resultSet, unixTimestamp));
+
                         return resultSet;
                     });
 
@@ -719,7 +736,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private async Task OnFrameForZoomIntoChanged(FrameViewModel selectedFrame)
         {
             // TODO: logging
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
+                $"ZoomIn|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
             ResultDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible;
             await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
@@ -728,7 +746,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private async Task OnFrameForZoomOutChanged(FrameViewModel selectedFrame)
         {
             // TODO: logging
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, $"TODO: --zoom-- {selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
+                $"ZoomOut||L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
             ResultDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible; 
             await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);

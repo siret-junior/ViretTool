@@ -158,7 +158,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         private void NotifyFiltersChanged(string changedFilterName, object value)
         {
             _logger.Info($"Lifelog filters changed: ${changedFilterName}: {value}");
-            _interationLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, $"{changedFilterName}|{value}");
+            // TODO: enable lifelog interaction logging
+            //_interationLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, $"{changedFilterName}|{value}");
             Validate();
             if (!HasErrors)
             {

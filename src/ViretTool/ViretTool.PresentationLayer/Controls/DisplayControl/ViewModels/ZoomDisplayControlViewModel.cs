@@ -40,6 +40,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             };
         }
 
+        public int CurrentLayer => _currentLayer;
+        public int LayerCount => _zoomDisplayProvider.GetMaxDepth();
 
         public bool ShowZoomIntoButton
         {
