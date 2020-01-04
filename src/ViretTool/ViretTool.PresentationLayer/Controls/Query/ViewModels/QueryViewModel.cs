@@ -70,7 +70,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                       LogCategory.Image,
                                                       LogType.GlobalFeatures,
                                                       string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
-                                                      $"{SemanticValue}|{SemanticUseForSorting}");
+                                                      $"{(int)SemanticValue}%|{SemanticUseForSorting}");
                                                   SemanticUseForSorting = QueryObjects.Any();
                                                   NotifyQuerySettingsChanged(nameof(QueryObjects), args.Action);
                                               };
@@ -111,7 +111,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterState = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{BwFilterState}|{(int)BwFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -127,7 +127,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterValue = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"BW{BwFilterState}|{BwFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{BwFilterState}|{(int)BwFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -181,7 +181,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                _interationLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{KeywordValue}|{KeywordUseForSorting}");
+                _interationLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{(int)KeywordValue}%|{KeywordUseForSorting}");
                 
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
@@ -234,7 +234,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterState = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{PercentageBlackFilterState}|{(int)PercentageBlackFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -250,7 +250,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterValue = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"%{PercentageBlackFilterState}|{PercentageBlackFilterValue}");
+                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{PercentageBlackFilterState}|{(int)PercentageBlackFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -308,7 +308,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                         LogCategory.Sketch,
                         LogType.Color,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
-                        $"{ColorValue}|{ColorUseForSorting}");
+                        $"{(int)ColorValue}%|{ColorUseForSorting}");
 
                     // use for sorting only if not already sorted by an another model
                     if (!KeywordUseForSorting && !SemanticUseForSorting)
@@ -323,7 +323,8 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                         LogCategory.Text,
                         LogType.LocalizedObject,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType != SketchType.Color)),
-                        $"{ColorValue}|{ColorUseForSorting}");
+                        // text and face sketch does not use sorting or filtering
+                        "");
                 }
 
                 NotifyOfPropertyChange();

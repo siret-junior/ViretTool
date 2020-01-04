@@ -197,23 +197,27 @@ namespace ViretTool.BusinessLayer.ResultLogging
             // keyword
             if (query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Any())
             {
-                usedLogTypes.Add($"JointEmbedding_1({query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Count()})");
+                usedLogTypes.Add($"JointEmbedding_1({query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Count()}"
+                    + $"|{(int)(query.FormerFusionQuery.KeywordFilteringQuery.Threshold * 100)}%)");
             }
             if (query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Any())
             {
-                usedLogTypes.Add($"JointEmbedding_2({query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Count()})");
+                usedLogTypes.Add($"JointEmbedding_2({query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Count()}"
+                    + $"|{(int)(query.LatterFusionQuery.KeywordFilteringQuery.Threshold * 100)}%)");
             }
 
             // color
             if (query.BiTemporalSimilarityQuery.ColorSketchQuery.FormerQuery.ColorSketchEllipses.Any())
             {
                 usedLogTypes.Add(
-                    $"Color_1({query.BiTemporalSimilarityQuery.ColorSketchQuery.FormerQuery.ColorSketchEllipses.Count()})");
+                    $"Color_1({query.BiTemporalSimilarityQuery.ColorSketchQuery.FormerQuery.ColorSketchEllipses.Count()}"
+                    + $"|{(int)(query.FormerFusionQuery.ColorSketchFilteringQuery.Threshold * 100)}%)");
             }
             if (query.BiTemporalSimilarityQuery.ColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
             {
                 usedLogTypes.Add(
-                    $"Color_2({query.BiTemporalSimilarityQuery.ColorSketchQuery.LatterQuery.ColorSketchEllipses.Count()})");
+                    $"Color_2({query.BiTemporalSimilarityQuery.ColorSketchQuery.LatterQuery.ColorSketchEllipses.Count()}"
+                    + $"|{(int)(query.LatterFusionQuery.ColorSketchFilteringQuery.Threshold * 100)}%)");
             }
 
             // semantic example
@@ -223,10 +227,10 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 )
             {
                 usedLogTypes.Add($"GlobalFeatures_1("
-                    + $"{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.PositiveExampleIds.Count()}"
-                    + $"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.NegativeExampleIds.Count()}"
-                    +$"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.ExternalImages.Count()}"
-                    +$")");
+                    + $"+{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.PositiveExampleIds.Count()}"
+                    + $"|-{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.NegativeExampleIds.Count()}"
+                    + $"|E{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.ExternalImages.Count()}"
+                    + $"|{(int)(query.FormerFusionQuery.SemanticExampleFilteringQuery.Threshold * 100)}%)");
             }
             if (query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.PositiveExampleIds.Any()
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.NegativeExampleIds.Any()
@@ -234,10 +238,10 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 )
             {
                 usedLogTypes.Add($"GlobalFeatures_2("
-                    + $"{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.PositiveExampleIds.Count()}"
-                    + $"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.NegativeExampleIds.Count()}"
-                    + $"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.ExternalImages.Count()}"
-                    + $")");
+                    + $"+{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.PositiveExampleIds.Count()}"
+                    + $"|-{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.NegativeExampleIds.Count()}"
+                    + $"|E{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.ExternalImages.Count()}"
+                    + $"|{(int)(query.FormerFusionQuery.SemanticExampleFilteringQuery.Threshold * 100)}%)");
             }
 
             // face/text
@@ -260,7 +264,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
                     + $")");
             }
 
-            // color saturarion / percent of black
+            // color saturation / percent of black
             if (query.FormerFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
                 || query.FormerFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off)
             {
