@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
         {
             UsedCategories = GetUsedCategories(query);
             UsedTypes = GetUsedTypes(query);
+            Value = GetValue(query);
             SortType = GetSortType(query);
             ResultSetAvailability = ResultSetAvailability.All;
             Type = SubmissionType.Result;
@@ -190,27 +192,27 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
         private static string GetValue(BiTemporalQuery query)
         {
-            StringBuilder usedLogTypes = new StringBuilder();
+            List<string> usedLogTypes = new List<string>();
 
             // keyword
             if (query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Any())
             {
-                usedLogTypes.Append($"JointEmbedding_1({query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Count()})");
+                usedLogTypes.Add($"JointEmbedding_1({query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Count()})");
             }
             if (query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Any())
             {
-                usedLogTypes.Append($"JointEmbedding_2({query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Count()})");
+                usedLogTypes.Add($"JointEmbedding_2({query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Count()})");
             }
 
             // color
             if (query.BiTemporalSimilarityQuery.ColorSketchQuery.FormerQuery.ColorSketchEllipses.Any())
             {
-                usedLogTypes.Append(
+                usedLogTypes.Add(
                     $"Color_1({query.BiTemporalSimilarityQuery.ColorSketchQuery.FormerQuery.ColorSketchEllipses.Count()})");
             }
             if (query.BiTemporalSimilarityQuery.ColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
             {
-                usedLogTypes.Append(
+                usedLogTypes.Add(
                     $"Color_2({query.BiTemporalSimilarityQuery.ColorSketchQuery.LatterQuery.ColorSketchEllipses.Count()})");
             }
 
@@ -220,17 +222,22 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.ExternalImages.Any()
                 )
             {
-                usedLogTypes.Append($"GlobalFeatures_1(");
-                usedLogTypes.Append($"{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.PositiveExampleIds.Count()}");
-                usedLogTypes.Append($"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.NegativeExampleIds.Count()}");
-                usedLogTypes.Append($"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.ExternalImages.Count()}");
+                usedLogTypes.Add($"GlobalFeatures_1("
+                    + $"{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.PositiveExampleIds.Count()}"
+                    + $"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.NegativeExampleIds.Count()}"
+                    +$"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.ExternalImages.Count()}"
+                    +$")");
             }
             if (query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.PositiveExampleIds.Any()
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.NegativeExampleIds.Any()
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.ExternalImages.Any()
                 )
             {
-                usedLogTypes.Append(LogType.GlobalFeatures);
+                usedLogTypes.Add($"GlobalFeatures_2("
+                    + $"{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.PositiveExampleIds.Count()}"
+                    + $"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.NegativeExampleIds.Count()}"
+                    + $"|{query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.ExternalImages.Count()}"
+                    + $")");
             }
 
             // face/text
@@ -238,32 +245,47 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 || query.BiTemporalSimilarityQuery.TextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
                 )
             {
-                usedLogTypes.Append(LogType.LocalizedObject);
+                usedLogTypes.Add($"LocalizedObject_1("
+                    + $"F{query.BiTemporalSimilarityQuery.FaceSketchQuery.FormerQuery.ColorSketchEllipses.Count()}"
+                    + $"|T{query.BiTemporalSimilarityQuery.TextSketchQuery.FormerQuery.ColorSketchEllipses.Count()}"
+                    + $")");
             }
             if (query.BiTemporalSimilarityQuery.FaceSketchQuery.LatterQuery.ColorSketchEllipses.Any()
                 || query.BiTemporalSimilarityQuery.TextSketchQuery.LatterQuery.ColorSketchEllipses.Any()
                 )
             {
-                usedLogTypes.Append(LogType.LocalizedObject);
+                usedLogTypes.Add($"LocalizedObject_2("
+                    + $"F{query.BiTemporalSimilarityQuery.FaceSketchQuery.LatterQuery.ColorSketchEllipses.Count()}"
+                    + $"|T{query.BiTemporalSimilarityQuery.TextSketchQuery.LatterQuery.ColorSketchEllipses.Count()}"
+                    + $")");
             }
 
             // color saturarion / percent of black
             if (query.FormerFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
                 || query.FormerFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off)
             {
-                usedLogTypes.Append(LogType.BW);
+                usedLogTypes.Add($"BW_1("
+                    + $"CS{query.FormerFilteringQuery.ColorSaturationQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
+                    + $"PBC{query.FormerFilteringQuery.PercentOfBlackQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
+                    + $")");
             }
             if (query.LatterFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
                 || query.LatterFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off)
             {
-                usedLogTypes.Append(LogType.BW);
+                usedLogTypes.Add($"BW_2("
+                    + $"CS{query.LatterFilteringQuery.ColorSaturationQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
+                    + $"|PBC{query.LatterFilteringQuery.PercentOfBlackQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
+                    + $")");
             }
 
             // max frames
             if (query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled
                 || query.LatterFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled)
             {
-                usedLogTypes.Append(LogType.MaxFrames);
+                usedLogTypes.Add($"MaxFrames("
+                    + $"V{query.FormerFilteringQuery.CountFilteringQuery.MaxPerVideo}"
+                    + $"|S{query.FormerFilteringQuery.CountFilteringQuery.MaxPerShot}"
+                    + $")");
             }
             else if (query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Disabled
                 || query.LatterFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Disabled)
@@ -274,7 +296,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
             // TODO: lifelog is not send because the result log is used only in VBS
 
-            return usedLogTypes.ToString();
+            return string.Join(";", usedLogTypes);
         }
 
         private static LogType GetSortType(BiTemporalQuery query)
