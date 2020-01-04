@@ -70,7 +70,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
                         return;
                     }
 
-                    results[i] = CosineSimilarity(mFloatVectors[i], queryData);
+                    results[i] = CosineSimilarityNormalized01(mFloatVectors[i], queryData);
                 });
             return results;
         }
@@ -160,6 +160,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
         private static float CosineDistance(float[] x, float[] y)
         {
             return 1 - CosineSimilarity(x, y);
+        }
+
+        private static float CosineSimilarityNormalized01(float[] x, float[] y)
+        {
+            return (CosineSimilarity(x, y) + 1) / 2;
         }
 
         private static float CosineSimilarity(float[] x, float[] y)
