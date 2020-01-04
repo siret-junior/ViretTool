@@ -36,6 +36,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             datasetServicesManager.DatasetOpened += (_, services) =>
             {
                 _zoomDisplayProvider = datasetServicesManager.CurrentDataset.ZoomDisplayProvider;
+                LoadInitialDisplay();
             };
         }
 

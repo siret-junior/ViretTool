@@ -94,8 +94,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             QueryResults = queryResults;
             ZoomDisplay = zoomDisplay;
-            ResultDisplayVisibility = Visibility.Visible;
-            ZoomDisplayVisibility = Visibility.Hidden;
+            ResultDisplayVisibility = Visibility.Hidden;
+            ZoomDisplayVisibility = Visibility.Visible;
 
             DetailView = detailView;
             DetailViewModel = detailViewModel;
@@ -352,6 +352,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 await QueryResults.LoadInitialDisplay();
             }
 
+            ZoomDisplay.LoadInitialDisplay();
+            ResultDisplayVisibility = Visibility.Hidden;
+            ZoomDisplayVisibility = Visibility.Visible;
+
             IsBusy = false;
         }
 
@@ -405,20 +409,24 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 CloseDetailViewModel();
             }
-            if ((e.Key == Key.Right)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
+                // TODO: logging
                 ZoomDisplay.KeyRightPressed();
             }
-            if ((e.Key == Key.Left)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
+                // TODO: logging
                 ZoomDisplay.KeyLeftPressed();
             }
-            if ((e.Key == Key.Up)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
+                // TODO: logging
                 ZoomDisplay.KeyUpPressed();
             }
-            if ((e.Key == Key.Down)) // && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
+                // TODO: logging
                 ZoomDisplay.KeyDownPressed();
             }
         }
