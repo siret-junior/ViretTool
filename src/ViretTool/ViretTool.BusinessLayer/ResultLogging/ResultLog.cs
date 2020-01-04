@@ -68,16 +68,29 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
             // keyword
             if (query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Any()
-                || query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Any())
+                || query.BiTemporalSimilarityQuery.KeywordQuery.LatterQuery.Query.Any()
+                // face/text
+                || query.BiTemporalSimilarityQuery.FaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                || query.BiTemporalSimilarityQuery.FaceSketchQuery.LatterQuery.ColorSketchEllipses.Any()
+                || query.BiTemporalSimilarityQuery.TextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
+                || query.BiTemporalSimilarityQuery.TextSketchQuery.LatterQuery.ColorSketchEllipses.Any()
+                // color saturarion / percent of black
+                || query.FormerFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.LatterFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.FormerFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off
+                || query.LatterFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off
+                )
             {
                 usedLogCategories.Add(LogCategory.Text);
             }
+
             // color
             if (query.BiTemporalSimilarityQuery.ColorSketchQuery.FormerQuery.ColorSketchEllipses.Any()
                 || query.BiTemporalSimilarityQuery.ColorSketchQuery.LatterQuery.ColorSketchEllipses.Any())
             {
                 usedLogCategories.Add(LogCategory.Sketch);
             }
+
             // semantic example
             if (query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.LatterQuery.PositiveExampleIds.Any()
@@ -88,24 +101,6 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 )
             {
                 usedLogCategories.Add(LogCategory.Image);
-            }
-            // face/text
-            if (query.BiTemporalSimilarityQuery.FaceSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                || query.BiTemporalSimilarityQuery.FaceSketchQuery.LatterQuery.ColorSketchEllipses.Any()
-                || query.BiTemporalSimilarityQuery.TextSketchQuery.FormerQuery.ColorSketchEllipses.Any()
-                || query.BiTemporalSimilarityQuery.TextSketchQuery.LatterQuery.ColorSketchEllipses.Any()
-                )
-            {
-                usedLogCategories.Add(LogCategory.Text);
-            }
-
-            // color saturarion / percent of black
-            if (query.FormerFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.LatterFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.FormerFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off
-                || query.LatterFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off)
-            {
-                usedLogCategories.Add(LogCategory.Text);
             }
 
             // max frames
@@ -269,16 +264,24 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 || query.FormerFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off)
             {
                 usedLogTypes.Add($"BW_1("
-                    + $"CS{query.FormerFilteringQuery.ColorSaturationQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
-                    + $"PBC{query.FormerFilteringQuery.PercentOfBlackQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
+                    + $"CS"
+                    + $"-{(query.FormerFilteringQuery.ColorSaturationQuery.FilterState == ThresholdFilteringQuery.State.ExcludeAboveThreshold ? "E" : "I")}"
+                    + $"-{(int)(query.FormerFilteringQuery.ColorSaturationQuery.Threshold * 100)}%"
+                    + $"|PBC"
+                    + $"-{(query.FormerFilteringQuery.PercentOfBlackQuery.FilterState == ThresholdFilteringQuery.State.ExcludeAboveThreshold ? "E" : "I")}"
+                    + $"-{(int)(query.FormerFilteringQuery.PercentOfBlackQuery.Threshold * 100)}%"
                     + $")");
             }
             if (query.LatterFilteringQuery.ColorSaturationQuery.FilterState != ThresholdFilteringQuery.State.Off
                 || query.LatterFilteringQuery.PercentOfBlackQuery.FilterState != ThresholdFilteringQuery.State.Off)
             {
                 usedLogTypes.Add($"BW_2("
-                    + $"CS{query.LatterFilteringQuery.ColorSaturationQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
-                    + $"|PBC{query.LatterFilteringQuery.PercentOfBlackQuery.Threshold.ToString(CultureInfo.InvariantCulture)}"
+                    + $"CS"
+                    + $"-{(query.LatterFilteringQuery.ColorSaturationQuery.FilterState == ThresholdFilteringQuery.State.ExcludeAboveThreshold ? "E" : "I")}"
+                    + $"-{(int)(query.LatterFilteringQuery.ColorSaturationQuery.Threshold * 100)}%"
+                    + $"|PBC"
+                    + $"-{(query.LatterFilteringQuery.PercentOfBlackQuery.FilterState == ThresholdFilteringQuery.State.ExcludeAboveThreshold ? "E" : "I")}"
+                    + $"-{(int)(query.LatterFilteringQuery.PercentOfBlackQuery.Threshold * 100)}%"
                     + $")");
             }
 

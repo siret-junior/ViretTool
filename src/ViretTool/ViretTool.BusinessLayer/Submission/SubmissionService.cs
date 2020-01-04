@@ -235,7 +235,7 @@ namespace ViretTool.BusinessLayer.Submission
                     _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(item.Id),
                     _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(item.Id),
                     item.Rank,
-                    index + 1
+                    index
                     ))
                 .ToArray();
         }

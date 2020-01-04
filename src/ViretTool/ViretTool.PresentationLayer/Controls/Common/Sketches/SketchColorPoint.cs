@@ -24,9 +24,9 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
         public override string ToString()
         {
             return "[P(" +
-                Position.X.ToString(CultureInfo.InvariantCulture) +
+                Position.X.ToString("0.00", CultureInfo.InvariantCulture) +
                 "; " +
-                Position.Y.ToString(CultureInfo.InvariantCulture) +
+                Position.Y.ToString("0.00", CultureInfo.InvariantCulture) +
                 "), " +
                 "C(" +
                 FillColor.R +
@@ -36,9 +36,9 @@ namespace ViretTool.PresentationLayer.Controls.Common.Sketches
                 FillColor.B +
                 "), " +
                 "E(" +
-                EllipseAxis.X.ToString(CultureInfo.InvariantCulture) +
+                EllipseAxis.X.ToString("0.00", CultureInfo.InvariantCulture) +
                 "; " +
-                EllipseAxis.Y.ToString(CultureInfo.InvariantCulture) +
+                EllipseAxis.Y.ToString("0.00", CultureInfo.InvariantCulture) +
                 "), " +
                 (Area ? "all" : "any") +
                 "]";
