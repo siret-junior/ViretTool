@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,8 @@ namespace ViretTool.BusinessLayer.Submission
         private readonly IInteractionLogger _interactionLogger;
         private readonly ILogger _logger;
         private readonly IDatasetServicesManager _datasetServicesManager;
+        private readonly string _submissionLogDirectory = "SubmissionLogs";
+        private readonly StreamWriter _streamWriter;
 
         public SubmissionService(IInteractionLogger interactionLogger, ILogger logger, IDatasetServicesManager datasetServicesManager)
         {
@@ -23,6 +26,12 @@ namespace ViretTool.BusinessLayer.Submission
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
             SubmissionUrl = ConfigurationManager.AppSettings["submissionUrl"];
+            Directory.CreateDirectory(_submissionLogDirectory);
+            string logFilename = $"SubmissionLog_{Environment.MachineName}_{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss.ffff}.txt";
+            _streamWriter = new StreamWriter(Path.Combine(_submissionLogDirectory, logFilename))
+            {
+                AutoFlush = true
+            };
         }
 
         public string SubmissionUrl { get; set; }
@@ -46,7 +55,8 @@ namespace ViretTool.BusinessLayer.Submission
             {
                 string jsonInteractionLog = _interactionLogger.GetContent();
                 StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
-                response = await _client.PostAsync(url, content);
+                //response = await _client.PostAsync(url, content);
+                response = await PostAsyncLogged(url, content);
                 if (response.IsSuccessStatusCode)
                 {
                     _interactionLogger.ResetLog();
@@ -62,7 +72,8 @@ namespace ViretTool.BusinessLayer.Submission
             string url = GetUrl(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId);
             string jsonInteractionLog = _interactionLogger.GetContent();
             StringContent content = new StringContent(jsonInteractionLog, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _client.PostAsync(url, content);
+            //HttpResponseMessage response = await _client.PostAsync(url, content);
+            HttpResponseMessage response = await PostAsyncLogged(url, content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -87,6 +98,25 @@ namespace ViretTool.BusinessLayer.Submission
         private string GetUrl(int teamId, int memberId)
         {
             return $"{SubmissionUrl}?team={teamId}&member={memberId}";
+        }
+
+
+        private async Task<HttpResponseMessage> PostAsyncLogged(string url, StringContent content)
+        {
+            string requestContent = await content.ReadAsStringAsync();
+            HttpResponseMessage response = await _client.PostAsync(url, content);
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            _streamWriter.WriteLine($"#### URL: {url}");
+            _streamWriter.WriteLine($"--------------------------------------------------------------------------------");
+            _streamWriter.WriteLine($"#### POST content: {requestContent}");
+            _streamWriter.WriteLine($"--------------------------------------------------------------------------------");
+            _streamWriter.WriteLine($"#### Response code: {(int)response.StatusCode} ({response.StatusCode})");
+            _streamWriter.WriteLine($"--------------------------------------------------------------------------------");
+            _streamWriter.WriteLine($"#### Response content: {responseContent}");
+            _streamWriter.WriteLine($"################################################################################");
+
+            return response;
         }
     }
 }
