@@ -16,7 +16,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         public IPercentOfBlackFilter PercentOfBlackColorFilter { get; }
         public ICountRestrictionFilter CountRestrictionFilter { get; }
         public ILifelogFilter LifelogFilter { get; }
-
         public ITranscriptFilter TranscriptFilter { get; }
 
         public FilteringQuery CachedQuery { get; set; }
@@ -73,12 +72,13 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             // mask filters
             bool[] colorSaturationMask = ColorSaturationFilter.GetFilterMask(query.ColorSaturationQuery);
             bool[] percentOfBlackMask = PercentOfBlackColorFilter.GetFilterMask(query.PercentOfBlackQuery);
-            bool[] transcriptMask = TranscriptFilter.GetFilterMask(query.TranscriptFilteringQuery);
+            bool[] transcriptMask = TranscriptFilter.GetFilterMask(query.TranscriptFilteringQuery.VideoTranscriptQuery);
 
             // aggregate filters
             List<bool[]> masks = new List<bool[]>(2);
             if (colorSaturationMask != null) { masks.Add(colorSaturationMask); }
             if (percentOfBlackMask != null) { masks.Add(percentOfBlackMask); }
+            if (transcriptMask != null) { masks.Add(transcriptMask); }
             bool[] aggregatedMask = AggregateMasks(masks);
 
             // apply mask filters

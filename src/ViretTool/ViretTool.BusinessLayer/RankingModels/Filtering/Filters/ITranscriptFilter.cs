@@ -2,7 +2,6 @@
 {
     public interface ITranscriptFilter
     {
-        //bool[] FilterVideos(string query);
         bool[] GetFilterMask(string query);
     }
 }

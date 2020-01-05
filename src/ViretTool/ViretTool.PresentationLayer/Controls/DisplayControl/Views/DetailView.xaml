@@ -37,7 +37,8 @@
                                                                      [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                      [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
                                                                      [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
-                                                                     [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
+                                                                     [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
+                                                                     [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];" 
                                                  IsSelectable="True" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -74,7 +75,8 @@
                                                                      [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                      [Event FrameSelected] = [Action OnFrameSelectedSampled($dataContext)];
                                                                      [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
-                                                                     [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
+                                                                     [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
+                                                                     [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];" 
                                                  IsSelectable="True">
                                 <common:FrameControl.LayoutTransform>
                                     <ScaleTransform ScaleX="0.666" ScaleY="0.666" />

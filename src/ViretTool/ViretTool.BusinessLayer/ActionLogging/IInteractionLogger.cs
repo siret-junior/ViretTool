@@ -20,7 +20,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
         //sketch
         Color,
         //Filter
-        BW, MaxFrames, Lifelog,
+        BW, MaxFrames, Lifelog, ASR,
         //browsing
         RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll,
         // none

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Datasets;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Services;
 
 namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
@@ -14,33 +15,38 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         private IDatasetServicesManager _datasetServicesManager { get; }
         private readonly string[] _videoTranscripts;
 
-        public TranscriptFilter(IDatasetServicesManager datasetServicesManager, string[] videoTranscripts)
+        public TranscriptFilter(IDatasetServicesManager datasetServicesManager, ITranscriptProvider transcriptProvider)
         {
             _datasetServicesManager = datasetServicesManager;
-            _videoTranscripts = videoTranscripts;
-
-            _datasetServicesManager.DatasetOpened += (_, services) =>
-            {
-                _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 50 : 3;
-                NotifyOfPropertyChange(nameof(MaxFramesFromVideo));
-            };
-
-            for (int i = 0; i < _videoTranscripts.Length; i++)
-                _videoTranscripts[i] = _videoTranscripts[i].Replace("~", " ");
+            _videoTranscripts = transcriptProvider.GetTranscripts();
         }
 
-        public static TranscriptFilter FromDirectory(string path)
-        {
-            return new TranscriptFilter(Path.Combine(path, "V3C1-videoTranscript.txt"));
-        }
 
         public bool[] GetFilterMask(string query)
         {
+            if (query == null || query.Equals(""))
+            {
+                return null;
+            }
+
             bool[] videoMask = FilterVideos(query);
 
+            int frameCount = _datasetServicesManager.CurrentDataset.DatasetService.FrameCount;
+            bool[] result = new bool[frameCount];
 
-
-            return videoMask;
+            for (int iVideo = 0; iVideo < videoMask.Length; iVideo++)
+            {
+                if (videoMask[iVideo])
+                {
+                    // include
+                    foreach (int frameId in _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdsForVideo(iVideo))
+                    {
+                        result[frameId] = true;
+                    }
+                }
+            }
+           
+            return result;
         }
 
         // query is a string of phrases separated by '+'
@@ -48,6 +54,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
         {
             int[] resultCounts = new int[_videoTranscripts.Length];
 
+            query = query.ToLower();
             string[] queryPhrases = query.Split('+');
             for (int i = 0; i < resultCounts.Length; i++)
                 resultCounts[i] = FilterVideo(queryPhrases, i);

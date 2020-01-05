@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
@@ -40,6 +41,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             base.OnApplyTemplate();
 
             TextBox_ = (TextBox)Template.FindName(PartTextBox, this);
+            TextBox_.Foreground = Brushes.Red;
             Popups_ = new List<SuggestionPopup>();
             Popups_.Add((SuggestionPopup)Template.FindName(PartPopup, this));
 

@@ -65,6 +65,10 @@ namespace ViretTool.Installers
                 Component.For<IW2VVQueryToVectorProvider>()
                          .UsingFactoryMethod((_, context) => W2VVQueryToVectorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
+                Component.For<ITranscriptProvider>()
+                         .UsingFactoryMethod((_, context) => TranscriptProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .LifestyleBoundTo<DatasetServices>(),
+
 
 
                 Component.For<IDescriptorProvider<LifelogFrameMetadata>>().ImplementedBy<LifelogDescriptorProvider>().LifestyleBoundTo<DatasetServices>(),
@@ -176,6 +180,8 @@ namespace ViretTool.Installers
                     .LifestyleTransient(),
                 Component.For<ICountRestrictionFilter>()
                     .ImplementedBy<CountRestrictionFilter>().LifestyleTransient(),
+                Component.For<ITranscriptFilter>()
+                    .ImplementedBy<TranscriptFilter>().LifestyleTransient(),
 
                 // used by IBiTemporalRankingModule
                 Component.For<IBiTemporalSimilarityModule>().ImplementedBy<BiTemporalSimilarityModule>().LifestyleTransient(),

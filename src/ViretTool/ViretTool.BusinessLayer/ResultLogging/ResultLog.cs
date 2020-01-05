@@ -189,6 +189,15 @@ namespace ViretTool.BusinessLayer.ResultLogging
         {
             List<string> usedLogTypes = new List<string>();
 
+            if (query.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former)
+            {
+                usedLogTypes.Add("Primary_1");
+            }
+            else
+            {
+                usedLogTypes.Add("Primary_2");
+            }
+
             // keyword
             if (query.BiTemporalSimilarityQuery.KeywordQuery.FormerQuery.Query.Any())
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -116,6 +117,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                     OutputRanking.Ranks[i] = float.MinValue;
                 }
             });
+
+            File.WriteAllLines("ranks.txt", OutputRanking.Ranks.Select((x, index) => $"{index};{x}"));
         }
 
         private void ExcludeAbove(float threshold, RankingBuffer inputRanking, RankingBuffer outputRanking)
@@ -138,55 +141,69 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
             //        throw new NotImplementedException("RankedDatasetFilter sampling of a previously filtered frame.");
             //    }
             //});
+            //////////////////////////////////////////////
+            //_random = new Random(RANDOM_SEED);
+
+            //// prepare list for not filtered ranks
+            //if (_notFilteredRanks == null || _notFilteredRanks.Capacity < InputRanking.Ranks.Length)
+            //{
+            //    _notFilteredRanks = new List<float>(InputRanking.Ranks.Length);
+            //}
+            //else
+            //{
+            //    _notFilteredRanks.Clear();
+            //}
+
+            //// extract not filtered ranks
+            //for (int i = 0; i < InputRanking.Ranks.Length; i++)
+            //{
+            //    float rank = InputRanking.Ranks[i];
+            //    if (rank != float.MinValue)
+            //    {
+            //        _notFilteredRanks.Add(rank);
+            //    }
+            //}
+
+            //float nonFilteredPercentage = ((float)_notFilteredRanks.Count()) / InputRanking.Ranks.Length;
+            //if (nonFilteredPercentage > percentageOfDatabase)
+            //{
+            //    // too much results, sample
+            //    for (int i = 0; i < SAMPLE_SIZE && i < _notFilteredRanks.Count; i++)
+            //    {
+            //        _sampleValues[i] = _notFilteredRanks[_random.Next(_notFilteredRanks.Count)];
+            //    }
+            //    float percentageInSubset = percentageOfDatabase / nonFilteredPercentage;
+            //    Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
+            //    double threshold = _sampleValues[(int)((SAMPLE_SIZE - 1) * percentageInSubset)];
+            //    return threshold;
+            //}
+            //else
+            //{
+            //    // too few results, return all (set threshold to the smallest value)
+            //    float minValue = float.MaxValue;
+            //    for (int i = 0; i < SAMPLE_SIZE && i < _notFilteredRanks.Count; i++)
+            //    {
+            //        if (_notFilteredRanks[i] != float.MinValue && _notFilteredRanks[i] < minValue)
+            //        {
+            //            minValue = _notFilteredRanks[i];
+            //        }
+            //    }
+            //    return minValue;
+            //}
+
+
 
             _random = new Random(RANDOM_SEED);
+            // sample
+            for (int i = 0; i < SAMPLE_SIZE; i++)
+            {
+                _sampleValues[i] = inputRanking.Ranks[_random.Next(inputRanking.Ranks.Count())];
+            }
+            Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
+            File.WriteAllLines("samples.txt", _sampleValues.Select((x, index) => $"{index};{x}"));
+            double threshold = _sampleValues[(int)((_sampleValues.Length - 1) * percentageOfDatabase)];
+            return threshold;
 
-            // prepare list for not filtered ranks
-            if (_notFilteredRanks == null || _notFilteredRanks.Capacity < InputRanking.Ranks.Length)
-            {
-                _notFilteredRanks = new List<float>(InputRanking.Ranks.Length);
-            }
-            else
-            {
-                _notFilteredRanks.Clear();
-            }
-
-            // extract not filtered ranks
-            for (int i = 0; i < InputRanking.Ranks.Length; i++)
-            {
-                float rank = InputRanking.Ranks[i];
-                if (rank != float.MinValue)
-                {
-                    _notFilteredRanks.Add(rank);
-                }
-            }
-
-            float nonFilteredPercentage = ((float)_notFilteredRanks.Count()) / InputRanking.Ranks.Length;
-            if (nonFilteredPercentage > percentageOfDatabase)
-            {
-                // too much results, sample
-                for (int i = 0; i < SAMPLE_SIZE && i < _notFilteredRanks.Count; i++)
-                {
-                    _sampleValues[i] = _notFilteredRanks[_random.Next(_notFilteredRanks.Count)];
-                }
-                float percentageInSubset = percentageOfDatabase / nonFilteredPercentage;
-                Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
-                double threshold = _sampleValues[(int)((SAMPLE_SIZE - 1) * percentageInSubset)];
-                return threshold;
-            }
-            else
-            {
-                // too few results, return all (set threshold to the smallest value)
-                float minValue = float.MaxValue;
-                for (int i = 0; i < SAMPLE_SIZE && i < _notFilteredRanks.Count; i++)
-                {
-                    if (_notFilteredRanks[i] != float.MinValue && _notFilteredRanks[i] < minValue)
-                    {
-                        minValue = _notFilteredRanks[i];
-                    }
-                }
-                return minValue;
-            }
         }
     }
 }

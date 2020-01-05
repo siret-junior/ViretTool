@@ -15,14 +15,15 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <!--<ColumnDefinition Width="Auto" />-->
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" VerticalAlignment="Center" Text="{Binding InputText}">
+        <TextBox Grid.Column="0" VerticalAlignment="Center" Text="{Binding InputText}" Foreground="Red">
             <i:Interaction.Behaviors>
                 <behaviors:TextBoxEnterKeyUpdateBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
+        <!--
         <Grid Grid.Column="1" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -32,10 +33,11 @@
             <RadioButton Grid.Row="0" GroupName="FilterMode" Content="Video" IsChecked="True" Margin="10, 0, 10, 0"/>
             <RadioButton Grid.Row="1" GroupName="FilterMode" Content="Shot" Margin="10, 0, 10, 0"/>
         </Grid>
-        <Button Grid.Column="2"
-                
+        -->
+        <Button Grid.Column="1"
                 Padding="10, 0, 10, 0"
-                Content="{x:Static properties:Resources.ClearButtonText}" />
+                Content="{x:Static properties:Resources.ClearButtonText}" 
+                cal:Message.Attach="[Event Click] = [Action Clear()]" />
 
     </Grid>
 </UserControl>

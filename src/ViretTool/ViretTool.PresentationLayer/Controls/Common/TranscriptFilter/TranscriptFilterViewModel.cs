@@ -41,8 +41,15 @@ namespace ViretTool.PresentationLayer.Controls.Common.TranscriptFilter
                 }
 
                 _inputText = value;
+                // TODO: implement logging for shot only
+                _interactionLogger.LogInteraction(LogCategory.Text, LogType.ASR, $"_inputText", "V");
                 NotifyOfPropertyChange();
             }
+        }
+
+        public void Clear()
+        {
+            InputText = "";
         }
 
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();

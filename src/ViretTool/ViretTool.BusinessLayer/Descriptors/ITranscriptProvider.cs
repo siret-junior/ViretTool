@@ -8,5 +8,6 @@ namespace ViretTool.BusinessLayer.Descriptors
 {
     public interface ITranscriptProvider
     {
+        string[] GetTranscripts();
     }
 }

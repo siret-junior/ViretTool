@@ -117,9 +117,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             /**** Assign events and event handlers **************************/
 
-            // Right scroll panel (shot view)
-            queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
-            zoomDisplay.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
+            // Right scroll panel (shot view) //// moved to all displays below
+            //queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
+            //zoomDisplay.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
 
             // FrameViewModel events (buttons, etc.)
             DisplayControlViewModelBase[] displays = { queryResults, zoomDisplay, detailView, detailViewModel };
@@ -134,10 +134,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 display.FrameForZoomOutChanged += async (sender, selectedFrame) => await OnFrameForZoomOutChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
                 display.FrameForGpsChanged += (sender, selectedFrame) => queryResults.GpsFrame = selectedFrame.Clone();
+                display.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             }
 
             // Miscelaneous windows
             DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
+            DetailViewModel.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             _testControlViewModel.Deactivated += (sender, args) => TestFramesPosition = string.Empty;
         }
 

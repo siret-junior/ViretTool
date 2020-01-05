@@ -53,7 +53,8 @@
                                                                  [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                  [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
                                                                  [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
-                                                                 [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];" 
+                                                                 [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
+                                                                 [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];" 
                                              IsSelectable="True" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -163,6 +163,15 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _colorValue = value;
+                bool hasColorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
+                if (hasColorPoints)
+                {
+                    _interactionLogger.LogInteraction(
+                        LogCategory.Sketch,
+                        LogType.Color,
+                        string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
+                        $"{(int)_colorValue}%|{ColorUseForSorting}");
+                }
                 NotifyOfPropertyChange();
             }
         }
@@ -219,6 +228,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordValue = value;
+                _interactionLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{(int)_keywordValue}%|{KeywordUseForSorting}");
                 NotifyOfPropertyChange();
             }
         }
