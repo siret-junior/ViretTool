@@ -8,12 +8,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
             ThresholdFilteringQuery colorSaturationQuery,
             ThresholdFilteringQuery percentOfBlackQuery,
             CountFilteringQuery countFilteringQuery,
-            LifelogFilteringQuery lifelogFilteringQuery)
+            LifelogFilteringQuery lifelogFilteringQuery,
+            TranscriptFilteringQuery transcriptFilteringQuery)
         {
             ColorSaturationQuery = colorSaturationQuery;
             PercentOfBlackQuery = percentOfBlackQuery;
             CountFilteringQuery = countFilteringQuery;
             LifelogFilteringQuery = lifelogFilteringQuery;
+            TranscriptFilteringQuery = transcriptFilteringQuery;
         }
 
         public ThresholdFilteringQuery ColorSaturationQuery { get; }
@@ -21,6 +23,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
         public CountFilteringQuery CountFilteringQuery { get; }
         public LifelogFilteringQuery LifelogFilteringQuery { get; }
         public ThresholdFilteringQuery PercentOfBlackQuery { get; }
+        public TranscriptFilteringQuery TranscriptFilteringQuery { get; }
 
 
         public bool Equals(FilteringQuery other)
@@ -28,7 +31,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
             return ColorSaturationQuery.Equals(other.ColorSaturationQuery) &&
                    PercentOfBlackQuery.Equals(other.PercentOfBlackQuery) &&
                    CountFilteringQuery.Equals(other.CountFilteringQuery) &&
-                   LifelogFilteringQuery.Equals(other.LifelogFilteringQuery);
+                   LifelogFilteringQuery.Equals(other.LifelogFilteringQuery) &&
+                   TranscriptFilteringQuery.Equals(other.TranscriptFilteringQuery);
         }
     }
 }

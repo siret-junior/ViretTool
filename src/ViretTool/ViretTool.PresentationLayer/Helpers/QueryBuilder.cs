@@ -6,6 +6,7 @@ using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.LifelogFilters;
+using ViretTool.PresentationLayer.Controls.Common.TranscriptFilter;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 
 namespace ViretTool.PresentationLayer.Helpers
@@ -27,7 +28,8 @@ namespace ViretTool.PresentationLayer.Helpers
             int maxFramesFromShot,
             IDatasetParameters datasetParameters,
             FrameViewModel frameForGpsFilter,
-            LifelogFilterViewModel lifelogFilters)
+            LifelogFilterViewModel lifelogFilters,
+            TranscriptFilterViewModel transcriptFilters)
         {
             BiTemporalModelQuery<KeywordQuery> biTemporalKeywordQuery =
                 new BiTemporalModelQuery<KeywordQuery>(
@@ -277,13 +279,15 @@ namespace ViretTool.PresentationLayer.Helpers
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.BwFilterState), query1.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query1.PercentageBlackFilterState), query1.PercentageBlackFilterValue * 0.01),
                 new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1),
-                GetLifelogFilteringQuery(datasetParameters, frameForGpsFilter, lifelogFilters));
+                GetLifelogFilteringQuery(datasetParameters, frameForGpsFilter, lifelogFilters),
+                new TranscriptFilteringQuery(transcriptFilters.InputText));
 
             FilteringQuery latterFilteringQuery = new FilteringQuery(
                 new ThresholdFilteringQuery(ConvertToFilterState(query2.BwFilterState), query2.BwFilterValue * 0.01),
                 new ThresholdFilteringQuery(ConvertToFilterState(query2.PercentageBlackFilterState), query2.PercentageBlackFilterValue * 0.01),
                 new CountFilteringQuery(CountFilteringQuery.State.Enabled, maxFramesFromVideo, maxFramesFromShot, -1),
-                GetLifelogFilteringQuery(datasetParameters, frameForGpsFilter, lifelogFilters));
+                GetLifelogFilteringQuery(datasetParameters, frameForGpsFilter, lifelogFilters),
+                new TranscriptFilteringQuery(transcriptFilters.InputText));
 
 
             BiTemporalQuery biTemporalQuery =

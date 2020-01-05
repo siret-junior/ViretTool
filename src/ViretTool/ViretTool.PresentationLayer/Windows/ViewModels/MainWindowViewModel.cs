@@ -104,7 +104,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             LifelogFilterViewModel = lifelogFilterViewModel;
             TranscriptFilterViewModel = transcriptFilterViewModel;
 
-            Observable.Merge(Query1.QuerySettingsChanged, Query2.QuerySettingsChanged, LifelogFilterViewModel.FiltersChanged, QueryResults.QuerySettingsChanged, ZoomDisplay.QuerySettingsChanged)
+            Observable.Merge(Query1.QuerySettingsChanged, 
+                             Query2.QuerySettingsChanged, 
+                             LifelogFilterViewModel.FiltersChanged, 
+                             QueryResults.QuerySettingsChanged, 
+                             ZoomDisplay.QuerySettingsChanged,
+                             TranscriptFilterViewModel.QuerySettingsChanged)
                       .Where(_ => !IsBusy)
                       .Throttle(TimeSpan.FromMilliseconds(50))
                       .ObserveOn(SynchronizationContext.Current)
@@ -583,7 +588,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                             QueryResults.MaxFramesFromShot,
                             _datasetServicesManager.CurrentDataset.DatasetParameters,
                             QueryResults.GpsFrame,
-                            LifelogFilterViewModel);
+                            LifelogFilterViewModel,
+                            TranscriptFilterViewModel);
 
                         // log the query object (save unix timestamp to match queries with results)
                         long unixTimestamp = _queryPersistingService.SaveQuery(biTemporalQuery);

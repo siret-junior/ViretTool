@@ -93,6 +93,7 @@
     <Compile Include="RankingModels\Filtering\Filters\ILifelogFilter.cs" />
     <Compile Include="RankingModels\Filtering\Filters\LifelogFilter.cs" />
     <Compile Include="RankingModels\Queries\LifelogQuery.cs" />
+    <Compile Include="RankingModels\Queries\TranscriptFilteringQuery.cs" />
     <Compile Include="RankingModels\Similarity\Models\BoolSketchModelSkeleton.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\FaceSketchModel.cs" />

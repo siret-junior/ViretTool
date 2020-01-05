@@ -21,7 +21,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
     public class QueryViewModel : PropertyChangedBase
     {
         private readonly ILogger _logger;
-        private readonly IInteractionLogger _interationLogger;
+        private readonly IInteractionLogger _interactionLogger;
 
         // TODO: load default values from a settings file
         private FilterControl.FilterState _bwFilterState = FilterControl.FilterState.Off;
@@ -53,7 +53,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
         public QueryViewModel(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interationLogger)
         {
             _logger = logger;
-            _interationLogger = interationLogger;
+            _interactionLogger = interationLogger;
             DatasetServicesManager = datasetServicesManager;
 
             datasetServicesManager.DatasetOpened += (_, services) =>
@@ -66,7 +66,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
             QueryObjects.CollectionChanged += (sender, args) =>
                                               {
-                                                  _interationLogger.LogInteraction(
+                                                  _interactionLogger.LogInteraction(
                                                       LogCategory.Image,
                                                       LogType.GlobalFeatures,
                                                       string.Join(";", QueryObjects.Select(q => q is DownloadedFrameViewModel dq ? dq.ImagePath : $"{q.VideoId}|{q.FrameNumber}")),
@@ -111,7 +111,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterState = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{BwFilterState}|{(int)BwFilterValue}%");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{BwFilterState}|{(int)BwFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -127,7 +127,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _bwFilterValue = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{BwFilterState}|{(int)BwFilterValue}%");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{BwFilterState}|{(int)BwFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -181,7 +181,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                _interationLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{(int)KeywordValue}%|{KeywordUseForSorting}");
+                _interactionLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{(int)KeywordValue}%|{KeywordUseForSorting}");
                 
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
@@ -234,7 +234,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterState = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{PercentageBlackFilterState}|{(int)PercentageBlackFilterValue}%");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{PercentageBlackFilterState}|{(int)PercentageBlackFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -250,7 +250,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _percentageBlackFilterValue = value;
-                _interationLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{PercentageBlackFilterState}|{(int)PercentageBlackFilterValue}%");
+                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.BW, $"{PercentageBlackFilterState}|{(int)PercentageBlackFilterValue}%");
                 NotifyOfPropertyChange();
             }
         }
@@ -304,7 +304,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 bool hasColorPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type == SketchType.Color) == true;
                 if (hasColorPoints)
                 {
-                    _interationLogger.LogInteraction(
+                    _interactionLogger.LogInteraction(
                         LogCategory.Sketch,
                         LogType.Color,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType == SketchType.Color)),
@@ -319,7 +319,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 bool hasOtherPoints = _sketchQueryResult?.ChangedSketchTypes?.Any(type => type != SketchType.Color) == true;
                 if (hasOtherPoints)
                 {
-                    _interationLogger.LogInteraction(
+                    _interactionLogger.LogInteraction(
                         LogCategory.Text,
                         LogType.LocalizedObject,
                         string.Join(",", _sketchQueryResult.SketchColorPoints.Where(p => p.SketchType != SketchType.Color)),
@@ -378,7 +378,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
         public void OnSortingExplicitlyChanged(string modelName, bool isUsedForSorting)
         {
-            _interationLogger.LogInteraction(LogCategory.Browsing, LogType.ExplicitSort, $"{modelName}:{!isUsedForSorting}");
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ExplicitSort, $"{modelName}:{!isUsedForSorting}");
         }
 
         public void RemoveFromQueryClicked(FrameViewModel frameViewModel)
