@@ -204,7 +204,7 @@ namespace ViretTool.BusinessLayer.Submission
                 _logger.Error(message, ex);
                 return message;
             }
-}
+        }
 
         private void StoreResultLog(string resultLog, long timestamp)
         {
@@ -232,7 +232,7 @@ namespace ViretTool.BusinessLayer.Submission
 
             return resultSet.Take(_maxResultsCount)
                 .Select((item, index) => new Result(
-                    _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(item.Id),
+                    _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(item.Id) + 1,
                     _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(item.Id),
                     item.Rank,
                     index
