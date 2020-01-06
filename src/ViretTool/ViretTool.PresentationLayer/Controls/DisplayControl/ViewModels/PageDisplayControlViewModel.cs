@@ -218,6 +218,31 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 ScrollToRow(0);
                 VisibleFrames.Clear();
                 viewModelsToAdd.ForEach(f => f.IsLastInVideo = false);
+
+                // show temporal context
+                List<FrameViewModel> viewModelsWithContext = new List<FrameViewModel>();
+                for (int iFrame = 0; iFrame < viewModelsToAdd.Count && iFrame < 200; iFrame++)
+                {
+                    FrameViewModel primaryViewModel = viewModelsToAdd[iFrame];
+                    int[] videoFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumbersForVideo(primaryViewModel.VideoId);
+                    int frameIndex = Array.IndexOf(videoFrameNumbers, primaryViewModel.FrameNumber);
+                    int startIndex = (frameIndex - 2 >= 0) ? frameIndex - 2 : 0;
+
+
+                    List<FrameViewModel> frameContext = videoFrameNumbers
+                        .Skip(startIndex)
+                        .Take(ColumnCount)
+                        .Select(frameNumber => ConvertThumbnailToViewModel(primaryViewModel.VideoId, frameNumber))
+                        .ToList();
+                    
+                    while (frameContext.Count() < ColumnCount)
+                    {
+                        frameContext.Add(ConvertThumbnailToViewModel(0, 0));
+                    }
+
+                    viewModelsWithContext.AddRange(frameContext);
+                }
+                viewModelsToAdd = viewModelsWithContext;
             }
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
