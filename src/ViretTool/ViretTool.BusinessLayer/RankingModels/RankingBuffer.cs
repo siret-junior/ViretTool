@@ -46,5 +46,10 @@ namespace ViretTool.BusinessLayer.RankingModels
 
             return new RankingBuffer(name, ranks);
         }
+
+        public override string ToString()
+        {
+            return $"{Ranks.Length} ranks, {Ranks.Where(rank => rank != float.MinValue).Count()} filtered.";
+        }
     }
 }

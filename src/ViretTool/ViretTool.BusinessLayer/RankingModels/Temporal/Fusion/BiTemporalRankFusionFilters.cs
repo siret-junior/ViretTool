@@ -58,9 +58,9 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                     singleOutputPairs[frameId] = -1;
                     return;
                 }
-                
+
                 // include frame only if the temporal range also includes it
-                bool isIncludedInSecondary = false;
+                float maxPairRank = float.MinValue;
                 int maxPairRankId = -1;
                 for (int iContext = 1; iContext <= _temporalContextLength; iContext++)
                 {
@@ -68,25 +68,17 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                     if (iPairFrame > lastFrameIdsInVideoForFrameId[frameId]) break;
 
                     float pairRank = secondaryInputRanking.Ranks[iPairFrame];
-                    if (pairRank != float.MinValue)
+                    if (pairRank != float.MinValue && pairRank > maxPairRank)
                     {
-                        isIncludedInSecondary = true;
+                        maxPairRank = pairRank;
                         maxPairRankId = iPairFrame;
-                        break;
+
                     }
                 }
 
                 // compute result
-                if (isIncludedInSecondary)
-                {
-                    singleOutputRanking.Ranks[frameId] = 0;
-                    singleOutputPairs[frameId] = maxPairRankId;
-                }
-                else
-                {
-                    singleOutputRanking.Ranks[frameId] = float.MinValue;
-                    singleOutputPairs[frameId] = -1;
-                }
+                singleOutputRanking.Ranks[frameId] = primaryInputRanking.Ranks[frameId] * maxPairRank;
+                singleOutputPairs[frameId] = maxPairRankId;
             });
             singleOutputRanking.IsUpdated = true;
         }
@@ -109,7 +101,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                 }
 
                 // include frame only if the temporal range also includes it
-                bool isIncludedInSecondary = false;
+                float maxPairRank = float.MinValue;
                 int maxPairRankId = -1;
                 for (int iContext = 1; iContext <= _temporalContextLength; iContext++)
                 {
@@ -117,25 +109,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal.Fusion
                     if (iPairFrame < firstFrameIdsInVideoForFrameId[frameId]) break;
 
                     float pairRank = secondaryInputRanking.Ranks[iPairFrame];
-                    if (pairRank != float.MinValue)
+                    if (pairRank != float.MinValue && pairRank > maxPairRank)
                     {
-                        isIncludedInSecondary = true;
+                        maxPairRank = pairRank;
                         maxPairRankId = iPairFrame;
-                        break;
                     }
                 }
-                
+
                 // compute result
-                if (isIncludedInSecondary)
-                {
-                    singleOutputRanking.Ranks[frameId] = 0;
-                    singleOutputPairs[frameId] = maxPairRankId;
-                }
-                else
-                {
-                    singleOutputRanking.Ranks[frameId] = float.MinValue;
-                    singleOutputPairs[frameId] = -1;
-                }
+                singleOutputRanking.Ranks[frameId] = primaryInputRanking.Ranks[frameId] * maxPairRank;
+                singleOutputPairs[frameId] = maxPairRankId;
             });
             singleOutputRanking.IsUpdated = true;
         }

@@ -121,6 +121,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             //queryResults.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             //zoomDisplay.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
 
+
             // FrameViewModel events (buttons, etc.)
             DisplayControlViewModelBase[] displays = { queryResults, zoomDisplay, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
@@ -140,6 +141,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             // Miscelaneous windows
             DetailViewModel.Close += (sender, args) => CloseDetailViewModel();
             DetailViewModel.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
+            _submitControlViewModel.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             _testControlViewModel.Deactivated += (sender, args) => TestFramesPosition = string.Empty;
         }
 
@@ -700,6 +702,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 List<FrameToSubmit> framesToSubmit = _submitControlViewModel.SubmittedFrames.Select(f => new FrameToSubmit(f.VideoId, f.FrameNumber)).ToList();
                 foreach (FrameToSubmit frameToSubmit in framesToSubmit)
                 {
+                    // TODO: async attempt?
+                    //FrameToSubmit frameToSubmitLocal = new FrameToSubmit(frameToSubmit.VideoId, frameToSubmit.FrameNumber);
+                    //Task.Run(async () =>
+                    //{
+                    //    await _submissionService.SubmitFrameAsync(frameToSubmitLocal);
+                    //});
+
+                    // TODO: warning: blocking!
                     string response = await _submissionService.SubmitFrameAsync(frameToSubmit);
                     _logger.Info(response);
                 }

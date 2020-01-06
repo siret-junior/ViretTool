@@ -16,7 +16,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
         private Random _random = new Random(RANDOM_SEED);
         private int[] _sampleIndexes;
         private double[] _sampleValues;
-        private List<float> _notFilteredRanks;
+        //private List<float> _notFilteredRanks;
 
         public ThresholdFilteringQuery CachedQuery { get; private set; }
 
@@ -117,8 +117,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                     OutputRanking.Ranks[i] = float.MinValue;
                 }
             });
-
-            File.WriteAllLines("ranks.txt", OutputRanking.Ranks.Select((x, index) => $"{index};{x}"));
         }
 
         private void ExcludeAbove(float threshold, RankingBuffer inputRanking, RankingBuffer outputRanking)
@@ -200,7 +198,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering
                 _sampleValues[i] = inputRanking.Ranks[_random.Next(inputRanking.Ranks.Count())];
             }
             Array.Sort(_sampleValues, (a, b) => b.CompareTo(a));
-            File.WriteAllLines("samples.txt", _sampleValues.Select((x, index) => $"{index};{x}"));
             double threshold = _sampleValues[(int)((_sampleValues.Length - 1) * percentageOfDatabase)];
             return threshold;
 
