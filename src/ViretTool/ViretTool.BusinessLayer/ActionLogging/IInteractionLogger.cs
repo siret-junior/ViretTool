@@ -39,5 +39,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
         void ResetLog();
         InteractionLog Log { get; }
         string GetContent();
+
+        long GetLastInteractionTimestamp();
     }
 }

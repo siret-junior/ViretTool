@@ -40,7 +40,7 @@ namespace ViretTool.BusinessLayer.Submission
             // TODO: lock on Log object
             lock (this)
             {
-                long lastInteractionTimeStamp = _interactionLogger.Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
+                long lastInteractionTimeStamp = _interactionLogger.GetLastInteractionTimestamp();
                 long currentQueryTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
                 Task.Run(() => 

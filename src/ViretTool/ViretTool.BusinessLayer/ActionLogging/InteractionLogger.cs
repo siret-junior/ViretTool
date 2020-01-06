@@ -85,6 +85,14 @@ namespace ViretTool.BusinessLayer.ActionLogging
             }
         }
 
+        public long GetLastInteractionTimestamp() 
+        {
+            lock (_lockObject)
+            {
+                return Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
+            }
+        }
+
         public void Dispose()
         {
             _streamWriter?.Close();
