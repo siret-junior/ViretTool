@@ -22,7 +22,8 @@
                 <DataTemplate>
                     <common:FrameControl Margin="2" Width="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                          Height="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}"
-                                         cal:Message.Attach="[Event RemoveFromQueryClicked] = [Action RemoveFromQueryClicked($dataContext)];">
+                                         cal:Message.Attach="[Event RemoveFromQueryClicked] = [Action RemoveFromQueryClicked($dataContext)];
+                                                             [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];">
                         <common:FrameControl.LayoutTransform>
                             <ScaleTransform ScaleX="2" ScaleY="2" />
                         </common:FrameControl.LayoutTransform>

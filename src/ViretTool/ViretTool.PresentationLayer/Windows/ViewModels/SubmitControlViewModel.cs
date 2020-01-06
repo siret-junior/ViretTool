@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -17,6 +18,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                                         ImageHeight = services.DatasetParameters.DefaultFrameHeight;
                                                         ImageWidth = services.DatasetParameters.DefaultFrameWidth;
                                                     };
+        }
+
+        public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
+
+        public void OnScrollVideoDisplay(FrameViewModel frameViewModel)
+        {
+            FrameForScrollVideoChanged?.Invoke(this, frameViewModel.Clone());
         }
 
         public int ImageHeight
