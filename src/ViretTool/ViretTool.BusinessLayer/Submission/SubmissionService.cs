@@ -22,7 +22,10 @@ namespace ViretTool.BusinessLayer.Submission
     {
         private static readonly int _maxResultsCount = 10_000;
 
-        private readonly HttpClient _client = new HttpClient();
+        private readonly HttpClient _client = new HttpClient()
+        {
+            Timeout = TimeSpan.FromMilliseconds(int.Parse(ConfigurationManager.AppSettings["networkTimeout"]))
+        };
         private readonly IInteractionLogger _interactionLogger;
         private readonly ILogger _logger;
         private readonly IDatasetServicesManager _datasetServicesManager;
@@ -261,27 +264,30 @@ namespace ViretTool.BusinessLayer.Submission
         private async Task<HttpResponseMessage> PostAsyncLogged(string url, StringContent content)
         {
             string requestContent = await content.ReadAsStringAsync();
-            HttpResponseMessage response = await _client.PostAsync(url, content);
-            string responseContent = await response.Content.ReadAsStringAsync();
-
+            _streamWriterNetwork.WriteLine($"################################################################################");
             _streamWriterNetwork.WriteLine($"#### URL: {url}");
             _streamWriterNetwork.WriteLine($"--------------------------------------------------------------------------------");
             _streamWriterNetwork.WriteLine($"#### POST content ignored (length {requestContent.Length} characters).");
             _streamWriterNetwork.WriteLine($"--------------------------------------------------------------------------------");
-            _streamWriterNetwork.WriteLine($"#### Response code: {(int)response.StatusCode} ({response.StatusCode})");
-            _streamWriterNetwork.WriteLine($"--------------------------------------------------------------------------------");
-            _streamWriterNetwork.WriteLine($"#### Response content: {responseContent}");
-            _streamWriterNetwork.WriteLine($"################################################################################");
 
+            _streamWriterNetworkPOST.WriteLine($"################################################################################");
             _streamWriterNetworkPOST.WriteLine($"#### URL: {url}");
             _streamWriterNetworkPOST.WriteLine($"--------------------------------------------------------------------------------");
             _streamWriterNetworkPOST.WriteLine($"#### POST content: {requestContent}");
             _streamWriterNetworkPOST.WriteLine($"--------------------------------------------------------------------------------");
+
+
+            HttpResponseMessage response = await _client.PostAsync(url, content);
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            _streamWriterNetwork.WriteLine($"#### Response code: {(int)response.StatusCode} ({response.StatusCode})");
+            _streamWriterNetwork.WriteLine($"--------------------------------------------------------------------------------");
+            _streamWriterNetwork.WriteLine($"#### Response content: {responseContent}");
+            
             _streamWriterNetworkPOST.WriteLine($"#### Response code: {(int)response.StatusCode} ({response.StatusCode})");
             _streamWriterNetworkPOST.WriteLine($"--------------------------------------------------------------------------------");
             _streamWriterNetworkPOST.WriteLine($"#### Response content: {responseContent}");
-            _streamWriterNetworkPOST.WriteLine($"################################################################################");
-
+            
             return response;
         }
 

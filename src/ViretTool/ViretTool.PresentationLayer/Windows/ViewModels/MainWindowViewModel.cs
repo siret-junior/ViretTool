@@ -710,8 +710,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     //});
 
                     // TODO: warning: blocking!
-                    string response = await _submissionService.SubmitFrameAsync(frameToSubmit);
-                    _logger.Info(response);
+                    try
+                    {
+                        string response = await _submissionService.SubmitFrameAsync(frameToSubmit);
+                        _logger.Info(response);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error($"Error submitting frame V{frameToSubmit.VideoId}, F{frameToSubmit.FrameNumber}");
+                    }
                 }
             }
             catch (Exception e)
