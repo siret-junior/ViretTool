@@ -43,8 +43,9 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
         /// Reads content of each layer from file
         /// </summary>
         /// <param name="filePath"></param>
-        /// <returns>two Lists of 2D arrays, each array in first list represents one layer in SOM map, each array in second list represents right & bottom similarity with surrounding elements, returns </returns>
-        public (List<int[][]>,List<float[][]>) ReadLayersIdsFromFile()
+        /// <returns>two Lists of 2D arrays, each array in first list represents one layer in SOM map, 
+        /// each array in second list represents right & bottom similarity with surrounding elements.</returns>
+        public (List<int[][]>, List<float[][]>) ReadLayersIdsFromFile()
         {
             // Read content of textfile to array
             string[] lines = null;
@@ -73,7 +74,7 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
                 colorSimilarity.Add(ReshapeTo2DArray(layerSimilarities, layerHeight, layerWidth * 2));
             }
 
-            return (resultLayers,colorSimilarity);
+            return (resultLayers, colorSimilarity);
         }
 
 
