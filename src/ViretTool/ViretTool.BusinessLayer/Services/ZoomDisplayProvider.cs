@@ -28,7 +28,7 @@ namespace ViretTool.BusinessLayer.Services
             (LayersIds, ColorSimilarity) = zoomDisplayReader.ReadLayersIdsFromFile();
         }
 
-        public (float BottomBorder,float RightBorder) GetColorSimilarity(int layerIndex, int frameID)
+        public (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameID)
         {
             float[][] layerSimilarities = ColorSimilarity[layerIndex];
             (int Col, int Row) = GetArrayItemPosition(frameID, LayersIds[layerIndex]);
@@ -42,7 +42,8 @@ namespace ViretTool.BusinessLayer.Services
         public int[] GetInitialLayer(int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null
-            if (LayersIds.Count() > 0) { 
+            if (LayersIds.Count() > 0)
+            {
                 return ZoomIntoLayer(0, LayersIds[0][0][0], rowCount, columnCount);
             }
             return null;
@@ -56,7 +57,7 @@ namespace ViretTool.BusinessLayer.Services
             int Height = Math.Min(rowCount, layerHeight);
             int Width = Math.Min(columnCount, layerWidth);
 
-            int[] Array = LayersIds[layerIndex].Take(layerHeight).SelectMany(x => x.Take(Width).ToArray()).ToArray() ;//Enumerable.Range(0, Height).SelectMany(x => Enumerable.Range(0, Width).Select(y => y).ToArray()).ToArray();
+            int[] Array = LayersIds[layerIndex].Take(layerHeight).SelectMany(x => x.Take(Width).ToArray()).ToArray();//Enumerable.Range(0, Height).SelectMany(x => Enumerable.Range(0, Width).Select(y => y).ToArray()).ToArray();
             return (Array, Width, Height);
         }
         public int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount)
@@ -81,7 +82,7 @@ namespace ViretTool.BusinessLayer.Services
                     throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
                 }
 
-                // (positionInLayerCol, positionInLayerRow) is tuple determining position of frameId in last SOM layer
+                // (positionInLayerCol, positionInLayerRow) is tuple determining position of frameId in SOM layer
                 (int positionInLayerCol, int positionInLayerRow) = GetArrayItemPosition(frameId, layer);
 
                 // if frame wasn't found
@@ -112,7 +113,7 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
                 }
-                
+
                 (int colStart, int rowStart) = GetArrayItemPosition(frameId, LayersIds[layerIndex]);
 
                 // if frame wasn't found
@@ -121,7 +122,7 @@ namespace ViretTool.BusinessLayer.Services
                     throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
                 }
                 int rowEnd, columnEnd;
-                if(rowStart + rowCount <= layerHeight)
+                if (rowStart + rowCount <= layerHeight)
                 {
                     rowEnd = rowStart + rowCount;
                 }
@@ -149,7 +150,7 @@ namespace ViretTool.BusinessLayer.Services
         public int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
 
-            int [][] higherLayer = LayersIds[layerIndex];
+            int[][] higherLayer = LayersIds[layerIndex];
             int higherLayerHeight = higherLayer.Length;
             int higherLayerWidth = higherLayer[0].Length;
 
@@ -173,7 +174,7 @@ namespace ViretTool.BusinessLayer.Services
                 for (int distance = 1; distance <= Math.Max(lowerLayerHeight, lowerLayerWidth); distance++)
                 {
                     (positionInLayerCol, positionInLayerRow) = SearchVerticalMargin(distance, lowerLayer, higherLayer, centerCol, centerRow);
-                    if(positionInLayerCol != -1)
+                    if (positionInLayerCol != -1)
                     {
                         break;
                     }
@@ -181,7 +182,7 @@ namespace ViretTool.BusinessLayer.Services
                     if (positionInLayerCol != -1)
                     {
                         break;
-                    } 
+                    }
                 }
             }
 
@@ -202,15 +203,15 @@ namespace ViretTool.BusinessLayer.Services
         {
             (int ColumnToBeSearched1, int ColumnToBeSearched2) = (centerCol - distanceFromCenter, centerCol + distanceFromCenter);
             int StartOfColumnIterator = centerRow - distanceFromCenter;
-            for(int i = 0; i < 2 * distanceFromCenter + 1; i++)
+            for (int i = 0; i < 2 * distanceFromCenter + 1; i++)
             {
                 int ColumnIterator = StartOfColumnIterator + i;
-                if(ColumnIterator >= 0 && ColumnIterator < layer.Length)
+                if (ColumnIterator >= 0 && ColumnIterator < layer.Length)
                 {
-                    if(ColumnToBeSearched1 >= 0)
+                    if (ColumnToBeSearched1 >= 0)
                     {
                         (int resultCol, int resultRow) = GetArrayItemPosition(layer[ColumnIterator][ColumnToBeSearched1], higherLayer);
-                        if(resultCol != -1)
+                        if (resultCol != -1)
                         {
                             return (resultCol, resultRow);
                         }
@@ -232,15 +233,15 @@ namespace ViretTool.BusinessLayer.Services
         {
             (int RowToBeSearched1, int RowToBeSearched2) = (centerRow - distanceFromCenter, centerRow + distanceFromCenter);
             int StartOfRowIterator = centerRow - distanceFromCenter + 1;
-            for(int i = 0;i < 2 * (distanceFromCenter - 1) + 1; i++)
+            for (int i = 0; i < 2 * (distanceFromCenter - 1) + 1; i++)
             {
                 int RowIterator = StartOfRowIterator + i;
-                if(RowIterator >= 0 && RowIterator < layer[0].Length)
+                if (RowIterator >= 0 && RowIterator < layer[0].Length)
                 {
-                    if(RowToBeSearched1 >= 0)
+                    if (RowToBeSearched1 >= 0)
                     {
                         (int resultCol, int resultRow) = GetArrayItemPosition(layer[RowToBeSearched1][RowIterator], higherLayer);
-                        if(resultCol != -1)
+                        if (resultCol != -1)
                         {
                             return (resultCol, resultRow);
                         }
@@ -277,32 +278,17 @@ namespace ViretTool.BusinessLayer.Services
 
         private static (int rowStart, int rowEnd) ComputeRowBoundaries(int layerHeight, int positionInLayerRow, int targetRowCount)
         {
-            // normal situation
-            int rowStart = Math.Max(0, positionInLayerRow - (targetRowCount / 2) + 1);
-            int rowEnd = rowStart + targetRowCount;
 
-            // if the surounding would overstep the SOM layer borders, then we have to adjust the rowStart, rowEnd
-            if (rowStart + targetRowCount > layerHeight)
-            {
-                rowEnd = layerHeight;
-                rowStart = layerHeight - targetRowCount;
-            }
+            int rowStart = positionInLayerRow - (targetRowCount / 2) + 1;
+            int rowEnd = rowStart + targetRowCount;
 
             return (rowStart, rowEnd);
         }
 
         private static (int colStart, int colEnd) ComputeColBoundaries(int layerWidth, int positionInLayerCol, int targetColumnCount)
         {
-            // normal situation
-            int colStart = Math.Max(0, positionInLayerCol - (targetColumnCount / 2) + 1);
+            int colStart = positionInLayerCol - (targetColumnCount / 2) + 1;
             int colEnd = colStart + targetColumnCount;
-
-            // if the surounding would overstep the layer borders, then we have to adjust the X_start,X_end
-            if (colStart + targetColumnCount > layerWidth)
-            {
-                colEnd = layerWidth;
-                colStart = Math.Max(0, layerWidth - targetColumnCount);
-            }
 
             return (colStart, colEnd);
         }
@@ -312,9 +298,37 @@ namespace ViretTool.BusinessLayer.Services
             List<int> resultList = new List<int>();
             for (int iRow = rowStart; iRow < rowEnd; iRow++)
             {
+                int i;
+                // resolve wrap around the edges (2D torus)
+                if (iRow < 0)
+                {
+                    i = iRow + layer.Length;
+                }
+                else if (iRow < layer.Length)
+                {
+                    i = iRow;
+                }
+                else
+                {
+                    i = iRow - layer.Length;
+                }
                 for (int iCol = colStart; iCol < colEnd; iCol++)
                 {
-                    resultList.Add(layer[iRow][iCol]);
+                    int j;
+                    // resolve wrap around the edges (2D torus)
+                    if (iCol < 0)
+                    {
+                        j = iCol + layer[i].Length;
+                    }
+                    else if (iCol < layer[i].Length)
+                    {
+                        j = iCol;
+                    }
+                    else
+                    {
+                        j = iCol - layer[i].Length;
+                    }
+                    resultList.Add(layer[i][j]);
                 }
             }
             return resultList;
