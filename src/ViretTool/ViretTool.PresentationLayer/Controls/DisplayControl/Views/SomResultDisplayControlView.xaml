@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="ViretTool.PresentationLayer.Controls.DisplayControl.Views.SomResultDisplayControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:ViretTool.PresentationLayer.Behaviors"
+             xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels"
+             xmlns:common="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
+             xmlns:properties="clr-namespace:ViretTool.Resources.Properties;assembly=ViretTool.Resources"
+             xmlns:converters="clr-namespace:ViretTool.PresentationLayer.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:SomResultDisplayControlViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+            <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
+            <converters:BooleanAndToBooleanConverter x:Key="BooleanAndToBooleanConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="DarkGray" FocusVisualStyle="{x:Null}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="700" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Margin" Value="0,7,0,5" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <TextBlock Text="{x:Static properties:Resources.ZoomDisplayText}"/>
+                <TextBlock Text=":" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Body -->
+        <ItemsControl x:Name="ImagesDisplay" Grid.Row="1" ItemsSource="{Binding VisibleFrames}" ScrollViewer.CanContentScroll="True">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <common:FrameControl x:Name="FrameControl" cal:Message.Attach="[Event AddToQueryClicked] = [Action OnAddToQueryClicked($dataContext, $eventArgs)];
+                                                                                   [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
+                                                                                   [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
+                                                                                   [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
+                                                                                   [Event ZoomIntoDisplay] = [Action OnZoomIntoDisplay($dataContext)];
+                                                                                   [Event ZoomOutDisplay] = [Action OnZoomOutDisplay($dataContext)];
+                                                                                   [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
+                                                                                   [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
+                                                                                   [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];"
+                                         IsSelectable="True" 
+                                         ShowZoomOut="{Binding RelativeSource={RelativeSource FindAncestor, 
+                    AncestorType={x:Type UserControl}}, Path=DataContext.ShowZoomOutButton, UpdateSourceTrigger=PropertyChanged}"
+                                         ShowZoomInto="{Binding RelativeSource={RelativeSource FindAncestor, 
+                    AncestorType={x:Type UserControl}}, Path=DataContext.ShowZoomIntoButton, UpdateSourceTrigger=PropertyChanged}">
+
+                        <!-- Display style selector -->
+                        <common:FrameControl.Style>
+                            <Style TargetType="{x:Type common:FrameControl}">
+                                <Style.Triggers>
+                                    <DataTrigger Value="True">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{StaticResource BooleanAndToBooleanConverter}">
+                                                <Binding Path="DataContext.IsLargeFramesChecked" ElementName="ImagesDisplay" />
+                                                <Binding Path="DataContext.IsInitialDisplayShown" ElementName="ImagesDisplay" Converter="{StaticResource InvertedBooleanConverter}" />
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="LayoutTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform ScaleX="{Binding DataContext.LargeFramesMultiplier, ElementName= ImagesDisplay}" ScaleY="{Binding DataContext.LargeFramesMultiplier, ElementName= ImagesDisplay}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </common:FrameControl.Style>
+                    </common:FrameControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <common:VirtualizedUniformGrid Orientation="Vertical" Rows="{Binding RowCount}" Columns="{Binding ColumnCount}" IsVirtualizing ="True" VirtualizationMode="Recycling"
+                                                   cal:Message.Attach="[Event ScrollChanged] = [Action OnGridScrollChanged('RankedList', 'RankedListScroll')]">
+                        <i:Interaction.Behaviors>
+                            <behaviors:ResetVirtualizedCacheBehavior Reset="{Binding ResetGrid, Mode=OneWayToSource}"/>
+                        </i:Interaction.Behaviors>
+                    </common:VirtualizedUniformGrid>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <!--
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                  Padding="{TemplateBinding Control.Padding}"
+                                  Focusable="False">
+                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        <i:Interaction.Behaviors>
+                            <behaviors:ScrollToColumnOrRowIndexBehavior ScrollToRow="{Binding ScrollToRow, Mode=OneWayToSource}"/>
+                        </i:Interaction.Behaviors>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>-->
+            <i:Interaction.Behaviors>
+                <behaviors:ActualSizeBehavior ActualHeight="{Binding DisplayHeight}" ActualWidth="{Binding DisplayWidth}"
+                                              SizeChanged="{Binding DisplaySizeChangedHandler, Mode=OneWay}"/>
+            </i:Interaction.Behaviors>
+        </ItemsControl>
+    </Grid>
+</UserControl>

@@ -37,6 +37,7 @@ namespace ViretTool.Installers
                 Component.For<ScrollDisplayControlViewModel>().LifestyleTransient(),
                 Component.For<PageDisplayControlViewModel>().LifestyleTransient(),
                 Component.For<ZoomDisplayControlViewModel>().LifestyleTransient(),
+                Component.For<SomResultDisplayControlViewModel>().LifestyleTransient(),
                 Component.For<SubmitControlView>().LifestyleTransient(),
                 Component.For<SubmitControlViewModel>().LifestyleTransient(),
                 Component.For<DetailView>().LifestyleTransient(),

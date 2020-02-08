@@ -43,7 +43,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                                                      };
         }
 
-        public int DisplayHeight { get; set; }
+        public int DisplayHeight { get; 
+            set; }
 
         public int DisplayWidth { get; set; }
 

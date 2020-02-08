@@ -52,5 +52,6 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }
         public IInitialDisplayProvider InitialDisplayProvider { get; }
         public IZoomDisplayProvider ZoomDisplayProvider { get; }
+        public ISomGeneratorProvider SomGeneratorProvider { get; }
     }
 }

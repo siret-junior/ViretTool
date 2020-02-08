@@ -54,11 +54,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private Visibility _resultDisplayVisibility;
         private Visibility _zoomDisplayVisibility;
+        private Visibility _somDisplayVisibility;
 
         public MainWindowViewModel(
             ILogger logger,
             IWindowManager windowManager,
             ZoomDisplayControlViewModel zoomDisplay,
+            SomResultDisplayControlViewModel somDisplay,
             PageDisplayControlViewModel queryResults,
             ScrollDisplayControlViewModel detailView,
             DetailViewModel detailViewModel,
@@ -93,8 +95,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _externalImageProvider = externalImageProvider;
 
             QueryResults = queryResults;
+            SomDisplay = somDisplay;
             ZoomDisplay = zoomDisplay;
             ResultDisplayVisibility = Visibility.Hidden;
+            SomDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible;
 
             DetailView = detailView;
@@ -108,6 +112,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                              Query2.QuerySettingsChanged, 
                              LifelogFilterViewModel.FiltersChanged, 
                              QueryResults.QuerySettingsChanged, 
+                             SomDisplay.QuerySettingsChanged,
                              ZoomDisplay.QuerySettingsChanged,
                              TranscriptFilterViewModel.QuerySettingsChanged)
                       .Where(_ => !IsBusy)
@@ -123,7 +128,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
 
             // FrameViewModel events (buttons, etc.)
-            DisplayControlViewModelBase[] displays = { queryResults, zoomDisplay, detailView, detailViewModel };
+            DisplayControlViewModelBase[] displays = { queryResults, somDisplay, zoomDisplay, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
             {
                 display.FramesForQueryChanged += (sender, framesToQuery) =>
@@ -153,6 +158,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
 
         public PageDisplayControlViewModel QueryResults { get; }
+        public SomResultDisplayControlViewModel SomDisplay { get; }
         public ZoomDisplayControlViewModel ZoomDisplay { get; }
         public DisplayControlViewModelBase DetailView { get; }
         public DetailViewModel DetailViewModel { get; }
@@ -309,6 +315,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+        public Visibility SomDisplayVisibility
+        {
+            get => _somDisplayVisibility;
+            set
+            {
+                if (_somDisplayVisibility == value)
+                {
+                    return;
+                }
+
+                _somDisplayVisibility = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         public async void OpenDatabase()
         {
@@ -363,6 +383,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             await ZoomDisplay.LoadInitialDisplay();
             ResultDisplayVisibility = Visibility.Hidden;
+            SomDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible;
 
             IsBusy = false;
@@ -380,6 +401,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (_datasetServicesManager.IsDatasetOpened)
             {
                 IsBusy = true;
+                SomDisplayVisibility = Visibility.Hidden;
                 ResultDisplayVisibility = Visibility.Hidden;
                 await ZoomDisplay.LoadInitialDisplay();
                 ZoomDisplayVisibility = Visibility.Visible;
@@ -575,7 +597,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             IsBusy = true;
             ZoomDisplayVisibility = Visibility.Hidden;
-            ResultDisplayVisibility = Visibility.Visible;
+            SomDisplayVisibility = Visibility.Visible;
+            ResultDisplayVisibility = Visibility.Hidden;
             try
             {
                 CancelSortingTaskIfNecessary();
@@ -617,8 +640,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
-
-                await QueryResults.LoadFramesForIds(sortedIds);
+                
+                await ZoomDisplay.LoadFramesForIds(sortedIds);
             }
             catch (Exception e)
             {
@@ -763,6 +786,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             // TODO: logging
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
                 $"ZoomIn|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
+            SomDisplayVisibility = Visibility.Hidden;
             ResultDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible;
             await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
@@ -774,6 +798,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
                 $"ZoomOut||L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
             ResultDisplayVisibility = Visibility.Hidden;
+            SomDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible; 
             await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
         }
