@@ -113,7 +113,6 @@
                             <Button x:Name="ClearAll" Grid.Column="1" Margin="0,4,0,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
                             <Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />
                             <Button x:Name="ShowInitialDisplayClicked" Grid.Column="3" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.ShowInitialDisplayText}" />
-
                         </Grid>
 
                         <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.LSCFiltersLabel}" Visibility="{Binding LscFiltersVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -157,6 +156,7 @@
 
                         <ContentControl Grid.Column="0" x:Name="QueryResults" Visibility="{Binding ResultDisplayVisibility}" />
                         <ContentControl Grid.Column="0" x:Name="ZoomDisplay" Visibility="{Binding ZoomDisplayVisibility}" />
+                        <ContentControl Grid.Column="0" x:Name="SomDisplay" Visibility="{Binding SomDisplayVisibility}" />
                         <TextBlock Grid.Column="0" x:Name="TestFramesPosition" Margin="330,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
 
                         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />

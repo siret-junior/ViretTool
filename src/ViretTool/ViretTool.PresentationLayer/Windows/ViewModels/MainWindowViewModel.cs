@@ -641,7 +641,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
                 
-                await ZoomDisplay.LoadFramesForIds(sortedIds);
+                await SomDisplay.LoadFramesForIds(sortedIds);
             }
             catch (Exception e)
             {
