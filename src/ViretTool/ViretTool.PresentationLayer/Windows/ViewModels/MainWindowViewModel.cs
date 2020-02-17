@@ -452,29 +452,55 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 if ((e.Key == Key.Right) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
-                    ZoomDisplay.KeyRightPressed();
-                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
-                        $"ZoomScrollRight|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
-
+                    if (ZoomDisplayVisibility == Visibility.Visible)
+                    {
+                        ZoomDisplay.KeyRightPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                            $"ZoomScrollRight|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                    }
+                    else if(SomDisplayVisibility == Visibility.Visible)
+                    {
+                        SomDisplay.KeyRightPressed();
+                    }
                 }
                 if ((e.Key == Key.Left) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
-                    ZoomDisplay.KeyLeftPressed();
-                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
-                        $"ZoomScrollLeft|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                    if (ZoomDisplayVisibility == Visibility.Visible)
+                    {
+                        ZoomDisplay.KeyLeftPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                            $"ZoomScrollLeft|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                    }
+                    else if (SomDisplayVisibility == Visibility.Visible)
+                    {
+                        SomDisplay.KeyLeftPressed();
+                    }
                 }
                 if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
-                    ZoomDisplay.KeyUpPressed();
-                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
-                        $"ZoomScrollUp|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
-
+                    if (ZoomDisplayVisibility == Visibility.Visible)
+                    {
+                        ZoomDisplay.KeyUpPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                            $"ZoomScrollUp|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                    }
+                    else if (SomDisplayVisibility == Visibility.Visible)
+                    {
+                        SomDisplay.KeyUpPressed();
+                    }
                 }
                 if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
                 {
-                    ZoomDisplay.KeyDownPressed();
-                    _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
-                        $"ZoomScrollDown|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                    if (ZoomDisplayVisibility == Visibility.Visible)
+                    {
+                        ZoomDisplay.KeyDownPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                            $"ZoomScrollDown|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
+                    }
+                    else if (SomDisplayVisibility == Visibility.Visible)
+                    {
+                        SomDisplay.KeyDownPressed();
+                    }
                 }
             }
         }

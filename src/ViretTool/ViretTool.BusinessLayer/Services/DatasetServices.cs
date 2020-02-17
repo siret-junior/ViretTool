@@ -24,7 +24,8 @@ namespace ViretTool.BusinessLayer.Services
             IDatasetParameters datasetParameters,
             IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider,
             IInitialDisplayProvider initialDisplayProvider,
-            IZoomDisplayProvider zoomDisplayProvider)
+            IZoomDisplayProvider zoomDisplayProvider,
+            SomGeneratorProvider somGeneratorProvider)
         {
             ThumbnailService = thumbnailService;
             DatasetService = datasetService;
@@ -38,6 +39,7 @@ namespace ViretTool.BusinessLayer.Services
             LifelogDescriptorProvider = lifelogDescriptorProvider;
             InitialDisplayProvider = initialDisplayProvider;
             ZoomDisplayProvider = zoomDisplayProvider;
+            SomGeneratorProvider = somGeneratorProvider;
         }
 
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
@@ -52,6 +54,6 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }
         public IInitialDisplayProvider InitialDisplayProvider { get; }
         public IZoomDisplayProvider ZoomDisplayProvider { get; }
-        public ISomGeneratorProvider SomGeneratorProvider { get; }
+        public SomGeneratorProvider SomGeneratorProvider { get; }
     }
 }

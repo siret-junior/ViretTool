@@ -1,4 +1,7 @@
-﻿namespace ViretTool.BusinessLayer.Services
+﻿using System.Collections.Generic;
+using ViretTool.BusinessLayer.Descriptors;
+
+namespace ViretTool.BusinessLayer.Services
 {
     public interface IZoomDisplayProvider
     {
@@ -7,11 +10,11 @@
         /// </summary>
         /// <returns></returns>
         int[] GetInitialLayer(int RowCount, int ColumnCount);
-
+        int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider);
         /// <summary>
         /// Calculate number of layers
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns index of the last layer</returns>
         int GetMaxDepth();
         (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameIndex);
         /// <summary>

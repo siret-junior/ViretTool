@@ -121,6 +121,7 @@
     <Compile Include="Services\IZoomDisplayProvider.cs" />
     <Compile Include="Services\SomGeneratorProvider.cs" />
     <Compile Include="Services\ZoomDisplayProvider.cs" />
+    <Compile Include="SOMGridSorting\SOMWrapper.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />
@@ -232,7 +233,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="RankingModels\Similarity\Models\W2VV\" />
-    <Folder Include="SOMGridSorting\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SOMGridSorting\CEmbedSomDLL.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

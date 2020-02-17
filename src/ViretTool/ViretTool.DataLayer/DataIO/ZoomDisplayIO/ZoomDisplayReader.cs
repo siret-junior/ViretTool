@@ -85,7 +85,7 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
         /// <param name="outputHeight"></param>
         /// <param name="outputWidth"></param>
         /// <returns></returns>
-        private T[][] ReshapeTo2DArray<T>(T[] input1DArray, int outputHeight, int outputWidth)
+        public static T[][] ReshapeTo2DArray<T>(T[] input1DArray, int outputHeight, int outputWidth)
         {
             // argument check
             if (outputWidth * outputHeight != input1DArray.Length)

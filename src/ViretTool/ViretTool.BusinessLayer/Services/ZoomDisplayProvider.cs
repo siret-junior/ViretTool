@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.DataLayer.DataIO.ZoomDisplayIO;
 
 namespace ViretTool.BusinessLayer.Services
@@ -37,6 +38,10 @@ namespace ViretTool.BusinessLayer.Services
         public int GetMaxDepth()
         {
             return LayersIds.Count - 1;
+        }
+        public virtual int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
+        {
+            return GetInitialLayer(rowCount, columnCount);
         }
 
         public int[] GetInitialLayer(int rowCount, int columnCount)

@@ -25,7 +25,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         /// </summary>
         private int _currentLayer;
 
-        private IZoomDisplayProvider _zoomDisplayProvider;
+        protected IZoomDisplayProvider _zoomDisplayProvider;
 
         public ZoomDisplayControlViewModel(
             ILogger logger,
@@ -142,7 +142,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         /// Computes position of center in _loadedFrames
         /// </summary>
         /// <returns></returns>
-        private int ComputeCenter()
+        protected int ComputeCenter()
         {
             return ColumnCount * (RowCount / 2 - 1) + (ColumnCount / 2) - 1;
         }
@@ -163,7 +163,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() + ColumnCount]);
         }
 
-        public async Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame)
+        public async virtual Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame)
         {
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, _zoomDisplayProvider.ZoomIntoLayer);
         }
