@@ -148,24 +148,24 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
         public async void KeyRightPressed()
         {
-            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() + 1]);
+            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() + 1], _zoomDisplayProvider.MoveRight);
         }
         public async void KeyLeftPressed()
         {
-            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() - 1]);
+            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() - 1], _zoomDisplayProvider.MoveLeft);
         }
         public async void KeyUpPressed()
         {
-            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() - ColumnCount]);
+            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() - ColumnCount], _zoomDisplayProvider.MoveUp);
         }
         public async void KeyDownPressed()
         {
-            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() + ColumnCount]);
+            await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() + ColumnCount], _zoomDisplayProvider.MoveDown);
         }
 
-        public async virtual Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame)
+        public async virtual Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame, Func<int,int,int,int,int[]> typeOfMove)
         {
-            await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, _zoomDisplayProvider.ZoomIntoLayer);
+            await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, typeOfMove);
         }
 
         public async Task LoadZoomIntoDisplayForFrame(FrameViewModel selectedFrame)

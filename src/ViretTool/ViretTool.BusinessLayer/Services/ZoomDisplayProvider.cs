@@ -19,7 +19,8 @@ namespace ViretTool.BusinessLayer.Services
         public List<int[][]> LayersIds;
         public List<float[][]> ColorSimilarity;
 
-
+        private int centerPositionInLayerCol;
+        private int centerPositionInLayerRow;
         public ZoomDisplayProvider(IDatasetParameters datasetParameters, string datasetDirectory)
         {
             string filePath = Path.Combine(datasetDirectory, ZOOM_DISPLAY_FILENAME);
@@ -74,6 +75,76 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+        public int[] MoveLeft(int layerIndex, int frameId, int rowCount, int columnCount)
+        {
+            if (layerIndex < LayersIds.Count())
+            {
+                if(--centerPositionInLayerCol < 0)
+                {
+                    centerPositionInLayerCol = LayersIds[layerIndex][0].Length - 1;
+                }
+                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+            }
+            return null;
+        }
+        public int[] MoveRight(int layerIndex, int frameId, int rowCount, int columnCount)
+        {
+            if (layerIndex < LayersIds.Count())
+            {
+                if (++centerPositionInLayerCol >= LayersIds[layerIndex][0].Length)
+                {
+                    centerPositionInLayerCol = 0;
+                }
+                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+            }
+            return null;
+        }
+        public int[] MoveUp(int layerIndex, int frameId, int rowCount, int columnCount)
+        {
+            if (layerIndex < LayersIds.Count())
+            {
+                if (--centerPositionInLayerRow < 0)
+                {
+                    centerPositionInLayerRow = LayersIds[layerIndex].Length - 1;
+                }
+                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+            }
+            return null;
+        }
+        public int[] MoveDown(int layerIndex, int frameId, int rowCount, int columnCount)
+        {
+            if (layerIndex < LayersIds.Count())
+            {
+                if (++centerPositionInLayerRow >= LayersIds[layerIndex].Length)
+                {
+                    centerPositionInLayerRow = 0;
+                }
+                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+            }
+            return null;
+        }
+        private int[] calculateSectorAfterMoving(int[][] layer, int rowCount, int columnCount)
+        {
+            if (layer.Length != 0)
+            {
+
+                // check display fits layer size
+                int layerHeight = layer.Length;
+                int layerWidth = layer[0].Length;
+                if (rowCount > layerHeight || columnCount > layerWidth)
+                {
+                    throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
+                }
+
+                (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, centerPositionInLayerRow, rowCount);
+                (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, centerPositionInLayerCol, columnCount);
+
+                List<int> resultDisplay = ExtractDisplayItems(layer, rowStart, rowEnd, colStart, colEnd);
+
+                return resultDisplay.ToArray();
+            }
+            return null;
+        }
         public int[] ZoomIntoLayer(int[][] layer, int frameId, int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null
@@ -95,7 +166,7 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
                 }
-
+                (centerPositionInLayerCol, centerPositionInLayerRow) = (positionInLayerCol, positionInLayerRow);
                 // get display boundaries in the SOM layer
                 (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, positionInLayerRow, rowCount);
                 (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, positionInLayerCol, columnCount);
@@ -195,6 +266,8 @@ namespace ViretTool.BusinessLayer.Services
             {
                 throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the higher SOM layer.");
             }
+
+            (centerPositionInLayerCol, centerPositionInLayerRow) = (positionInLayerCol, positionInLayerRow);
 
             (int rowStart, int rowEnd) = ComputeRowBoundaries(higherLayerHeight, positionInLayerRow, rowCount);
             (int colStart, int colEnd) = ComputeColBoundaries(higherLayerWidth, positionInLayerCol, columnCount);

@@ -26,6 +26,10 @@ namespace ViretTool.BusinessLayer.Services
         /// <param name="columnCount">Column length</param>
         /// <returns></returns>
         int[] Resize(int layerIndex, int frameId, int rowCount, int columnCount);
+        int[] MoveDown(int layerIndex, int frameId, int rowCount, int columnCount);
+        int[] MoveUp(int layerIndex, int frameId, int rowCount, int columnCount);
+        int[] MoveLeft(int layerIndex, int frameId, int rowCount, int columnCount);
+        int[] MoveRight(int layerIndex, int frameId, int rowCount, int columnCount);
         int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount);
         int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount);
         (int[] Array, int Width, int Height) GetSmallLayer(int layerIndex, int rowCount, int columnCount);
