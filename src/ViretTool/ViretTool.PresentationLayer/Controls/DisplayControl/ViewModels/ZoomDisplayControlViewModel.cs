@@ -185,7 +185,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, _zoomDisplayProvider.ZoomOutOfLayer);
         }
 
-        private void InitBorders()
+        protected void InitBorders()
         {
             foreach(FrameViewModel frame in _loadedFrames)
             {

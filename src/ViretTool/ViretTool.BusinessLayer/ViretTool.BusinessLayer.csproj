@@ -115,6 +115,7 @@
     <Compile Include="ResultLogging\Result.cs" />
     <Compile Include="ResultLogging\ResultLog.cs" />
     <Compile Include="ResultLogging\ResultLogger.cs" />
+    <Compile Include="Services\Helper\CosineSimilarityHelper.cs" />
     <Compile Include="Services\IDatasetParameters.cs" />
     <Compile Include="Services\IInitialDisplayProvider.cs" />
     <Compile Include="Services\ISomGeneratorProvider.cs" />

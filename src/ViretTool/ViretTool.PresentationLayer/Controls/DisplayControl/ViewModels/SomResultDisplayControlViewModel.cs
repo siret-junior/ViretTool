@@ -32,30 +32,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 LoadInitialDisplay();
             };
         }
-
-        public FrameViewModel GpsFrame
-        {
-            get => _gpsFrame;
-            set
-            {
-                if (_gpsFrame?.Equals(value) == true)
-                {
-                    return;
-                }
-
-                _gpsFrame = value;
-                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
-                NotifyQuerySettingsChanged();
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public void DeleteGpsFrame()
-        {
-            GpsFrame = null;
-        }
-
-
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
 
@@ -68,7 +44,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public override async Task LoadFramesForIds(IEnumerable<int> inputFrameIds)
         {
             int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
-            await base.LoadFramesForIds(ids);  
+            if (ids != null)
+            {
+                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+
+                InitBorders();
+            }
+            else
+            {
+                await RandomGridDisplay();
+            }
+            IsInitialDisplayShown = false;
+            UpdateVisibleFrames();
         }
         protected override void UpdateVisibleFrames()
         {
