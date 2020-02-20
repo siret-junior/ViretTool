@@ -17,6 +17,7 @@ namespace ViretTool.BusinessLayer.Services
         /// <returns>Returns index of the last layer</returns>
         int GetMaxDepth();
         (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameIndex);
+        float[] GetColorSimilarity(int layerIndex, int rowCount, int columnCount);
         /// <summary>
         /// Calculates grid from layer. This grid is specified by the most top-left frame of the grid, then by row length and column length
         /// </summary>

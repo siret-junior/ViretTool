@@ -23,7 +23,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         /// <summary>
         /// Indicates the layer of SOM, in which the ZoomDisplay is currently located. Zero-based numbering.
         /// </summary>
-        private int _currentLayer;
+        protected int _currentLayer;
 
         protected IZoomDisplayProvider _zoomDisplayProvider;
 
@@ -187,11 +187,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected void InitBorders()
         {
-            foreach(FrameViewModel frame in _loadedFrames)
+            // get border values from ZoomDisplayProvider, bottom border value for n-th frame is at (2*n)-th index, right border value for n-th frame is at (2*n + 1)-th index
+            float[] borders = _zoomDisplayProvider.GetColorSimilarity(_currentLayer, RowCount, ColumnCount);
+            for (int iFrame = 0; iFrame < _loadedFrames.Count; iFrame++)
             {
-                // Load frameID and find its similarity in zoom DisplayProvider
-                int frameID = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber);
-                (float BottomBorderSimilarity, float RightBorderSimilarity) = _zoomDisplayProvider.GetColorSimilarity(_currentLayer, frameID);
+                (float BottomBorderSimilarity, float RightBorderSimilarity) = (borders[iFrame * 2], borders[(iFrame * 2) + 1]);
 
                 System.Drawing.Color colorSimilar = System.Drawing.Color.Lime;
                 System.Drawing.Color colorDissimilar = System.Drawing.Color.Red;
@@ -201,11 +201,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 System.Drawing.Color rightColor = ColorInterpolationHelper.InterpolateColorHSV(colorSimilar, colorDissimilar, 1 - RightBorderSimilarity, true);
 
                 // Convert System.Drawing.Color (used by ColorInterpolationHelper) to System.Windows.Media.Color (used by WPF)
+                FrameViewModel frame = _loadedFrames[iFrame];
                 frame.BottomBorderColor = System.Windows.Media.Color.FromArgb(bottomColor.A, bottomColor.R, bottomColor.G, bottomColor.B);
                 frame.RightBorderColor = System.Windows.Media.Color.FromArgb(rightColor.A, rightColor.R, rightColor.G, rightColor.B);
 
             }
-
 
             // Make bottom border invisible for the last row
             // Iterate over whole grid except the last row

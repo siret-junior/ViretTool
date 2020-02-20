@@ -55,6 +55,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 await RandomGridDisplay();
             }
             IsInitialDisplayShown = false;
+
+            _currentLayer = 0;
+            this.NotifyOfPropertyChange("ShowZoomOutButton");
+            this.NotifyOfPropertyChange("ShowZoomIntoButton");
+
             UpdateVisibleFrames();
         }
         protected override void UpdateVisibleFrames()

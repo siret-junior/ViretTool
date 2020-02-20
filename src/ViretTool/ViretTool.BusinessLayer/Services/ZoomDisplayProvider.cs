@@ -36,6 +36,24 @@ namespace ViretTool.BusinessLayer.Services
             (int Col, int Row) = GetArrayItemPosition(frameID, LayersIds[layerIndex]);
             return (layerSimilarities[Row][Col * 2], layerSimilarities[Row][Col * 2 + 1]);
         }
+        public float[] GetColorSimilarity(int layerIndex, int rowCount, int columnCount)
+        {
+            float[][] layer = ColorSimilarity[layerIndex];
+            int layerHeight = layer.Length;
+            int layerWidth = layer[0].Length;
+
+            if (rowCount > layerHeight || columnCount > layerWidth)
+            {
+                throw new ArgumentOutOfRangeException($"Display {columnCount}x{rowCount} is bigger than SOM layer {layerWidth}x{layerHeight}.");
+            }
+
+            (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, centerPositionInLayerRow, rowCount);
+            (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, centerPositionInLayerCol, columnCount);
+
+            List<float> borders = ExtractDisplayItems(layer, rowStart, rowEnd, colStart*2, colEnd*2);
+
+            return borders.ToArray();
+        }
         public int GetMaxDepth()
         {
             return LayersIds.Count - 1;
@@ -371,9 +389,9 @@ namespace ViretTool.BusinessLayer.Services
             return (colStart, colEnd);
         }
 
-        private List<int> ExtractDisplayItems(int[][] layer, int rowStart, int rowEnd, int colStart, int colEnd)
+        private List<T> ExtractDisplayItems<T>(T[][] layer, int rowStart, int rowEnd, int colStart, int colEnd)
         {
-            List<int> resultList = new List<int>();
+            List<T> resultList = new List<T>();
             for (int iRow = rowStart; iRow < rowEnd; iRow++)
             {
                 int i;
