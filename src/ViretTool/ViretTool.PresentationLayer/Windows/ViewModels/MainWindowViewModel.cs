@@ -287,6 +287,65 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public bool LscFiltersVisible => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData;
         //public bool InitialDisplayAvailable => _datasetServicesManager.IsDatasetOpened && _datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed;
 
+        private bool _isResultDisplayVisible;
+        public bool IsResultDisplayVisible
+        {
+            get { return _isResultDisplayVisible; }
+            set
+            {
+                if (_isResultDisplayVisible == value)
+                {
+                    return;
+                }
+                _isResultDisplayVisible = value;
+                if (value)
+                {
+                    ResultDisplayVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    ResultDisplayVisibility = Visibility.Hidden;
+                }
+                NotifyOfPropertyChange();
+            }
+        }
+        private bool _isSomDisplayVisible;
+        public bool IsSomDisplayVisible
+        {
+            get { return _isSomDisplayVisible; }
+            set
+            {
+                if (_isSomDisplayVisible == value)
+                {
+                    return;
+                }
+                _isSomDisplayVisible = value;
+                if (value)
+                {
+                    SomDisplayVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    SomDisplayVisibility = Visibility.Hidden;
+                }
+                NotifyOfPropertyChange();
+            }
+        }
+        private bool _isSomDisplayLoaded = false;
+        public bool IsSomDisplayLoaded
+        {
+            get { return _isSomDisplayLoaded; }
+            set
+            {
+                if(value == _isSomDisplayLoaded)
+                {
+                    return;
+                }
+                _isSomDisplayLoaded = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public Visibility ResultDisplayVisibility 
         {
             get => _resultDisplayVisibility;
@@ -298,6 +357,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
 
                 _resultDisplayVisibility = value;
+                IsResultDisplayVisible = (_resultDisplayVisibility == Visibility.Visible);
                 NotifyOfPropertyChange();
             }
         }
@@ -324,8 +384,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 {
                     return;
                 }
-
                 _somDisplayVisibility = value;
+                IsSomDisplayVisible = (_somDisplayVisibility == Visibility.Visible);
                 NotifyOfPropertyChange();
             }
         }
@@ -623,8 +683,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             IsBusy = true;
             ZoomDisplayVisibility = Visibility.Hidden;
-            SomDisplayVisibility = Visibility.Visible;
-            ResultDisplayVisibility = Visibility.Hidden;
+            SomDisplayVisibility = Visibility.Hidden;
+            ResultDisplayVisibility = Visibility.Visible;
             try
             {
                 CancelSortingTaskIfNecessary();
@@ -666,8 +726,11 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
-                
-                await SomDisplay.LoadFramesForIds(sortedIds);
+
+                Thread t1 = new Thread( () => loadSomDisplay(sortedIds));
+                t1.Start();
+
+                await QueryResults.LoadFramesForIds(sortedIds);
             }
             catch (Exception e)
             {
@@ -678,7 +741,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 IsBusy = false;
             }
         }
-
+        private async void loadSomDisplay(IEnumerable<int> sortedIds)
+        {
+            IsSomDisplayLoaded = false;
+            await SomDisplay.LoadFramesForIds(sortedIds);
+            IsSomDisplayLoaded = true;
+            
+        }
         private void UpdateTestFramesPositionIfActive(List<int> sortedIds)
         {
             if (!_testControlViewModel.IsActive)

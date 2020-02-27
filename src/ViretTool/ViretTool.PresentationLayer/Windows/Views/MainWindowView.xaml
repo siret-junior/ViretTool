@@ -126,8 +126,9 @@
 
                         <GroupBox Grid.Row="3" Margin="6" Visibility="Visible">
                             <StackPanel>
-                                <RadioButton Content="Linear Search" IsChecked="{Binding Path=ResultDisplayVisibility ,  Mode=TwoWay}"/>
-                                <RadioButton Content="SOM Search" IsChecked="{Binding Path=SomDisplayVisibility,  Mode=TwoWay}"/>
+                                <RadioButton Content="Linear Search" IsChecked="{Binding Path=IsResultDisplayVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <RadioButton Content="SOM Search" IsChecked="{Binding Path=IsSomDisplayVisible,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                             IsEnabled="{Binding Path=IsSomDisplayLoaded, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             </StackPanel>
                         </GroupBox>
 
