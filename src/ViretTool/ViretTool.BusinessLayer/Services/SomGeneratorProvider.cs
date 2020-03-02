@@ -17,23 +17,18 @@ namespace ViretTool.BusinessLayer.Services
             
         }
 
-        // Dimensions of SOM layers
-        private const int xDim = 10;
-        private const int yDim = 10;
-
-
         public override int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             LayersIds.Clear();
             ColorSimilarity.Clear();
             // Convert int[] => long[]
             IEnumerable<long> inputFrameIds_long = inputFrameIds.Select(x => (long)x);
-            int [] somResult = SOMWrapper.CreateSOMRepresentants(inputFrameIds_long.ToArray(), null, xDim, xDim, 15, deepFeaturesProvider);
+            int [] somResult = SOMWrapper.CreateSOMRepresentants(inputFrameIds_long.ToArray(), null, columnCount, rowCount, 15, deepFeaturesProvider);
 
             // maybe move ReshapeTo2DArray function somewhere else, create some kind of Coverter/Helper static class (ask Gregor where)
 
             // add more layers - discuss with Gregor
-            int [][] reshapeTo2D_SOMresult = ZoomDisplayReader.ReshapeTo2DArray<int>(somResult, yDim, xDim);
+            int [][] reshapeTo2D_SOMresult = ZoomDisplayReader.ReshapeTo2DArray<int>(somResult, rowCount, columnCount);
             LayersIds.Add(reshapeTo2D_SOMresult);
 
             // Compute color similarities

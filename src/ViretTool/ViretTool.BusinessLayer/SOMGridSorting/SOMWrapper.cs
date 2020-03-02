@@ -65,6 +65,7 @@ namespace ViretTool.BusinessLayer.SOMGridSorting
             }
         }
 
+        // TODO: is xDim rowCount or columnCount? That's why we use rows/cols instead of X/Y.
         public static int[] CreateSOMRepresentants(long[] list, double[] probablities, long xdim, long ydim, long rlen, IDescriptorProvider<float[]> descriptorProvider)
         {
             if (probablities == null)
