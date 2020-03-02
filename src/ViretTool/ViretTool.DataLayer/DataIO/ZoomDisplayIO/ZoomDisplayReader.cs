@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.IO;
 using System.Globalization;
+using ViretTool.Core;
 
 namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
 {
@@ -70,43 +71,11 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
                 int[] layerItems = lines[i + 2].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
                 float[] layerSimilarities = lines[i + 3].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(x => float.Parse(x, CultureInfo.InvariantCulture)).ToArray();
 
-                resultLayers.Add(ReshapeTo2DArray(layerItems, layerHeight, layerWidth));
-                colorSimilarity.Add(ReshapeTo2DArray(layerSimilarities, layerHeight, layerWidth * 2));
+                resultLayers.Add(layerItems.As2DArray(layerWidth, layerHeight));
+                colorSimilarity.Add(layerSimilarities.As2DArray(layerWidth * 2, layerHeight));
             }
 
             return (resultLayers, colorSimilarity);
-        }
-
-
-        /// <summary>
-        /// Transforms 1D array to 2D array depending on height/width parameters
-        /// </summary>
-        /// <param name="input1DArray"></param>
-        /// <param name="outputHeight"></param>
-        /// <param name="outputWidth"></param>
-        /// <returns></returns>
-        public static T[][] ReshapeTo2DArray<T>(T[] input1DArray, int outputHeight, int outputWidth)
-        {
-            // argument check
-            if (outputWidth * outputHeight != input1DArray.Length)
-            {
-                throw new InvalidDataException(
-                    $"Input array length = {input1DArray.Length}" +
-                    $" does not match output 2D layer dimensions {outputWidth}x{outputHeight} = {outputWidth * outputHeight}.");
-            }
-
-            // reshaping
-            T[][] output2DArray = new T [outputHeight][];
-            for (int iCol = 0; iCol < outputHeight; iCol++)
-            {
-                T[] row = new T[outputWidth];
-                for (int iRow = 0; iRow < outputWidth; iRow++)
-                {
-                    row[iRow] = input1DArray[iCol * outputWidth + iRow];
-                }
-                output2DArray[iCol] = row;
-            }
-            return output2DArray;
         }
 
     }

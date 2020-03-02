@@ -7,40 +7,44 @@ using System.Threading.Tasks;
 using ViretTool.BusinessLayer.SOMGridSorting;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.DataLayer.DataIO.ZoomDisplayIO;
+using ViretTool.Core;
 
 namespace ViretTool.BusinessLayer.Services
 {
     public class SomGeneratorProvider : ZoomDisplayProvider
     {
-        public SomGeneratorProvider(IDatasetParameters datasetParameters, string datasetDirectory) : base(datasetParameters, datasetDirectory)
+        public SomGeneratorProvider(IDatasetParameters datasetParameters, string datasetDirectory) 
+            : base(datasetParameters, datasetDirectory)
         {
-            
+            // TODO: set SOM initialization here whenever dataset is loaded (using datasetServicesManager.DatasetOpened event).
+            // TODO: access IDescriptorProvider<float[]> through passed datasetServicesManager
         }
 
         public override int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             LayersIds.Clear();
             ColorSimilarity.Clear();
+
             // Convert int[] => long[]
-            IEnumerable<long> inputFrameIds_long = inputFrameIds.Select(x => (long)x);
-            int [] somResult = SOMWrapper.CreateSOMRepresentants(inputFrameIds_long.ToArray(), null, columnCount, rowCount, 15, deepFeaturesProvider);
+            long[] inputFrameIdsLong = inputFrameIds.Select(x => (long)x).ToArray();
+            int [] somResult = SOMWrapper.CreateSOMRepresentants(inputFrameIdsLong, null, columnCount, rowCount, 15, deepFeaturesProvider);
 
-            // maybe move ReshapeTo2DArray function somewhere else, create some kind of Coverter/Helper static class (ask Gregor where)
-
-            // add more layers - discuss with Gregor
-            int [][] reshapeTo2D_SOMresult = ZoomDisplayReader.ReshapeTo2DArray<int>(somResult, rowCount, columnCount);
-            LayersIds.Add(reshapeTo2D_SOMresult);
+            // TODO: add more layers - discuss with Gregor
+            int[][] somResult2D = somResult.As2DArray(columnCount, rowCount);
+            LayersIds.Add(somResult2D);
 
             // Compute color similarities
-            float [][] colorSimilarities = calculateBorderColorSimilarities(reshapeTo2D_SOMresult, deepFeaturesProvider);
+            float [][] colorSimilarities = CalculateBorderColorSimilarities(somResult2D, deepFeaturesProvider);
             ColorSimilarity.Add(colorSimilarities);
 
             return GetInitialLayer(rowCount, columnCount);
         }
-        // PROBLEM in GetColorSimilarity - Search is conducted using FrameID -> problem with repeating frameIDs
+
+
+        // TODO: PROBLEM in GetColorSimilarity - Search is conducted using FrameID -> problem with repeating frameIDs
         // Need to be solved
         // next problem are multiple layer when there is none (we generated from dll, but new layer still appears in sidebar of frame-view)
-        private float[][] calculateBorderColorSimilarities(int [][] layer, IDescriptorProvider<float[]> deepFeaturesProvider)
+        private float[][] CalculateBorderColorSimilarities(int [][] layer, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             float[][] deepFeatures = deepFeaturesProvider.Descriptors;
             float[][] result = new float[layer.Length][];

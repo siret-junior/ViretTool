@@ -108,5 +108,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ViretTool.Core\ViretTool.Core.csproj">
+      <Project>{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}</Project>
+      <Name>ViretTool.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
