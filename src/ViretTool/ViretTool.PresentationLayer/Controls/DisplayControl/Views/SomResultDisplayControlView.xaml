@@ -67,26 +67,7 @@
                                          ShowZoomInto="{Binding RelativeSource={RelativeSource FindAncestor, 
                     AncestorType={x:Type UserControl}}, Path=DataContext.ShowZoomIntoButton, UpdateSourceTrigger=PropertyChanged}">
 
-                        <!-- Display style selector -->
-                        <common:FrameControl.Style>
-                            <Style TargetType="{x:Type common:FrameControl}">
-                                <Style.Triggers>
-                                    <DataTrigger Value="True">
-                                        <DataTrigger.Binding>
-                                            <MultiBinding Converter="{StaticResource BooleanAndToBooleanConverter}">
-                                                <Binding Path="DataContext.IsLargeFramesChecked" ElementName="ImagesDisplay" />
-                                                <Binding Path="DataContext.IsInitialDisplayShown" ElementName="ImagesDisplay" Converter="{StaticResource InvertedBooleanConverter}" />
-                                            </MultiBinding>
-                                        </DataTrigger.Binding>
-                                        <Setter Property="LayoutTransform">
-                                            <Setter.Value>
-                                                <ScaleTransform ScaleX="{Binding DataContext.LargeFramesMultiplier, ElementName= ImagesDisplay}" ScaleY="{Binding DataContext.LargeFramesMultiplier, ElementName= ImagesDisplay}" />
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </common:FrameControl.Style>
+                        
                     </common:FrameControl>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
