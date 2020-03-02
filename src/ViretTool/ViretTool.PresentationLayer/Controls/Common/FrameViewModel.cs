@@ -215,6 +215,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
+        // TODO: check usage
         public bool IsLastInVideo
         {
             get => _isLastInVideo;

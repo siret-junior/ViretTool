@@ -14,11 +14,25 @@ using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
+    /// <summary>
+    /// Base class for grid based display.
+    /// 
+    /// * The display viewport of size (DisplayWidth x DisplayHeight)
+    ///   shows a subset VisibleFrames of size (ImageWidth x ImageHeight) from a superset of _loadedFrames
+    ///   in a (ColumnCount x RowCount) grid.
+    /// * Provides modal overlay for situations when background computation IsBusy.
+    /// * Logs user interactions.
+    /// * Provides an initial display that is loaded initially or additionally on an external request.
+    /// * Holds a 1D list of loaded frames that needs to be displayed in 2D grid correctly
+    ///   based on ColumnCount and RowCount. 
+    /// * Updates correctly on changes of display viewport size.
+    /// </summary>
     public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         protected readonly IDatasetServicesManager _datasetServicesManager;
         protected readonly IInteractionLogger _interactionLogger;
         protected readonly ILogger _logger;
+        
         protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
         protected int _defaultImageHeight;
         protected int _defaultImageWidth;
@@ -31,43 +45,30 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         private bool _isInitialDisplayShown;
 
 
-        protected DisplayControlViewModelBase(ILogger logger, IDatasetServicesManager datasetServicesManager, IInteractionLogger interactionLogger)
+        protected DisplayControlViewModelBase(
+            ILogger logger, 
+            IDatasetServicesManager datasetServicesManager, 
+            IInteractionLogger interactionLogger)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
             _interactionLogger = interactionLogger;
-            _datasetServicesManager.DatasetOpened += (_, services) =>
-                                                     {
-                                                         ImageHeight = _defaultImageHeight = services.DatasetParameters.DefaultFrameHeight;
-                                                         ImageWidth = _defaultImageWidth = services.DatasetParameters.DefaultFrameWidth;
-                                                     };
+            _datasetServicesManager.DatasetOpened += 
+                (_, services) =>
+                {
+                    ImageHeight = _defaultImageHeight = services.DatasetParameters.DefaultFrameHeight;
+                    ImageWidth = _defaultImageWidth = services.DatasetParameters.DefaultFrameWidth;
+                };
         }
 
-        public int DisplayHeight { get; 
-            set; }
+
+        #region --[ Properties ]--
+
+        public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
+
+        public int DisplayHeight { get; set; }
 
         public int DisplayWidth { get; set; }
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                if (_isBusy == value)
-                {
-                    return;
-                }
-
-                _isBusy = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public Action DisplaySizeChangedHandler => () =>
-                                                   {
-                                                       ResetGrid?.Invoke();
-                                                       UpdateVisibleFrames();
-                                                   };
 
         public int ImageHeight
         {
@@ -129,6 +130,21 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                if (_isBusy == value)
+                {
+                    return;
+                }
+
+                _isBusy = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public bool IsInitialDisplayShown
         {
             get => _isInitialDisplayShown;
@@ -144,64 +160,41 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
+        #endregion --[ Properties ]--
+
+
+        #region --[ Actions ]--
+
         public Action<int> ScrollToRow { protected get; set; }
 
         public Action ResetGrid { protected get; set; }
 
-        public BindableCollection<FrameViewModel> VisibleFrames { get; } = new BindableCollection<FrameViewModel>();
-        public event EventHandler<FramesToQuery> FramesForQueryChanged;
-        public event EventHandler<FrameViewModel> FrameForVideoChanged;
-        public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;
-        public event EventHandler<FrameViewModel> FrameForSortChanged;
-        public event EventHandler<FrameViewModel> FrameForGpsChanged;
-        public event EventHandler<FrameViewModel> FrameForZoomIntoChanged;
-        public event EventHandler<FrameViewModel> FrameForZoomOutChanged;
-        public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;
-
-        public int[] GetTopFrameIds(int count) => _loadedFrames.Select(GetFrameId).Where(id => id.HasValue).Take(count).Cast<int>().ToArray();
-
-        public virtual async Task LoadVideoForFrame(FrameViewModel frameViewModel)
-        {
-            int videoId = frameViewModel.VideoId;
-            _loadedFrames = await Task.Run(
-                                () => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumbersForVideo(videoId)
-                                                             .Select(frameId => ConvertThumbnailToViewModel(videoId, frameId))
-                                                             .ToList());
-            SelectFrame(frameViewModel);
-            IsInitialDisplayShown = false;
-            UpdateVisibleFrames();
-        }
-
-        public virtual async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
-        {
-            // TODO: .Where(f => f != null) should not happen! Investigate why is this used here and possibly remove it!
-            _loadedFrames = await Task.Run(() => sortedFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-            IsInitialDisplayShown = false;
-            UpdateVisibleFrames();
-        }
-
-        public virtual async Task LoadInitialDisplay()
-        {
-            IsInitialDisplayShown = false;
-            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-            if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed)
+        // TODO: check usage
+        protected Action DisplaySizeChangedHandler =>
+            () =>
             {
-                IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
-                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-                AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
-
-                RowCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.RowCount;
-                ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
-                ScrollToRow(0);
-                IsInitialDisplayShown = true;
-            }
-            else
-            {
-                Random random = new Random(); //shuffle initial images randomly
-                _loadedFrames = await Task.Run(() => datasetService.VideoIds.SelectMany(LoadAllThumbnails).OrderBy(_ => random.Next()).ToList());
+                ResetGrid?.Invoke();
                 UpdateVisibleFrames();
-            }
-        }
+            };
+
+        #endregion --[ Actions ]--
+
+
+        #region --[ Event handlers ]--
+
+        public event EventHandler<FramesToQuery> FramesForQueryChanged;             // similarity query
+        public event EventHandler<FrameViewModel> FrameForVideoChanged;             // video inspection
+        public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;       // TODO: rename. (video scrolling playback / scrolling sidebar?)
+        public event EventHandler<FrameViewModel> FrameForSortChanged;              // TODO: remove? (unused - used to be noodle map)
+        public event EventHandler<FrameViewModel> FrameForGpsChanged;               // lifelog specific GPS coordinates
+        public event EventHandler<FrameViewModel> FrameForZoomIntoChanged;          // ZoomDisplay zoom in
+        public event EventHandler<FrameViewModel> FrameForZoomOutChanged;           // ZoomDisplay zoom out
+        public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;    // submit collection
+
+        #endregion --[ Event handlers ]--
+
+
+        #region --[ Events ]--
 
         public void OnAddToQueryClicked(FrameViewModel frameViewModel, AddToQueryEventArgs args)
         {
@@ -248,6 +241,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                              .ToList());
         }
 
+        // TODO: remove, unused?
         public void OnSortDisplay(FrameViewModel frameViewModel)
         {
             BeforeEventAction();
@@ -282,16 +276,89 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged", detailDescription);
         }
 
+        #endregion --[ Events ]--
+
+
+        #region --[ Public methods ]--
+
+        public int[] GetTopFrameIds(int count) => _loadedFrames
+            .Select(GetFrameId)
+            .Where(id => id.HasValue)
+            .Take(count)
+            .Cast<int>()
+            .ToArray();
+
+        /// <summary>
+        /// Loads all parent video frames of the input frame.
+        /// </summary>
+        /// <param name="frameViewModel">input frame</param>
+        /// <returns>async Task</returns>
+        public virtual async Task LoadVideoForFrame(FrameViewModel frameViewModel)
+        {
+            int videoId = frameViewModel.VideoId;
+            _loadedFrames = await Task.Run(
+                () => _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumbersForVideo(videoId)
+                            .Select(frameId => ConvertThumbnailToViewModel(videoId, frameId))
+                            .ToList());
+            SelectFrame(frameViewModel);
+            IsInitialDisplayShown = false;
+            UpdateVisibleFrames();
+        }
+
+        /// <summary>
+        /// Loads FrameViewModel frame wrappers for the input set if frameIds.
+        /// </summary>
+        /// <param name="sortedFrameIds"></param>
+        /// <returns></returns>
+        public virtual async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
+        {
+            // TODO: .Where(f => f != null) should not happen! Investigate why is this used here and possibly remove it!
+            _loadedFrames = await Task.Run(() => sortedFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+            IsInitialDisplayShown = false;
+            UpdateVisibleFrames();
+        }
+
+        // TODO: move this implementation to PageDisplay, leave an abstract method.
+        public virtual async Task LoadInitialDisplay()
+        {
+            IsInitialDisplayShown = false;
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed)
+            {
+                IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
+                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+                AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
+
+                RowCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.RowCount;
+                ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
+                ScrollToRow(0);
+                IsInitialDisplayShown = true;
+            }
+            else
+            {
+                Random random = new Random(); //shuffle initial images randomly
+                _loadedFrames = await Task.Run(() => datasetService.VideoIds.SelectMany(LoadAllThumbnails).OrderBy(_ => random.Next()).ToList());
+                UpdateVisibleFrames();
+            }
+        }
+
+        #endregion --[ Public methods ]--
+
+
+
         protected virtual void BeforeEventAction()
         {
         }
 
+        // TODO: remove/rename?
         protected virtual void UpdateVisibleFrames()
         {
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
         }
 
-        protected virtual void AddFramesToVisibleItems(BindableCollection<FrameViewModel> collectionToUpdate, IList<FrameViewModel> viewModelsToAdd)
+        protected virtual void AddFramesToVisibleItems(
+            BindableCollection<FrameViewModel> collectionToUpdate, 
+            IList<FrameViewModel> viewModelsToAdd)
         {
             viewModelsToAdd.ForEach(vm => vm.IsVisible = true);
 
@@ -327,6 +394,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             return selectedFrame;
         }
 
+        // TODO: use a pool of FrameViewModels to reduce memory allocation
         protected FrameViewModel ConvertThumbnailToViewModel(int videoId, int frameNumber)
         {
             return new FrameViewModel(videoId, frameNumber, _datasetServicesManager);
@@ -336,12 +404,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             return !_datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId) ? (int?)null : frameId;
         }
-
-        private IEnumerable<FrameViewModel> LoadAllThumbnails(int videoId)
-        {
-            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-            return datasetService.GetFrameNumbersForVideo(videoId).Select(frameNumber => ConvertThumbnailToViewModel(videoId, frameNumber));
-        }
         
         protected FrameViewModel GetFrameViewModelForFrameId(int frameId)
         {
@@ -349,6 +411,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             int videoId = datasetService.GetVideoIdForFrameId(frameId);
             int frameNumber = datasetService.GetFrameNumberForFrameId(frameId);
             return ConvertThumbnailToViewModel(videoId, frameNumber);
+        }
+
+        private IEnumerable<FrameViewModel> LoadAllThumbnails(int videoId)
+        {
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            return datasetService.GetFrameNumbersForVideo(videoId).Select(frameNumber => ConvertThumbnailToViewModel(videoId, frameNumber));
         }
     }
 }
