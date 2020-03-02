@@ -16,8 +16,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class SomResultDisplayControlViewModel : ZoomDisplayControlViewModel
     {
-        private bool _isLargeFramesChecked;
-        private FrameViewModel _gpsFrame;
+        //private FrameViewModel _gpsFrame;
 
         public SomResultDisplayControlViewModel(
             ILogger logger,
@@ -25,24 +24,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IInteractionLogger iterationLogger)
             : base(logger, datasetServicesManager, iterationLogger)
         {
-            
             datasetServicesManager.DatasetOpened += (_, services) =>
             {
                 _zoomDisplayProvider = datasetServicesManager.CurrentDataset.SomGeneratorProvider;
-                LoadInitialDisplay();
             };
         }
-        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
-
-        public override async Task LoadInitialDisplay()
-        {
-            // TODO: load the highest level of SOM
-            await base.LoadInitialDisplay();
-        }
 
         public override async Task LoadFramesForIds(IEnumerable<int> inputFrameIds)
         {
+            // update row and column count before usage
+            RowCount = DisplayHeight / ImageHeight;
+            ColumnCount = DisplayWidth / ImageWidth;
             int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
             if (ids != null)
             {
@@ -62,6 +55,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             UpdateVisibleFrames();
         }
+
+
         protected override void UpdateVisibleFrames()
         {
             // TODO: Populate display frames using _loadedFrames
@@ -74,11 +69,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             // In the example code in LoadFramesForIds we already precomputed frames that are ready to be displayed.
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
-        }
-
-        private void NotifyQuerySettingsChanged()
-        {
-            QuerySettingsChanged.OnNext(Unit.Default);
         }
 
     }

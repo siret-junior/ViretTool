@@ -95,9 +95,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
 
-        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
-
-
         public override async Task LoadInitialDisplay()
         {
             IsInitialDisplayShown = false;
@@ -322,10 +319,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
         }
 
-        private void NotifyQuerySettingsChanged()
-        {
-            QuerySettingsChanged.OnNext(Unit.Default);
-        }
 
     }
 }

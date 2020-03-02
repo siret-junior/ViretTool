@@ -638,8 +638,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
 
                 // TODO: manage all displays in a separate component
-                await QueryResults.LoadInitialDisplay();
                 await ZoomDisplay.LoadInitialDisplay();
+                
 
                 //start async sorting computation
                 _sortingTask = _gridSorter.GetSortedFrameIdsAsync(

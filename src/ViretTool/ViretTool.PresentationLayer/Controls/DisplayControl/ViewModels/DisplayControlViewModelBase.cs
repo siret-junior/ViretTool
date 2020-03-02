@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
@@ -160,6 +162,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
+        public double LargeFramesMultiplier => 1.5;
+
+        public virtual bool IsLargeFramesChecked { get; set; } = false;
+
         #endregion --[ Properties ]--
 
 
@@ -170,7 +176,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public Action ResetGrid { protected get; set; }
 
         // TODO: check usage
-        protected Action DisplaySizeChangedHandler =>
+        public Action DisplaySizeChangedHandler =>
             () =>
             {
                 ResetGrid?.Invoke();
@@ -195,6 +201,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
 
         #region --[ Events ]--
+
+        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
 
         public void OnAddToQueryClicked(FrameViewModel frameViewModel, AddToQueryEventArgs args)
         {
@@ -345,6 +353,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         #endregion --[ Public methods ]--
 
 
+        protected void NotifyQuerySettingsChanged()
+        {
+            QuerySettingsChanged.OnNext(Unit.Default);
+        }
 
         protected virtual void BeforeEventAction()
         {

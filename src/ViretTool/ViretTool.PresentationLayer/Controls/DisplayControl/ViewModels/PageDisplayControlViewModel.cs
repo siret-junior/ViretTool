@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
@@ -105,7 +104,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / ((double)RowCount * ColumnCount)) - 1 : 0;
 
-        public bool IsLargeFramesChecked
+        public override bool IsLargeFramesChecked
         {
             get => _isLargeFramesChecked;
             set
@@ -121,10 +120,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
-
-        public double LargeFramesMultiplier => 1.5;
-
+        
         public void FirstPageButton()
         {
             if (CurrentPageNumber == 0)
@@ -194,7 +190,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         protected override void UpdateVisibleFrames()
-        {
+        {            
+            // TODO: move to a separate method
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
             NotifyOfPropertyChange(nameof(LastPageNumber));
@@ -250,10 +247,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
         }
 
-        private void NotifyQuerySettingsChanged()
-        {
-            QuerySettingsChanged.OnNext(Unit.Default);
-        }
 
         private void OnLargeFramesChanged()
         {

@@ -11,6 +11,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private int _imageHeight;
         private int _imageWidth;
 
+        
+        // TODO: fix FrameViewModel dependencies
+        public double LargeFramesMultiplier => 1.5;
+
         public SubmitControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
             datasetServicesManager.DatasetOpened += (_, services) =>
