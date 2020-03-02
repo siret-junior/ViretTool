@@ -71,8 +71,8 @@ namespace ViretTool.DataLayer.DataIO.ZoomDisplayIO
                 int[] layerItems = lines[i + 2].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
                 float[] layerSimilarities = lines[i + 3].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).Select(x => float.Parse(x, CultureInfo.InvariantCulture)).ToArray();
 
-                resultLayers.Add(layerItems.As2DArray(layerWidth, layerHeight));
-                colorSimilarity.Add(layerSimilarities.As2DArray(layerWidth * 2, layerHeight));
+                resultLayers.Add(layerItems.To2DArray(layerWidth, layerHeight));
+                colorSimilarity.Add(layerSimilarities.To2DArray(layerWidth * 2, layerHeight));
             }
 
             return (resultLayers, colorSimilarity);

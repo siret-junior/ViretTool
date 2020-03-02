@@ -10,7 +10,7 @@ namespace ViretTool.BusinessLayer.Services
         /// </summary>
         /// <returns></returns>
         int[] GetInitialLayer(int RowCount, int ColumnCount);
-        int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider);
+        int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider);
         /// <summary>
         /// Calculate number of layers
         /// </summary>

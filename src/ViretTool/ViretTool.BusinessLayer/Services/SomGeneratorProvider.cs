@@ -20,17 +20,17 @@ namespace ViretTool.BusinessLayer.Services
             // TODO: access IDescriptorProvider<float[]> through passed datasetServicesManager
         }
 
-        public override int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
+        public override int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             LayersIds.Clear();
             ColorSimilarity.Clear();
 
             // Convert int[] => long[]
-            long[] inputFrameIdsLong = inputFrameIds.Select(x => (long)x).ToArray();
+            long[] inputFrameIdsLong = inputFrameIds.ToLongArray();
             int [] somResult = SOMWrapper.CreateSOMRepresentants(inputFrameIdsLong, null, columnCount, rowCount, 15, deepFeaturesProvider);
 
             // TODO: add more layers - discuss with Gregor
-            int[][] somResult2D = somResult.As2DArray(columnCount, rowCount);
+            int[][] somResult2D = somResult.To2DArray(columnCount, rowCount);
             LayersIds.Add(somResult2D);
 
             // Compute color similarities

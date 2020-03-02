@@ -31,7 +31,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
 
-        public override async Task LoadFramesForIds(IEnumerable<int> inputFrameIds)
+        public override async Task LoadFramesForIds(IList<int> inputFrameIds)
         {
             // update row and column count before usage
             RowCount = DisplayHeight / ImageHeight;

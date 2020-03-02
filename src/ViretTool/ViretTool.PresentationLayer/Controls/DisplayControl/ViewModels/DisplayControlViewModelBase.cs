@@ -318,7 +318,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         /// </summary>
         /// <param name="sortedFrameIds"></param>
         /// <returns></returns>
-        public virtual async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
+        public virtual async Task LoadFramesForIds(IList<int> sortedFrameIds)
         {
             // TODO: .Where(f => f != null) should not happen! Investigate why is this used here and possibly remove it!
             _loadedFrames = await Task.Run(() => sortedFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());

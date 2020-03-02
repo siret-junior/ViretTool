@@ -177,7 +177,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             NotifyOfPropertyChange(nameof(LastPageNumber));
         }
 
-        public override async Task LoadFramesForIds(IEnumerable<int> sortedFrameIds)
+        public override async Task LoadFramesForIds(IList<int> sortedFrameIds)
         {
             CurrentPageNumber = 0;
             await base.LoadFramesForIds(sortedFrameIds);

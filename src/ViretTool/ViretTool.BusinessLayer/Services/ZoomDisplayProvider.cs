@@ -58,7 +58,7 @@ namespace ViretTool.BusinessLayer.Services
         {
             return LayersIds.Count - 1;
         }
-        public virtual int[] GetInitialLayer(int rowCount, int columnCount, IEnumerable<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
+        public virtual int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             return GetInitialLayer(rowCount, columnCount);
         }

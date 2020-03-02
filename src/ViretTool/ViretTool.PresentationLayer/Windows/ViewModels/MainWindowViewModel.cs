@@ -729,7 +729,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
 
-                Thread t1 = new Thread( () => loadSomDisplay(sortedIds));
+                Thread t1 = new Thread( () => LoadSomDisplay(sortedIds));
                 t1.Start();
 
                 await QueryResults.LoadFramesForIds(sortedIds);
@@ -743,7 +743,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 IsBusy = false;
             }
         }
-        private async void loadSomDisplay(IEnumerable<int> sortedIds)
+        private async void LoadSomDisplay(IList<int> sortedIds)
         {
             IsSomDisplayLoaded = false;
             await SomDisplay.LoadFramesForIds(sortedIds);
