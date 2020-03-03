@@ -190,7 +190,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 
             if (showAll || nameEnum.Any() || descriptionEnum.Any())
             {
-                // highlight the search phrase in the text and calculate relevance of the search
+                // highlight the search phrase in the text and compute relevance of the search
                 var nameRel = HighlightAndRankPhrase(nameEnum, item.Name);
                 var descriptionRel = HighlightAndRankPhrase(descriptionEnum, item.Description);
 
@@ -266,7 +266,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         }
 
         /// <summary>
-        /// Calculates relevance of the search phrase in the text. Encapsulates search phrases in the text by <see cref="SuggestionResultItem.HIGHLIGHT_START_TAG"/> and <see cref="SuggestionResultItem.HIGHLIGHT_END_TAG"/>.
+        /// Computes relevance of the search phrase in the text. Encapsulates search phrases in the text by <see cref="SuggestionResultItem.HIGHLIGHT_START_TAG"/> and <see cref="SuggestionResultItem.HIGHLIGHT_END_TAG"/>.
         /// </summary>
         /// <param name="hits">An enunerable of results from the Aho-Corasick search</param>
         /// <param name="text">A string the highlighting is done on</param>

@@ -23,28 +23,82 @@ namespace ViretTool.BusinessLayer.Services
         public override int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             LayersIds.Clear();
-            ColorSimilarity.Clear();
+            BorderSimilarities.Clear();
 
-            // Convert int[] => long[]
+            // compute base layer
             long[] inputFrameIdsLong = inputFrameIds.ToLongArray();
-            int [] somResult = SOMWrapper.CreateSOMRepresentants(inputFrameIdsLong, null, columnCount, rowCount, 15, deepFeaturesProvider);
+            int [] somResult1D = SOMWrapper.CreateSOMRepresentants(inputFrameIdsLong, null, columnCount, rowCount, 15, deepFeaturesProvider);
+            int[][] somBaseLayer = somResult1D.To2DArray(columnCount, rowCount);
 
-            // TODO: add more layers - discuss with Gregor
-            int[][] somResult2D = somResult.To2DArray(columnCount, rowCount);
-            LayersIds.Add(somResult2D);
+            // TODO: code prepared for a multilayer solution
+            //// compute the additional layer sizes based on the base layer dimensions
+            //int baseLayerWidth = columnCount;   // TODO: rename/reassign
+            //int baseLayerHeight = rowCount;
+            //List<(int layerWidth, int layerHeight)> layerSizes = ComputeAdditionalLayerSizesBottomUp(baseLayerWidth, baseLayerHeight);
 
-            // Compute color similarities
-            float [][] colorSimilarities = CalculateBorderColorSimilarities(somResult2D, deepFeaturesProvider);
-            ColorSimilarity.Add(colorSimilarities);
+            //// compute additional layers from bottom up to fulfill predicate
+            //// that each layer above is a subset of the layer below
+            //Stack<int[][]> layerStack = new Stack<int[][]>();
+            //Stack<float[][]> borderStack = new Stack<float[][]>();
+            //foreach ((int layerWidth, int layerHeight) in layerSizes)
+            //{
+            //    int[][] layer = SubsampleLayer(somBaseLayer, layerWidth, layerHeight);
+            //    layerStack.Push(layer);
+            //    borderStack.Push(ComputeBorderSimilarities(layer, deepFeaturesProvider));
+            //}
 
+            //// store layers
+            //while (layerStack.Count > 0)
+            //{
+            //    LayersIds.Add(layerStack.Pop());
+            //    BorderSimilarities.Add(borderStack.Pop());
+            //}
+
+            // TODO: temporary using just the base layer
+            LayersIds.Add(somBaseLayer);
+
+            // Compute border similarities
+            float [][] borderSimilarities = ComputeBorderSimilarities(somBaseLayer, deepFeaturesProvider);
+            BorderSimilarities.Add(borderSimilarities);
+
+            // TODO: consider using a single structure for both: frameIds and also its borders
             return GetInitialLayer(rowCount, columnCount);
+        }
+
+        private List<(int layerWidth, int layerHeight)> ComputeAdditionalLayerSizesBottomUp(int baseLayerWidth, int baseLayerHeight)
+        {
+            // TODO: temporary solution
+            List<(int layerWidth, int layerHeight)> result = new List<(int layerWidth, int layerHeight)>();
+            
+            // and a single (30x30) mid layer if there is more than 1000 items
+            if (baseLayerWidth * baseLayerHeight > 1000)
+            {
+                result.Add((30, 30));
+            }
+            
+            // add 10x10 top layer (TODO: dynamic size based on user display)
+            result.Add((10, 10));
+            
+            return result;
+        }
+
+        private int[][] SubsampleLayer(int[][] somBaseLayer, int layerWidth, int layerHeight)
+        {
+            if (layerWidth >= somBaseLayer[0].Length || layerHeight >= somBaseLayer.Length)
+            {
+                throw new ArgumentOutOfRangeException($"Trying to supersample in a subsampling method " 
+                    + $"([{somBaseLayer[0].Length}, {somBaseLayer.Length}] layer, [{layerWidth}, {layerHeight}] subsampling).");
+            }
+
+            // TODO: subsample 
+            throw new NotImplementedException();
         }
 
 
         // TODO: PROBLEM in GetColorSimilarity - Search is conducted using FrameID -> problem with repeating frameIDs
         // Need to be solved
         // next problem are multiple layer when there is none (we generated from dll, but new layer still appears in sidebar of frame-view)
-        private float[][] CalculateBorderColorSimilarities(int [][] layer, IDescriptorProvider<float[]> deepFeaturesProvider)
+        private float[][] ComputeBorderSimilarities(int [][] layer, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             float[][] deepFeatures = deepFeaturesProvider.Descriptors;
             float[][] result = new float[layer.Length][];
@@ -62,7 +116,7 @@ namespace ViretTool.BusinessLayer.Services
                     float[] rightDeepFeature = deepFeatures[layer[iRow][rightBorderIndex]];
                     float[] currentDeepFeature = deepFeatures[layer[iRow][iCol]];
 
-                    // calculate the similarity using cosine similarity
+                    // compute the similarity using cosine similarity
                     float bottomSimilarity = CosineSimilarityHelper.CosineSimilarityNormalized01(bottomDeepFeature, currentDeepFeature);
                     float rightSimilarity = CosineSimilarityHelper.CosineSimilarityNormalized01(rightDeepFeature, currentDeepFeature);
 

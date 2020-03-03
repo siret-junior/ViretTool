@@ -17,7 +17,7 @@ namespace ViretTool.BusinessLayer.Services
         /// Each element of List is a 2D array, each array represents SOM layer
         /// </summary>
         public List<int[][]> LayersIds;
-        public List<float[][]> ColorSimilarity;
+        public List<float[][]> BorderSimilarities;
 
         private int centerPositionInLayerCol;
         private int centerPositionInLayerRow;
@@ -27,18 +27,18 @@ namespace ViretTool.BusinessLayer.Services
             ZoomDisplayReader zoomDisplayReader = new ZoomDisplayReader(filePath);
 
             // Read the SOM map from file
-            (LayersIds, ColorSimilarity) = zoomDisplayReader.ReadLayersIdsFromFile();
+            (LayersIds, BorderSimilarities) = zoomDisplayReader.ReadLayersIdsFromFile();
         }
 
-        public (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameID)
+        public (float BottomBorder, float RightBorder) GetBorderSimilarity(int layerIndex, int frameID)
         {
-            float[][] layerSimilarities = ColorSimilarity[layerIndex];
+            float[][] layerSimilarities = BorderSimilarities[layerIndex];
             (int Col, int Row) = GetArrayItemPosition(frameID, LayersIds[layerIndex]);
             return (layerSimilarities[Row][Col * 2], layerSimilarities[Row][Col * 2 + 1]);
         }
-        public float[] GetColorSimilarity(int layerIndex, int rowCount, int columnCount)
+        public float[] GetBorderSimilarities(int layerIndex, int rowCount, int columnCount)
         {
-            float[][] layer = ColorSimilarity[layerIndex];
+            float[][] layer = BorderSimilarities[layerIndex];
             int layerHeight = layer.Length;
             int layerWidth = layer[0].Length;
 
@@ -101,7 +101,7 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     centerPositionInLayerCol = LayersIds[layerIndex][0].Length - 1;
                 }
-                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+                return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
             return null;
         }
@@ -113,7 +113,7 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     centerPositionInLayerCol = 0;
                 }
-                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+                return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
             return null;
         }
@@ -125,7 +125,7 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     centerPositionInLayerRow = LayersIds[layerIndex].Length - 1;
                 }
-                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+                return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
             return null;
         }
@@ -137,11 +137,11 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     centerPositionInLayerRow = 0;
                 }
-                return calculateSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
+                return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
             return null;
         }
-        private int[] calculateSectorAfterMoving(int[][] layer, int rowCount, int columnCount)
+        private int[] ComputeSectorAfterMoving(int[][] layer, int rowCount, int columnCount)
         {
             if (layer.Length != 0)
             {

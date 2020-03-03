@@ -323,7 +323,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
         /// <summary>
-        /// Calculate the extent of the view based on the available size
+        /// Computes the extent of the view based on the available size
         /// </summary>
         /// <param name="availableSize"></param>
         /// <returns></returns>

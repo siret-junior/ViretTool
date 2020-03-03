@@ -71,7 +71,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             LifelogFilterViewModel lifelogFilterViewModel,
             TranscriptFilterViewModel transcriptFilterViewModel,
             IDatasetServicesManager datasetServicesManager,
-            IGridSorter gridSorter,
+            IGridSorter gridSorter,                                 // TODO: remove, unused
             ISubmissionService submissionService,
             ITaskLogger taskLogger,
             IResultLogger resultLogger,
@@ -298,14 +298,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     return;
                 }
                 _isResultDisplayVisible = value;
-                if (value)
-                {
-                    ResultDisplayVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    ResultDisplayVisibility = Visibility.Hidden;
-                }
+                ResultDisplayVisibility = value ? Visibility.Visible : Visibility.Hidden;
                 NotifyOfPropertyChange();
             }
         }
@@ -320,14 +313,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     return;
                 }
                 _isSomDisplayVisible = value;
-                if (value)
-                {
-                    SomDisplayVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    SomDisplayVisibility = Visibility.Hidden;
-                }
+                SomDisplayVisibility = value ? Visibility.Visible : Visibility.Hidden;
                 NotifyOfPropertyChange();
             }
         }
@@ -501,6 +487,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        // TODO: move keypress control to a separate component.
         public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -520,6 +507,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if(SomDisplayVisibility == Visibility.Visible)
                     {
+                        // TODO: log all user interactions!
                         SomDisplay.KeyRightPressed();
                     }
                 }
@@ -533,6 +521,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if (SomDisplayVisibility == Visibility.Visible)
                     {
+                        // TODO: log all user interactions!
                         SomDisplay.KeyLeftPressed();
                     }
                 }
@@ -546,6 +535,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if (SomDisplayVisibility == Visibility.Visible)
                     {
+                        // TODO: log all user interactions!
                         SomDisplay.KeyUpPressed();
                     }
                 }
@@ -559,6 +549,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if (SomDisplayVisibility == Visibility.Visible)
                     {
+                        // TODO: log all user interactions!
                         SomDisplay.KeyDownPressed();
                     }
                 }
@@ -567,7 +558,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         public async void OnDrop(DragEventArgs e)
         {
-            //maybe throttle? sometimes it drops 2x
+            // TODO: maybe throttle? sometimes it drops 2x
             IsBusy = true;
             try
             {
@@ -606,13 +597,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             try
             {
                 OpenFileDialog folderBrowserDialog = new OpenFileDialog
-                                                     {
-                                                         ValidateNames = false,
-                                                         CheckFileExists = false,
-                                                         CheckPathExists = true,
-                                                         DereferenceLinks = false,
-                                                         FileName = Resources.Properties.Resources.SelectDirectoryText
-                                                     };
+                {
+                    ValidateNames = false,
+                    CheckFileExists = false,
+                    CheckPathExists = true,
+                    DereferenceLinks = false,
+                    FileName = Resources.Properties.Resources.SelectDirectoryText
+                };
                 if (folderBrowserDialog.ShowDialog() == true)
                 {
                     return Path.GetDirectoryName(folderBrowserDialog.FileName);
@@ -728,9 +719,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
-
-                Thread t1 = new Thread( () => LoadSomDisplay(sortedIds));
-                t1.Start();
+                
+                // TODO: consider catching and logging LoadSomDisplay exceptions.
+                _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds), TaskCreationOptions.LongRunning);
+                
 
                 await QueryResults.LoadFramesForIds(sortedIds);
             }
@@ -880,7 +872,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         private async Task OnFrameForZoomIntoChanged(FrameViewModel selectedFrame)
         {
-            // TODO: logging
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
                 $"ZoomIn|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
             SomDisplayVisibility = Visibility.Hidden;
@@ -891,7 +882,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         private async Task OnFrameForZoomOutChanged(FrameViewModel selectedFrame)
         {
-            // TODO: logging
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
                 $"ZoomOut||L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
             ResultDisplayVisibility = Visibility.Hidden;

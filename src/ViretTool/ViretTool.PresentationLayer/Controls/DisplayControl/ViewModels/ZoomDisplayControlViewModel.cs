@@ -18,6 +18,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
     public class ZoomDisplayControlViewModel : DisplayControlViewModelBase
     {
+        private readonly Random _random = new Random();
+
         private FrameViewModel _gpsFrame;
 
         /// <summary>
@@ -121,7 +123,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
-                InitBorders();
+                UpdateBorderColors();
 
             }
             else
@@ -181,26 +183,27 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, _zoomDisplayProvider.ZoomOutOfLayer);
         }
 
-        protected void InitBorders()
+        protected void UpdateBorderColors()
         {
-            // get border values from ZoomDisplayProvider, bottom border value for n-th frame is at (2*n)-th index, right border value for n-th frame is at (2*n + 1)-th index
-            float[] borders = _zoomDisplayProvider.GetColorSimilarity(_currentLayer, RowCount, ColumnCount);
+            // get border values from ZoomDisplayProvider, 
+            // bottom border value for n-th frame is at (2*n)-th index, 
+            // right border value for n-th frame is at (2*n + 1)-th index
+            float[] borderSimilarities = _zoomDisplayProvider.GetBorderSimilarities(_currentLayer, RowCount, ColumnCount);
             for (int iFrame = 0; iFrame < _loadedFrames.Count; iFrame++)
             {
-                (float BottomBorderSimilarity, float RightBorderSimilarity) = (borders[iFrame * 2], borders[(iFrame * 2) + 1]);
+                (float BottomBorderSimilarity, float RightBorderSimilarity) = (borderSimilarities[iFrame * 2], borderSimilarities[(iFrame * 2) + 1]);
 
                 System.Drawing.Color colorSimilar = System.Drawing.Color.Lime;
                 System.Drawing.Color colorDissimilar = System.Drawing.Color.Red;
 
                 // Map the similarity into Color
-                System.Drawing.Color bottomColor = ColorInterpolationHelper.InterpolateColorHSV(colorSimilar, colorDissimilar, 1 - BottomBorderSimilarity, true);
-                System.Drawing.Color rightColor = ColorInterpolationHelper.InterpolateColorHSV(colorSimilar, colorDissimilar, 1 - RightBorderSimilarity, true);
+                System.Drawing.Color bottomColor = ColorInterpolationHelper.InterpolateColorHSV(colorDissimilar, colorSimilar, BottomBorderSimilarity);
+                System.Drawing.Color rightColor = ColorInterpolationHelper.InterpolateColorHSV(colorDissimilar, colorSimilar, RightBorderSimilarity);
 
                 // Convert System.Drawing.Color (used by ColorInterpolationHelper) to System.Windows.Media.Color (used by WPF)
                 FrameViewModel frame = _loadedFrames[iFrame];
                 frame.BottomBorderColor = System.Windows.Media.Color.FromArgb(bottomColor.A, bottomColor.R, bottomColor.G, bottomColor.B);
                 frame.RightBorderColor = System.Windows.Media.Color.FromArgb(rightColor.A, rightColor.R, rightColor.G, rightColor.B);
-
             }
 
             // Make bottom border invisible for the last row
@@ -236,24 +239,20 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
             }
+
             if (ids != null)
             {
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-
-                InitBorders();
-
-                
+                UpdateBorderColors();
             }
             else
             {
                 await RandomGridDisplay();
+                // TODO: shouldn't be border colors updated here?
             }
-            // TODO: disable async loading for consistent loading when scrolling
 
             UpdateVisibleFrames();
-
             IsInitialDisplayShown = false;
-
         }
         private async Task ResizeDisplay()
         {
@@ -264,6 +263,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 int frameNumber = _loadedFrames.First().FrameNumber;
                 int videoId = _loadedFrames.First().VideoId;
                 int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(videoId, frameNumber);
+
                 int[] ids = null;
                 try
                 {
@@ -273,17 +273,16 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 {
                     (ids,ColumnCount,RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
                 }
+
                 if(ids != null)
                 {
                     _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-
-                    InitBorders();
-
-                    // TODO: disable async loading for consistent loading when scrolling
+                    UpdateBorderColors();
                 }
                 else
                 {
                     await RandomGridDisplay();
+                    // TODO: shouldn't be border colors updated here?
                 }
                 UpdateVisibleFrames();
             }
@@ -291,14 +290,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public async Task RandomGridDisplay()
         {
-
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
 
-            Random rnd = new Random((int)DateTime.Now.Ticks);
-            int[] ids = Enumerable.Range(0, RowCount * ColumnCount).Select(_ => rnd.Next(0, _datasetServicesManager.CurrentDataset.DatasetService.FrameCount)).ToArray();
-            _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+            int displayedFrameCount = RowCount * ColumnCount;
+            int datasetFrameCount = _datasetServicesManager.CurrentDataset.DatasetService.FrameCount;
+            IEnumerable<int> randomFrameIds = Enumerable.Range(0, displayedFrameCount).Select(_ => _random.Next(datasetFrameCount));
+            _loadedFrames = await Task.Run(() => randomFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
+            // TODO: shouldn't be border colors updated here?
         }
 
         public new Action DisplaySizeChangedHandler => async () =>
@@ -312,8 +312,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             // Contents of _loadedFrames depend on context. 
             // As an example, it could be entire 1M dataset sorted by relevance from which we select only the top RowCount*ColumnCount items.
-
-            
 
             // In the example code in LoadFramesForIds we already precomputed frames that are ready to be displayed.
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);

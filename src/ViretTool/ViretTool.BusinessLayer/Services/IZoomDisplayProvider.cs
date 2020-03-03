@@ -12,14 +12,14 @@ namespace ViretTool.BusinessLayer.Services
         int[] GetInitialLayer(int RowCount, int ColumnCount);
         int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider);
         /// <summary>
-        /// Calculate number of layers
+        /// Compute number of layers
         /// </summary>
         /// <returns>Returns index of the last layer</returns>
         int GetMaxDepth();
-        (float BottomBorder, float RightBorder) GetColorSimilarity(int layerIndex, int frameIndex);
-        float[] GetColorSimilarity(int layerIndex, int rowCount, int columnCount);
+        (float BottomBorder, float RightBorder) GetBorderSimilarity(int layerIndex, int frameIndex);
+        float[] GetBorderSimilarities(int layerIndex, int rowCount, int columnCount);
         /// <summary>
-        /// Calculates grid from layer. This grid is specified by the most top-left frame of the grid, then by row length and column length
+        /// Computes grid from layer. This grid is specified by the most top-left frame of the grid, then by row length and column length
         /// </summary>
         /// <param name="layerIndex"></param>
         /// <param name="frameId">frameID of the most tope-left frame in grid</param>

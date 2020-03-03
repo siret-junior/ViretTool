@@ -41,7 +41,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
-                InitBorders();
+                UpdateBorderColors();
             }
             else
             {
