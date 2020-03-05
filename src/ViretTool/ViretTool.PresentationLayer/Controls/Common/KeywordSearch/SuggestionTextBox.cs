@@ -42,12 +42,14 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             TextBox_ = (TextBox)Template.FindName(PartTextBox, this);
             TextBox_.Foreground = Brushes.Red;
+        
             Popups_ = new List<SuggestionPopup>();
             Popups_.Add((SuggestionPopup)Template.FindName(PartPopup, this));
 
             TextBox_.TextChanged += TextBox_OnTextChanged;
             TextBox_.PreviewKeyDown += TextBox_OnKeyDown;
             TextBox_.LostFocus += TextBox_OnLostFocus;
+            TextBox_.MouseMove += TextBox_MouseMove;
 
             Popups_[0].OnItemSelected += Popup_OnItemSelected;
             Popups_[0].OnItemExpanded += Popup_OnItemExpanded;
@@ -198,7 +200,14 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             if (!IsKeyboardFocusWithin)
                 Popup_CloseAll();
         }
-
+        private void TextBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            int i = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_),false);
+            MessageBox.Show("Do you want to close this window?",
+                                          "Confirmation",
+                                          MessageBoxButton.YesNo,
+                                          MessageBoxImage.Question);
+        }
         /// <summary>
         /// Cancel any pending search for suggestions and initiate a new one with new value
         /// </summary>

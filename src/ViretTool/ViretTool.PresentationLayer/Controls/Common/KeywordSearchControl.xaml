@@ -95,6 +95,12 @@
         <!--#region Keyword Search -->
         <controls:SuggestionTextBox x:Name="suggestionTextBox"
                                     ItemTemplateSelector="{StaticResource ResourceKey=HypernymSelector}">
+            <controls:SuggestionTextBox.ToolTip>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="c:\Users\vitek\source\repos\ViretTool\src\ViretTool\ViretTool\Untitled.jpg" />
+                    <TextBlock>My tooltip text</TextBlock>
+                </StackPanel>
+            </controls:SuggestionTextBox.ToolTip>
             <controls:SuggestionTextBox.LoadingPlaceholder>
                 <TextBlock Text="Loading..." Margin="5"/>
             </controls:SuggestionTextBox.LoadingPlaceholder>

@@ -23,7 +23,16 @@
 
         <Label Grid.Column="0"
                FontWeight="Bold"
-               Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Path=ModelName}" />
+               Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ModelControl}}, Path=ModelName}" >
+            <Label.ToolTip >
+                <ToolTip Visibility="Visible">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="c:\Users\vitek\source\repos\ViretTool\src\ViretTool\ViretTool\Untitled.jpg" />
+                        <TextBlock>My tooltip text</TextBlock>
+                    </StackPanel>
+                </ToolTip>
+            </Label.ToolTip>    
+        </Label>
 
         <!-- Keyboard actions are not notified (supported) for the slider and checkbox right now -->
         <Slider x:Name="ValueSlider"
