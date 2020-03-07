@@ -27,7 +27,7 @@
             <Label.ToolTip >
                 <ToolTip Visibility="Visible">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="c:\Users\vitek\source\repos\ViretTool\src\ViretTool\ViretTool\Untitled.jpg" />
+                        <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/smile.png" />
                         <TextBlock>My tooltip text</TextBlock>
                     </StackPanel>
                 </ToolTip>
