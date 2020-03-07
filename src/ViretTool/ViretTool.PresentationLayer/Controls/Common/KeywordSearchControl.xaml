@@ -95,10 +95,13 @@
         <!--#region Keyword Search -->
         <controls:SuggestionTextBox x:Name="suggestionTextBox"
                                     ItemTemplateSelector="{StaticResource ResourceKey=HypernymSelector}">
+            <controls:SuggestionTextBox.Resources>
+                <DiscreteObjectKeyFrame x:Key="proxy" Value="{Binding ElementName=suggestionTextBox}"/>
+            </controls:SuggestionTextBox.Resources>
             <controls:SuggestionTextBox.ToolTip>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="c:\Users\vitek\source\repos\ViretTool\src\ViretTool\ViretTool\Untitled.jpg" />
-                    <TextBlock>My tooltip text</TextBlock>
+                    <TextBlock Text="{Binding Value.ToolTipMessage, Source={StaticResource proxy}}"/>
                 </StackPanel>
             </controls:SuggestionTextBox.ToolTip>
             <controls:SuggestionTextBox.LoadingPlaceholder>
