@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.ComponentModel;
+using System.Windows.Media.Imaging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
@@ -98,6 +98,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         public static readonly DependencyProperty MaxNumberOfElementsProperty = DependencyProperty.Register("MaxNumberOfElements", typeof(int), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(50));
         public static readonly DependencyProperty LoadingPlaceholderProperty = DependencyProperty.Register("LoadingPlaceholder", typeof(object), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ToolTipMessageProperty = DependencyProperty.Register("ToolTipMessage", typeof(string), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty CurrentGraphProperty = DependencyProperty.Register("CurrentGraph", typeof(BitmapImage), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
 
         public string AnnotationSource {
             get { return (string)GetValue(AnnotationSourceProperty); }
@@ -206,33 +207,68 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             if (!IsKeyboardFocusWithin)
                 Popup_CloseAll();
         }
-        /// <summary>
-        /// Indicates, over which keyword is user actually hovering, -1 if no query is loaded
-        /// </summary>
-        private bool _areGraphsLoaded = false;
+
+
         public string ToolTipMessage
         {
             get { return (string)GetValue(ToolTipMessageProperty); }
             set { SetValue(ToolTipMessageProperty, value); }
         }
-        private int keywordNumber = -1;
+        public BitmapImage CurrentGraph
+        {
+            get { return (BitmapImage)GetValue(CurrentGraphProperty); }
+            set { SetValue(CurrentGraphProperty, value); }
+        }
+
         private void LoadGraphs()
         {
-             
+            keywordGraphDictionary.Clear();
+            areGraphsLoaded = true;
+
+
+            // TODO: Load real graphs!
+
+            string[] keywords = TextBox_.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < keywords.Length; i++)
+            {
+                BitmapImage bi = new BitmapImage(new Uri(@"pack://application:,,,/ViretTool.Resources;component/Images/smile.png", UriKind.Absolute));
+                
+                if (!keywordGraphDictionary.ContainsKey(keywords[i]))
+                {
+                    keywordGraphDictionary.Add(keywords[i], bi);
+                }
+            }
         }
         private void ClearGraphs()
         {
+            areGraphsLoaded = false;
 
-        }
+            keywordGraphDictionary.Clear();
+
+            _textBoxWordStartIndex = -1;
+            _textBoxWordEndIndex = -1;
+
+            ToolTipMessage = "";
+            CurrentGraph = null;
+    }
         
 
         private int _textBoxWordStartIndex = -1;
         private int _textBoxWordEndIndex = -1;
         private object _textBoxTooltipLock = new object();
         private volatile bool _isTooltipLocked = false;
+        private bool areGraphsLoaded = false;
+
+        // TODO: Discuss with Gregor, if Dictionary provides sufficient performance
+        Dictionary<string, BitmapImage> keywordGraphDictionary = new Dictionary<string, BitmapImage>();
 
         private void TextBox_MouseMove(object sender, MouseEventArgs e)
         {
+            if(!areGraphsLoaded)
+            {
+                return;
+            }
             if (!_isTooltipLocked)  // bool access is threadsafe
             {
                 lock (_textBoxTooltipLock)
@@ -243,9 +279,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                         // another thread already computing the tooltip, abort
                         return;
                     }
-
-                    // TODO: why do we need capturing mouse?
-                    TextBox_.CaptureMouse();
 
                     // compute word boundaries
                     int hoveredCharIndex = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true);
@@ -263,12 +296,27 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                     // check whether there is any word
                     if (StartIndex == EndIndex || StartIndex == -1 || EndIndex == -1)
                     {
+                        CurrentGraph = null;
                         ToolTipMessage = "";
                         return;
                     }
 
                     // compute output string
-                    ToolTipMessage = $"{TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1)} ({StartIndex}, {EndIndex})";
+                    string outputString = TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1);
+                    ToolTipMessage = $"{outputString} ({StartIndex}, {EndIndex})";
+
+                    // TryGetValue used, what if 
+                    if(keywordGraphDictionary.TryGetValue(outputString, out BitmapImage output))
+                    {
+                        CurrentGraph = keywordGraphDictionary[outputString];
+                    }
+                    // User changed the keywords or any other exception ocurred
+                    else
+                    {
+                        CurrentGraph = null;
+                        ToolTipMessage = "";
+                        return;
+                    }
                 }
             }
         }
@@ -309,15 +357,12 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         /// Cancel any pending search for suggestions and initiate a new one with new value
         /// </summary>
         private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e) {
+            
             Popup_CloseAll();
 
             if (TextBox_.Text.Length != 0) {
                 Popup_Open();
             }
-        }
-        private void LoadQueryQualityVisualisation()
-        {
-
         }
         /// <summary>
         /// Manage navigation in suggestions popup and run search if pressed enter
@@ -326,9 +371,10 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             if (!Popups_[0].IsPopupOpen) {
                 if (e.Key == Key.Enter)
                 {
+                    
                     QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
-                    LoadQueryQualityVisualisation();
                     LoadGraphs();
+
                     e.Handled = true;
                 }
                 else if (e.Key == Key.Back && TextBox_.Text == string.Empty) {
@@ -340,6 +386,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                             Query_.RemoveAt(Query_.Count - 1);
                         }
                         ClearGraphs();
+
                         e.Handled = true;
                         //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
                     }
@@ -384,6 +431,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
+            LoadGraphs();
 
             e.Handled = true;
         }
@@ -438,9 +486,9 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             RasultStack_.Children.Clear();
             Query_.Clear();
             TextBox_.Text = "";
+            ClearGraphs();
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke("", AnnotationSource);
-            keywordNumber = -1;
         }
 
         private void QueryClass_MouseUp(object sender, MouseButtonEventArgs e) {
