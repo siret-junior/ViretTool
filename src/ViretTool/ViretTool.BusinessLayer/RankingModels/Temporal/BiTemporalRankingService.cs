@@ -7,7 +7,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRankingService : IBiTemporalRankingService
     {
-        private object _lock = new object();
+        public readonly object Lock = new object();
 
         public IDatasetService DatasetService { get; private set; }
 
@@ -31,7 +31,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 
         public BiTemporalRankedResultSet ComputeRankedResultSet(BiTemporalQuery query)
         {
-            lock (_lock)
+            lock (Lock)
             {
                 // TODO: restriction to only a half of the dataset -> HasInputChanged (+InputRanking)
                 if (!HasQueryChanged(query))

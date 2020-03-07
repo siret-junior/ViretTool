@@ -82,6 +82,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             suggestionTextBox.AnnotationSources = annotationSources;
             suggestionTextBox.AnnotationSource = annotationSources.First();
+            suggestionTextBox.DatasetServicesManager = datasetServicesManager;
 
             foreach (string source in annotationSources)
             {

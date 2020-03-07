@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
+using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
@@ -28,6 +29,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
         public const string PartSourceStack = "PART_SourceStack";
         public const string PartResultStack = "PART_ResultStack";
+
+        public IDatasetServicesManager DatasetServicesManager { get; set; }
 
         private TextBox TextBox_;
         private List<SuggestionPopup> Popups_;
@@ -233,19 +236,94 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             return text.Substring(start == 0 ? 0 : start + 1, end - start - 1);
         }
+
+        private int _textBoxWordStartIndex = -1;
+        private int _textBoxWordEndIndex = -1;
+        private object _textBoxTooltipLock = new object();
+        private volatile bool _isTooltipLocked = false;
+
         private void TextBox_MouseMove(object sender, MouseEventArgs e)
         {
-            //if (keywordNumber > -1)
+            if (!_isTooltipLocked)  // bool access is threadsafe
             {
-                ToolTipMessage = "-1";
-                TextBox_.CaptureMouse();
+                lock (_textBoxTooltipLock)
+                {
+                    // double checked locking (_isTooltipLocked has to be volatile!)
+                    if (_isTooltipLocked)
+                    {
+                        // another thread already computing the tooltip, abort
+                        return;
+                    }
 
-                string word = CalculateWord(TextBox_.Text, TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true));
+                    // TODO: why do we need capturing mouse?
+                    TextBox_.CaptureMouse();
 
-                ToolTipMessage = word;
-                //Console.WriteLine(i);
+                    // compute word boundaries
+                    int hoveredCharIndex = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true);
+                    (int StartIndex, int EndIndex) = GetWordIndexes(TextBox_.Text, hoveredCharIndex);
+
+                    // check whether tooltip update is necessary
+                    if (StartIndex == _textBoxWordStartIndex && EndIndex == _textBoxWordEndIndex)
+                    {
+                        // update not necessary
+                        return;
+                    }
+                    _textBoxWordStartIndex = StartIndex;
+                    _textBoxWordEndIndex = EndIndex;
+
+                    // check whether there is any word
+                    if (StartIndex == EndIndex || StartIndex == -1 || EndIndex == -1)
+                    {
+                        ToolTipMessage = "";
+                        return;
+                    }
+
+                    // compute output string
+                    ToolTipMessage = $"{TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1)} ({StartIndex}, {EndIndex})";
+
+                    //string word = CalculateWord(TextBox_.Text, );
+                    //ToolTipMessage = word;
+
+                    //Console.WriteLine(i);
+                }
             }
         }
+
+        private (int StartIndex, int EndIndex) GetWordIndexes(string inputString, int characterIndex)
+        {
+            if (characterIndex >= inputString.Length)
+            {
+                return (-1, -1);
+                //throw new ArgumentOutOfRangeException(
+                //    $"Character index {characterIndex} is out of range of input string of length {inputString.Length}");
+            }
+
+            // start on the character index
+            int StartIndex = characterIndex;
+            int EndIndex = characterIndex;
+
+            // return if the hovered character is a whitespace
+            if (char.IsWhiteSpace(inputString[characterIndex]))
+            {
+                return (characterIndex, characterIndex);
+            }
+
+            // scroll left until end of the word
+            while (StartIndex > 0 && !char.IsWhiteSpace(inputString[StartIndex - 1]))
+            {
+                StartIndex--;
+            }
+
+
+            // scroll right until end of the word
+            while (EndIndex < inputString.Length - 1 && !char.IsWhiteSpace(inputString[EndIndex + 1]))
+            {
+                EndIndex++;
+            }
+
+            return (StartIndex, EndIndex);
+        }
+
         /// <summary>
         /// Cancel any pending search for suggestions and initiate a new one with new value
         /// </summary>
