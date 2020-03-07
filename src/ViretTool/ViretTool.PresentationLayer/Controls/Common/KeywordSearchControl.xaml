@@ -100,7 +100,7 @@
             </controls:SuggestionTextBox.Resources>
             <controls:SuggestionTextBox.ToolTip>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="c:\Users\vitek\source\repos\ViretTool\src\ViretTool\ViretTool\Untitled.jpg" />
+                    <Image Source="pack://application:,,,/ViretTool.Resources;component/Images/smile.png" />
                     <TextBlock Text="{Binding Value.ToolTipMessage, Source={StaticResource proxy}}"/>
                 </StackPanel>
             </controls:SuggestionTextBox.ToolTip>
