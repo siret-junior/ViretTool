@@ -225,17 +225,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
         }
         
-        private string CalculateWord(string text, int position)
-        {
-            if (text.Length - 1 < position || text[position] == ' ') return null;
-
-            int start = position;
-            int end = position;
-            while (text[start] != ' ' && start > 0) start--;
-            while (text[end] != ' ' && end < text.Length - 1) end++;
-
-            return text.Substring(start == 0 ? 0 : start + 1, end - start - 1);
-        }
 
         private int _textBoxWordStartIndex = -1;
         private int _textBoxWordEndIndex = -1;
@@ -280,11 +269,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
                     // compute output string
                     ToolTipMessage = $"{TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1)} ({StartIndex}, {EndIndex})";
-
-                    //string word = CalculateWord(TextBox_.Text, );
-                    //ToolTipMessage = word;
-
-                    //Console.WriteLine(i);
                 }
             }
         }
@@ -294,8 +278,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             if (characterIndex >= inputString.Length)
             {
                 return (-1, -1);
-                //throw new ArgumentOutOfRangeException(
-                //    $"Character index {characterIndex} is out of range of input string of length {inputString.Length}");
             }
 
             // start on the character index
@@ -313,7 +295,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             {
                 StartIndex--;
             }
-
 
             // scroll right until end of the word
             while (EndIndex < inputString.Length - 1 && !char.IsWhiteSpace(inputString[EndIndex + 1]))
