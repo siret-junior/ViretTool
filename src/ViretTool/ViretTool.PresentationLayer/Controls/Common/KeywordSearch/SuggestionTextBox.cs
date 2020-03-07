@@ -5,11 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.ComponentModel;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
-    class SuggestionTextBox : Control {
-
+    class SuggestionTextBox : Control
+    {
         static SuggestionTextBox() {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SuggestionTextBox), new FrameworkPropertyMetadata(typeof(SuggestionTextBox)));
         }
@@ -34,6 +35,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
         private List<QueryTextBlock> Query_ = new List<QueryTextBlock>();
 
+
         /// <summary>
         /// Initialize the UI elements and register events
         /// </summary>
@@ -42,7 +44,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             TextBox_ = (TextBox)Template.FindName(PartTextBox, this);
             TextBox_.Foreground = Brushes.Red;
-        
+
             Popups_ = new List<SuggestionPopup>();
             Popups_.Add((SuggestionPopup)Template.FindName(PartPopup, this));
 
@@ -92,6 +94,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         public static readonly DependencyProperty IsLoadingProperty = DependencyProperty.Register("IsLoading", typeof(bool), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(false));
         public static readonly DependencyProperty MaxNumberOfElementsProperty = DependencyProperty.Register("MaxNumberOfElements", typeof(int), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(50));
         public static readonly DependencyProperty LoadingPlaceholderProperty = DependencyProperty.Register("LoadingPlaceholder", typeof(object), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ToolTipMessageProperty = DependencyProperty.Register("ToolTipMessage", typeof(string), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
 
         public string AnnotationSource {
             get { return (string)GetValue(AnnotationSourceProperty); }
@@ -102,7 +105,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             get { return (string[])GetValue(AnnotationSourcesProperty); }
             set { SetValue(AnnotationSourcesProperty, value); }
         }
-        
+
         /// <summary>
         /// Template for items in the ListBox
         /// </summary>
@@ -200,13 +203,48 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             if (!IsKeyboardFocusWithin)
                 Popup_CloseAll();
         }
+        /// <summary>
+        /// Indicates, over which keyword is user actually hovering, -1 if no query is loaded
+        /// </summary>
+        private bool _areGraphsLoaded = false;
+        public string ToolTipMessage
+        {
+            get { return (string)GetValue(ToolTipMessageProperty); }
+            set { SetValue(ToolTipMessageProperty, value); }
+        }
+        private int keywordNumber = -1;
+        private void LoadGraphs()
+        {
+             
+        }
+        private void ClearGraphs()
+        {
+
+        }
+        
+        private string CalculateWord(string text, int position)
+        {
+            if (text.Length - 1 < position || text[position] == ' ') return null;
+
+            int start = position;
+            int end = position;
+            while (text[start] != ' ' && start > 0) start--;
+            while (text[end] != ' ' && end < text.Length - 1) end++;
+
+            return text.Substring(start == 0 ? 0 : start + 1, end - start - 1);
+        }
         private void TextBox_MouseMove(object sender, MouseEventArgs e)
         {
-            int i = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_),false);
-            MessageBox.Show("Do you want to close this window?",
-                                          "Confirmation",
-                                          MessageBoxButton.YesNo,
-                                          MessageBoxImage.Question);
+            //if (keywordNumber > -1)
+            {
+                ToolTipMessage = "-1";
+                TextBox_.CaptureMouse();
+
+                string word = CalculateWord(TextBox_.Text, TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true));
+
+                ToolTipMessage = word;
+                //Console.WriteLine(i);
+            }
         }
         /// <summary>
         /// Cancel any pending search for suggestions and initiate a new one with new value
@@ -218,7 +256,10 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 Popup_Open();
             }
         }
+        private void LoadQueryQualityVisualisation()
+        {
 
+        }
         /// <summary>
         /// Manage navigation in suggestions popup and run search if pressed enter
         /// </summary>
@@ -227,6 +268,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 if (e.Key == Key.Enter)
                 {
                     QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
+                    LoadQueryQualityVisualisation();
+                    LoadGraphs();
                     e.Handled = true;
                 }
                 else if (e.Key == Key.Back && TextBox_.Text == string.Empty) {
@@ -237,6 +280,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                             RasultStack_.Children.Remove(Query_[Query_.Count - 1]);
                             Query_.RemoveAt(Query_.Count - 1);
                         }
+                        ClearGraphs();
                         e.Handled = true;
                         //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
                     }
@@ -337,6 +381,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             TextBox_.Text = "";
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke("", AnnotationSource);
+            keywordNumber = -1;
         }
 
         private void QueryClass_MouseUp(object sender, MouseButtonEventArgs e) {

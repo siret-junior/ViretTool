@@ -22,6 +22,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public KeywordSearchControl()
         {
             InitializeComponent();
+            //DataContext = suggestionTextBox;
         }
 
         public static readonly DependencyProperty QueryResultProperty = DependencyProperty.Register(
