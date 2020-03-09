@@ -20,14 +20,14 @@
         <ItemsControl Grid.Row="0" Margin="6" x:Name="ImagesDisplay" ItemsSource="{Binding SubmittedFrames}" ScrollViewer.CanContentScroll="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <common:SubmitFrameControl Margin="2" Width="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
+                    <common:FrameControl Margin="2" Width="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
                                          Height="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}"
                                          cal:Message.Attach="[Event RemoveFromQueryClicked] = [Action RemoveFromQueryClicked($dataContext)];
                                                              [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];">
-                        <common:SubmitFrameControl.LayoutTransform>
+                        <common:FrameControl.LayoutTransform>
                             <ScaleTransform ScaleX="2" ScaleY="2" />
-                        </common:SubmitFrameControl.LayoutTransform>
-                    </common:SubmitFrameControl>
+                        </common:FrameControl.LayoutTransform>
+                    </common:FrameControl>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>

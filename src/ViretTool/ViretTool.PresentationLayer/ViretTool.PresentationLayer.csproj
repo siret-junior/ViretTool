@@ -125,9 +125,6 @@
     </Compile>
     <Compile Include="Controls\Common\Sketches\SketchColorPoint.cs" />
     <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
-    <Compile Include="Controls\Common\SubmitFrameControl.xaml.cs">
-      <DependentUpon>SubmitFrameControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Common\TranscriptFilter\TranscriptFilterView.xaml.cs">
       <DependentUpon>TranscriptFilterView.xaml</DependentUpon>
     </Compile>
@@ -237,10 +234,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Common\Sketches\SketchColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Common\SubmitFrameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
