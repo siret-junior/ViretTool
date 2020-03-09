@@ -16,6 +16,8 @@ namespace ViretTool.BusinessLayer.Services
             IThumbnailService<Thumbnail<byte[]>> thumbnailService,
             IDatasetService datasetService,
             IDescriptorProvider<byte[]> colorSignatureProvider,
+            IFaceSignatureDescriptorProvider faceSignatureProvider,
+            ITextSignatureDescriptorProvider textSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
             IDescriptorProvider<(int synsetId, float probability)[]> keywordSynsetProvider,
             IKeywordLabelProvider<string> keywordLabelProvider,
@@ -29,6 +31,8 @@ namespace ViretTool.BusinessLayer.Services
             ThumbnailService = thumbnailService;
             DatasetService = datasetService;
             ColorSignatureProvider = colorSignatureProvider;
+            FaceSignatureProvider = faceSignatureProvider;
+            TextSignatureProvider = textSignatureProvider;
             SemanticVectorProvider = semanticVectorProvider;
             KeywordSynsetProvider = keywordSynsetProvider;
             KeywordLabelProvider = keywordLabelProvider;
@@ -43,6 +47,8 @@ namespace ViretTool.BusinessLayer.Services
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
         public IDatasetService DatasetService { get; }
         public IDescriptorProvider<byte[]> ColorSignatureProvider { get; }
+        public IFaceSignatureDescriptorProvider FaceSignatureProvider { get; }
+        public ITextSignatureDescriptorProvider TextSignatureProvider { get; }
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
         public IDescriptorProvider<(int synsetId, float probability)[]> KeywordSynsetProvider { get; }
         public IKeywordLabelProvider<string> KeywordLabelProvider { get; }
