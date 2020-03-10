@@ -8,6 +8,7 @@ using ViretTool.BusinessLayer.Services;
 using ViretTool.Core;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ViretTool.Core;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -88,107 +89,86 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return !_servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId].FromVideo;
             }
         }
-        private void _computeFacesOverlay()
+
+
+        private void ComputeFacesOverlay()
         {
-            
-            if (_servicesManager.IsDatasetOpened)
+            if (!_servicesManager.IsDatasetOpened)
             {
-                int width = 26;
-                int height = 15;
+                return;
+            }
 
-                Bitmap _facesOverlay = new Bitmap(width, height);
+            int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+            bool[] facesSignatureDescriptor = _servicesManager.CurrentDataset.FaceSignatureProvider.Descriptors[frameID];
+            int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
+            int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
 
-                int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
-                bool[] facesSignatureDescriptor = _servicesManager.CurrentDataset.FaceSignatureProvider.Descriptors[frameID];
-                int count = _servicesManager.CurrentDataset.FaceSignatureProvider.DescriptorCount;
+            FacesOverlay = ComputeBooleanOverlay(facesSignatureDescriptor, width, height, System.Drawing.Color.Lime);
+        }
+        private void ComputeTextOverlay()
+        {
+            if (!_servicesManager.IsDatasetOpened)
+            {
+                return;
+            }
 
-                if (height * width > count)
-                {
-                    throw new ArgumentOutOfRangeException("Wrong format of Thumbnail resolution or FacesSignatureDescriptor!");
-                }
+            int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+            bool[] textSignatureDescriptor = _servicesManager.CurrentDataset.TextSignatureProvider.Descriptors[frameID];
+            int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
+            int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
 
+            TextOverlay = ComputeBooleanOverlay(textSignatureDescriptor, width, height, System.Drawing.Color.Red);
+        }
+
+        private BitmapSource ComputeBooleanOverlay(bool[] booleanMask, int width, int height, System.Drawing.Color overlayColor)
+        {
+            using (Bitmap overlayBitmap = new Bitmap(width, height))
+            {
                 int iterator = 0;
-                for (int y = 0; y < height; y++)
+                for (int iRow = 0; iRow < height; iRow++)
                 {
-                    for (int x = 0; x < width; x++)
+                    for (int iCol = 0; iCol < width; iCol++)
                     {
-                        if (facesSignatureDescriptor[iterator++])
+                        // 1 value per pixel (bool, true if contains text)
+                        if (booleanMask[iterator++])
                         {
-                            _facesOverlay.SetPixel(x, y, System.Drawing.Color.Red);
+                            overlayBitmap.SetPixel(iCol, iRow, overlayColor);
                         }
                     }
                 }
-
-                FacesOverlay = _facesOverlay.ToBitmapSource();
+                return overlayBitmap.ToBitmapSource();
             }
         }
-        private void _computeTextOverlay()
+
+        private void ComputeColorOverlay()
         {
-
-            if (_servicesManager.IsDatasetOpened)
+            if (!_servicesManager.IsDatasetOpened)
             {
-                int width = 26;
-                int height = 15;
-
-                Bitmap _textOverlay = new Bitmap(width, height);
-
-                int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
-                bool[] textSignatureDescriptor = _servicesManager.CurrentDataset.TextSignatureProvider.Descriptors[frameID];
-                int count = _servicesManager.CurrentDataset.FaceSignatureProvider.DescriptorCount;
-
-                if (height * width > count)
-                {
-                    throw new ArgumentOutOfRangeException("Wrong format of Thumbnail resolution or TextSignatureDescriptor!");
-                }
-
-                int iterator = 0;
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        if (textSignatureDescriptor[iterator++])
-                        {
-                            _textOverlay.SetPixel(x, y, System.Drawing.Color.Green);
-                        }
-                    }
-                }
-
-                TextOverlay = _textOverlay.ToBitmapSource();
-
+                return;
             }
-        }
-        private void _computeColorOverlay()
-        {
 
-            if (_servicesManager.IsDatasetOpened)
+            int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+            byte[] imageLabPixels = _servicesManager.CurrentDataset.ColorSignatureProvider.Descriptors[frameID];
+            int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
+            int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
+
+            using (Bitmap _colorOverlay = new Bitmap(width, height))
             {
-                int width = 26;
-                int height = 15;
-
-                Bitmap _colorOverlay = new Bitmap(width, height);
-
-
-                int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
-                byte[] a = _servicesManager.CurrentDataset.ColorSignatureProvider.Descriptors[frameID];
-                int count = _servicesManager.CurrentDataset.FaceSignatureProvider.DescriptorCount;
-
-                if (height * width > count)
+                // convert CIELab pixel values to RGB bitmap
+                for (int iRow = 0; iRow < height; iRow++)
                 {
-                    throw new ArgumentOutOfRangeException("Wrong format of Thumbnail resolution or ColorSignatureDescriptors!");
-                }
-
-                // TODO: populate bitmap with valid values
-                int iterator = 0;
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
+                    for (int iCol = 0; iCol < width; iCol++)
                     {
-                        // just blue color for now
-                        _colorOverlay.SetPixel(x, y, System.Drawing.Color.Blue);
-                        
+                        int pixelOffset = ((iRow * width) + iCol) * 3;  // 3 values per pixel (L, a, b)
+                        byte L = imageLabPixels[pixelOffset];
+                        byte a = imageLabPixels[pixelOffset + 1];
+                        byte b = imageLabPixels[pixelOffset + 2];
+
+                        ColorSpaceHelper.CIELab lab = ColorSpaceHelper.ProjectByteToLab(L, a, b);
+                        System.Drawing.Color color = ColorSpaceHelper.LabtoColor(lab);
+                        _colorOverlay.SetPixel(iCol, iRow, color);
                     }
                 }
-
                 ColorOverlay = _colorOverlay.ToBitmapSource();
             }
         }
@@ -226,15 +206,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
         {
             if(showFaces && FacesOverlay == null)
             {
-                _computeFacesOverlay();
+                ComputeFacesOverlay();
             }
             if (showText && TextOverlay == null)
             {
-                _computeTextOverlay();
+                ComputeTextOverlay();
             }
             if(showColor && ColorOverlay == null)
             {
-                _computeColorOverlay();
+                ComputeColorOverlay();
             }
             
             IsTextShown = showText;

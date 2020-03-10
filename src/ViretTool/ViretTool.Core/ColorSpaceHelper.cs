@@ -1,21 +1,111 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel
+namespace ViretTool.Core
 {
-    public struct Color
+    public class ColorSpaceHelper
     {
-        public int R;
-        public int G;
-        public int B;
-    }
+        /// <summary>
+        /// RGB structure.
+        /// </summary>
+        public struct RGB
+        {
+            /// <summary>
+            /// Gets an empty RGB structure;
+            /// </summary>
+            public static readonly RGB Empty = new RGB();
 
-    public class ImageHelper
-    {
-     
+            private int red;
+            private int green;
+            private int blue;
+
+            public static bool operator ==(RGB item1, RGB item2)
+            {
+                return (
+                    item1.Red == item2.Red
+                    && item1.Green == item2.Green
+                    && item1.Blue == item2.Blue
+                    );
+            }
+
+            public static bool operator !=(RGB item1, RGB item2)
+            {
+                return (
+                    item1.Red != item2.Red
+                    || item1.Green != item2.Green
+                    || item1.Blue != item2.Blue
+                    );
+            }
+
+            /// <summary>
+            /// Gets or sets red value.
+            /// </summary>
+            public int Red
+            {
+                get
+                {
+                    return red;
+                }
+                set
+                {
+                    red = (value > 255) ? 255 : ((value < 0) ? 0 : value);
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets red value.
+            /// </summary>
+            public int Green
+            {
+                get
+                {
+                    return green;
+                }
+                set
+                {
+                    green = (value > 255) ? 255 : ((value < 0) ? 0 : value);
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets red value.
+            /// </summary>
+            public int Blue
+            {
+                get
+                {
+                    return blue;
+                }
+                set
+                {
+                    blue = (value > 255) ? 255 : ((value < 0) ? 0 : value);
+                }
+            }
+
+            public RGB(int R, int G, int B)
+            {
+                this.red = (R > 255) ? 255 : ((R < 0) ? 0 : R);
+                this.green = (G > 255) ? 255 : ((G < 0) ? 0 : G);
+                this.blue = (B > 255) ? 255 : ((B < 0) ? 0 : B);
+            }
+
+            public override bool Equals(Object obj)
+            {
+                if (obj == null || GetType() != obj.GetType()) return false;
+
+                return (this == (RGB)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return Red.GetHashCode() ^ Green.GetHashCode() ^ Blue.GetHashCode();
+            }
+        }
+
         /// <summary>
         /// Structure to define CIE L*a*b*.
         /// </summary>
@@ -31,14 +121,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
             private double b;
 
 
-            public double lMaxValue { get { return 100; } }
-            public double lMinValue { get { return 0; } }
-            public double aMaxValue { get { return 98.250; } }
-            public double aMinValue { get { return -86.189; } }
-            public double aMaxValueAbs { get { return 98.250; } }
-            public double bMaxValue { get { return 94.488; } }
-            public double bMinValue { get { return -107.854; } }
-            public double bMaxValueAbs { get { return 107.854; } }
+            public static double lMaxValue { get { return 100; } }
+            public static double lMinValue { get { return 0; } }
+            public static double aMaxValue { get { return 98.250; } }
+            public static double aMinValue { get { return -86.189; } }
+            public static double aMaxValueAbs { get { return 98.250; } }
+            public static double bMaxValue { get { return 94.488; } }
+            public static double bMinValue { get { return -107.854; } }
+            public static double bMaxValueAbs { get { return 107.854; } }
             //maxL = 100, maxA = 98,2497239576523, maxB = 94,4877196299886
             //minL = 0, minA = -86,1884340941196, minB = -107,853734252327
             //    Color c;
@@ -321,24 +411,103 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
             return XYZtoLab(cIEXYZ.X, cIEXYZ.Y, cIEXYZ.Z);
         }
 
-        private static Color ProjectLabToByte(CIELab lab)
+        public static Color ProjectLabToByte(CIELab lab)
         {
             //maxL = 100, maxA = 98,2497239576523, maxB = 94,4877196299886
             //minL = 0, minA = -86,1884340941196, minB = -107,853734252327
 
-            double normalizer = 255.0 / (lab.bMaxValue - lab.bMinValue);
+            double normalizer = 255.0 / (CIELab.bMaxValue - CIELab.bMinValue);
 
-            Color color = new Color();
-            color.R = (byte)(lab.L * normalizer);
-            color.G = (byte)((lab.A - lab.aMinValue) * normalizer);
-            color.B = (byte)((lab.B - lab.bMinValue) * normalizer);
+            byte r = (byte)(lab.L * normalizer);
+            byte g = (byte)((lab.A - CIELab.aMinValue) * normalizer);
+            byte b = (byte)((lab.B - CIELab.bMinValue) * normalizer);
 
-            return color;
+            return Color.FromArgb(r, g, b);
+        }
+
+        public static CIELab ProjectByteToLab(byte byteL, byte byteA, byte byteB)
+        {
+            //maxL = 100, maxA = 98,2497239576523, maxB = 94,4877196299886
+            //minL = 0, minA = -86,1884340941196, minB = -107,853734252327
+
+            double normalizer = 255.0 / (CIELab.bMaxValue - CIELab.bMinValue);
+
+            double L = byteL / normalizer;
+            double A = byteA / normalizer + CIELab.aMinValue;
+            double B = byteB / normalizer + CIELab.bMinValue;
+
+
+            return new CIELab(L, A, B);
         }
 
         public static Color RGBtoLabByte(int red, int green, int blue)
         {
             return ProjectLabToByte(RGBtoLab(red, green, blue));
+        }
+
+        /// <summary>
+        /// Converts CIELab to CIEXYZ.
+        /// </summary>
+        private static CIEXYZ LabtoXYZ(double l, double a, double b)
+        {
+            double delta = 6.0 / 29.0;
+
+            double fy = (l + 16) / 116.0;
+            double fx = fy + (a / 500.0);
+            double fz = fy - (b / 200.0);
+
+            return new CIEXYZ(
+                (fx > delta) ? CIEXYZ.D65.X * (fx * fx * fx) : (fx - 16.0 / 116.0) * 3 * (
+                    delta * delta) * CIEXYZ.D65.X,
+                (fy > delta) ? CIEXYZ.D65.Y * (fy * fy * fy) : (fy - 16.0 / 116.0) * 3 * (
+                    delta * delta) * CIEXYZ.D65.Y,
+                (fz > delta) ? CIEXYZ.D65.Z * (fz * fz * fz) : (fz - 16.0 / 116.0) * 3 * (
+                    delta * delta) * CIEXYZ.D65.Z
+                );
+        }
+
+        /// <summary>
+        /// Converts CIEXYZ to RGB structure.
+        /// </summary>
+        private static RGB XYZtoRGB(double x, double y, double z)
+        {
+            double[] Clinear = new double[3];
+            Clinear[0] = x * 3.2410 - y * 1.5374 - z * 0.4986; // red
+            Clinear[1] = -x * 0.9692 + y * 1.8760 - z * 0.0416; // green
+            Clinear[2] = x * 0.0556 - y * 0.2040 + z * 1.0570; // blue
+
+            for (int i = 0; i < 3; i++)
+            {
+                Clinear[i] = (Clinear[i] <= 0.0031308) ? 12.92 * Clinear[i] : (
+                    1 + 0.055) * Math.Pow(Clinear[i], (1.0 / 2.4)) - 0.055;
+            }
+
+            return new RGB(
+                Convert.ToInt32(Double.Parse(String.Format("{0:0.00}",
+                    Clinear[0] * 255.0))),
+                Convert.ToInt32(Double.Parse(String.Format("{0:0.00}",
+                    Clinear[1] * 255.0))),
+                Convert.ToInt32(Double.Parse(String.Format("{0:0.00}",
+                    Clinear[2] * 255.0)))
+                );
+        }
+
+        /// <summary>
+        /// Converts CIELab to RGB.
+        /// </summary>
+        private static RGB LabtoRGB(CIELab lab)
+        {
+            CIEXYZ xyz = LabtoXYZ(lab.L, lab.A, lab.B);
+            return XYZtoRGB(xyz.X, xyz.Y, xyz.Z);
+        }
+
+        /// <summary>
+        /// Converts CIELab to Color.
+        /// </summary>
+        public static Color LabtoColor(CIELab lab)
+        {
+            RGB rgb = LabtoRGB(lab);
+            return Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue);
         }
     }
 }

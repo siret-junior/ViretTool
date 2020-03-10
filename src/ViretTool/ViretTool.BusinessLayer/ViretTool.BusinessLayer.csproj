@@ -63,6 +63,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -80,6 +81,7 @@
     <Compile Include="ActionLogging\InteractionLogger.cs" />
     <Compile Include="Descriptors\BoolSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IBoolSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\IColorSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IFaceSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IKeywordLabelProvider.cs" />
     <Compile Include="Descriptors\IKeywordScoringProvider.cs" />
@@ -171,7 +173,6 @@
     <Compile Include="RankingModels\RankedFrame.cs" />
     <Compile Include="RankingModels\RankingBuffer.cs" />
     <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ColorSignatureModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ImageHelper.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNFeatures\FloatVectorModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\IDFLoader.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordSearchFrame.cs" />
@@ -217,6 +218,10 @@
     <ProjectReference Include="..\ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj">
       <Project>{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}</Project>
       <Name>ViretTool.BusinessLayer.ExternalDescriptors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ViretTool.Core\ViretTool.Core.csproj">
+      <Project>{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}</Project>
+      <Name>ViretTool.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViretTool.DataLayer\ViretTool.DataLayer.csproj">
       <Project>{F7058311-7616-4EA5-B2D2-35E502782537}</Project>

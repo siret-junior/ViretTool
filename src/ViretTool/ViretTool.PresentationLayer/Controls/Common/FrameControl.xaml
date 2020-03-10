@@ -35,9 +35,18 @@
                         </Style>
                     </Image.Style>
                 </Image>
-                <Image Stretch="Fill" Opacity="0.8" Source="{Binding FacesOverlay,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding AreFacesShown,Converter={StaticResource BooleanToVisibilityConverter} ,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                <Image Stretch="Fill" Opacity="0.8" Source="{Binding TextOverlay,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding IsTextShown, Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                <Image Stretch="Fill" Source="{Binding ColorOverlay,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Visibility="{Binding IsColorShown, Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Image Name="FacesOverlay" Stretch="Fill" Opacity="0.8"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
+                       Source="{Binding FacesOverlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                       Visibility="{Binding AreFacesShown, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Image Name="TextOverlay" Stretch="Fill" Opacity="0.8" 
+                       RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
+                       Source="{Binding TextOverlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                       Visibility="{Binding IsTextShown, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                <Image Name="ColorOverlay" Stretch="Fill" 
+                       RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
+                       Source="{Binding ColorOverlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                       Visibility="{Binding IsColorShown, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
                            Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>

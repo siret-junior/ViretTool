@@ -15,7 +15,7 @@ namespace ViretTool.BusinessLayer.Services
         public DatasetServices(
             IThumbnailService<Thumbnail<byte[]>> thumbnailService,
             IDatasetService datasetService,
-            IDescriptorProvider<byte[]> colorSignatureProvider,
+            IColorSignatureDescriptorProvider colorSignatureProvider,
             IFaceSignatureDescriptorProvider faceSignatureProvider,
             ITextSignatureDescriptorProvider textSignatureProvider,
             IDescriptorProvider<float[]> semanticVectorProvider,
@@ -46,7 +46,7 @@ namespace ViretTool.BusinessLayer.Services
 
         public IThumbnailService<Thumbnail<byte[]>> ThumbnailService { get; }
         public IDatasetService DatasetService { get; }
-        public IDescriptorProvider<byte[]> ColorSignatureProvider { get; }
+        public IColorSignatureDescriptorProvider ColorSignatureProvider { get; }
         public IFaceSignatureDescriptorProvider FaceSignatureProvider { get; }
         public ITextSignatureDescriptorProvider TextSignatureProvider { get; }
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
