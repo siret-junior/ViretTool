@@ -75,6 +75,19 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
             return results;
         }
 
+        public float[] ComputeSimilarity(float[] queryData)
+        {
+            float[] results = new float[mFloatVectors.Length];
+            Parallel.For(
+                0,
+                results.Length,
+                i =>
+                {
+                    results[i] = CosineSimilarityNormalized01(mFloatVectors[i], queryData);
+                });
+            return results;
+        }
+
         public void ComputeRanking(SemanticExampleQuery query, RankingBuffer inputRanking, RankingBuffer outputRanking)
         {
             InputRanking = inputRanking;

@@ -184,15 +184,15 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         }
 
 
-        public double ComputeDistance(int frameId1, int frameId2)
-        {
-            return ComputeDistance(_colorSignatures[frameId1], _colorSignatures[frameId2]);
-        }
+        //public double ComputeDistance(int frameId1, int frameId2)
+        //{
+        //    return ComputeDistance(_colorSignatures[frameId1], _colorSignatures[frameId2]);
+        //}
 
-        public static double ComputeDistance(byte[] vectorA, byte[] vectorB)
-        {
-            return L2Distance(vectorA, vectorB);
-        }
+        //public static double ComputeDistance(byte[] vectorA, byte[] vectorB)
+        //{
+        //    return L2Distance(vectorA, vectorB);
+        //}
 
         
         /// <summary>
@@ -228,16 +228,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
             return rDiff * rDiff + gDiff * gDiff + bDiff * bDiff;
         }
 
-        private static double L2Distance(byte[] x, byte[] y)
-        {
-            double result = 0, r;
-            for (int i = 0; i < x.Length; i++)
-            {
-                r = x[i] - y[i];
-                result += r * r;
-            }
-            return Math.Sqrt(result);
-        }
+        //private static double L2Distance(byte[] x, byte[] y)
+        //{
+        //    double result = 0, r;
+        //    for (int i = 0; i < x.Length; i++)
+        //    {
+        //        r = x[i] - y[i];
+        //        result += r * r;
+        //    }
+        //    return Math.Sqrt(result);
+        //}
 
     }
 }

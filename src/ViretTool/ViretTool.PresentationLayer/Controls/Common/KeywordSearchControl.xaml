@@ -94,14 +94,16 @@
     <StackPanel>
         <!--#region Keyword Search -->
         <controls:SuggestionTextBox x:Name="suggestionTextBox"
-                                    ItemTemplateSelector="{StaticResource ResourceKey=HypernymSelector}">
+                                    ItemTemplateSelector="{StaticResource ResourceKey=HypernymSelector}"
+                                    ToolTipService.InitialShowDelay="0"
+                                    ToolTipService.VerticalOffset="20">
             <controls:SuggestionTextBox.Resources>
                 <DiscreteObjectKeyFrame x:Key="proxy" Value="{Binding ElementName=suggestionTextBox}"/>
             </controls:SuggestionTextBox.Resources>
             <controls:SuggestionTextBox.ToolTip>
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{Binding Value.CurrentGraph, Source={StaticResource proxy}}" />
+                <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding Value.ToolTipMessage, Source={StaticResource proxy}}"/>
+                    <Image Source="{Binding Value.ToolTipBitmap, Source={StaticResource proxy}}" />
                 </StackPanel>
             </controls:SuggestionTextBox.ToolTip>
             <controls:SuggestionTextBox.LoadingPlaceholder>

@@ -107,12 +107,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
 
         public float[] GetScoring(string[] query)
         {
-            //float[] queryVector = 
-
-            // vector, scoring
-
-
-            throw new NotImplementedException();
+            // compute scoring
+            float[] queryVector = _w2vvQueryToVectorProvider.TextToVector(query);
+            float[] scoring = _semanticExampleModel.ComputeSimilarity(queryVector);
+            return scoring;
         }
 
         //public float[] GetScoring(Synset synsetLiteral)

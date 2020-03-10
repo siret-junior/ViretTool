@@ -94,6 +94,10 @@ namespace ViretTool.PresentationLayer.Helpers
             {
                 resultHue -= 1;
             }
+            if (resultHue < 0)
+            {
+                resultHue += 1;
+            }
 
             return resultHue;
         }

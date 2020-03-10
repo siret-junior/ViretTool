@@ -2,19 +2,26 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
+using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.Core;
 using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 using ViretTool.PresentationLayer.Controls.Common.Sketches;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
+using ViretTool.PresentationLayer.Helpers;
+using static ViretTool.BusinessLayer.RankingModels.Temporal.Queries.BiTemporalQuery;
 
 namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 {
@@ -74,6 +81,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                                                   SemanticUseForSorting = QueryObjects.Any();
                                                   NotifyQuerySettingsChanged(nameof(QueryObjects), args.Action);
                                               };
+            InitializeScaleBitmap();
         }
 
         public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
@@ -386,6 +394,51 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             }
         }
 
+        private BitmapSource _keywordToolTipBitmap = null;
+        public BitmapSource KeywordToolTipBitmap
+        {
+            get => _keywordToolTipBitmap;
+            set
+            {
+                if (_keywordToolTipBitmap == value)
+                {
+                    return;
+                }
+                _keywordToolTipBitmap = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private BitmapSource _colorToolTipBitmap = null;
+        public BitmapSource ColorToolTipBitmap
+        {
+            get => _colorToolTipBitmap;
+            set
+            {
+                if (_colorToolTipBitmap == value)
+                {
+                    return;
+                }
+                _colorToolTipBitmap = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private BitmapSource _semanticToolTipBitmap = null;
+        public BitmapSource SemanticToolTipBitmap
+        {
+            get => _semanticToolTipBitmap;
+            set
+            {
+                if (_semanticToolTipBitmap == value)
+                {
+                    return;
+                }
+                _semanticToolTipBitmap = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public void OnSortingExplicitlyChanged(string modelName, bool isUsedForSorting)
         {
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ExplicitSort, $"{modelName}:{!isUsedForSorting}");
@@ -416,6 +469,21 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QueryObjects.Clear();
             ColorUseForSorting = SketchQueryResult?.SketchColorPoints?.Any() == true;
             KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
+        }
+
+        public void OnQueryResultUpdated(BiTemporalRankedResultSet queryResult)
+        {
+            if (!DatasetServicesManager.IsDatasetOpened)
+            {
+                return;
+            }
+
+            TemporalQueries primaryTemporalQuery = DatasetServicesManager.CurrentDataset.RankingService.CachedQuery.PrimaryTemporalQuery;
+            IBiTemporalSimilarityModule similarityModule = DatasetServicesManager.CurrentDataset.RankingService.BiTemporalRankingModule.BiTemporalSimilarityModule;
+            
+            KeywordToolTipBitmap = LoadBitmapForRanking(similarityModule.KeywordModel.OutputRanking, primaryTemporalQuery, 0, 1);
+            ColorToolTipBitmap = LoadBitmapForRanking(similarityModule.ColorSketchModel.OutputRanking, primaryTemporalQuery, float.MinValue, 0);
+            SemanticToolTipBitmap = LoadBitmapForRanking(similarityModule.SemanticExampleModel.OutputRanking, primaryTemporalQuery);
         }
 
         public void UpdateQueryObjects(DownloadedFrameViewModel downloadedFrame)
@@ -451,6 +519,78 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
             _logger.Info($"Query settings changed: ${changedFilterName}: {value}");
             QuerySettingsChanged.OnNext(Unit.Default);
+        }
+
+        private Bitmap _canvasBitmap = new Bitmap(1000, 200);
+        private Bitmap _scaleBitmap = new Bitmap(1, 200);
+        private BitmapSource LoadBitmapForRanking(BiTemporalRankingBuffer ranking, TemporalQueries primaryTemporalQuery, 
+            float minScore = float.MinValue, float maxScore = float.MinValue)
+        {
+            if (ranking == null) return null;
+
+            // get specific temporal ranks
+            float[] ranksWithFilters;
+            lock (DatasetServicesManager.CurrentDataset.RankingService.Lock)
+            {
+                ranksWithFilters = primaryTemporalQuery == TemporalQueries.Former
+                    ? ranking.FormerRankingBuffer.Ranks
+                    : ranking.LatterRankingBuffer.Ranks;
+            }
+
+            // filter and sort ranks
+            Array.Sort(ranksWithFilters, new Comparison<float>((i1, i2) => i2.CompareTo(i1)));
+            int validRanksLength = Array.IndexOf(ranksWithFilters, float.MinValue);
+            if (validRanksLength == 0) return null;
+            if (validRanksLength == -1) { validRanksLength = ranksWithFilters.Length; }
+            // TODO: debug
+            //validRanksLength = validRanksLength < 1000 ? validRanksLength : 1000;
+            float[] ranksSorted = new float[ranksWithFilters.Length];
+            Array.Copy(ranksWithFilters, ranksSorted, validRanksLength);
+
+            // update value range if necessary
+            if (minScore == float.MinValue)
+            {
+                minScore = ranksSorted[ranksSorted.Length - 1];
+            }
+            if (maxScore == float.MinValue)
+            {
+                maxScore = ranksSorted[0];
+            }
+            float range = maxScore - minScore;
+
+            // compute bitmap
+            using (Graphics gfx = Graphics.FromImage(_canvasBitmap))
+            {
+                gfx.FillRectangle(System.Drawing.Brushes.White, 0, 0, _canvasBitmap.Width, _canvasBitmap.Height);
+                if (range == 0) return _canvasBitmap.ToBitmapSource();
+
+                for (int iCol = 0; iCol < _canvasBitmap.Width; iCol++)
+                {
+                    int rankSampleIndex = (int)(((double)iCol / _canvasBitmap.Width) * ranksSorted.Length);
+                    float rankRatio = Math.Abs(ranksSorted[rankSampleIndex] - minScore) / range;
+                    int columnHeight = (int)(rankRatio * _canvasBitmap.Height);
+                    int startRow = _canvasBitmap.Height - columnHeight;
+                    gfx.DrawImage(_scaleBitmap,
+                        new Rectangle(iCol, startRow, 1, columnHeight),
+                        new Rectangle(0, startRow, 1, columnHeight),  
+                        GraphicsUnit.Pixel);
+                    //gfx.DrawRectangle(Pens.Blue, iCol, startRow, 1, columnHeight);
+                }
+
+                // TODO: debug output
+                //bitmap.Save($"tooltip-{ranking.Name}-{DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss")}.png", ImageFormat.Png);
+                return _canvasBitmap.ToBitmapSource();
+            }
+        }
+
+        private void InitializeScaleBitmap()
+        {
+            for (int iRow = 0; iRow < _scaleBitmap.Height; iRow++)
+            {
+                double interpolation = (double)iRow / _scaleBitmap.Height;
+                Color color = ColorInterpolationHelper.InterpolateColorHSV(Color.Lime, Color.Red, interpolation, true);
+                _scaleBitmap.SetPixel(0, iRow, color);
+            }
         }
     }
 }

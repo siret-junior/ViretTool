@@ -7,7 +7,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRankingService : IBiTemporalRankingService
     {
-        public readonly object Lock = new object();
+        private object _lock = new object();
+        public object Lock => _lock;
 
         public IDatasetService DatasetService { get; private set; }
 

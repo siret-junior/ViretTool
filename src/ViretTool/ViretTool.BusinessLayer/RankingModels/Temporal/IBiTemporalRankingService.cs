@@ -4,6 +4,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public interface IBiTemporalRankingService
     {
+        object Lock { get; }
+
         IBiTemporalRankingModule BiTemporalRankingModule { get; }
 
         BiTemporalQuery CachedQuery { get; }

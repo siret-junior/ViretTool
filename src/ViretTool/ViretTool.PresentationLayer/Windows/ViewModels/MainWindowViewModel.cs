@@ -415,6 +415,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 queryViewModel.OnQueryObjectsCleared();
                 queryViewModel.OnSketchesCleared();
                 queryViewModel.QueryObjects.Clear();
+                queryViewModel.OnQueryResultUpdated(null);
             }
 
             LifelogFilterViewModel.Reset();
@@ -709,6 +710,11 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                         return resultSet;
                     });
+
+                // update model tooltips
+                // TODO: differentiate between former and latter query tooltips
+                Query1.OnQueryResultUpdated(queryResult);
+                Query2.OnQueryResultUpdated(queryResult);
 
                 List<int> sortedIds = (queryResult.TemporalQuery.PrimaryTemporalQuery == BiTemporalQuery.TemporalQueries.Former
                                            ? queryResult.FormerTemporalResultSet

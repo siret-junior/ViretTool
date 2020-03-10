@@ -8,6 +8,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion;
+using System.Threading;
+using System.Drawing;
+using ViretTool.Core;
+using System.Drawing.Imaging;
+using static ViretTool.BusinessLayer.RankingModels.Temporal.Queries.BiTemporalQuery;
+using ViretTool.BusinessLayer.RankingModels.Temporal;
+using ViretTool.PresentationLayer.Helpers;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
     class SuggestionTextBox : Control
@@ -15,6 +22,13 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         static SuggestionTextBox() {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SuggestionTextBox), new FrameworkPropertyMetadata(typeof(SuggestionTextBox)));
         }
+
+        public SuggestionTextBox()
+        {
+            InitializeScaleBitmap();
+        }
+
+
 
         #region Initialization
 
@@ -46,7 +60,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             base.OnApplyTemplate();
 
             TextBox_ = (TextBox)Template.FindName(PartTextBox, this);
-            TextBox_.Foreground = Brushes.Red;
+            TextBox_.Foreground = System.Windows.Media.Brushes.Red;
 
             Popups_ = new List<SuggestionPopup>();
             Popups_.Add((SuggestionPopup)Template.FindName(PartPopup, this));
@@ -98,7 +112,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         public static readonly DependencyProperty MaxNumberOfElementsProperty = DependencyProperty.Register("MaxNumberOfElements", typeof(int), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(50));
         public static readonly DependencyProperty LoadingPlaceholderProperty = DependencyProperty.Register("LoadingPlaceholder", typeof(object), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty ToolTipMessageProperty = DependencyProperty.Register("ToolTipMessage", typeof(string), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty CurrentGraphProperty = DependencyProperty.Register("CurrentGraph", typeof(BitmapImage), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ModelToolTipBitmapProperty = DependencyProperty.Register("ModelToolTipBitmap", typeof(BitmapSource), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ToolTipBitmapProperty = DependencyProperty.Register("ToolTipBitmap", typeof(BitmapSource), typeof(SuggestionTextBox), new FrameworkPropertyMetadata(null));
 
         public string AnnotationSource {
             get { return (string)GetValue(AnnotationSourceProperty); }
@@ -214,110 +229,158 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             get { return (string)GetValue(ToolTipMessageProperty); }
             set { SetValue(ToolTipMessageProperty, value); }
         }
-        public BitmapImage CurrentGraph
+
+        public BitmapSource ToolTipBitmap
         {
-            get { return (BitmapImage)GetValue(CurrentGraphProperty); }
-            set { SetValue(CurrentGraphProperty, value); }
+            get { return (BitmapSource)GetValue(ToolTipBitmapProperty); }
+            set { SetValue(ToolTipBitmapProperty, value); }
         }
 
-        private void LoadGraphs()
-        {
-            keywordGraphDictionary.Clear();
-            areGraphsLoaded = true;
 
 
-            // TODO: Load real graphs!
 
-            string[] keywords = TextBox_.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            for (int i = 0; i < keywords.Length; i++)
-            {
-                BitmapImage bi = new BitmapImage(new Uri(@"pack://application:,,,/ViretTool.Resources;component/Images/smile.png", UriKind.Absolute));
-                
-                if (!keywordGraphDictionary.ContainsKey(keywords[i]))
-                {
-                    keywordGraphDictionary.Add(keywords[i], bi);
-                }
-            }
-        }
-        private void ClearGraphs()
-        {
-            areGraphsLoaded = false;
-
-            keywordGraphDictionary.Clear();
-
-            _textBoxWordStartIndex = -1;
-            _textBoxWordEndIndex = -1;
-
-            ToolTipMessage = "";
-            CurrentGraph = null;
-    }
-        
-
+        private readonly object _textBoxTooltipLock = new object();
+        private readonly Dictionary<string, BitmapSource> _keywordTooltipCache = new Dictionary<string, BitmapSource>();
+        private string _textBoxCachedText = "";
         private int _textBoxWordStartIndex = -1;
         private int _textBoxWordEndIndex = -1;
-        private object _textBoxTooltipLock = new object();
-        private volatile bool _isTooltipLocked = false;
-        private bool areGraphsLoaded = false;
-
-        // TODO: Discuss with Gregor, if Dictionary provides sufficient performance
-        Dictionary<string, BitmapImage> keywordGraphDictionary = new Dictionary<string, BitmapImage>();
-
+        
         private void TextBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if(!areGraphsLoaded)
+            if (DatasetServicesManager == null || !DatasetServicesManager.IsDatasetOpened) return;
+
+            if (!Monitor.TryEnter(_textBoxTooltipLock))
             {
+                // allow only one thread to compute the tooltip
                 return;
             }
-            if (!_isTooltipLocked)  // bool access is threadsafe
+
+            try
             {
-                lock (_textBoxTooltipLock)
+                // compute hovered word boundaries
+                int hoveredCharIndex = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true);
+                (int StartIndex, int EndIndex) = GetWordIndexes(TextBox_.Text, hoveredCharIndex);
+
+                // check whether tooltip update is necessary
+                if (_textBoxCachedText.Equals(TextBox_.Text) 
+                    && StartIndex == _textBoxWordStartIndex 
+                    && EndIndex == _textBoxWordEndIndex
+                    && ToolTipBitmap != null)
                 {
-                    // double checked locking (_isTooltipLocked has to be volatile!)
-                    if (_isTooltipLocked)
-                    {
-                        // another thread already computing the tooltip, abort
-                        return;
-                    }
+                    // tooltip update not necessary
+                    return;
+                }
+                _textBoxCachedText = TextBox_.Text;
+                _textBoxWordStartIndex = StartIndex;
+                _textBoxWordEndIndex = EndIndex;
 
-                    // compute word boundaries
-                    int hoveredCharIndex = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true);
-                    (int StartIndex, int EndIndex) = GetWordIndexes(TextBox_.Text, hoveredCharIndex);
+                // abort if we are not hovering over a word (whitespace or an empty string)
+                if (StartIndex == EndIndex || StartIndex == -1 || EndIndex == -1)
+                {
+                    ToolTipBitmap = null;
+                    ToolTipMessage = "";
+                    return;
+                }
 
-                    // check whether tooltip update is necessary
-                    if (StartIndex == _textBoxWordStartIndex && EndIndex == _textBoxWordEndIndex)
-                    {
-                        // update not necessary
-                        return;
-                    }
-                    _textBoxWordStartIndex = StartIndex;
-                    _textBoxWordEndIndex = EndIndex;
+                // compute output string
+                string hoveredWord = TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1);
 
-                    // check whether there is any word
-                    if (StartIndex == EndIndex || StartIndex == -1 || EndIndex == -1)
+                // load tooltip, either from cache or compute it
+                if (!_keywordTooltipCache.TryGetValue(hoveredWord, out BitmapSource tooltipBitmap))
+                {
+                    tooltipBitmap = LoadBitmapForKeyword(hoveredWord);
+                    if (tooltipBitmap != null)
                     {
-                        CurrentGraph = null;
-                        ToolTipMessage = "";
-                        return;
-                    }
-
-                    // compute output string
-                    string outputString = TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1);
-                    ToolTipMessage = $"{outputString} ({StartIndex}, {EndIndex})";
-
-                    // TryGetValue used, what if 
-                    if(keywordGraphDictionary.TryGetValue(outputString, out BitmapImage output))
-                    {
-                        CurrentGraph = keywordGraphDictionary[outputString];
-                    }
-                    // User changed the keywords or any other exception ocurred
-                    else
-                    {
-                        CurrentGraph = null;
-                        ToolTipMessage = "";
-                        return;
+                        _keywordTooltipCache.Add(hoveredWord, tooltipBitmap);
                     }
                 }
+
+                ToolTipMessage = $"{hoveredWord}";
+                ToolTipBitmap = tooltipBitmap;
+            }
+            finally
+            {
+                Monitor.Exit(_textBoxTooltipLock);
+            }
+        }
+
+        private Bitmap _canvasBitmap = new Bitmap(1000, 200);
+        private Bitmap _scaleBitmap = new Bitmap(1, 200);
+        private BitmapSource LoadBitmapForKeyword(string hoveredWord, float minScore = float.MinValue, float maxScore = float.MinValue)
+        {
+            if (!DatasetServicesManager.IsDatasetOpened)
+            {
+                return null;
+            }
+
+            // get ranks
+            float[] ranksWithFilters;
+            lock (DatasetServicesManager.CurrentDataset.RankingService.Lock)
+            {
+                if (DatasetServicesManager.CurrentDataset.RankingService.OutputRanking == null) return null;
+
+                ranksWithFilters = DatasetServicesManager.CurrentDataset
+                    .RankingService
+                    .BiTemporalRankingModule
+                    .BiTemporalSimilarityModule
+                    .KeywordModel
+                    .FormerSimilarityModel
+                    .GetScoring(new string[] { hoveredWord });
+            }
+
+            // filter and sort ranks
+            Array.Sort(ranksWithFilters, new Comparison<float>((i1, i2) => i2.CompareTo(i1)));
+            int validRanksLength = Array.IndexOf(ranksWithFilters, float.MinValue);
+            if (validRanksLength == 0) return null;
+            if (validRanksLength == -1) { validRanksLength = ranksWithFilters.Length; }
+            // TODO: debug
+            //validRanksLength = validRanksLength < 1000 ? validRanksLength : 1000;
+            float[] ranksSorted = new float[ranksWithFilters.Length];
+            Array.Copy(ranksWithFilters, ranksSorted, validRanksLength);
+
+            // update value range if necessary
+            if (minScore == float.MinValue)
+            {
+                minScore = ranksSorted[ranksSorted.Length - 1];
+            }
+            if (maxScore == float.MinValue)
+            {
+                maxScore = ranksSorted[0];
+            }
+            float range = maxScore - minScore;
+
+            // compute bitmap
+            using (Graphics gfx = Graphics.FromImage(_canvasBitmap))
+            {
+                gfx.FillRectangle(System.Drawing.Brushes.White, 0, 0, _canvasBitmap.Width, _canvasBitmap.Height);
+
+                if (range == 0) return _canvasBitmap.ToBitmapSource();
+
+                for (int iCol = 0; iCol < _canvasBitmap.Width; iCol++)
+                {
+                    int rankSampleIndex = (int)(((double)iCol / _canvasBitmap.Width) * ranksSorted.Length);
+                    float rankRatio = Math.Abs(ranksSorted[rankSampleIndex] - minScore) / range;
+                    int columnHeight = (int)(rankRatio * _canvasBitmap.Height);
+                    int startRow = _canvasBitmap.Height - columnHeight;
+                    gfx.DrawImage(_scaleBitmap,
+                        new Rectangle(iCol, startRow, 1, columnHeight),
+                        new Rectangle(0, startRow, 1, columnHeight),
+                        GraphicsUnit.Pixel);
+                    //gfx.DrawRectangle(Pens.Blue, iCol, _canvasBitmap.Height - columnHeight, 1, columnHeight);
+                }
+
+                return _canvasBitmap.ToBitmapSource();
+            }
+        }
+
+        private void InitializeScaleBitmap()
+        {
+            for (int iRow = 0; iRow < _scaleBitmap.Height; iRow++)
+            {
+                double interpolation = (double)iRow / _scaleBitmap.Height;
+                System.Drawing.Color color = ColorInterpolationHelper.InterpolateColorHSV(
+                    System.Drawing.Color.Lime, System.Drawing.Color.Red, interpolation, true);
+                _scaleBitmap.SetPixel(0, iRow, color);
             }
         }
 
@@ -373,7 +436,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 {
                     
                     QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
-                    LoadGraphs();
+                    //LoadGraphs();
 
                     e.Handled = true;
                 }
@@ -385,7 +448,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                             RasultStack_.Children.Remove(Query_[Query_.Count - 1]);
                             Query_.RemoveAt(Query_.Count - 1);
                         }
-                        ClearGraphs();
 
                         e.Handled = true;
                         //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
@@ -431,7 +493,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
-            LoadGraphs();
 
             e.Handled = true;
         }
@@ -486,7 +547,6 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             RasultStack_.Children.Clear();
             Query_.Clear();
             TextBox_.Text = "";
-            ClearGraphs();
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke("", AnnotationSource);
         }
