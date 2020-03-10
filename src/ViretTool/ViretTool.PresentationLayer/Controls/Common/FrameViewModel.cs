@@ -435,14 +435,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
             return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
         }
 
+        private bool originalIsColorShown = false;
+        private bool originalIsTextShown = false;
+        private bool originalAreFacesShown = false;
+
         public void ResetFrameNumber()
         {
             if (FrameNumber == _originalFrameNumber)
             {
                 return;
             }
-
             FrameNumber = _originalFrameNumber;
+
+            (AreFacesShown, IsColorShown, IsTextShown) = (originalAreFacesShown, originalIsColorShown, originalIsTextShown);
+            (originalAreFacesShown, originalIsColorShown, originalIsTextShown) = (false, false, false);
+
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
@@ -471,6 +478,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             FrameNumber = allFrameNumbers[newIndex];
+
+            if (!(originalIsTextShown || originalIsColorShown || originalAreFacesShown))
+            {
+                (originalAreFacesShown, originalIsColorShown, originalIsTextShown) = (AreFacesShown, IsColorShown, IsTextShown);
+                (AreFacesShown, IsColorShown, IsTextShown) = (false, false, false);
+            }
+
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
