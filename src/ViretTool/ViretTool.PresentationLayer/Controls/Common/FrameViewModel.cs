@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Drawing;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.Core;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -20,9 +23,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private bool _isVisible = true;
         private bool _isRightBorderVisible = false;
         private bool _isBottomBorderVisible = false;
-        private Color _rightBorderColor = Colors.Brown;
-        private Color _bottomBorderColor = Colors.Green;
+        private System.Windows.Media.Color _rightBorderColor = Colors.Brown;
+        private System.Windows.Media.Color _bottomBorderColor = Colors.Green;
         private bool _isLastInVideo;
+        private bool _areFacesShown = false;
+        private bool _isTextShown = false;
+        private BitmapSource _facesOverlay = null;
+        private BitmapSource _textOverlay = null;
 
         public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
         {
@@ -31,6 +38,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             FrameNumber = _originalFrameNumber = frameNumber;
 
             _framesInTheVideo = new Lazy<int[]>(() => servicesManager.CurrentDataset.ThumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
+
         }
 
         public bool CanAddToQuery => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
@@ -78,12 +86,139 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 return !_servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId].FromVideo;
             }
         }
+        private void _computeFacesOverlay()
+        {
+            
+            if (_servicesManager.IsDatasetOpened)
+            {
+                int width = 26;
+                int height = 15;
 
+                Bitmap _facesOverlay = new Bitmap(width, height);
+
+                int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+                bool[] facesSignatureDescriptor = _servicesManager.CurrentDataset.FaceSignatureProvider.Descriptors[frameID];
+                int count = _servicesManager.CurrentDataset.FaceSignatureProvider.DescriptorCount;
+
+                if (height * width > count)
+                {
+                    throw new ArgumentOutOfRangeException("Wrong format of Thumbnail resolution or FacesSignatureDescriptor!");
+                }
+
+                int iterator = 0;
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (facesSignatureDescriptor[iterator++])
+                        {
+                            _facesOverlay.SetPixel(x, y, System.Drawing.Color.Red);
+                        }
+                    }
+                }
+
+                FacesOverlay = _facesOverlay.ToBitmapSource();
+            }
+        }
+        private void _computeTextOverlay()
+        {
+
+            if (_servicesManager.IsDatasetOpened)
+            {
+                int width = 26;
+                int height = 15;
+
+                Bitmap _textOverlay = new Bitmap(width, height);
+
+                int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+                bool[] textSignatureDescriptor = _servicesManager.CurrentDataset.TextSignatureProvider.Descriptors[frameID];
+                int count = _servicesManager.CurrentDataset.FaceSignatureProvider.DescriptorCount;
+
+                if (height * width > count)
+                {
+                    throw new ArgumentOutOfRangeException("Wrong format of Thumbnail resolution or TextSignatureDescriptor!");
+                }
+
+                int iterator = 0;
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (textSignatureDescriptor[iterator++])
+                        {
+                            _textOverlay.SetPixel(x, y, System.Drawing.Color.Green);
+                        }
+                    }
+                }
+
+                TextOverlay = _textOverlay.ToBitmapSource();
+
+            }
+        }
+        public bool AreFacesShown
+        {
+            get => _areFacesShown;
+            set
+            {
+                _areFacesShown = value;
+                NotifyOfPropertyChange(() => AreFacesShown);
+            }
+        }
+        public bool IsTextShown
+        {
+            get => _isTextShown;
+            set
+            {
+                _isTextShown = value;
+                NotifyOfPropertyChange(() => IsTextShown);
+            }
+        }
+
+
+        public void ShowOverlay(bool showFaces, bool showText)
+        {
+            if(showFaces && FacesOverlay == null)
+            {
+                _computeFacesOverlay();
+            }
+            if (showText && TextOverlay == null)
+            {
+                _computeTextOverlay();
+            }
+            IsTextShown = showText;
+            AreFacesShown = showFaces;
+            NotifyOfPropertyChange();
+        }
 
         public int FrameNumber { get; private set; }
 
         public virtual byte[] ImageSource => _servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image;
-
+        
+        public BitmapSource FacesOverlay
+        {
+            get => _facesOverlay;
+            set
+            {
+                if(_facesOverlay != value)
+                {
+                    _facesOverlay = value;
+                    NotifyOfPropertyChange(() => FacesOverlay);
+                }
+            }
+        }
+        public BitmapSource TextOverlay
+        {
+            get => _textOverlay;
+            set
+            {
+                if (_textOverlay != value)
+                {
+                    _textOverlay = value;
+                    NotifyOfPropertyChange(() => TextOverlay);
+                }
+            }
+        }
+        
         public bool IsSelectedForDetail
         {
             get => _isSelectedForDetail;
@@ -142,7 +277,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
-        public Color RightBorderColor
+        public System.Windows.Media.Color RightBorderColor
         {
             get => _rightBorderColor;
             set
@@ -170,7 +305,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
-        public Color BottomBorderColor
+        public System.Windows.Media.Color BottomBorderColor
         {
             get => _bottomBorderColor;
             set

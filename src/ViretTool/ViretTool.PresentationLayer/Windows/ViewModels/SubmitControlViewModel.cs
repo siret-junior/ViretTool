@@ -10,6 +10,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
     {
         private int _imageHeight;
         private int _imageWidth;
+        private bool _isTextFacesChecked = false;
+        private bool _isTextChecked = false;
+        private bool _isFacesChecked = false;
+        private bool _isNothingChecked = true;
 
         public SubmitControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
@@ -46,7 +50,76 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+        public bool IsTextChecked
+        {
+            get => _isTextChecked;
+            set
+            {
+                _isTextChecked = value;
 
+                if (value == true)
+                {
+                    _updateOverlay(false, true);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsFacesChecked
+        {
+            get => _isFacesChecked;
+            set
+            {
+                _isFacesChecked = value;
+
+                if (value == true)
+                {
+                    _updateOverlay(true, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsTextFacesChecked
+        {
+            get => _isTextFacesChecked;
+            set
+            {
+                _isTextFacesChecked = value;
+
+                if (value == true)
+                {
+                    _updateOverlay(true, true);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsNothingChecked
+        {
+            get => _isNothingChecked;
+            set
+            {
+                _isNothingChecked = value;
+
+                if (value == true)
+                {
+                    _updateOverlay(false, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private void _updateOverlay(bool showFaces, bool showText)
+        {
+            foreach(FrameViewModel frame in SubmittedFrames)
+            {
+                frame.ShowOverlay(showFaces, showText);
+            }
+        }
         public BindableCollection<FrameViewModel> SubmittedFrames { get; } = new BindableCollection<FrameViewModel>();
 
         public void Initialize(IList<FrameViewModel> selectedFrames)
