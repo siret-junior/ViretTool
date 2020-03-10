@@ -93,35 +93,36 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void ComputeFacesOverlay()
         {
-            if (!_servicesManager.IsDatasetOpened)
+            if (!_servicesManager.IsDatasetOpened
+                || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
             {
                 return;
             }
 
-            int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
-            bool[] facesSignatureDescriptor = _servicesManager.CurrentDataset.FaceSignatureProvider.Descriptors[frameID];
-            int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
-            int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
-
-            FacesOverlay = ComputeBooleanOverlay(facesSignatureDescriptor, width, height, System.Drawing.Color.Lime);
+            IBoolSignatureDescriptorProvider textDescriptorProvider = _servicesManager.CurrentDataset.FaceSignatureProvider;
+            FacesOverlay = ComputeBooleanOverlay(frameId, textDescriptorProvider, System.Drawing.Color.Lime);
         }
         private void ComputeTextOverlay()
         {
-            if (!_servicesManager.IsDatasetOpened)
+            if (!_servicesManager.IsDatasetOpened 
+                || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
             {
                 return;
             }
 
-            int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
-            bool[] textSignatureDescriptor = _servicesManager.CurrentDataset.TextSignatureProvider.Descriptors[frameID];
-            int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
-            int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
-
-            TextOverlay = ComputeBooleanOverlay(textSignatureDescriptor, width, height, System.Drawing.Color.Red);
+            IBoolSignatureDescriptorProvider textDescriptorProvider = _servicesManager.CurrentDataset.TextSignatureProvider;
+            TextOverlay = ComputeBooleanOverlay(frameId, textDescriptorProvider, System.Drawing.Color.Red);
         }
 
-        private BitmapSource ComputeBooleanOverlay(bool[] booleanMask, int width, int height, System.Drawing.Color overlayColor)
+        private BitmapSource ComputeBooleanOverlay(
+            int frameId,
+            IBoolSignatureDescriptorProvider boolDescriptorProvider, 
+            System.Drawing.Color overlayColor)
         {
+            bool[] booleanMask = boolDescriptorProvider.Descriptors[frameId];
+            int width = boolDescriptorProvider.SignatureWidth;
+            int height = boolDescriptorProvider.SignatureHeight;
+
             using (Bitmap overlayBitmap = new Bitmap(width, height))
             {
                 int iterator = 0;
@@ -142,13 +143,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         private void ComputeColorOverlay()
         {
-            if (!_servicesManager.IsDatasetOpened)
+            if (!_servicesManager.IsDatasetOpened
+                || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
             {
                 return;
             }
 
-            int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
-            byte[] imageLabPixels = _servicesManager.CurrentDataset.ColorSignatureProvider.Descriptors[frameID];
+            byte[] imageLabPixels = _servicesManager.CurrentDataset.ColorSignatureProvider.Descriptors[frameId];
             int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
             int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
 
