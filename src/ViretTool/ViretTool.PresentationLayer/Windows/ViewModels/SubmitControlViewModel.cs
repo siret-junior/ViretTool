@@ -14,7 +14,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private bool _isTextChecked = false;
         private bool _isFacesChecked = false;
         private bool _isNothingChecked = true;
-
+        private bool _isColorChecked = false;
         public SubmitControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
             datasetServicesManager.DatasetOpened += (_, services) =>
@@ -59,7 +59,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(false, true);
+                    _updateOverlay(false, true, false);
                 }
 
                 NotifyOfPropertyChange();
@@ -75,7 +75,22 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(true, false);
+                    _updateOverlay(true, false, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsColorChecked
+        {
+            get => _isColorChecked;
+            set
+            {
+                _isColorChecked = value;
+
+                if (value == true)
+                {
+                    _updateOverlay(false, false, true);
                 }
 
                 NotifyOfPropertyChange();
@@ -90,7 +105,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(true, true);
+                    _updateOverlay(true, true, false);
                 }
 
                 NotifyOfPropertyChange();
@@ -106,18 +121,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(false, false);
+                    _updateOverlay(false, false, false);
                 }
 
                 NotifyOfPropertyChange();
             }
         }
 
-        private void _updateOverlay(bool showFaces, bool showText)
+        private void _updateOverlay(bool showFaces, bool showText, bool showColor)
         {
             foreach(FrameViewModel frame in SubmittedFrames)
             {
-                frame.ShowOverlay(showFaces, showText);
+                frame.ShowOverlay(showFaces, showText, showColor);
             }
         }
         public BindableCollection<FrameViewModel> SubmittedFrames { get; } = new BindableCollection<FrameViewModel>();

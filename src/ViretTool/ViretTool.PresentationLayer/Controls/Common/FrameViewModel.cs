@@ -28,8 +28,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private bool _isLastInVideo;
         private bool _areFacesShown = false;
         private bool _isTextShown = false;
+        private bool _isColorShown = false;
         private BitmapSource _facesOverlay = null;
         private BitmapSource _textOverlay = null;
+        private BitmapSource _colorOverlay = null;
 
         public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
         {
@@ -155,6 +157,41 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             }
         }
+        private void _computeColorOverlay()
+        {
+
+            if (_servicesManager.IsDatasetOpened)
+            {
+                int width = 26;
+                int height = 15;
+
+                Bitmap _colorOverlay = new Bitmap(width, height);
+
+
+                int frameID = _servicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(VideoId, FrameNumber);
+                byte[] a = _servicesManager.CurrentDataset.ColorSignatureProvider.Descriptors[frameID];
+                int count = _servicesManager.CurrentDataset.FaceSignatureProvider.DescriptorCount;
+
+                if (height * width > count)
+                {
+                    throw new ArgumentOutOfRangeException("Wrong format of Thumbnail resolution or ColorSignatureDescriptors!");
+                }
+
+                // TODO: populate bitmap with valid values
+                int iterator = 0;
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        // just blue color for now
+                        _colorOverlay.SetPixel(x, y, System.Drawing.Color.Blue);
+                        
+                    }
+                }
+
+                ColorOverlay = _colorOverlay.ToBitmapSource();
+            }
+        }
         public bool AreFacesShown
         {
             get => _areFacesShown;
@@ -174,8 +211,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
+        public bool IsColorShown
+        {
+            get => _isColorShown;
+            set
+            {
+                _isColorShown = value;
+                NotifyOfPropertyChange(() => IsColorShown);
+            }
+        }
 
-        public void ShowOverlay(bool showFaces, bool showText)
+
+        public void ShowOverlay(bool showFaces, bool showText, bool showColor)
         {
             if(showFaces && FacesOverlay == null)
             {
@@ -185,7 +232,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
             {
                 _computeTextOverlay();
             }
+            if(showColor && ColorOverlay == null)
+            {
+                _computeColorOverlay();
+            }
+            
             IsTextShown = showText;
+            IsColorShown = showColor;
             AreFacesShown = showFaces;
             NotifyOfPropertyChange();
         }
@@ -218,7 +271,19 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 }
             }
         }
-        
+        public BitmapSource ColorOverlay
+        {
+            get => _colorOverlay;
+            set
+            {
+                if (_colorOverlay != value)
+                {
+                    _colorOverlay = value;
+                    NotifyOfPropertyChange(() => ColorOverlay);
+                }
+            }
+        }
+
         public bool IsSelectedForDetail
         {
             get => _isSelectedForDetail;
