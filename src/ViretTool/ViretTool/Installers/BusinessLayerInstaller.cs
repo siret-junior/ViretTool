@@ -50,7 +50,7 @@ namespace ViretTool.Installers
                 Component.For<IDescriptorProvider<float[]>>()
                          .UsingFactoryMethod((_, context) => SemanticVectorDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
-                Component.For<IDescriptorProvider<byte[]>>()
+                Component.For<IColorSignatureDescriptorProvider>()
                          .UsingFactoryMethod((_, context) => ColorSignatureDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
                 Component.For<IDescriptorProvider<(int synsetId, float probability)[]>>()

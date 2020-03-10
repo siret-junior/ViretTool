@@ -15,6 +15,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         // TODO: fix FrameViewModel dependencies
         public double LargeFramesMultiplier => 1.5;
 
+        private bool _isTextFacesChecked = false;
+        private bool _isTextChecked = false;
+        private bool _isFacesChecked = false;
+        private bool _isNothingChecked = true;
+        private bool _isColorChecked = false;
+        
         public SubmitControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
             datasetServicesManager.DatasetOpened += (_, services) =>
@@ -50,7 +56,91 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+        public bool IsTextChecked
+        {
+            get => _isTextChecked;
+            set
+            {
+                _isTextChecked = value;
 
+                if (value == true)
+                {
+                    UpdateOverlay(false, true, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsFacesChecked
+        {
+            get => _isFacesChecked;
+            set
+            {
+                _isFacesChecked = value;
+
+                if (value == true)
+                {
+                    UpdateOverlay(true, false, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsColorChecked
+        {
+            get => _isColorChecked;
+            set
+            {
+                _isColorChecked = value;
+
+                if (value == true)
+                {
+                    UpdateOverlay(false, false, true);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsTextFacesChecked
+        {
+            get => _isTextFacesChecked;
+            set
+            {
+                _isTextFacesChecked = value;
+
+                if (value == true)
+                {
+                    UpdateOverlay(true, true, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsNothingChecked
+        {
+            get => _isNothingChecked;
+            set
+            {
+                _isNothingChecked = value;
+
+                if (value == true)
+                {
+                    UpdateOverlay(false, false, false);
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private void UpdateOverlay(bool showFaces, bool showText, bool showColor)
+        {
+            foreach(FrameViewModel frame in SubmittedFrames)
+            {
+                frame.ShowOverlay(showFaces, showText, showColor);
+            }
+        }
         public BindableCollection<FrameViewModel> SubmittedFrames { get; } = new BindableCollection<FrameViewModel>();
 
         public void Initialize(IList<FrameViewModel> selectedFrames)

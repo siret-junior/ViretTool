@@ -8,7 +8,7 @@ using ViretTool.DataLayer.DataIO.DescriptorIO.ColorSignatureIO;
 
 namespace ViretTool.BusinessLayer.Descriptors
 {
-    public class ColorSignatureDescriptorProvider : IDescriptorProvider<byte[]>
+    public class ColorSignatureDescriptorProvider : IColorSignatureDescriptorProvider
     {
         public byte[] DatasetHeader { get; }
 

@@ -15,8 +15,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
+        
         <ItemsControl Grid.Row="0" Margin="6" x:Name="ImagesDisplay" ItemsSource="{Binding SubmittedFrames}" ScrollViewer.CanContentScroll="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -45,7 +46,14 @@
                 </ControlTemplate>
             </ItemsControl.Template>
         </ItemsControl>
-        <DockPanel Grid.Row="1" Margin="6">
+        <StackPanel Grid.Row="1" Margin="6" Orientation="Horizontal">
+            <RadioButton GroupName="GroupName" Margin="0,0,30,0" IsChecked="{Binding Path=IsNothingChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Nothing" />
+            <RadioButton GroupName="GroupName" Margin="0,0,30,0" IsChecked="{Binding Path=IsTextChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Text"/>
+            <RadioButton GroupName="GroupName" Margin="0,0,30,0" IsChecked="{Binding Path=IsFacesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Faces"/>
+            <RadioButton GroupName="GroupName" Margin="0,0,30,0" IsChecked="{Binding Path=IsTextFacesChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Text + Faces" />
+            <RadioButton GroupName="GroupName" Margin="0,0,30,0" IsChecked="{Binding Path=IsColorChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Content="Color" />
+        </StackPanel>
+        <DockPanel Grid.Row="2" Margin="6">
             <Button x:Name="Cancel" Margin="6,0,0,6" DockPanel.Dock="Right" Content="{x:Static properties:Resources.CancelButtonText}" IsCancel="True"/>
             <Button x:Name="Ok" Margin="6,0,0,6" DockPanel.Dock="Right" Content="{x:Static properties:Resources.SubmitButtonText}" IsDefault="True"/>
         </DockPanel>

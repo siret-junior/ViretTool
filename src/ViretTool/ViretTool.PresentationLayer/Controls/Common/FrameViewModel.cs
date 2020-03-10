@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Drawing;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
+using ViretTool.Core;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using ViretTool.Core;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -20,9 +24,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private bool _isVisible = true;
         private bool _isRightBorderVisible = false;
         private bool _isBottomBorderVisible = false;
-        private Color _rightBorderColor = Colors.Brown;
-        private Color _bottomBorderColor = Colors.Green;
+        private System.Windows.Media.Color _rightBorderColor = Colors.Brown;
+        private System.Windows.Media.Color _bottomBorderColor = Colors.Green;
         private bool _isLastInVideo;
+        private bool _areFacesShown = false;
+        private bool _isTextShown = false;
+        private bool _isColorShown = false;
+        private BitmapSource _facesOverlay = null;
+        private BitmapSource _textOverlay = null;
+        private BitmapSource _colorOverlay = null;
 
         public FrameViewModel(int videoId, int frameNumber, IDatasetServicesManager servicesManager)
         {
@@ -31,6 +41,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             FrameNumber = _originalFrameNumber = frameNumber;
 
             _framesInTheVideo = new Lazy<int[]>(() => servicesManager.CurrentDataset.ThumbnailService.GetThumbnails(VideoId).Select(t => t.FrameNumber).ToArray());
+
         }
 
         public bool CanAddToQuery => _servicesManager.IsDatasetOpened && _servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out _);
@@ -80,9 +91,179 @@ namespace ViretTool.PresentationLayer.Controls.Common
         }
 
 
+        private void ComputeFacesOverlay()
+        {
+            if (!_servicesManager.IsDatasetOpened
+                || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+            {
+                return;
+            }
+
+            IBoolSignatureDescriptorProvider textDescriptorProvider = _servicesManager.CurrentDataset.FaceSignatureProvider;
+            FacesOverlay = ComputeBooleanOverlay(frameId, textDescriptorProvider, System.Drawing.Color.Lime);
+        }
+        private void ComputeTextOverlay()
+        {
+            if (!_servicesManager.IsDatasetOpened 
+                || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+            {
+                return;
+            }
+
+            IBoolSignatureDescriptorProvider textDescriptorProvider = _servicesManager.CurrentDataset.TextSignatureProvider;
+            TextOverlay = ComputeBooleanOverlay(frameId, textDescriptorProvider, System.Drawing.Color.Red);
+        }
+
+        private BitmapSource ComputeBooleanOverlay(
+            int frameId,
+            IBoolSignatureDescriptorProvider boolDescriptorProvider, 
+            System.Drawing.Color overlayColor)
+        {
+            bool[] booleanMask = boolDescriptorProvider.Descriptors[frameId];
+            int width = boolDescriptorProvider.SignatureWidth;
+            int height = boolDescriptorProvider.SignatureHeight;
+
+            using (Bitmap overlayBitmap = new Bitmap(width, height))
+            {
+                int iterator = 0;
+                for (int iRow = 0; iRow < height; iRow++)
+                {
+                    for (int iCol = 0; iCol < width; iCol++)
+                    {
+                        // 1 value per pixel (bool, true if contains text)
+                        if (booleanMask[iterator++])
+                        {
+                            overlayBitmap.SetPixel(iCol, iRow, overlayColor);
+                        }
+                    }
+                }
+                return overlayBitmap.ToBitmapSource();
+            }
+        }
+
+        private void ComputeColorOverlay()
+        {
+            if (!_servicesManager.IsDatasetOpened
+                || !_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+            {
+                return;
+            }
+
+            byte[] imageLabPixels = _servicesManager.CurrentDataset.ColorSignatureProvider.Descriptors[frameId];
+            int width = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureWidth;
+            int height = _servicesManager.CurrentDataset.ColorSignatureProvider.SignatureHeight;
+
+            using (Bitmap _colorOverlay = new Bitmap(width, height))
+            {
+                // convert CIELab pixel values to RGB bitmap
+                for (int iRow = 0; iRow < height; iRow++)
+                {
+                    for (int iCol = 0; iCol < width; iCol++)
+                    {
+                        int pixelOffset = ((iRow * width) + iCol) * 3;  // 3 values per pixel (L, a, b)
+                        byte L = imageLabPixels[pixelOffset];
+                        byte a = imageLabPixels[pixelOffset + 1];
+                        byte b = imageLabPixels[pixelOffset + 2];
+
+                        ColorSpaceHelper.CIELab lab = ColorSpaceHelper.ProjectByteToLab(L, a, b);
+                        System.Drawing.Color color = ColorSpaceHelper.LabtoColor(lab);
+                        _colorOverlay.SetPixel(iCol, iRow, color);
+                    }
+                }
+                ColorOverlay = _colorOverlay.ToBitmapSource();
+            }
+        }
+        public bool AreFacesShown
+        {
+            get => _areFacesShown;
+            set
+            {
+                _areFacesShown = value;
+                NotifyOfPropertyChange(() => AreFacesShown);
+            }
+        }
+        public bool IsTextShown
+        {
+            get => _isTextShown;
+            set
+            {
+                _isTextShown = value;
+                NotifyOfPropertyChange(() => IsTextShown);
+            }
+        }
+
+        public bool IsColorShown
+        {
+            get => _isColorShown;
+            set
+            {
+                _isColorShown = value;
+                NotifyOfPropertyChange(() => IsColorShown);
+            }
+        }
+
+
+        public void ShowOverlay(bool showFaces, bool showText, bool showColor)
+        {
+            if(showFaces && FacesOverlay == null)
+            {
+                ComputeFacesOverlay();
+            }
+            if (showText && TextOverlay == null)
+            {
+                ComputeTextOverlay();
+            }
+            if(showColor && ColorOverlay == null)
+            {
+                ComputeColorOverlay();
+            }
+            
+            IsTextShown = showText;
+            IsColorShown = showColor;
+            AreFacesShown = showFaces;
+            NotifyOfPropertyChange();
+        }
+
         public int FrameNumber { get; private set; }
 
         public virtual byte[] ImageSource => _servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image;
+        
+        public BitmapSource FacesOverlay
+        {
+            get => _facesOverlay;
+            set
+            {
+                if(_facesOverlay != value)
+                {
+                    _facesOverlay = value;
+                    NotifyOfPropertyChange(() => FacesOverlay);
+                }
+            }
+        }
+        public BitmapSource TextOverlay
+        {
+            get => _textOverlay;
+            set
+            {
+                if (_textOverlay != value)
+                {
+                    _textOverlay = value;
+                    NotifyOfPropertyChange(() => TextOverlay);
+                }
+            }
+        }
+        public BitmapSource ColorOverlay
+        {
+            get => _colorOverlay;
+            set
+            {
+                if (_colorOverlay != value)
+                {
+                    _colorOverlay = value;
+                    NotifyOfPropertyChange(() => ColorOverlay);
+                }
+            }
+        }
 
         public bool IsSelectedForDetail
         {
@@ -142,7 +323,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
-        public Color RightBorderColor
+        public System.Windows.Media.Color RightBorderColor
         {
             get => _rightBorderColor;
             set
@@ -170,7 +351,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
-        public Color BottomBorderColor
+        public System.Windows.Media.Color BottomBorderColor
         {
             get => _bottomBorderColor;
             set
@@ -236,14 +417,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
             return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
         }
 
+        private bool originalIsColorShown = false;
+        private bool originalIsTextShown = false;
+        private bool originalAreFacesShown = false;
+
         public void ResetFrameNumber()
         {
             if (FrameNumber == _originalFrameNumber)
             {
                 return;
             }
-
             FrameNumber = _originalFrameNumber;
+
+            (AreFacesShown, IsColorShown, IsTextShown) = (originalAreFacesShown, originalIsColorShown, originalIsTextShown);
+            (originalAreFacesShown, originalIsColorShown, originalIsTextShown) = (false, false, false);
+
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));
@@ -272,6 +460,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
 
             FrameNumber = allFrameNumbers[newIndex];
+
+            if (!(originalIsTextShown || originalIsColorShown || originalAreFacesShown))
+            {
+                (originalAreFacesShown, originalIsColorShown, originalIsTextShown) = (AreFacesShown, IsColorShown, IsTextShown);
+                (AreFacesShown, IsColorShown, IsTextShown) = (false, false, false);
+            }
+
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
             NotifyOfPropertyChange(nameof(CanAddToQuery));

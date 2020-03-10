@@ -2,12 +2,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.Core;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignatureModel
 {
@@ -28,7 +30,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         private Dictionary<Ellipse, float[]> _partialRankingCache = new Dictionary<Ellipse, float[]>();
 
 
-        public ColorSignatureModel(IDescriptorProvider<byte[]> colorSignatures)
+        public ColorSignatureModel(IColorSignatureDescriptorProvider colorSignatures)
         {
             //RankFusion = rankFusion;
             _colorSignatures = colorSignatures.Descriptors;
@@ -216,7 +218,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                         offsets.Add(j * _signatureWidth * 3 + i * 3);
 
             return new Tuple<int[], Color, Ellipse.State>(offsets.ToArray(), 
-                ImageHelper.RGBtoLabByte(ellipse.ColorR, ellipse.ColorG, ellipse.ColorB), ellipse.EllipseState);
+                ColorSpaceHelper.RGBtoLabByte(ellipse.ColorR, ellipse.ColorG, ellipse.ColorB), ellipse.EllipseState);
         }
 
 
