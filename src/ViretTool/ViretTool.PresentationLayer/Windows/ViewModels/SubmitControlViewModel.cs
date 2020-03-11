@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Services;
@@ -8,6 +9,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 {
     public class SubmitControlViewModel : Screen
     {
+
+        private readonly IDatasetServicesManager _datasetServicesManager;
         private int _imageHeight;
         private int _imageWidth;
         private bool _isTextFacesChecked = false;
@@ -15,8 +18,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         private bool _isFacesChecked = false;
         private bool _isNothingChecked = true;
         private bool _isColorChecked = false;
+        private string _aggregatedLabel = null;
         public SubmitControlViewModel(IDatasetServicesManager datasetServicesManager)
         {
+            _datasetServicesManager = datasetServicesManager;
             datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
                                                         ImageHeight = services.DatasetParameters.DefaultFrameHeight;
@@ -59,7 +64,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(false, true, false);
+                    UpdateOverlay(false, true, false);
                 }
 
                 NotifyOfPropertyChange();
@@ -75,7 +80,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(true, false, false);
+                    UpdateOverlay(true, false, false);
                 }
 
                 NotifyOfPropertyChange();
@@ -90,7 +95,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(false, false, true);
+                    UpdateOverlay(false, false, true);
                 }
 
                 NotifyOfPropertyChange();
@@ -105,7 +110,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(true, true, false);
+                    UpdateOverlay(true, true, false);
                 }
 
                 NotifyOfPropertyChange();
@@ -121,14 +126,27 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 if (value == true)
                 {
-                    _updateOverlay(false, false, false);
+                    UpdateOverlay(false, false, false);
                 }
 
                 NotifyOfPropertyChange();
             }
         }
 
-        private void _updateOverlay(bool showFaces, bool showText, bool showColor)
+        public string AggregatedLabel
+        {
+            get => _aggregatedLabel;
+            set
+            {
+                if(value != _aggregatedLabel)
+                {
+                    _aggregatedLabel = value;
+                    NotifyOfPropertyChange();
+                }
+            }
+        }
+
+        private void UpdateOverlay(bool showFaces, bool showText, bool showColor)
         {
             foreach(FrameViewModel frame in SubmittedFrames)
             {
@@ -141,6 +159,23 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             SubmittedFrames.Clear();
             SubmittedFrames.AddRange(selectedFrames);
+
+            List<int> synsets = new List<int>();
+
+            foreach (FrameViewModel frame in selectedFrames)
+            {
+                _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId);
+                synsets.AddRange(_datasetServicesManager.CurrentDataset.KeywordSynsetProvider.GetDescriptor(frameId).Take(5).Select(x => x.synsetId).ToList());
+            }
+            var aggregatedSynsetIDs = from synsetID in synsets
+                    group synsetID by synsetID into groups
+                    let count = groups.Count()
+                    orderby count descending
+                    select groups.Key;
+            AggregatedLabel = string.Join(", ", aggregatedSynsetIDs.ToArray()
+                    .Select(synsetID =>
+                        $"{_datasetServicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsetID)}")
+                    );
         }
 
         public void RemoveFromQueryClicked(FrameViewModel frameViewModel)
