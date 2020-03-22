@@ -9,5 +9,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models
 {
     public interface IColorSketchModel : ISimilarityModel<ColorSketchQuery>
     {
+        bool TryGetEllipseRanking(Ellipse ellipse, out float[] value);
     }
 }

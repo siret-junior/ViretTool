@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
+using ViretTool.BusinessLayer.RankingModels.Queries;
+using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.Core;
@@ -199,7 +202,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
                 _keywordQueryResult = value;
                 _interactionLogger.LogInteraction(LogCategory.Text, LogType.JointEmbedding, _keywordQueryResult?.FullQuery, $"{(int)KeywordValue}%|{KeywordUseForSorting}");
-                
+
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();
             }
@@ -480,9 +483,9 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
             TemporalQueries primaryTemporalQuery = DatasetServicesManager.CurrentDataset.RankingService.CachedQuery.PrimaryTemporalQuery;
             IBiTemporalSimilarityModule similarityModule = DatasetServicesManager.CurrentDataset.RankingService.BiTemporalRankingModule.BiTemporalSimilarityModule;
-            
+
             KeywordToolTipBitmap = LoadBitmapForRanking(similarityModule.KeywordModel.OutputRanking, primaryTemporalQuery, 0, 1);
-            ColorToolTipBitmap = LoadBitmapForRanking(similarityModule.ColorSketchModel.OutputRanking, primaryTemporalQuery, float.MinValue, 0);
+            ColorToolTipBitmap = LoadBitmapForColorRanking(DatasetServicesManager.CurrentDataset.RankingService, float.MinValue, 0);
             SemanticToolTipBitmap = LoadBitmapForRanking(similarityModule.SemanticExampleModel.OutputRanking, primaryTemporalQuery, 0, 1);
         }
 
@@ -521,10 +524,10 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QuerySettingsChanged.OnNext(Unit.Default);
         }
 
-        private Bitmap _canvasBitmap = new Bitmap(1000, 200);
-        private Bitmap _scaleBitmap = new Bitmap(1, 200);
+        private Bitmap _canvasBitmap = new Bitmap(1000, 400);
+        private Bitmap _scaleBitmap = new Bitmap(1, 400);
         private readonly int _tooltipRanksCount = 1000;
-        private BitmapSource LoadBitmapForRanking(BiTemporalRankingBuffer ranking, TemporalQueries primaryTemporalQuery, 
+        private BitmapSource LoadBitmapForRanking(BiTemporalRankingBuffer ranking, TemporalQueries primaryTemporalQuery,
             float minScore = float.MinValue, float maxScore = float.MinValue)
         {
             if (ranking == null) return null;
@@ -534,8 +537,8 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             lock (DatasetServicesManager.CurrentDataset.RankingService.Lock)
             {
                 ranksWithFilters = primaryTemporalQuery == TemporalQueries.Former
-                    ? ranking.FormerRankingBuffer.Ranks
-                    : ranking.LatterRankingBuffer.Ranks;
+                    ? (float[])ranking.FormerRankingBuffer.Ranks.Clone()
+                    : (float[])ranking.LatterRankingBuffer.Ranks.Clone();
             }
 
             // filter and sort ranks
@@ -577,7 +580,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                     int startRow = _canvasBitmap.Height - columnHeight;
                     gfx.DrawImage(_scaleBitmap,
                         new Rectangle(iCol, startRow, 1, columnHeight),
-                        new Rectangle(0, startRow, 1, columnHeight),  
+                        new Rectangle(0, startRow, 1, columnHeight),
                         GraphicsUnit.Pixel);
                     //gfx.DrawRectangle(Pens.Blue, iCol, startRow, 1, columnHeight);
                 }
@@ -587,6 +590,211 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 return _canvasBitmap.ToBitmapSource();
             }
         }
+
+
+
+        private BitmapSource LoadBitmapForColorRanking(IBiTemporalRankingService rankingService, 
+            float minScore = float.MinValue, float maxScore = float.MinValue)
+        {
+            // TODO: implement for temporal queries
+            IColorSketchModel colorSketchModel = rankingService
+                .BiTemporalRankingModule
+                .BiTemporalSimilarityModule
+                .ColorSketchModel
+                .FormerSimilarityModel;
+
+            Ellipse[] ellipses = colorSketchModel.CachedQuery.ColorSketchEllipses;
+
+            List<(Ellipse ellipse, float[] ranking)> rankingEllipses = new List<(Ellipse ellipse, float[] ranking)>();
+
+            // load ranking for all ellipses
+            float[] rankingAll = (float[])colorSketchModel.OutputRanking.Ranks.Clone();
+            Array.Sort(rankingAll, new Comparison<float>((i1, i2) => i2.CompareTo(i1)));
+            if (ellipses.Length > 1)
+            {
+                for (int i = 0; i < rankingAll.Length; i++)
+                {
+                    rankingAll[i] /= ellipses.Length;
+                }
+            }
+            rankingEllipses.Add((null, rankingAll));
+
+            // load ranking for each ellipse individually
+            rankingEllipses.AddRange(ellipses
+                .Select(ellipse =>
+                {
+                    if (!colorSketchModel.TryGetEllipseRanking(ellipse, out float[] ranking))
+                    {
+                        ranking = null;
+                    }
+                    ranking = (float[])ranking.Clone();
+                    Array.Sort(ranking, new Comparison<float>((i1, i2) => i2.CompareTo(i1)));
+                    return (ellipse, ranking);
+                })
+            );
+
+
+            // compute ranking boundaries
+            if (minScore == float.MinValue)
+            {
+                minScore = float.MaxValue;
+                foreach (float[] ranking in rankingEllipses.Select(x => x.ranking))
+                {
+                    float rankingMinValue = float.MaxValue;
+                    int i = 0;
+                    while (ranking != null
+                        && i < ranking.Length
+                        && ranking[i] != float.MinValue)
+                    {
+                        rankingMinValue = ranking[i] < rankingMinValue ? ranking[i] : rankingMinValue;
+                        i++;
+                    }
+                    minScore = rankingMinValue < minScore ? rankingMinValue : minScore; 
+                }
+            }
+            if (maxScore == float.MinValue)
+            {
+                maxScore = float.MinValue;
+                foreach (float[] ranking in rankingEllipses.Select(x => x.ranking))
+                {
+                    float rankingMaxValue = ranking != null ? ranking[0] : float.MinValue;
+                    maxScore = rankingMaxValue > maxScore ? rankingMaxValue : minScore;
+                }
+            }
+            float range = maxScore - minScore;
+
+            //File.WriteAllText($"Ellipses ({ellipses.Length}) - MinScore_{minScore}, MaxScore_{maxScore}, Range_{range}.txt", 
+            //    string.Join("; ", rankingAll));
+
+            // compute bitmap
+            using (Graphics gfx = Graphics.FromImage(_canvasBitmap))
+            {
+                // white background
+                gfx.FillRectangle(System.Drawing.Brushes.White, 0, 0, _canvasBitmap.Width, _canvasBitmap.Height);
+                if (range == 0) return _canvasBitmap.ToBitmapSource();
+
+                // graph lines
+                foreach ((Ellipse ellipse, float[] ranking) in rankingEllipses)
+                {
+                    //if (ellipse != null)
+                    //{
+                    //    File.WriteAllText(
+                    //        $"Ellipse R{ellipse.ColorR}_G{ellipse.ColorG}_B{ellipse.ColorB} {(ellipse.EllipseState == Ellipse.State.All ? "ALL" : "ANY")}.txt",
+                    //        string.Join("; ", ranking));
+                    //}
+
+                    Color color;
+                    if (ellipse == null)
+                    {
+                        color = Color.Black;
+                    }
+                    else
+                    {
+                        color = Color.FromArgb(ellipse.ColorR, ellipse.ColorG, ellipse.ColorB);
+                    }
+
+                    // start from 10th value
+                    int columnStart = (int)(Math.Log10(10) / Math.Log10(rankingAll.Length) * _canvasBitmap.Width);
+
+
+                    Point? lastPoint = null;
+                    for (int iCol = columnStart; iCol < _canvasBitmap.Width - 1; iCol++)
+                    {
+                        //int sampleIndex = (int)(((double)iCol / _canvasBitmap.Width) * ranking.Length);
+                        double maxExponent = Math.Log10(ranking.Length);
+                        double sampleRatio = (double)(iCol) / _canvasBitmap.Width;
+                        int sampleIndex = (int)(Math.Pow(10, sampleRatio * maxExponent)) - 1;
+
+                        float rankRatio = Math.Abs(ranking[sampleIndex] - minScore) / range;
+                        int columnHeight = (int)(rankRatio * (_canvasBitmap.Height - 1));
+                        int iRow = (_canvasBitmap.Height - 1) - columnHeight;
+
+
+                        //_canvasBitmap.SetPixel(iCol, iRow, color);
+                        Point currentPoint = new Point(iCol, iRow);
+                        if (lastPoint == null)
+                        {
+                            lastPoint = currentPoint;
+                        }
+
+
+                        if (ellipse != null || iCol % 8 < 4)
+                        {
+                            gfx.DrawLine(new Pen(color) { Width = 2 }, lastPoint.Value, currentPoint);
+                        }
+
+                        lastPoint = currentPoint;
+                    }
+
+                    // add last point
+                    {
+                        float rankRatio = Math.Abs(ranking[ranking.Length - 1] - minScore) / range;
+                        int columnHeight = (int)(rankRatio * (_canvasBitmap.Height - 1));
+                        int iRow = (_canvasBitmap.Height - 1) - columnHeight;
+                        int iCol = _canvasBitmap.Width - 1;
+                        Point currentPoint = new Point(iCol, iRow);
+                        gfx.DrawLine(new Pen(color) { Width = 2 }, lastPoint.Value, currentPoint);
+                    }
+
+
+                    // draw first 10 as circles/rectangles
+                    for (int index = 1; index < 10; index++)
+                    {
+                        double columnRatio = Math.Log10(index) / Math.Log10(rankingAll.Length);
+                        int iCol = (int)(columnRatio * _canvasBitmap.Width);
+
+                        double maxExponent = Math.Log10(ranking.Length);
+                        double sampleRatio = (double)(iCol) / _canvasBitmap.Width;
+                        int sampleIndex = (int)(Math.Pow(10, sampleRatio * maxExponent)) - 1;
+
+                        float rankRatio = Math.Abs(ranking[sampleIndex] - minScore) / range;
+                        int columnHeight = (int)(rankRatio * (_canvasBitmap.Height - 1));
+                        int iRow = (_canvasBitmap.Height - 1) - columnHeight;
+
+
+                        //gfx.DrawLine(new Pen(Color.Black) { Width = 2 },
+                        //    columnIndex, _canvasBitmap.Height - 6,
+                        //    columnIndex, _canvasBitmap.Height - 1);
+
+                        gfx.DrawEllipse(new Pen(color) { Width = 1 }, iCol - 5, iRow - 5, 11, 11);
+                    }
+                }
+
+                // draw log scale - small steps
+                int step = 1;
+                int iPosition = 1;
+                while (iPosition < rankingAll.Length)
+                {
+                    int nextSegmentStart = iPosition * 10;
+                    while (iPosition < rankingAll.Length && iPosition < nextSegmentStart)
+                    {
+                        double columnRatio = Math.Log10(iPosition) / Math.Log10(rankingAll.Length);
+                        int columnIndex = (int)(columnRatio * _canvasBitmap.Width);
+
+                        gfx.DrawLine(new Pen(Color.Black) { Width = 2 },
+                            columnIndex, _canvasBitmap.Height - 6,
+                            columnIndex, _canvasBitmap.Height - 1);
+
+                        iPosition += step;
+                    }
+                    step *= 10;
+                }
+
+                // draw log scale - large steps
+                for (int iExponent = 0; Math.Pow(10, iExponent) < rankingAll.Length; iExponent++)
+                {
+                    double columnRatio = iExponent / Math.Log10(rankingAll.Length);
+                    int columnIndex = (int)(columnRatio * _canvasBitmap.Width);
+
+                    gfx.DrawLine(new Pen(Color.Black) { Width = 2 },
+                        columnIndex, _canvasBitmap.Height - 21,
+                        columnIndex, _canvasBitmap.Height - 1);
+                }
+                
+                return _canvasBitmap.ToBitmapSource();
+            }
+        }
+
 
         private void InitializeScaleBitmap()
         {

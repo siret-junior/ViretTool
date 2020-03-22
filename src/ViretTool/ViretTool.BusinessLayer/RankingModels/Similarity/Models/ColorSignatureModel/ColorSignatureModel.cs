@@ -100,6 +100,11 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
 
         }
 
+        public bool TryGetEllipseRanking(Ellipse ellipse, out float[] value)
+        {
+            return _partialRankingCache.TryGetValue(ellipse, out value);
+        }
+
         private bool HasQueryOrInputChanged(ColorSketchQuery query, RankingBuffer inputRanking)
         {
             return (query == null && CachedQuery != null)
