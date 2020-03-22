@@ -288,7 +288,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 // load tooltip, either from cache or compute it
                 if (!_keywordTooltipCache.TryGetValue(hoveredWord, out BitmapSource tooltipBitmap))
                 {
-                    tooltipBitmap = LoadBitmapForKeyword(hoveredWord);
+                    tooltipBitmap = LoadBitmapForKeyword(hoveredWord, 0, 1);
                     if (tooltipBitmap != null)
                     {
                         _keywordTooltipCache.Add(hoveredWord, tooltipBitmap);
@@ -306,6 +306,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
 
         private Bitmap _canvasBitmap = new Bitmap(1000, 200);
         private Bitmap _scaleBitmap = new Bitmap(1, 200);
+        private readonly int _tooltipRanksCount = 1000;
         private BitmapSource LoadBitmapForKeyword(string hoveredWord, float minScore = float.MinValue, float maxScore = float.MinValue)
         {
             if (!DatasetServicesManager.IsDatasetOpened)
@@ -335,13 +336,16 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             if (validRanksLength == -1) { validRanksLength = ranksWithFilters.Length; }
             // TODO: debug
             //validRanksLength = validRanksLength < 1000 ? validRanksLength : 1000;
-            float[] ranksSorted = new float[ranksWithFilters.Length];
-            Array.Copy(ranksWithFilters, ranksSorted, validRanksLength);
+            //float[] ranksSorted = new float[ranksWithFilters.Length];
+
+            float[] ranksSorted = new float[_tooltipRanksCount];
+            int ranksToCopyCount = Math.Min(validRanksLength, _tooltipRanksCount);
+            Array.Copy(ranksWithFilters, ranksSorted, ranksToCopyCount);
 
             // update value range if necessary
             if (minScore == float.MinValue)
             {
-                minScore = ranksSorted[ranksSorted.Length - 1];
+                minScore = ranksSorted[ranksToCopyCount - 1];
             }
             if (maxScore == float.MinValue)
             {
@@ -359,6 +363,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 for (int iCol = 0; iCol < _canvasBitmap.Width; iCol++)
                 {
                     int rankSampleIndex = (int)(((double)iCol / _canvasBitmap.Width) * ranksSorted.Length);
+                    if (rankSampleIndex >= ranksToCopyCount) break;
                     float rankRatio = Math.Abs(ranksSorted[rankSampleIndex] - minScore) / range;
                     int columnHeight = (int)(rankRatio * _canvasBitmap.Height);
                     int startRow = _canvasBitmap.Height - columnHeight;

@@ -483,7 +483,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             
             KeywordToolTipBitmap = LoadBitmapForRanking(similarityModule.KeywordModel.OutputRanking, primaryTemporalQuery, 0, 1);
             ColorToolTipBitmap = LoadBitmapForRanking(similarityModule.ColorSketchModel.OutputRanking, primaryTemporalQuery, float.MinValue, 0);
-            SemanticToolTipBitmap = LoadBitmapForRanking(similarityModule.SemanticExampleModel.OutputRanking, primaryTemporalQuery);
+            SemanticToolTipBitmap = LoadBitmapForRanking(similarityModule.SemanticExampleModel.OutputRanking, primaryTemporalQuery, 0, 1);
         }
 
         public void UpdateQueryObjects(DownloadedFrameViewModel downloadedFrame)
@@ -523,6 +523,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
 
         private Bitmap _canvasBitmap = new Bitmap(1000, 200);
         private Bitmap _scaleBitmap = new Bitmap(1, 200);
+        private readonly int _tooltipRanksCount = 1000;
         private BitmapSource LoadBitmapForRanking(BiTemporalRankingBuffer ranking, TemporalQueries primaryTemporalQuery, 
             float minScore = float.MinValue, float maxScore = float.MinValue)
         {
@@ -544,13 +545,16 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             if (validRanksLength == -1) { validRanksLength = ranksWithFilters.Length; }
             // TODO: debug
             //validRanksLength = validRanksLength < 1000 ? validRanksLength : 1000;
-            float[] ranksSorted = new float[ranksWithFilters.Length];
-            Array.Copy(ranksWithFilters, ranksSorted, validRanksLength);
+            //float[] ranksSorted = new float[ranksWithFilters.Length];
+
+            float[] ranksSorted = new float[_tooltipRanksCount];
+            int ranksToCopyCount = Math.Min(validRanksLength, _tooltipRanksCount);
+            Array.Copy(ranksWithFilters, ranksSorted, ranksToCopyCount);
 
             // update value range if necessary
             if (minScore == float.MinValue)
             {
-                minScore = ranksSorted[ranksSorted.Length - 1];
+                minScore = ranksSorted[ranksToCopyCount - 1];
             }
             if (maxScore == float.MinValue)
             {
@@ -567,6 +571,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 for (int iCol = 0; iCol < _canvasBitmap.Width; iCol++)
                 {
                     int rankSampleIndex = (int)(((double)iCol / _canvasBitmap.Width) * ranksSorted.Length);
+                    if (rankSampleIndex >= ranksToCopyCount) break;
                     float rankRatio = Math.Abs(ranksSorted[rankSampleIndex] - minScore) / range;
                     int columnHeight = (int)(rankRatio * _canvasBitmap.Height);
                     int startRow = _canvasBitmap.Height - columnHeight;
