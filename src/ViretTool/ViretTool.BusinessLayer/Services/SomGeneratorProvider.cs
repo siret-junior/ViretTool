@@ -19,6 +19,8 @@ namespace ViretTool.BusinessLayer.Services
             // TODO: set SOM initialization here whenever dataset is loaded (using datasetServicesManager.DatasetOpened event).
             // TODO: access IDescriptorProvider<float[]> through passed datasetServicesManager
         }
+        private int _baseWidth = 20;
+        private int _baseHeight = 20;
 
         public override int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
@@ -26,9 +28,14 @@ namespace ViretTool.BusinessLayer.Services
             BorderSimilarities.Clear();
 
             // compute base layer
-            long[] inputFrameIdsLong = inputFrameIds.ToLongArray();
-            int [] somResult1D = SOMWrapper.CreateSOMRepresentants(inputFrameIdsLong, null, columnCount, rowCount, 15, deepFeaturesProvider);
-            int[][] somBaseLayer = somResult1D.To2DArray(columnCount, rowCount);
+            int datasetSize = _baseHeight * _baseWidth;
+            int rlen = 20;
+            int[] inputFrameIdsArray = inputFrameIds.Take(datasetSize).ToArray();
+            (double[] framesData, int dimension) = ExtractDataFromSemanticVectors(inputFrameIdsArray, deepFeaturesProvider);
+
+            int[] somResult1D = SOMWrapper.GetSomRepresentants(framesData, datasetSize, dimension, _baseWidth, _baseHeight, rlen, inputFrameIdsArray);
+            
+            int[][] somBaseLayer = somResult1D.To2DArray(_baseWidth, _baseHeight);
 
             // TODO: code prepared for a multilayer solution
             //// compute the additional layer sizes based on the base layer dimensions
@@ -127,6 +134,17 @@ namespace ViretTool.BusinessLayer.Services
                 result[iRow] = rowResult;
             }
             return result;
+        }
+        (double[] framesData, int dimension) ExtractDataFromSemanticVectors(int[] inputFrameIdsArray, IDescriptorProvider<float[]> deepFeaturesProvider)
+        {
+            int dimension = deepFeaturesProvider.Descriptors[0].Length;
+            double[] framesData = new double[inputFrameIdsArray.Length * dimension];
+            for (int iFrame = 0; iFrame < inputFrameIdsArray.Length; iFrame++)
+            {
+                deepFeaturesProvider.Descriptors[iFrame].CopyTo(framesData, 0);
+            }
+
+            return (framesData, dimension);
         }
     }
 }
