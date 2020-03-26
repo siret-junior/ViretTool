@@ -100,11 +100,11 @@ namespace ViretTool.BusinessLayer.Submission
                 //    }
                 //}
 
-                HttpResponseMessage response = await _client.GetAsync(url);
+                //HttpResponseMessage response = await _client.GetAsync(url);
                 string responseString;
                 if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
                 {
-                    response = await _client.GetAsync(url);
+                    HttpResponseMessage response = await _client.GetAsync(url);
                     responseString = await response.Content.ReadAsStringAsync();
                 }
                 else
@@ -116,7 +116,7 @@ namespace ViretTool.BusinessLayer.Submission
                     await _semaphoreSlim.WaitAsync();
                     try
                     {
-                        await PostAsyncLogged(url, content);
+                        HttpResponseMessage response = await PostAsyncLogged(url, content);
                         responseString = await response.Content.ReadAsStringAsync();
                     }
                     finally
