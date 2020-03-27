@@ -31,7 +31,7 @@ namespace ViretTool.BusinessLayer.Services
             int datasetSize = _baseHeight * _baseWidth;
             int rlen = 20;
             int[] inputFrameIdsArray = inputFrameIds.Take(datasetSize).ToArray();
-            (double[] framesData, int dimension) = ExtractDataFromSemanticVectors(inputFrameIdsArray, deepFeaturesProvider);
+            (float[] framesData, int dimension) = ExtractDataFromSemanticVectors(inputFrameIdsArray, deepFeaturesProvider);
 
             int[] somResult1D = SOMWrapper.GetSomRepresentants(framesData, datasetSize, dimension, _baseWidth, _baseHeight, rlen, inputFrameIdsArray);
             
@@ -135,13 +135,13 @@ namespace ViretTool.BusinessLayer.Services
             }
             return result;
         }
-        (double[] framesData, int dimension) ExtractDataFromSemanticVectors(int[] inputFrameIdsArray, IDescriptorProvider<float[]> deepFeaturesProvider)
+        (float[] framesData, int dimension) ExtractDataFromSemanticVectors(int[] inputFrameIdsArray, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             int dimension = deepFeaturesProvider.Descriptors[0].Length;
-            double[] framesData = new double[inputFrameIdsArray.Length * dimension];
+            float[] framesData = new float[inputFrameIdsArray.Length * dimension];
             for (int iFrame = 0; iFrame < inputFrameIdsArray.Length; iFrame++)
             {
-                deepFeaturesProvider.Descriptors[iFrame].CopyTo(framesData, 0);
+                deepFeaturesProvider.Descriptors[iFrame].CopyTo(framesData, iFrame * dimension);
             }
 
             return (framesData, dimension);
