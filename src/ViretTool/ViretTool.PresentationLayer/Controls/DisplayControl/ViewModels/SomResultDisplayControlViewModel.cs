@@ -49,7 +49,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
             IsInitialDisplayShown = false;
 
-            _currentLayer = 0;
+            _currentLayer = _zoomDisplayProvider.GetMaxDepth();
             this.NotifyOfPropertyChange("ShowZoomOutButton");
             this.NotifyOfPropertyChange("ShowZoomIntoButton");
 
