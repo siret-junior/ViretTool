@@ -37,7 +37,6 @@ namespace ViretTool.BusinessLayer.Services
 
             if (datasetSize > inputFrameIdsArray.Length)
             {
-                // TODO: populate the inputFrameIdsArray with coppies of inputFrameIdsArray
                 AddCopiesToInputFrameIds(ref inputFrameIdsArray, datasetSize);
             }
 
@@ -51,7 +50,6 @@ namespace ViretTool.BusinessLayer.Services
             // Compute border similarities for base layer
             float[][] somBaseBorderSimilarities = ComputeBorderSimilarities(somBaseLayer, deepFeaturesProvider);
 
-            // TODO: code prepared for a multilayer solution
             //// compute the additional layer sizes based on the base layer dimensions
             List<(int layerWidth, int layerHeight)> layerSizes = ComputeAdditionalLayerSizesBottomUp(_baseWidth, _baseHeight);
 
@@ -82,7 +80,9 @@ namespace ViretTool.BusinessLayer.Services
             }
 
             // TODO: consider using a single structure for both: frameIds and also its borders
-            return GetInitialLayer(rowCount, columnCount);
+
+            // zoom into base layer
+            return ZoomIntoLayer(somBaseLayer, inputFrameIdsArray.First(), rowCount, columnCount);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace ViretTool.BusinessLayer.Services
 
                     if (rank < 0 || rank >= inputFrameIdsArray.Length)
                     {
-                        // throw ex
+                        throw new ArgumentOutOfRangeException("Rank " + rank + " is not found in SOM datastructure!");
                     }
 
                     rowResult[iCol] = (frameID, rank);

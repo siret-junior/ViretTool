@@ -36,9 +36,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             // update row and column count before usage
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
+
             int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
+            
             if (ids != null)
             {
+                 _currentLayer = _zoomDisplayProvider.GetMaxDepth();
+                   
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
                 UpdateBorderColors();
@@ -46,10 +50,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             else
             {
                 await RandomGridDisplay();
+                _currentLayer = 0;
             }
             IsInitialDisplayShown = false;
 
-            _currentLayer = _zoomDisplayProvider.GetMaxDepth();
+           
             this.NotifyOfPropertyChange("ShowZoomOutButton");
             this.NotifyOfPropertyChange("ShowZoomIntoButton");
 
