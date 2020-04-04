@@ -878,22 +878,43 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         private async Task OnFrameForZoomIntoChanged(FrameViewModel selectedFrame)
         {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
+            
+            
+            if(SomDisplayVisibility == Visibility.Visible)
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                $"ZoomIn|L{SomDisplay.CurrentLayer}/{SomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
+                await SomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+            }
+            else
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
                 $"ZoomIn|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
-            SomDisplayVisibility = Visibility.Hidden;
-            ResultDisplayVisibility = Visibility.Hidden;
-            ZoomDisplayVisibility = Visibility.Visible;
-            await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+                SomDisplayVisibility = Visibility.Hidden;
+                ResultDisplayVisibility = Visibility.Hidden;
+                ZoomDisplayVisibility = Visibility.Visible;
+                await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+
+            }
         }
 
         private async Task OnFrameForZoomOutChanged(FrameViewModel selectedFrame)
         {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
+            if (SomDisplayVisibility == Visibility.Visible)
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                $"ZoomOut||L{SomDisplay.CurrentLayer}/{SomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
+                await SomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
+            }
+            else
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
                 $"ZoomOut||L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
-            ResultDisplayVisibility = Visibility.Hidden;
-            SomDisplayVisibility = Visibility.Hidden;
-            ZoomDisplayVisibility = Visibility.Visible; 
-            await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
+                ResultDisplayVisibility = Visibility.Hidden;
+                SomDisplayVisibility = Visibility.Hidden;
+                ZoomDisplayVisibility = Visibility.Visible;
+                await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
+            }
         }
 
         private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)
