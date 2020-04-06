@@ -424,13 +424,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             if (_datasetServicesManager.IsDatasetOpened)
             {
-                await QueryResults.LoadInitialDisplay();
+                await ZoomDisplay.LoadInitialDisplay();
+                ResultDisplayVisibility = Visibility.Hidden;
+                SomDisplayVisibility = Visibility.Hidden;
+                ZoomDisplayVisibility = Visibility.Visible;
             }
 
-            await ZoomDisplay.LoadInitialDisplay();
-            ResultDisplayVisibility = Visibility.Hidden;
-            SomDisplayVisibility = Visibility.Hidden;
-            ZoomDisplayVisibility = Visibility.Visible;
+            
 
             IsBusy = false;
         }
@@ -438,8 +438,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public async void ShowInitialDisplayClicked()
         {
             await ShowInitialDisplay();
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
-                    $"ZoomInitial|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
         }
 
         private async Task ShowInitialDisplay()
@@ -451,7 +449,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 ResultDisplayVisibility = Visibility.Hidden;
                 await ZoomDisplay.LoadInitialDisplay();
                 ZoomDisplayVisibility = Visibility.Visible;
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                    $"ZoomInitial|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
                 IsBusy = false;
+
             }
         }
 
