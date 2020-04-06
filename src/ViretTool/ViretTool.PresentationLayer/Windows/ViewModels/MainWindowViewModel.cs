@@ -425,9 +425,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             if (_datasetServicesManager.IsDatasetOpened)
             {
                 await ZoomDisplay.LoadInitialDisplay();
-                ResultDisplayVisibility = Visibility.Hidden;
-                SomDisplayVisibility = Visibility.Hidden;
-                ZoomDisplayVisibility = Visibility.Visible;
+            ResultDisplayVisibility = Visibility.Hidden;
+            SomDisplayVisibility = Visibility.Hidden;
+            ZoomDisplayVisibility = Visibility.Visible;
             }
 
             
