@@ -722,7 +722,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
                 
                 // TODO: consider catching and logging LoadSomDisplay exceptions.
-                _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds), TaskCreationOptions.LongRunning);
+                _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds));
                 
 
                 await QueryResults.LoadFramesForIds(sortedIds);
@@ -736,10 +736,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 IsBusy = false;
             }
         }
-        private async void LoadSomDisplay(IList<int> sortedIds)
+        private object _somLock = new object();
+        private void LoadSomDisplay(IList<int> sortedIds)
         {
             IsSomDisplayLoaded = false;
-            await SomDisplay.LoadFramesForIds(sortedIds);
+            lock(_somLock)
+            {
+                SomDisplay.LoadFramesForIds(sortedIds);
+            }
             IsSomDisplayLoaded = true;
             
         }
