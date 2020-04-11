@@ -22,8 +22,9 @@ namespace ViretTool.BusinessLayer.Descriptors
             mDictionary = LoadDictionary(Path.Combine(path, "word2idx.txt"));
             M11147x2048 = LoadData(Path.Combine(path, "txt_weight-11147x2048floats.bin"), mDimension);
             Bias = LoadData(Path.Combine(path, "txt_bias-2048floats.bin"), mDimension);
-            PCA = LoadData(Path.Combine(path, "V3C1_20191228.w2vv.pca.matrix.bin"), mDimension);
-            PCAMean = LoadData(Path.Combine(path, "V3C1_20191228.w2vv.pca.mean.bin"), mDimension);
+
+            PCA = LoadData(Path.Combine(path, Directory.GetFiles(path, "*w2vv.pca.matrix.bin").First()), mDimension);
+            PCAMean = LoadData(Path.Combine(path, Directory.GetFiles(path, "*w2vv.pca.mean.bin").First()), mDimension);
         }
 
         public static W2VVQueryToVectorProvider FromDirectory(string path)
