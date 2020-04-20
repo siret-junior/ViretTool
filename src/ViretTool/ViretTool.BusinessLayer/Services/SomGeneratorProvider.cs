@@ -82,7 +82,7 @@ namespace ViretTool.BusinessLayer.Services
             // TODO: consider using a single structure for both: frameIds and also its borders
 
             // zoom into base layer
-            return ZoomIntoLayer(somBaseLayer, inputFrameIdsArray.First(), rowCount, columnCount);
+            return ZoomIntoLayer(0, LayersIds[0][0][0], rowCount, columnCount);
         }
 
         /// <summary>
