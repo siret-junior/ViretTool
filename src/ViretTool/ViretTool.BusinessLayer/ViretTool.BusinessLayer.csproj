@@ -64,6 +64,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -81,6 +82,7 @@
     <Compile Include="ActionLogging\InteractionLogger.cs" />
     <Compile Include="Descriptors\BoolSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IBoolSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\IColorSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IFaceSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IKeywordLabelProvider.cs" />
     <Compile Include="Descriptors\IKeywordScoringProvider.cs" />
@@ -175,7 +177,6 @@
     <Compile Include="RankingModels\RankedFrame.cs" />
     <Compile Include="RankingModels\RankingBuffer.cs" />
     <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ColorSignatureModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ImageHelper.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNFeatures\FloatVectorModel.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\IDFLoader.cs" />
     <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordSearchFrame.cs" />
