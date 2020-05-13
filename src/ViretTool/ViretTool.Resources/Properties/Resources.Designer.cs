@@ -439,7 +439,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initial display.
+        ///   Looks up a localized string similar to Zoom display.
         /// </summary>
         public static string ShowInitialDisplayText {
             get {

@@ -53,14 +53,7 @@
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"
                            Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
 
-                <Border BorderBrush="Lime" BorderThickness="0,0,4,0">
-                    <Border.Visibility>
-                        <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
-                            <Binding Path="IsLastInVideo" IsAsync="True" />
-                            <Binding Path="IsClicked" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Converter="{StaticResource InvertedBooleanConverter}" IsAsync="True"/>
-                        </MultiBinding>
-                    </Border.Visibility>
-                </Border>
+                
                 <Border BorderThickness="0,0,0,4" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
                     <Border.BorderBrush>
                         <SolidColorBrush Color="{Binding BottomBorderColor}"/>

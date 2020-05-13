@@ -113,7 +113,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             int[] ids = null;
             try
             {
-                _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
+                ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
+
             }
             catch (ArgumentOutOfRangeException)
             {
