@@ -44,6 +44,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public int CurrentLayer => _currentLayer;
         public int LayerCount => _zoomDisplayProvider.GetMaxDepth();
 
+        /// <summary>
+        /// True if user is not in last layer
+        /// </summary>
         public bool ShowZoomIntoButton
         {
             get
@@ -58,6 +61,10 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
             }
         }
+
+        /// <summary>
+        /// true if user is not in first layer
+        /// </summary>
         public bool ShowZoomOutButton
         {
             get
@@ -72,31 +79,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
             }
         }
-        public FrameViewModel GpsFrame
-        {
-            get => _gpsFrame;
-            set
-            {
-                if (_gpsFrame?.Equals(value) == true)
-                {
-                    return;
-                }
+       
 
-                _gpsFrame = value;
-                // TODO: enable lifelog filter
-                //_interactionLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
-                NotifyQuerySettingsChanged();
-                NotifyOfPropertyChange();
-
-            }
-        }
-
-        public void DeleteGpsFrame()
-        {
-            GpsFrame = null;
-        }
-
-
+        /// <summary>
+        /// Loads initial display
+        /// </summary>
+        /// <returns></returns>
         public override async Task LoadInitialDisplay()
         {
             IsInitialDisplayShown = false;
@@ -116,6 +104,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount);
 
             }
+            // load smaller layer if screen is too big
             catch (ArgumentOutOfRangeException)
             {
                 (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
@@ -124,15 +113,17 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
+                // update borders
                 UpdateBorderColors();
 
             }
             else
             {
+                // calculate random grid
                 await RandomGridDisplay();
             }
 
-            // UpdateVisibleFrames() loads frames to screen
+            // load frames to screen
             UpdateVisibleFrames();
             IsInitialDisplayShown = true;
         }
@@ -162,10 +153,17 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await LoadMoveAtCurrentLayerDisplayForFrame(_loadedFrames[ComputeCenter() + ColumnCount], _zoomDisplayProvider.MoveDown);
         }
 
+        /// <summary>
+        /// Move display in specified direction
+        /// </summary>
+        /// <param name="selectedFrame"></param>
+        /// <param name="typeOfMove">direction</param>
+        /// <returns></returns>
         public async virtual Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame, Func<int,int,int,int,int[]> typeOfMove)
         {
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, typeOfMove);
         }
+
 
         public async Task LoadZoomIntoDisplayForFrame(FrameViewModel selectedFrame)
         {
@@ -184,6 +182,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, _zoomDisplayProvider.ZoomOutOfLayer);
         }
 
+        /// <summary>
+        /// loads and updates border colors
+        /// </summary>
         protected void UpdateBorderColors()
         {
             // get border values from ZoomDisplayProvider, 
@@ -194,6 +195,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             {
                 (float BottomBorderSimilarity, float RightBorderSimilarity) = (borderSimilarities[iFrame * 2], borderSimilarities[(iFrame * 2) + 1]);
 
+                // set color interval
                 System.Drawing.Color colorSimilar = System.Drawing.Color.Lime;
                 System.Drawing.Color colorDissimilar = System.Drawing.Color.Red;
 
@@ -249,25 +251,33 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             else
             {
                 await RandomGridDisplay();
-                // TODO: shouldn't be border colors updated here?
             }
 
             UpdateVisibleFrames();
             IsInitialDisplayShown = false;
         }
+
+        /// <summary>
+        /// operate resizing of the display
+        /// </summary>
+        /// <returns></returns>
         private async Task ResizeDisplay()
         {
+            // new row/column length
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
             if(_loadedFrames.Count > 0)
             {
+                // get frameID
                 int frameNumber = _loadedFrames.First().FrameNumber;
                 int videoId = _loadedFrames.First().VideoId;
                 int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(videoId, frameNumber);
 
+
                 int[] ids = null;
                 try
                 {
+                    // compute new items
                     ids = _zoomDisplayProvider.Resize(_currentLayer, frameId, RowCount, ColumnCount);
                 }
                 catch (ArgumentOutOfRangeException)
@@ -283,12 +293,15 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 else
                 {
                     await RandomGridDisplay();
-                    // TODO: shouldn't be border colors updated here?
                 }
                 UpdateVisibleFrames();
             }
         }
 
+        /// <summary>
+        /// Computes random items into display
+        /// </summary>
+        /// <returns></returns>
         public async Task RandomGridDisplay()
         {
             RowCount = DisplayHeight / ImageHeight;
@@ -299,7 +312,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IEnumerable<int> randomFrameIds = Enumerable.Range(0, displayedFrameCount).Select(_ => _random.Next(datasetFrameCount));
             _loadedFrames = await Task.Run(() => randomFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
 
-            // TODO: shouldn't be border colors updated here?
         }
 
         public new Action DisplaySizeChangedHandler => async () =>
@@ -311,10 +323,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected override void UpdateVisibleFrames()
         {
-            // Contents of _loadedFrames depend on context. 
-            // As an example, it could be entire 1M dataset sorted by relevance from which we select only the top RowCount*ColumnCount items.
-
-            // In the example code in LoadFramesForIds we already precomputed frames that are ready to be displayed.
             AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
         }
 
