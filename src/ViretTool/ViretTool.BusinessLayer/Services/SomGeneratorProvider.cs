@@ -108,9 +108,17 @@ namespace ViretTool.BusinessLayer.Services
             }
 
         }
+
+        /// <summary>
+        /// Computes sizes of upper layers
+        /// </summary>
+        /// <param name="baseLayerWidth"></param>
+        /// <param name="baseLayerHeight"></param>
+        /// <returns></returns>
         private List<(int layerWidth, int layerHeight)> ComputeAdditionalLayerSizesBottomUp(int baseLayerWidth, int baseLayerHeight)
         {
             List<(int layerWidth, int layerHeight)> result = new List<(int layerWidth, int layerHeight)>();
+
 
             baseLayerWidth /= 2;
             baseLayerHeight /= 2;
@@ -128,6 +136,14 @@ namespace ViretTool.BusinessLayer.Services
             return result;
         }
 
+
+        /// <summary>
+        /// Creates new layer based on original layer 
+        /// </summary>
+        /// <param name="somBaseLayer">original layer</param>
+        /// <param name="layerWidth">new layer width</param>
+        /// <param name="layerHeight">new layer height</param>
+        /// <returns></returns>
         private int[][] SubsampleLayer((int frameIDs, int ranks)[][] somBaseLayer, int layerWidth, int layerHeight)
         {
             if (layerWidth >= somBaseLayer[0].Length || layerHeight >= somBaseLayer.Length)
@@ -191,6 +207,12 @@ namespace ViretTool.BusinessLayer.Services
             return somBaseLayer[rowResult][colResult].frameIDs;
         }
 
+        /// <summary>
+        /// Assigns rank to each element in SOM base layer
+        /// </summary>
+        /// <param name="somBaseLayer"></param>
+        /// <param name="inputFrameIdsArray">Ranks from ranking pipeline</param>
+        /// <returns></returns>
         (int frameIDs, int ranks)[][] assignRankToEachElement(int[][] somBaseLayer, int[] inputFrameIdsArray)
         {
             (int frameIDs, int ranks)[][] result = new (int frameIDs, int ranks)[somBaseLayer.Length][];
@@ -220,10 +242,12 @@ namespace ViretTool.BusinessLayer.Services
             return result;
         }
 
-
-        // TODO: PROBLEM in GetColorSimilarity - Search is conducted using FrameID -> problem with repeating frameIDs
-        // Need to be solved
-        // next problem are multiple layer when there is none (we generated from dll, but new layer still appears in sidebar of frame-view)
+        /// <summary>
+        /// Compute right/bottom border for each element in layer
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="deepFeaturesProvider"></param>
+        /// <returns></returns>
         private float[][] ComputeBorderSimilarities(int [][] layer, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             float[][] deepFeatures = deepFeaturesProvider.Descriptors;
@@ -254,6 +278,13 @@ namespace ViretTool.BusinessLayer.Services
             }
             return result;
         }
+
+        /// <summary>
+        /// Extracts deep features for each frameID from array
+        /// </summary>
+        /// <param name="inputFrameIdsArray">array of frameIDs</param>
+        /// <param name="deepFeaturesProvider"></param>
+        /// <returns></returns>
         private (float[] framesData, int dimension) ExtractDataFromSemanticVectors(int[] inputFrameIdsArray, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             int dimension = deepFeaturesProvider.Descriptors[0].Length;

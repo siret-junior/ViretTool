@@ -108,6 +108,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             catch (ArgumentOutOfRangeException)
             {
                 (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
+                ImageWidth = DisplayWidth / ColumnCount;
+                ImageHeight = DisplayHeight / RowCount;
             }
             if (ids != null) 
             {
@@ -241,6 +243,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             catch (ArgumentOutOfRangeException)
             {
                 (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
+                ImageWidth = DisplayWidth / ColumnCount;
+                ImageHeight = DisplayHeight / RowCount;
             }
 
             if (ids != null)
@@ -283,6 +287,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 catch (ArgumentOutOfRangeException)
                 {
                     (ids,ColumnCount,RowCount) = _zoomDisplayProvider.GetSmallLayer(_currentLayer, RowCount, ColumnCount);
+                    ImageWidth = DisplayWidth / ColumnCount;
+                    ImageHeight = DisplayHeight / RowCount;
                 }
 
                 if(ids != null)

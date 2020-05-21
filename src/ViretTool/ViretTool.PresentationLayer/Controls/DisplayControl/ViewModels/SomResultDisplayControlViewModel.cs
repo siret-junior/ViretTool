@@ -31,23 +31,31 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
 
+        /// <summary>
+        /// Computes SOM structure from given framIDs
+        /// </summary>
+        /// <param name="inputFrameIds">Frame IDs</param>
+        /// <returns></returns>
         public override async Task LoadFramesForIds(IList<int> inputFrameIds)
         {
             // update row and column count before usage
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
-            if (RowCount > 10)
+
+
+            int[] ids;
+            try
             {
-                ImageHeight = DisplayHeight / 10;
-                RowCount = DisplayHeight / ImageHeight;
+                // compute ids
+                ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
             }
-            if (ColumnCount > 10)
+            // if user screen is bigger than top layer then compute smaller layer and resize image height/width 
+            catch (ArgumentOutOfRangeException)
             {
-                ImageWidth = DisplayWidth / 10;
-                ColumnCount = DisplayWidth / ImageWidth;
+                (ids, ColumnCount, RowCount) = _zoomDisplayProvider.GetSmallLayer(0, RowCount, ColumnCount);
+                ImageWidth = DisplayWidth / ColumnCount;
+                ImageHeight = DisplayHeight / RowCount;
             }
-            int[] ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
-            
             if (ids != null)
             {
                 _currentLayer = 0;

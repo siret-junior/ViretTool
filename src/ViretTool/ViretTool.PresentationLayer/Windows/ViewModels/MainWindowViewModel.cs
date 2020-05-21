@@ -317,7 +317,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
-        private bool _isSomDisplayLoaded = false;
+        private bool _isSomDisplayLoaded = true;
         public bool IsSomDisplayLoaded
         {
             get { return _isSomDisplayLoaded; }
@@ -720,10 +720,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
-                
+
                 // TODO: consider catching and logging LoadSomDisplay exceptions.
                 _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds));
-                
+                //LoadSomDisplay(sortedIds);
+
+
 
                 await QueryResults.LoadFramesForIds(sortedIds);
             }
@@ -736,13 +738,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 IsBusy = false;
             }
         }
-        private object _somLock = new object();
-        private void LoadSomDisplay(IList<int> sortedIds)
+
+        private async void LoadSomDisplay(IList<int> sortedIds)
         {
+            while (!IsSomDisplayLoaded)
+                await Task.Delay(100);
+
             IsSomDisplayLoaded = false;
-            lock(_somLock)
+            try
             {
-                SomDisplay.LoadFramesForIds(sortedIds);
+                await SomDisplay.LoadFramesForIds(sortedIds);
+            }
+            catch (Exception e)
+            {
+                LogError(e, "Error during SOM computing");
             }
             IsSomDisplayLoaded = true;
             
