@@ -202,9 +202,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-
+        /// <summary>
+        /// Update of face/text/color overlay at current instance of FrameControl
+        /// </summary>
+        /// <param name="showFaces"></param>
+        /// <param name="showText"></param>
+        /// <param name="showColor"></param>
         public void ShowOverlay(bool showFaces, bool showText, bool showColor)
         {
+            // Compute coresponding overlay if particular overlay is null
             if(showFaces && FacesOverlay == null)
             {
                 ComputeFacesOverlay();

@@ -145,7 +145,12 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
             }
         }
-
+        /// <summary>
+        /// Function updates face/text/color overlay in each frameControl from current instance of SubmitControlView
+        /// </summary>
+        /// <param name="showFaces"></param>
+        /// <param name="showText"></param>
+        /// <param name="showColor"></param>
         private void UpdateOverlay(bool showFaces, bool showText, bool showColor)
         {
             foreach(FrameViewModel frame in SubmittedFrames)
