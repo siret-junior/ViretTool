@@ -55,6 +55,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+
+        /// <summary>
+        /// True if text overlay is required
+        /// </summary>
         public bool IsTextChecked
         {
             get => _isTextChecked;
@@ -70,7 +74,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
-
+        /// <summary>
+        /// True if faces overlay is required
+        /// </summary>
         public bool IsFacesChecked
         {
             get => _isFacesChecked;
@@ -86,6 +92,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+
+        /// <summary>
+        /// True if color overlay is required 
+        /// </summary>
         public bool IsColorChecked
         {
             get => _isColorChecked;
@@ -101,6 +111,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+        /// <summary>
+        /// True if both text and faces overlay is required 
+        /// </summary>
         public bool IsTextFacesChecked
         {
             get => _isTextFacesChecked;
@@ -117,6 +130,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        /// <summary>
+        /// True if no overlay is required
+        /// </summary>
         public bool IsNothingChecked
         {
             get => _isNothingChecked;
@@ -133,6 +149,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// Computed string of labels
+        /// </summary>
         public string AggregatedLabel
         {
             get => _aggregatedLabel;
@@ -160,11 +180,17 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         }
         public BindableCollection<FrameViewModel> SubmittedFrames { get; } = new BindableCollection<FrameViewModel>();
 
+
+        /// <summary>
+        /// Adds frames to submit window and computes AggregatedLabel
+        /// </summary>
+        /// <param name="selectedFrames"></param>
         public void Initialize(IList<FrameViewModel> selectedFrames)
         {
             SubmittedFrames.Clear();
             SubmittedFrames.AddRange(selectedFrames);
 
+            // compute labels 
             List<int> synsets = new List<int>();
 
             foreach (FrameViewModel frame in selectedFrames)
