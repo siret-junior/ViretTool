@@ -71,7 +71,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     UpdateOverlay(false, true, false);
                 }
 
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange("IsTextChecked");
             }
         }
         /// <summary>
@@ -89,7 +89,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     UpdateOverlay(true, false, false);
                 }
 
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange("IsFacesChecked");
             }
         }
 
@@ -108,7 +108,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     UpdateOverlay(false, false, true);
                 }
 
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange("IsColorChecked");
             }
         }
         /// <summary>
@@ -126,7 +126,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     UpdateOverlay(true, true, false);
                 }
 
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange("IsTextFacesChecked");
             }
         }
 
@@ -145,7 +145,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     UpdateOverlay(false, false, false);
                 }
 
-                NotifyOfPropertyChange();
+                NotifyOfPropertyChange("IsNothingChecked");
             }
         }
 
@@ -189,6 +189,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             SubmittedFrames.Clear();
             SubmittedFrames.AddRange(selectedFrames);
+
+            _isTextFacesChecked = false;
+            _isTextChecked = false;
+            _isFacesChecked = false;
+            _isNothingChecked = true;
+            _isColorChecked = false;
+            _aggregatedLabel = null;
 
             // compute labels 
             List<int> synsets = new List<int>();
