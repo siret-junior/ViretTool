@@ -311,7 +311,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
             }
 
             // TODO: lifelog is not send because the result log is used only in VBS
-
+            // TODO: add ASR
             return string.Join(";", usedLogTypes);
         }
 
