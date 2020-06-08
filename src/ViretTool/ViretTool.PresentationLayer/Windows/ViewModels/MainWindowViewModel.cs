@@ -425,13 +425,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             if (_datasetServicesManager.IsDatasetOpened)
             {
-                await QueryResults.LoadInitialDisplay();
-            }
-
-            await ZoomDisplay.LoadInitialDisplay();
+                await ZoomDisplay.LoadInitialDisplay();
             ResultDisplayVisibility = Visibility.Hidden;
             SomDisplayVisibility = Visibility.Hidden;
             ZoomDisplayVisibility = Visibility.Visible;
+            }
+
+            
 
             IsBusy = false;
         }
@@ -439,8 +439,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public async void ShowInitialDisplayClicked()
         {
             await ShowInitialDisplay();
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
-                    $"ZoomInitial|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
         }
 
         private async Task ShowInitialDisplay()
@@ -452,7 +450,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 ResultDisplayVisibility = Visibility.Hidden;
                 await ZoomDisplay.LoadInitialDisplay();
                 ZoomDisplayVisibility = Visibility.Visible;
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                    $"ZoomInitial|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
                 IsBusy = false;
+
             }
         }
 
@@ -727,7 +728,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
                 
                 // TODO: consider catching and logging LoadSomDisplay exceptions.
-                _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds), TaskCreationOptions.LongRunning);
+                _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds));
                 
 
                 await QueryResults.LoadFramesForIds(sortedIds);
@@ -741,10 +742,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 IsBusy = false;
             }
         }
-        private async void LoadSomDisplay(IList<int> sortedIds)
+        private object _somLock = new object();
+        private void LoadSomDisplay(IList<int> sortedIds)
         {
             IsSomDisplayLoaded = false;
-            await SomDisplay.LoadFramesForIds(sortedIds);
+            lock(_somLock)
+            {
+                SomDisplay.LoadFramesForIds(sortedIds);
+            }
             IsSomDisplayLoaded = true;
             
         }
@@ -878,22 +883,43 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         private async Task OnFrameForZoomIntoChanged(FrameViewModel selectedFrame)
         {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
+            
+            
+            if(SomDisplayVisibility == Visibility.Visible)
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                $"ZoomIn|L{SomDisplay.CurrentLayer}/{SomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
+                await SomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+            }
+            else
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
                 $"ZoomIn|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
-            SomDisplayVisibility = Visibility.Hidden;
-            ResultDisplayVisibility = Visibility.Hidden;
-            ZoomDisplayVisibility = Visibility.Visible;
-            await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+                SomDisplayVisibility = Visibility.Hidden;
+                ResultDisplayVisibility = Visibility.Hidden;
+                ZoomDisplayVisibility = Visibility.Visible;
+                await ZoomDisplay.LoadZoomIntoDisplayForFrame(selectedFrame);
+
+            }
         }
 
         private async Task OnFrameForZoomOutChanged(FrameViewModel selectedFrame)
         {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration, 
+            if (SomDisplayVisibility == Visibility.Visible)
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                $"ZoomOut||L{SomDisplay.CurrentLayer}/{SomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
+                await SomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
+            }
+            else
+            {
+                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
                 $"ZoomOut||L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}|V{selectedFrame.VideoId}|F{selectedFrame.FrameNumber}");
-            ResultDisplayVisibility = Visibility.Hidden;
-            SomDisplayVisibility = Visibility.Hidden;
-            ZoomDisplayVisibility = Visibility.Visible; 
-            await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
+                ResultDisplayVisibility = Visibility.Hidden;
+                SomDisplayVisibility = Visibility.Hidden;
+                ZoomDisplayVisibility = Visibility.Visible;
+                await ZoomDisplay.LoadZoomOutDisplayForFrame(selectedFrame);
+            }
         }
 
         private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)

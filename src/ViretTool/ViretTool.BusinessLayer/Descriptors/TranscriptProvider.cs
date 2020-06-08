@@ -18,11 +18,18 @@ namespace ViretTool.BusinessLayer.Descriptors
 
         public static TranscriptProvider FromDirectory(string directory)
         {
-            string[] videoTranscripts = File
-                .ReadAllLines(Path.Combine(directory, "V3C1-videoTranscript.txt"))
-                .Select(line => line.Replace("~", " ").ToLower())
-                .ToArray();
-            return new TranscriptProvider(videoTranscripts);
+            try
+            {
+                string[] videoTranscripts = File
+                    .ReadAllLines(Path.Combine(directory, "V3C1-videoTranscript.txt"))
+                    .Select(line => line.Replace("~", " ").ToLower())
+                    .ToArray();
+                return new TranscriptProvider(videoTranscripts);
+            }
+            catch
+            {
+                return new TranscriptProvider(new string[] { });
+            }
         }
 
         public string[] GetTranscripts()

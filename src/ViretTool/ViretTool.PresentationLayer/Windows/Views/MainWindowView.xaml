@@ -119,10 +119,10 @@
                         <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.LSCFiltersLabel}" Visibility="{Binding LscFiltersVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ContentControl x:Name="LifelogFilterViewModel" />
                         </GroupBox>
-                        
+                        <!--
                         <GroupBox Grid.Row="2" Margin="6" Header="{x:Static properties:Resources.TranscriptFilterLabel}" >
                             <ContentControl x:Name="TranscriptFilterViewModel" />
-                        </GroupBox>
+                        </GroupBox>-->
 
                         <GroupBox Grid.Row="3" Margin="6" Visibility="Visible">
                             <StackPanel>
