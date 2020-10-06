@@ -1,0 +1,80 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=6678&frame=800
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1546954953641,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546954899710,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "840|16183;5037|13100;7276|8781;5588|24665;225|2181;3527|3775;6405|2712;1985|7582;6248|9375;6381|3888;45|475;897|3175;6405|5232;2320|2304;2430|3026;5440|8040;1985|6413;5859|16700;2295|8091;6588|1750;22|4255;5588|4825;6588|1975;3030|4945;6551|2350;5684|325;3496|2427;5515|1018;3239|3176;822|17200;2058|9680;357|12625;6581|2328;1339|5214",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546954900970,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1546954901685,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546954906002,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-08T13_41_45_9474193Z.png",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1546954906940,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1546954917523,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1546954929562,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:5"
+    },
+    {
+      "timestamp": 1546954935684,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1546954940262,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:5"
+    },
+    {
+      "timestamp": 1546954945691,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "5201|60"
+    },
+    {
+      "timestamp": 1546954945799,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=5599&frame=2325
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1546952227144,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546952201655,
+      "category": "Text",
+      "type": "Concept",
+      "value": "personal digital assistant",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1546952203950,
+      "category": "Text",
+      "type": "Concept",
+      "value": "",
+      "attributes": "50|True"
+    },
+    {
+      "timestamp": 1546952207308,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1546952217943,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1546952219007,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:2"
+    },
+    {
+      "timestamp": 1546952220432,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1546952221594,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:5"
+    },
+    {
+      "timestamp": 1546952222737,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1546952223836,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    }
+  ]
+}

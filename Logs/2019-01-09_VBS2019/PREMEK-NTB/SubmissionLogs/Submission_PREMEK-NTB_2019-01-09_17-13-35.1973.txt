@@ -1,0 +1,68 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=61&frame=2393
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1547054014717,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547054010417,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4439|959"
+    },
+    {
+      "timestamp": 1547054010522,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547054010524,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4439|953"
+    },
+    {
+      "timestamp": 1547054011459,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547054011462,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2720|2919"
+    },
+    {
+      "timestamp": 1547054012371,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547054012373,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "60|2393"
+    },
+    {
+      "timestamp": 1547054012677,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547054012706,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "60|2381"
+    }
+  ]
+}

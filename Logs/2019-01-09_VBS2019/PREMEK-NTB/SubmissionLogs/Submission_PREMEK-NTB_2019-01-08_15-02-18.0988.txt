@@ -1,0 +1,63 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=1373&frame=1018
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1546959737921,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546959698048,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "1093|3120;6841|5604;6420|1438;2727|7025;3951|4735;1046|6925;1505|9225;5508|23184;370|5544;368|13050;7363|6083;6202|6075;6202|6625",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546959698790,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1546959703418,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "1093|3120;6841|5604;6420|1438;2727|7025;3951|4735;1046|6925;1505|9225;5508|23184;370|5544;368|13050;7363|6083;6202|6625",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546959706015,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546959709015,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-08T15_01_48_9662488Z.png",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1546959711490,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1546959715233,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "1372|1018",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1546959715634,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    }
+  ]
+}

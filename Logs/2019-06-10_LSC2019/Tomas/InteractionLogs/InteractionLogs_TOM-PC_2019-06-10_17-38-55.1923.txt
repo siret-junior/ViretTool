@@ -1,0 +1,3342 @@
+{
+  "timestamp": 1560188391310,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "11|1017"
+}
+{
+  "timestamp": 1560188493223,
+  "category": "Text",
+  "type": "Concept",
+  "value": "salad",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560188495103,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|450"
+}
+{
+  "timestamp": 1560188496590,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|449"
+}
+{
+  "timestamp": 1560188497646,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|455"
+}
+{
+  "timestamp": 1560188498710,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|456"
+}
+{
+  "timestamp": 1560188500774,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|455"
+}
+{
+  "timestamp": 1560188501774,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|453"
+}
+{
+  "timestamp": 1560188502806,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|447"
+}
+{
+  "timestamp": 1560188505862,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|758"
+}
+{
+  "timestamp": 1560188507654,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|1000"
+}
+{
+  "timestamp": 1560188508838,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|996"
+}
+{
+  "timestamp": 1560188511022,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "13|967"
+}
+{
+  "timestamp": 1560188512038,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "13|967"
+}
+{
+  "timestamp": 1560188513510,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "13|967"
+}
+{
+  "timestamp": 1560188518751,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|1144"
+}
+{
+  "timestamp": 1560188520327,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|463"
+}
+{
+  "timestamp": 1560188521382,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|448"
+}
+{
+  "timestamp": 1560188522598,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|423"
+}
+{
+  "timestamp": 1560188523614,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|402"
+}
+{
+  "timestamp": 1560188524758,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|379"
+}
+{
+  "timestamp": 1560188526422,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|371"
+}
+{
+  "timestamp": 1560188527431,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|357"
+}
+{
+  "timestamp": 1560188528543,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|446"
+}
+{
+  "timestamp": 1560188530270,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|432"
+}
+{
+  "timestamp": 1560188531286,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|424"
+}
+{
+  "timestamp": 1560188532526,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|402"
+}
+{
+  "timestamp": 1560188535286,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|995"
+}
+{
+  "timestamp": 1560188536566,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|981"
+}
+{
+  "timestamp": 1560188537815,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|957"
+}
+{
+  "timestamp": 1560188538818,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|936"
+}
+{
+  "timestamp": 1560188540118,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|916"
+}
+{
+  "timestamp": 1560188541270,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|900"
+}
+{
+  "timestamp": 1560188542271,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|880"
+}
+{
+  "timestamp": 1560188544824,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188545835,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188547838,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "14|789"
+}
+{
+  "timestamp": 1560188548886,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "14|781"
+}
+{
+  "timestamp": 1560188550142,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "14|758"
+}
+{
+  "timestamp": 1560188551710,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "14|737"
+}
+{
+  "timestamp": 1560188560305,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "StartTimeHour|11"
+}
+{
+  "timestamp": 1560188560598,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188562916,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|15"
+}
+{
+  "timestamp": 1560188566974,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "25|672"
+}
+{
+  "timestamp": 1560188568062,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "25|665"
+}
+{
+  "timestamp": 1560188569067,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "25|646"
+}
+{
+  "timestamp": 1560188570159,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "25|631"
+}
+{
+  "timestamp": 1560188571271,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "25|611"
+}
+{
+  "timestamp": 1560188573054,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "25|586"
+}
+{
+  "timestamp": 1560188575838,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|676"
+}
+{
+  "timestamp": 1560188580510,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|776"
+}
+{
+  "timestamp": 1560188581534,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|765"
+}
+{
+  "timestamp": 1560188582535,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|756"
+}
+{
+  "timestamp": 1560188583726,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|731"
+}
+{
+  "timestamp": 1560188585430,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|716"
+}
+{
+  "timestamp": 1560188593348,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|776"
+}
+{
+  "timestamp": 1560188595348,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|776"
+}
+{
+  "timestamp": 1560188596394,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|774"
+}
+{
+  "timestamp": 1560188597927,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|779"
+}
+{
+  "timestamp": 1560188599206,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|773"
+}
+{
+  "timestamp": 1560188600559,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|769"
+}
+{
+  "timestamp": 1560188601743,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|766"
+}
+{
+  "timestamp": 1560188602775,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|764"
+}
+{
+  "timestamp": 1560188604071,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|760"
+}
+{
+  "timestamp": 1560188605178,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|758"
+}
+{
+  "timestamp": 1560188606551,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|754"
+}
+{
+  "timestamp": 1560188607719,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|748"
+}
+{
+  "timestamp": 1560188608899,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|739"
+}
+{
+  "timestamp": 1560188610095,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|729"
+}
+{
+  "timestamp": 1560188635489,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560188635493,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560188635496,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "StartTimeHour|2"
+}
+{
+  "timestamp": 1560188635497,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560188831423,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|8"
+}
+{
+  "timestamp": 1560188837682,
+  "category": "Text",
+  "type": "Concept",
+  "value": "coffee maker",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560188839504,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|179"
+}
+{
+  "timestamp": 1560188840608,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|179"
+}
+{
+  "timestamp": 1560188841720,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|181"
+}
+{
+  "timestamp": 1560188843064,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|183"
+}
+{
+  "timestamp": 1560188844320,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|178"
+}
+{
+  "timestamp": 1560188845400,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|177"
+}
+{
+  "timestamp": 1560188847064,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "3|2"
+}
+{
+  "timestamp": 1560188848296,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "3|2"
+}
+{
+  "timestamp": 1560188849552,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "3|2"
+}
+{
+  "timestamp": 1560188860384,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "18|30"
+}
+{
+  "timestamp": 1560188861384,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "ScrollChanged",
+  "attributes": ""
+}
+{
+  "timestamp": 1560188862392,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "0|8"
+}
+{
+  "timestamp": 1560188863720,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "0|9"
+}
+{
+  "timestamp": 1560188864739,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "7|33"
+}
+{
+  "timestamp": 1560188866152,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "3|4"
+}
+{
+  "timestamp": 1560188867432,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "4|72"
+}
+{
+  "timestamp": 1560188868664,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "4|72"
+}
+{
+  "timestamp": 1560188869768,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "4|75"
+}
+{
+  "timestamp": 1560188870912,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "4|73"
+}
+{
+  "timestamp": 1560188872200,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "4|70"
+}
+{
+  "timestamp": 1560188873632,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "4|67"
+}
+{
+  "timestamp": 1560188876096,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "2|25"
+}
+{
+  "timestamp": 1560188878440,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|179"
+}
+{
+  "timestamp": 1560188879536,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|183"
+}
+{
+  "timestamp": 1560188880544,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|184"
+}
+{
+  "timestamp": 1560188888001,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188890449,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188893600,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|30"
+}
+{
+  "timestamp": 1560188894880,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|36"
+}
+{
+  "timestamp": 1560188896200,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|43"
+}
+{
+  "timestamp": 1560188897560,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|30"
+}
+{
+  "timestamp": 1560188898888,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|26"
+}
+{
+  "timestamp": 1560188899928,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|36"
+}
+{
+  "timestamp": 1560188901024,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "10|33"
+}
+{
+  "timestamp": 1560188906217,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188907520,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560188909032,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|189"
+}
+{
+  "timestamp": 1560188910888,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "8|216"
+}
+{
+  "timestamp": 1560188911912,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "8|222"
+}
+{
+  "timestamp": 1560188918424,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|419"
+}
+{
+  "timestamp": 1560188919688,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|416"
+}
+{
+  "timestamp": 1560188920783,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|413"
+}
+{
+  "timestamp": 1560188921976,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|407"
+}
+{
+  "timestamp": 1560188923224,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|422"
+}
+{
+  "timestamp": 1560188924376,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|426"
+}
+{
+  "timestamp": 1560188927536,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|419"
+}
+{
+  "timestamp": 1560188928632,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|423"
+}
+{
+  "timestamp": 1560188934512,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|419"
+}
+{
+  "timestamp": 1560188935662,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|416"
+}
+{
+  "timestamp": 1560188936729,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|420"
+}
+{
+  "timestamp": 1560188937730,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "ScrollChanged",
+  "attributes": ""
+}
+{
+  "timestamp": 1560188973944,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560188973944,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560188973944,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|23"
+}
+{
+  "timestamp": 1560188973944,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560188981192,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189156569,
+  "category": "Text",
+  "type": "Concept",
+  "value": "house",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189161030,
+  "category": "Text",
+  "type": "Concept",
+  "value": "",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189164030,
+  "category": "Text",
+  "type": "Concept",
+  "value": "toyshop",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189171282,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189172291,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189173722,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189175482,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189176482,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189178058,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189182025,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "20|1208"
+}
+{
+  "timestamp": 1560189183321,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|410"
+}
+{
+  "timestamp": 1560189186386,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189189874,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189191122,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189193298,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189194498,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189196154,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189197850,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189198954,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189200210,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189201214,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189202251,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189203978,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189205946,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189207730,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189209222,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189210306,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189211674,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189212690,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189215466,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189219490,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189225030,
+  "category": "Text",
+  "type": "Concept",
+  "value": "",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189225342,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189240631,
+  "category": "Text",
+  "type": "Concept",
+  "value": "plaything",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189245617,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189248406,
+  "category": "Text",
+  "type": "Concept",
+  "value": "candle",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189253577,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "1|944"
+}
+{
+  "timestamp": 1560189254609,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "1|936"
+}
+{
+  "timestamp": 1560189257609,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|1"
+}
+{
+  "timestamp": 1560189259538,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189262818,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189263862,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189264890,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189266482,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189268953,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1402"
+}
+{
+  "timestamp": 1560189270033,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1393"
+}
+{
+  "timestamp": 1560189271465,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1406"
+}
+{
+  "timestamp": 1560189277601,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1406"
+}
+{
+  "timestamp": 1560189278753,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1403"
+}
+{
+  "timestamp": 1560189279913,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1400"
+}
+{
+  "timestamp": 1560189281353,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1405"
+}
+{
+  "timestamp": 1560189284066,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1407"
+}
+{
+  "timestamp": 1560189286257,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "22|1407"
+}
+{
+  "timestamp": 1560189303058,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "23|1048"
+}
+{
+  "timestamp": 1560189304492,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "IsSelected|True"
+}
+{
+  "timestamp": 1560189304803,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189309812,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|655"
+}
+{
+  "timestamp": 1560189310914,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|648"
+}
+{
+  "timestamp": 1560189311917,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|651"
+}
+{
+  "timestamp": 1560189314992,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189316650,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189317662,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189318666,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189320066,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189321445,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189322547,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189325237,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189326241,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189331457,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|901"
+}
+{
+  "timestamp": 1560189332463,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|895"
+}
+{
+  "timestamp": 1560189333497,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|885"
+}
+{
+  "timestamp": 1560189334688,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|865"
+}
+{
+  "timestamp": 1560189335693,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|884"
+}
+{
+  "timestamp": 1560189336699,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|902"
+}
+{
+  "timestamp": 1560189337721,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|914"
+}
+{
+  "timestamp": 1560189339023,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|932"
+}
+{
+  "timestamp": 1560189340160,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|947"
+}
+{
+  "timestamp": 1560189341160,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|928"
+}
+{
+  "timestamp": 1560189342714,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|911"
+}
+{
+  "timestamp": 1560189343898,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|908"
+}
+{
+  "timestamp": 1560189346060,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|907"
+}
+{
+  "timestamp": 1560189347313,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|905"
+}
+{
+  "timestamp": 1560189348317,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|905"
+}
+{
+  "timestamp": 1560189349764,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|903"
+}
+{
+  "timestamp": 1560189350977,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|902"
+}
+{
+  "timestamp": 1560189352015,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|901"
+}
+{
+  "timestamp": 1560189355678,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|686"
+}
+{
+  "timestamp": 1560189356683,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|676"
+}
+{
+  "timestamp": 1560189357811,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|659"
+}
+{
+  "timestamp": 1560189359089,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|648"
+}
+{
+  "timestamp": 1560189360545,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|628"
+}
+{
+  "timestamp": 1560189362015,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|629"
+}
+{
+  "timestamp": 1560189363282,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|631"
+}
+{
+  "timestamp": 1560189364530,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|632"
+}
+{
+  "timestamp": 1560189365922,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|627"
+}
+{
+  "timestamp": 1560189366993,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|622"
+}
+{
+  "timestamp": 1560189369688,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|617"
+}
+{
+  "timestamp": 1560189370698,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|608"
+}
+{
+  "timestamp": 1560189373159,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|142"
+}
+{
+  "timestamp": 1560189379647,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189380650,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189381922,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|1607"
+}
+{
+  "timestamp": 1560189383082,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|1611"
+}
+{
+  "timestamp": 1560189384208,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|1611"
+}
+{
+  "timestamp": 1560189385522,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|1605"
+}
+{
+  "timestamp": 1560189386642,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|1609"
+}
+{
+  "timestamp": 1560189388193,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|649"
+}
+{
+  "timestamp": 1560189389458,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|638"
+}
+{
+  "timestamp": 1560189391113,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|906"
+}
+{
+  "timestamp": 1560189393379,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|908"
+}
+{
+  "timestamp": 1560189394485,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|911"
+}
+{
+  "timestamp": 1560189397681,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1132"
+}
+{
+  "timestamp": 1560189398914,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1135"
+}
+{
+  "timestamp": 1560189400031,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1135"
+}
+{
+  "timestamp": 1560189403074,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1136"
+}
+{
+  "timestamp": 1560189404105,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1134"
+}
+{
+  "timestamp": 1560189405206,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1132"
+}
+{
+  "timestamp": 1560189406381,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1130"
+}
+{
+  "timestamp": 1560189407395,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1127"
+}
+{
+  "timestamp": 1560189408447,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1123"
+}
+{
+  "timestamp": 1560189409938,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1115"
+}
+{
+  "timestamp": 1560189410962,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1103"
+}
+{
+  "timestamp": 1560189412397,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1097"
+}
+{
+  "timestamp": 1560189413537,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1098"
+}
+{
+  "timestamp": 1560189414650,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1096"
+}
+{
+  "timestamp": 1560189415716,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1091"
+}
+{
+  "timestamp": 1560189416994,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1079"
+}
+{
+  "timestamp": 1560189418477,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|1075"
+}
+{
+  "timestamp": 1560189420761,
+  "category": "Browsing",
+  "type": "VideoSummary",
+  "value": "5|1074"
+}
+{
+  "timestamp": 1560189425945,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189430946,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189432160,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189437796,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189441238,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189445113,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189447895,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189448900,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189449915,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560189472865,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189473877,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189475063,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189476618,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189476618,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560189476618,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "IsSelected|False"
+}
+{
+  "timestamp": 1560189476618,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560189478619,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189504171,
+  "category": "Text",
+  "type": "Concept",
+  "value": "shop",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189507635,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|11"
+}
+{
+  "timestamp": 1560189513475,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189514971,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189516811,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189517988,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189520587,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|326"
+}
+{
+  "timestamp": 1560189521770,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|326"
+}
+{
+  "timestamp": 1560189537379,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189537379,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560189537379,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|23"
+}
+{
+  "timestamp": 1560189537379,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560189541281,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560189837693,
+  "category": "Text",
+  "type": "Concept",
+  "value": "counter",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189843228,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|6"
+}
+{
+  "timestamp": 1560189845940,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560189847188,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560189848444,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|20"
+}
+{
+  "timestamp": 1560189849628,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|31"
+}
+{
+  "timestamp": 1560189850668,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|31"
+}
+{
+  "timestamp": 1560189851740,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560189852876,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|18"
+}
+{
+  "timestamp": 1560189853932,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560189855324,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|20"
+}
+{
+  "timestamp": 1560189860196,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560189861500,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|22"
+}
+{
+  "timestamp": 1560189862932,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|21"
+}
+{
+  "timestamp": 1560189864300,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|18"
+}
+{
+  "timestamp": 1560189867028,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560189873647,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|42"
+}
+{
+  "timestamp": 1560189874945,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|44"
+}
+{
+  "timestamp": 1560189879473,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189882787,
+  "category": "Text",
+  "type": "Concept",
+  "value": "hotel",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189889140,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|147"
+}
+{
+  "timestamp": 1560189892062,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|7"
+}
+{
+  "timestamp": 1560189895301,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189901057,
+  "category": "Text",
+  "type": "Concept",
+  "value": "reception room",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189909796,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189914537,
+  "category": "Text",
+  "type": "Concept",
+  "value": "airplane",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560189916892,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "15|325"
+}
+{
+  "timestamp": 1560189918068,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "15|313"
+}
+{
+  "timestamp": 1560189919116,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "15|291"
+}
+{
+  "timestamp": 1560189920220,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|35"
+}
+{
+  "timestamp": 1560189923460,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|21"
+}
+{
+  "timestamp": 1560189924804,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|20"
+}
+{
+  "timestamp": 1560189927052,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|22"
+}
+{
+  "timestamp": 1560189928148,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|23"
+}
+{
+  "timestamp": 1560189930348,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|25"
+}
+{
+  "timestamp": 1560189931924,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|21"
+}
+{
+  "timestamp": 1560189933444,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|155"
+}
+{
+  "timestamp": 1560189934972,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|149"
+}
+{
+  "timestamp": 1560189936140,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|142"
+}
+{
+  "timestamp": 1560189937276,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|122"
+}
+{
+  "timestamp": 1560189938324,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|108"
+}
+{
+  "timestamp": 1560189939628,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|84"
+}
+{
+  "timestamp": 1560189941148,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|60"
+}
+{
+  "timestamp": 1560189942260,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|47"
+}
+{
+  "timestamp": 1560189943420,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|33"
+}
+{
+  "timestamp": 1560189948460,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|20"
+}
+{
+  "timestamp": 1560189949700,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|11"
+}
+{
+  "timestamp": 1560189951116,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|3"
+}
+{
+  "timestamp": 1560189952500,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|8"
+}
+{
+  "timestamp": 1560189953516,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|19"
+}
+{
+  "timestamp": 1560189955212,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|20"
+}
+{
+  "timestamp": 1560189957796,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|19"
+}
+{
+  "timestamp": 1560189961660,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|18"
+}
+{
+  "timestamp": 1560189962836,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|18"
+}
+{
+  "timestamp": 1560189963940,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|20"
+}
+{
+  "timestamp": 1560189965516,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|21"
+}
+{
+  "timestamp": 1560189998516,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560189998516,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560189998516,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|23"
+}
+{
+  "timestamp": 1560189998517,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560190186326,
+  "category": "Text",
+  "type": "Concept",
+  "value": "clock",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560190190749,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|204"
+}
+{
+  "timestamp": 1560190192189,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|203"
+}
+{
+  "timestamp": 1560190204781,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|655"
+}
+{
+  "timestamp": 1560190206053,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|655"
+}
+{
+  "timestamp": 1560190209694,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "5|204"
+}
+{
+  "timestamp": 1560190210698,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "ScrollChanged",
+  "attributes": ""
+}
+{
+  "timestamp": 1560190220255,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190221584,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "16|121"
+}
+{
+  "timestamp": 1560190222930,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "16|121"
+}
+{
+  "timestamp": 1560190228802,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "8|1525"
+}
+{
+  "timestamp": 1560190229933,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "8|1525"
+}
+{
+  "timestamp": 1560190232993,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190235380,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190238078,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190239144,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190240382,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190243658,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "7|120"
+}
+{
+  "timestamp": 1560190246558,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190249191,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "7|120"
+}
+{
+  "timestamp": 1560190259733,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "7|120"
+}
+{
+  "timestamp": 1560190267302,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190270224,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190395494,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560190395494,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560190395494,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560190395494,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560190399426,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190511910,
+  "category": "Text",
+  "type": "Concept",
+  "value": "car",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560190514418,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560190516673,
+  "category": "Text",
+  "type": "Concept",
+  "value": "car",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560190520745,
+  "category": "Sketch",
+  "type": "Color",
+  "value": "[P(0.192200557103064; 0.657233054781802), C(255; 0; 0), E(0.104166666666667; 0.185185185185185), all]",
+  "attributes": "10|False"
+}
+{
+  "timestamp": 1560190523521,
+  "category": "Sketch",
+  "type": "Color",
+  "value": "[P(0.192200557103064; 0.657233054781802), C(255; 0; 0), E(0.104166666666667; 0.185185185185185), any]",
+  "attributes": "10|True"
+}
+{
+  "timestamp": 1560190525349,
+  "category": "Browsing",
+  "type": "ExplicitSort",
+  "value": "KeywordModel:True"
+}
+{
+  "timestamp": 1560190532967,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190535069,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190541332,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560190541332,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560190541332,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560190541332,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560190545222,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190910244,
+  "category": "Text",
+  "type": "Concept",
+  "value": "mirror",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560190911827,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "IsSelected|True"
+}
+{
+  "timestamp": 1560190916248,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|9"
+}
+{
+  "timestamp": 1560190920336,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|84"
+}
+{
+  "timestamp": 1560190921584,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|84"
+}
+{
+  "timestamp": 1560190923825,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|84"
+}
+{
+  "timestamp": 1560190925001,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|84"
+}
+{
+  "timestamp": 1560190926232,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|86"
+}
+{
+  "timestamp": 1560190938082,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190939906,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190940915,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560190942286,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|120"
+}
+{
+  "timestamp": 1560190944027,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|120"
+}
+{
+  "timestamp": 1560190953008,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|120"
+}
+{
+  "timestamp": 1560190954018,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|119"
+}
+{
+  "timestamp": 1560190955567,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|121"
+}
+{
+  "timestamp": 1560191036239,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560191036239,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560191036239,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "IsSelected|False"
+}
+{
+  "timestamp": 1560191036239,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560191038713,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560191252221,
+  "category": "Text",
+  "type": "Concept",
+  "value": "grass",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560191256762,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|780"
+}
+{
+  "timestamp": 1560191257970,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|781"
+}
+{
+  "timestamp": 1560191260186,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|779"
+}
+{
+  "timestamp": 1560191263163,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560191265218,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "17|21"
+}
+{
+  "timestamp": 1560191267642,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560191267933,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560191271734,
+  "category": "Text",
+  "type": "Concept",
+  "value": "weed",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560191275755,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560191280336,
+  "category": "Text",
+  "type": "Concept",
+  "value": "grass",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560191291827,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560191295746,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|780"
+}
+{
+  "timestamp": 1560191306350,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560191306350,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560191306350,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560191306350,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560191310114,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560191567422,
+  "category": "Text",
+  "type": "Concept",
+  "value": "washer",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560191569068,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|807"
+}
+{
+  "timestamp": 1560191570124,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|806"
+}
+{
+  "timestamp": 1560191573124,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "9|1169"
+}
+{
+  "timestamp": 1560191574531,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "9|1169"
+}
+{
+  "timestamp": 1560191575747,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "9|1172"
+}
+{
+  "timestamp": 1560191577636,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1739"
+}
+{
+  "timestamp": 1560191579428,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1740"
+}
+{
+  "timestamp": 1560191596003,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "9|1169"
+}
+{
+  "timestamp": 1560191597668,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1739"
+}
+{
+  "timestamp": 1560191600031,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1739"
+}
+{
+  "timestamp": 1560191601191,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1742"
+}
+{
+  "timestamp": 1560191602556,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "18|1644"
+}
+{
+  "timestamp": 1560191603569,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "18|1644"
+}
+{
+  "timestamp": 1560191605292,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1662"
+}
+{
+  "timestamp": 1560191606780,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|1662"
+}
+{
+  "timestamp": 1560191778930,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560191778930,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560191778930,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560191778930,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560191786962,
+  "category": "Text",
+  "type": "Concept",
+  "value": "washer",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560191789117,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|807"
+}
+{
+  "timestamp": 1560191790749,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "26|807"
+}
+{
+  "timestamp": 1560192271175,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560192271175,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560192271175,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560192271175,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560192442685,
+  "category": "Text",
+  "type": "Concept",
+  "value": "reception room",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560192448427,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|7"
+}
+{
+  "timestamp": 1560192454682,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560192456050,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560192458695,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560192464072,
+  "category": "Text",
+  "type": "Concept",
+  "value": "counter",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560192471490,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560192474762,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560192475553,
+  "category": "Browsing",
+  "type": "RankedList",
+  "value": "ScrollChanged",
+  "attributes": "RankedListScroll"
+}
+{
+  "timestamp": 1560192480823,
+  "category": "Text",
+  "type": "Concept",
+  "value": "hotel",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560192485863,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|20"
+}
+{
+  "timestamp": 1560192487303,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|22"
+}
+{
+  "timestamp": 1560192488399,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|22"
+}
+{
+  "timestamp": 1560192490071,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|18"
+}
+{
+  "timestamp": 1560192491855,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560192493583,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|20"
+}
+{
+  "timestamp": 1560192494791,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|29"
+}
+{
+  "timestamp": 1560192495887,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|19"
+}
+{
+  "timestamp": 1560192497031,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|32"
+}
+{
+  "timestamp": 1560192498043,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|45"
+}
+{
+  "timestamp": 1560192499143,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|53"
+}
+{
+  "timestamp": 1560192500163,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|65"
+}
+{
+  "timestamp": 1560192501186,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|77"
+}
+{
+  "timestamp": 1560192502223,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|87"
+}
+{
+  "timestamp": 1560192503335,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|100"
+}
+{
+  "timestamp": 1560192504345,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|98"
+}
+{
+  "timestamp": 1560192509161,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560192513396,
+  "category": "Text",
+  "type": "Concept",
+  "value": "airplane",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560192515783,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "15|325"
+}
+{
+  "timestamp": 1560192518207,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "15|325"
+}
+{
+  "timestamp": 1560192519295,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "15|312"
+}
+{
+  "timestamp": 1560192521263,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "24|35"
+}
+{
+  "timestamp": 1560192523703,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|155"
+}
+{
+  "timestamp": 1560192524722,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|143"
+}
+{
+  "timestamp": 1560192525723,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|128"
+}
+{
+  "timestamp": 1560192526911,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|113"
+}
+{
+  "timestamp": 1560192527991,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|99"
+}
+{
+  "timestamp": 1560192529119,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|84"
+}
+{
+  "timestamp": 1560192530311,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|68"
+}
+{
+  "timestamp": 1560192531316,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "ScrollChanged",
+  "attributes": ""
+}
+{
+  "timestamp": 1560192532323,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|40"
+}
+{
+  "timestamp": 1560192533447,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|27"
+}
+{
+  "timestamp": 1560192534471,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|17"
+}
+{
+  "timestamp": 1560192535511,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|15"
+}
+{
+  "timestamp": 1560192537759,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|18"
+}
+{
+  "timestamp": 1560192545447,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|148"
+}
+{
+  "timestamp": 1560192546599,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|136"
+}
+{
+  "timestamp": 1560192547671,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|122"
+}
+{
+  "timestamp": 1560192548684,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|105"
+}
+{
+  "timestamp": 1560192549879,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|92"
+}
+{
+  "timestamp": 1560192550879,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "ScrollChanged",
+  "attributes": ""
+}
+{
+  "timestamp": 1560192551991,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|61"
+}
+{
+  "timestamp": 1560192553006,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|44"
+}
+{
+  "timestamp": 1560192554012,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "ScrollChanged",
+  "attributes": ""
+}
+{
+  "timestamp": 1560192555020,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|18"
+}
+{
+  "timestamp": 1560192556039,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|17"
+}
+{
+  "timestamp": 1560192557983,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "21|148"
+}
+{
+  "timestamp": 1560192559879,
+  "category": "Browsing",
+  "type": "VideoSummary",
+  "value": "21|148"
+}
+{
+  "timestamp": 1560192561128,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560192579305,
+  "category": "Browsing",
+  "type": "Exploration",
+  "value": "ScrollChanged",
+  "attributes": "DetailScroll"
+}
+{
+  "timestamp": 1560192590848,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "21|148"
+}
+{
+  "timestamp": 1560192592848,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560192604543,
+  "category": "Text",
+  "type": "Concept",
+  "attributes": "50|True"
+}
+{
+  "timestamp": 1560192604543,
+  "category": "Image",
+  "type": "GlobalFeatures",
+  "value": "",
+  "attributes": "30|False"
+}
+{
+  "timestamp": 1560192604543,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "EndTimeHour|23"
+}
+{
+  "timestamp": 1560192604544,
+  "category": "Browsing",
+  "type": "ResetAll"
+}
+{
+  "timestamp": 1560192613727,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "3|1062"
+}
+{
+  "timestamp": 1560192617024,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": "3|1062"
+}
+{
+  "timestamp": 1560192637981,
+  "category": "Text",
+  "type": "Concept",
+  "value": "bowl",
+  "attributes": "50|False"
+}
+{
+  "timestamp": 1560192682615,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "9|889"
+}
+{
+  "timestamp": 1560192683616,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "6|582"
+}
+{
+  "timestamp": 1560192688792,
+  "category": "Filter",
+  "type": "Lifelog",
+  "value": ""
+}
+{
+  "timestamp": 1560194731881,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|172"
+}
+{
+  "timestamp": 1560194733289,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "12|172"
+}
+{
+  "timestamp": 1560195407325,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|48"
+}
+{
+  "timestamp": 1560195408683,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|36"
+}
+{
+  "timestamp": 1560195409722,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "19|64"
+}
+{
+  "timestamp": 1560195412396,
+  "category": "Browsing",
+  "type": "TemporalContext",
+  "value": "2|553"
+}

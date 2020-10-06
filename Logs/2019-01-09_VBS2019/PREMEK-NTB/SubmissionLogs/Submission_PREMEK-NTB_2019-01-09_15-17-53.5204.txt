@@ -1,0 +1,41 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=4958&frame=4555
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1547047067199,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547046856170,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5902|2217"
+    },
+    {
+      "timestamp": 1547046856217,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547046856218,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5902|2225"
+    },
+    {
+      "timestamp": 1547046860817,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547046860843,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    }
+  ]
+}

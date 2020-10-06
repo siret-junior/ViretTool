@@ -1,0 +1,171 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=6612&frame=3125
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1546956737523,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546956711935,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "7154|3566"
+    },
+    {
+      "timestamp": 1546956712089,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956713090,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956716691,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "6815|7432"
+    },
+    {
+      "timestamp": 1546956716910,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956718575,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956719584,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956720705,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956721706,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956722847,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956723880,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956724882,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956727804,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6611|1425"
+    },
+    {
+      "timestamp": 1546956727945,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546956727947,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6611|1431"
+    },
+    {
+      "timestamp": 1546956728214,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546956728493,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6611|1481"
+    },
+    {
+      "timestamp": 1546956728534,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1546956728542,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "6611|1506"
+    },
+    {
+      "timestamp": 1546956729732,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "6611|1487"
+    },
+    {
+      "timestamp": 1546956729907,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956731390,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956732391,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    },
+    {
+      "timestamp": 1546956733392,
+      "category": "Browsing",
+      "type": "Exploration",
+      "value": "ScrollChanged",
+      "attributes": "DetailScroll"
+    }
+  ]
+}

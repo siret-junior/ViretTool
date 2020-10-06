@@ -1,0 +1,17 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547052953787,
+  "type": "Flush",
+  "events": [
+    {
+      "timestamp": 1547052918694,
+      "category": "Text",
+      "type": "Concept",
+      "value": "",
+      "attributes": "1,90117507105473|False"
+    }
+  ]
+}

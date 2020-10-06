@@ -1,0 +1,168 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=3102&frame=1366
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1547044925951,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547044761875,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547044761906,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547044764664,
+      "category": "Text",
+      "type": "Concept",
+      "value": "camera",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1547044770769,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.877437325905293; 0.211352522438873), C(102; 102; 102), E(0.104166666666667; 0.185185185185185), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1547044772130,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.860724233983287; 0.191544413494274), C(102; 102; 102), E(0.104166666666667; 0.185185185185185), all]",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1547044790200,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-09T14_39_50_1587246Z.png",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547044796331,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2817|7700"
+    },
+    {
+      "timestamp": 1547044796956,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547044796975,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2817|7706"
+    },
+    {
+      "timestamp": 1547044797439,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547044797498,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2817|7681"
+    },
+    {
+      "timestamp": 1547044798887,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "2817|7700",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1547044803217,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547044829336,
+      "category": "Text",
+      "type": "Concept",
+      "value": "camera OR crowd",
+      "attributes": "50|True"
+    },
+    {
+      "timestamp": 1547044830715,
+      "category": "Text",
+      "type": "Concept",
+      "value": "camera AND crowd",
+      "attributes": "50|True"
+    },
+    {
+      "timestamp": 1547044854427,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "50|True"
+    },
+    {
+      "timestamp": 1547044868227,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547044868248,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547044888840,
+      "category": "Text",
+      "type": "Concept",
+      "value": "musical instrument",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1547044891538,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4887|2125"
+    },
+    {
+      "timestamp": 1547044892036,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547044892044,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4887|2131"
+    },
+    {
+      "timestamp": 1547044894466,
+      "category": "Text",
+      "type": "Concept",
+      "value": "musical instrument OR person",
+      "attributes": "50|True"
+    },
+    {
+      "timestamp": 1547044896042,
+      "category": "Text",
+      "type": "Concept",
+      "value": "musical instrument AND person",
+      "attributes": "50|True"
+    }
+  ]
+}

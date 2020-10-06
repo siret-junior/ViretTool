@@ -1,0 +1,246 @@
+2019-01-08 13:14:59.6127|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while submitting framesSystem.InvalidOperationException: An invalid request URI was provided. The request URI must either be an absolute URI or BaseAddress must be set.
+   at System.Net.Http.HttpClient.PrepareRequestMessage(HttpRequestMessage request)
+   at System.Net.Http.HttpClient.SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.PostAsync(Uri requestUri, HttpContent content, CancellationToken cancellationToken)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitFrameAsync>d__10.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 33
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnSubmittedFramesChanged>d__73.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 501
+2019-01-08 14:42:58.7857|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: Too many automatic redirections were attempted.
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 14:44:22.9907|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: Too many automatic redirections were attempted.
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:22:55.2963|FATAL|ViretTool.App|Unhandled Exception: System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at ViretTool.DataLayer.DataIO.ThumbnailIO.ThumbnailReader.ReadVideoThumbnails(Int32 videoId) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.DataLayer\DataIO\ThumbnailIO\ThumbnailReader.cs:line 102
+   at ViretTool.BusinessLayer.Thumbnails.JpegThumbnailService.GetThumbnails(Int32 videoId) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Thumbnails\JpegThumbnailService.cs:line 29
+   at ViretTool.PresentationLayer.Controls.Common.FrameViewModel.<>c__DisplayClass6_0.<.ctor>b__0() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Controls\Common\FrameViewModel.cs:line 23
+   at System.Lazy`1.CreateValue()
+   at System.Lazy`1.LazyInitValue()
+   at ViretTool.PresentationLayer.Controls.Common.FrameViewModel.ReloadBitmap(Int32 position) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Controls\Common\FrameViewModel.cs:line 109
+   at ViretTool.PresentationLayer.Controls.Common.FrameControl.FrameControl_OnMouseWheel(Object sender, MouseWheelEventArgs e) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Controls\Common\FrameControl.xaml.cs:line 247
+   at System.Windows.RoutedEventArgs.InvokeHandler(Delegate handler, Object target)
+   at System.Windows.RoutedEventHandlerInfo.InvokeHandler(Object target, RoutedEventArgs routedEventArgs)
+   at System.Windows.EventRoute.InvokeHandlersImpl(Object source, RoutedEventArgs args, Boolean reRaised)
+   at System.Windows.UIElement.RaiseEventImpl(DependencyObject sender, RoutedEventArgs args)
+   at System.Windows.UIElement.RaiseTrustedEvent(RoutedEventArgs args)
+   at System.Windows.Input.InputManager.ProcessStagingArea()
+   at System.Windows.Input.InputManager.ProcessInput(InputEventArgs input)
+   at System.Windows.Input.InputProviderSite.ReportInput(InputReport inputReport)
+   at System.Windows.Interop.HwndMouseInputProvider.ReportInput(IntPtr hwnd, InputMode mode, Int32 timestamp, RawMouseActions actions, Int32 x, Int32 y, Int32 wheel)
+   at System.Windows.Interop.HwndMouseInputProvider.FilterMessage(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at System.Windows.Interop.HwndSource.InputFilterMessage(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2019-01-08 15:28:54.6142|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'images.pexels.com'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:29:09.6483|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'res.cloudinary.com'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:29:27.0716|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'www.muralswallpaper.com'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:45:55.2644|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'mediad.publicbroadcasting.net'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:55:22.1115|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'www.euronics.cz'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:55:36.8172|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'homebydleni.cz'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:58:25.4797|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote name could not be resolved: 'st3.depositphotos.com'
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-08 15:58:59.8586|FATAL|ViretTool.App|Unhandled Exception: System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení 172.16.3.245:80
+   at System.Net.Sockets.Socket.InternalEndConnect(IAsyncResult asyncResult)
+   at System.Net.Sockets.Socket.EndConnect(IAsyncResult asyncResult)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.EndGetRequestStream(IAsyncResult asyncResult, TransportContext& context)
+   at System.Net.Http.HttpClientHandler.GetRequestStreamCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitLog>d__11.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 53
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<SendLogs>d__62.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2019-01-08 15:58:59.8855|FATAL|ViretTool.App|Unhandled Exception: System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení 172.16.3.245:80
+   at System.Net.Sockets.Socket.InternalEndConnect(IAsyncResult asyncResult)
+   at System.Net.Sockets.Socket.EndConnect(IAsyncResult asyncResult)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.EndGetRequestStream(IAsyncResult asyncResult, TransportContext& context)
+   at System.Net.Http.HttpClientHandler.GetRequestStreamCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitLog>d__11.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 53
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<SendLogs>d__62.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+2019-01-09 14:39:40.8550|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.ArgumentNullException: Path cannot be null.
+Parameter name: path
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.File.InternalReadAllBytes(String path, Boolean checkHost)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-09 16:10:35.2233|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while submitting framesSystem.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The underlying connection was closed: An unexpected error occurred on a receive. ---> System.IO.IOException: Unable to read data from the transport connection: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení. ---> System.Net.Sockets.SocketException: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení
+   at System.Net.Sockets.Socket.EndReceive(IAsyncResult asyncResult)
+   at System.Net.Sockets.NetworkStream.EndRead(IAsyncResult asyncResult)
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.NetworkStream.EndRead(IAsyncResult asyncResult)
+   at System.Net.Connection.ReadCallback(IAsyncResult asyncResult)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.Http.HttpClientHandler.GetResponseCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitFrameAsync>d__10.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 34
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnSubmittedFramesChanged>d__73.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 501
+2019-01-09 16:11:40.9120|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while submitting framesSystem.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The underlying connection was closed: An unexpected error occurred on a receive. ---> System.IO.IOException: Unable to read data from the transport connection: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení. ---> System.Net.Sockets.SocketException: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení
+   at System.Net.Sockets.Socket.EndReceive(IAsyncResult asyncResult)
+   at System.Net.Sockets.NetworkStream.EndRead(IAsyncResult asyncResult)
+   --- End of inner exception stack trace ---
+   at System.Net.Sockets.NetworkStream.EndRead(IAsyncResult asyncResult)
+   at System.Net.Connection.ReadCallback(IAsyncResult asyncResult)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.Http.HttpClientHandler.GetResponseCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitFrameAsync>d__10.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 34
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnSubmittedFramesChanged>d__73.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 501
+2019-01-09 16:12:10.0946|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while submitting framesSystem.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: Software v hostitelském poèítaèi ukonèil vytvoøené pøipojení 172.16.3.245:80
+   at System.Net.Sockets.Socket.InternalEndConnect(IAsyncResult asyncResult)
+   at System.Net.Sockets.Socket.EndConnect(IAsyncResult asyncResult)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.EndGetRequestStream(IAsyncResult asyncResult, TransportContext& context)
+   at System.Net.Http.HttpClientHandler.GetRequestStreamCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.BusinessLayer.Submission.SubmissionService.<SubmitFrameAsync>d__10.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer\Submission\SubmissionService.cs:line 34
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnSubmittedFramesChanged>d__73.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 501
+2019-01-09 17:54:10.6575|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-09 17:55:19.3279|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote server returned an error: (403) Forbidden.
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299
+2019-01-09 17:55:24.5754|ERROR|ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel|Error while dropping imageSystem.Net.WebException: The remote server returned an error: (403) Forbidden.
+   at System.Net.WebClient.DownloadDataInternal(Uri address, WebRequest& request)
+   at System.Net.WebClient.DownloadData(Uri address)
+   at ViretTool.BusinessLayer.ExternalDescriptors.ExternalImageProvider.DownloadImage(String url) in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.BusinessLayer.ExternalDescriptors\ExternalImageProvider.cs:line 44
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.Tasks.Task.Execute()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at ViretTool.PresentationLayer.Windows.ViewModels.MainWindowViewModel.<OnDrop>d__64.MoveNext() in C:\Developement\Repositories\ViretTool\src\ViretTool\ViretTool.PresentationLayer\Windows\ViewModels\MainWindowViewModel.cs:line 299

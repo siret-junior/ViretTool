@@ -1,0 +1,76 @@
+http://172.16.3.245/vbs/submit?team=4&member=1&video=4738&frame=3764
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 1,
+  "timestamp": 1546956683910,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1546956577803,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0.623955431754875; 0.364271123491179), C(112; 128; 144), E(0.197771587743733; 0.277313525224389), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1546956578133,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1546956593547,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.966573816155989; 0.780241411327762), C(153; 92; 0), E(0.104166666666667; 0.185185185185185), any],[P(0.0250696378830084; 0.547694212318168), C(204; 122; 0), E(0.0473537604456825; 0.391210151655834), any]",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1546956605738,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "[P(0.0250696378830084; 0.547694212318168), C(204; 122; 0), E(0.0473537604456825; 0.391210151655834), any]",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1546956608546,
+      "category": "Sketch",
+      "type": "Color",
+      "value": "",
+      "attributes": "10|True"
+    },
+    {
+      "timestamp": 1546956623075,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0.587743732590529; 0.453605694831321), C(112; 128; 144), E(0.103064066852368; 0.183423088826989), all]",
+      "attributes": "10|False"
+    },
+    {
+      "timestamp": 1546956648970,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "50|False"
+    },
+    {
+      "timestamp": 1546956648978,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1546956649012,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1546956662403,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "Images\\2019-01-08T14_11_02_3555612Z.png",
+      "attributes": "30|False"
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "primarytemporalquery": 0,
+  "bitemporalsimilarityquery": {
+    "keywordquery": {
+      "formerquery": {
+        "synsetgroups": []
+      },
+      "latterquery": {
+        "synsetgroups": [
+          {
+            "synsets": [
+              {
+                "text": "GoogLeNet",
+                "synsetid": 515
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "colorsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "facesketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": [
+          {
+            "ellipsestate": 1,
+            "positionx": 0.38837703756201275,
+            "positiony": 0.51330025986298111,
+            "horizontalaxis": 0.12756909992912827,
+            "verticalaxis": 0.23938892826206784,
+            "rotation": 0,
+            "colorr": 112,
+            "colorg": 128,
+            "colorb": 144
+          },
+          {
+            "ellipsestate": 0,
+            "positionx": 0.82211197732104868,
+            "positiony": 0.3923458540042522,
+            "horizontalaxis": 0.20836286321757611,
+            "verticalaxis": 0.54681470981967073,
+            "rotation": 0,
+            "colorr": 0,
+            "colorg": 0,
+            "colorb": 0
+          }
+        ]
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "textsketchquery": {
+      "formerquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      },
+      "latterquery": {
+        "canvaswidth": 216,
+        "canvasheight": 384,
+        "colorsketchellipses": []
+      }
+    },
+    "semanticexamplequery": {
+      "formerquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      },
+      "latterquery": {
+        "positiveexampleids": [],
+        "negativeexampleids": [],
+        "externalimages": []
+      }
+    }
+  },
+  "formerfusionquery": {
+    "sortingsimilaritymodel": 1,
+    "keywordfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.11852656090836475
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.0943703368406393
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.0943703368406393
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.0943703368406393
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.11272671995521999
+    }
+  },
+  "latterfusionquery": {
+    "sortingsimilaritymodel": 0,
+    "keywordfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.31979897277302693
+    },
+    "colorsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.094370336840639044
+    },
+    "facesketchfilteringquery": {
+      "filterstate": 0,
+      "threshold": 0.094370336840639044
+    },
+    "textsketchfilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.094370336840639044
+    },
+    "semanticexamplefilteringquery": {
+      "filterstate": 2,
+      "threshold": 0.3
+    }
+  },
+  "formerfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.86317228563843873
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.58316236524011722
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 3,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    }
+  },
+  "latterfilteringquery": {
+    "colorsaturationquery": {
+      "filterstate": 2,
+      "threshold": 0.9
+    },
+    "percentofblackquery": {
+      "filterstate": 2,
+      "threshold": 0.65
+    },
+    "countfilteringquery": {
+      "filterstate": 0,
+      "maxpervideo": 3,
+      "maxpershot": 1,
+      "maxpergroup": -1
+    }
+  }
+}

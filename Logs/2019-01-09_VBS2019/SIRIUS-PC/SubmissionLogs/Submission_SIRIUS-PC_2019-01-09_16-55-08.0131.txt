@@ -1,0 +1,141 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=5010&frame=5244
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547052907695,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547052867028,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    },
+    {
+      "timestamp": 1547052873626,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,307583274273565; 0,546058744783053), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,552799433026222; 0,530939444050713), C(112; 128; 144), E(0,199858256555634; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    },
+    {
+      "timestamp": 1547052874137,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547052875699,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,307583274273565; 0,546058744783053), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,360028348688873; 0,583856996613906), C(112; 128; 144), E(0,199858256555634; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    },
+    {
+      "timestamp": 1547052878565,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,307583274273565; 0,546058744783053), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,381289865343728; 0,601496180801638), C(112; 128; 144), E(0,199858256555634; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    },
+    {
+      "timestamp": 1547052881343,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,307583274273565; 0,546058744783053), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,331679659815734; 0,571257579336955), C(112; 128; 144), E(0,199858256555634; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    },
+    {
+      "timestamp": 1547052884329,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5009|5094"
+    },
+    {
+      "timestamp": 1547052884404,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547052884407,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5009|5102"
+    },
+    {
+      "timestamp": 1547052885465,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5009|5079"
+    },
+    {
+      "timestamp": 1547052886556,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5009|5004"
+    },
+    {
+      "timestamp": 1547052886563,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547052886580,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5009|4997"
+    },
+    {
+      "timestamp": 1547052886970,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547052886983,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5009|4937"
+    },
+    {
+      "timestamp": 1547052890845,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4984|13606"
+    },
+    {
+      "timestamp": 1547052891649,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547052893783,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,437987243090007; 0,546058744783053), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,331679659815734; 0,571257579336955), C(112; 128; 144), E(0,199858256555634; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    },
+    {
+      "timestamp": 1547052901505,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,568391211906449; 0,581337113158516), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,331679659815734; 0,571257579336955), C(112; 128; 144), E(0,199858256555634; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    },
+    {
+      "timestamp": 1547052903578,
+      "category": "Text",
+      "type": "LocalizedObject",
+      "value": "[P(0,618001417434444; 0,566217812426175), C(112; 128; 144), E(0,18284904323175; 0,252240333884558), any],[P(0,331679659815734; 0,571257579336955), C(112; 128; 144), E(0,28632175761871; 0,292306480825262), any]",
+      "attributes": "18,577888425891|True"
+    }
+  ]
+}

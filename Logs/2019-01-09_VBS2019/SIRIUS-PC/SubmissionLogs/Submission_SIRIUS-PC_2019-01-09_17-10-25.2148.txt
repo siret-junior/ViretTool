@@ -1,0 +1,441 @@
+http://172.16.3.245:80/vbs/submit?team=4&member=0&video=4594&frame=50709
+{
+  "teamname": "VIRET",
+  "teamid": 4,
+  "memberid": 0,
+  "timestamp": 1547053825048,
+  "type": "Submit",
+  "events": [
+    {
+      "timestamp": 1547053308728,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053308729,
+      "category": "Browsing",
+      "type": "ResetAll"
+    },
+    {
+      "timestamp": 1547053308749,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547053309169,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547053442951,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person",
+      "attributes": "1,90117507105473|False"
+    },
+    {
+      "timestamp": 1547053463584,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person OR street",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053466082,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person AND street",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053485539,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person AND street OR walk",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053488277,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person AND street AND walk",
+      "attributes": "1,90117507105473|True"
+    },
+    {
+      "timestamp": 1547053498360,
+      "category": "Text",
+      "type": "Concept",
+      "value": "person",
+      "attributes": "25,1212974505456|False"
+    },
+    {
+      "timestamp": 1547053515923,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053523409,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4998|13375"
+    },
+    {
+      "timestamp": 1547053523733,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053523740,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "4998|13381"
+    },
+    {
+      "timestamp": 1547053525539,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5008|2375"
+    },
+    {
+      "timestamp": 1547053525653,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053525657,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5008|2381"
+    },
+    {
+      "timestamp": 1547053526712,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053526714,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|636"
+    },
+    {
+      "timestamp": 1547053527779,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|629"
+    },
+    {
+      "timestamp": 1547053534100,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|629"
+    },
+    {
+      "timestamp": 1547053535237,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|629"
+    },
+    {
+      "timestamp": 1547053536036,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053536541,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|591"
+    },
+    {
+      "timestamp": 1547053545811,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|629"
+    },
+    {
+      "timestamp": 1547053545827,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053545837,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|636"
+    },
+    {
+      "timestamp": 1547053551898,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5014|629"
+    },
+    {
+      "timestamp": 1547053565734,
+      "category": "Text",
+      "type": "Concept",
+      "value": "party",
+      "attributes": "22,6334271956001|False"
+    },
+    {
+      "timestamp": 1547053570528,
+      "category": "Text",
+      "type": "Concept",
+      "value": "party OR street",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053572499,
+      "category": "Text",
+      "type": "Concept",
+      "value": "party AND street",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053575352,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "673|2307"
+    },
+    {
+      "timestamp": 1547053575453,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053575456,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "673|2315"
+    },
+    {
+      "timestamp": 1547053578097,
+      "category": "Text",
+      "type": "Concept",
+      "value": "street",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053590763,
+      "category": "Text",
+      "type": "Concept",
+      "value": "street OR person",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053593717,
+      "category": "Text",
+      "type": "Concept",
+      "value": "street AND person",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053597778,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547053599738,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    },
+    {
+      "timestamp": 1547053608340,
+      "category": "Text",
+      "type": "Concept",
+      "value": "street",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053608940,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:0"
+    },
+    {
+      "timestamp": 1547053611334,
+      "category": "Text",
+      "type": "Concept",
+      "value": "",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053656804,
+      "category": "Text",
+      "type": "Concept",
+      "value": "plaza",
+      "attributes": "22,6334271956001|False"
+    },
+    {
+      "timestamp": 1547053660427,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "5122|6050"
+    },
+    {
+      "timestamp": 1547053660689,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053664665,
+      "category": "Text",
+      "type": "Concept",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053674625,
+      "category": "Text",
+      "type": "Concept",
+      "value": "social event",
+      "attributes": "22,6334271956001|False"
+    },
+    {
+      "timestamp": 1547053682529,
+      "category": "Text",
+      "type": "Concept",
+      "value": "social event OR street",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053684219,
+      "category": "Text",
+      "type": "Concept",
+      "value": "social event AND street",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053688648,
+      "category": "Text",
+      "type": "Concept",
+      "value": "social event",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053693729,
+      "category": "Text",
+      "type": "Concept",
+      "value": "",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053726639,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "5005|12011",
+      "attributes": "30|False"
+    },
+    {
+      "timestamp": 1547053731078,
+      "category": "Image",
+      "type": "GlobalFeatures",
+      "value": "",
+      "attributes": "30|True"
+    },
+    {
+      "timestamp": 1547053762513,
+      "category": "Text",
+      "type": "Concept",
+      "value": "car",
+      "attributes": "22,6334271956001|False"
+    },
+    {
+      "timestamp": 1547053768293,
+      "category": "Text",
+      "type": "Concept",
+      "value": "car OR person",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053770788,
+      "category": "Text",
+      "type": "Concept",
+      "value": "car AND person",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053778443,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2605|299"
+    },
+    {
+      "timestamp": 1547053778661,
+      "category": "Browsing",
+      "type": "VideoSummary",
+      "value": "ScrollChanged",
+      "attributes": ""
+    },
+    {
+      "timestamp": 1547053778667,
+      "category": "Browsing",
+      "type": "TemporalContext",
+      "value": "2605|307"
+    },
+    {
+      "timestamp": 1547053794634,
+      "category": "Text",
+      "type": "Concept",
+      "value": "car AND person OR car",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053799125,
+      "category": "Text",
+      "type": "Concept",
+      "value": "car AND person",
+      "attributes": "22,6334271956001|True"
+    },
+    {
+      "timestamp": 1547053805097,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:1"
+    },
+    {
+      "timestamp": 1547053810662,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:2"
+    },
+    {
+      "timestamp": 1547053816653,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    },
+    {
+      "timestamp": 1547053819820,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:4"
+    },
+    {
+      "timestamp": 1547053821709,
+      "category": "Browsing",
+      "type": "RankedList",
+      "value": "CurrentPage:3"
+    }
+  ]
+}
