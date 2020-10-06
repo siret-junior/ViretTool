@@ -14,10 +14,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
 {
     public partial class KeywordSearchControl : UserControl
     {
-        private readonly Dictionary<string, LabelProvider> mLabelProviders = new Dictionary<string, LabelProvider>();
-        private readonly Dictionary<string, SuggestionProvider> mSuggestionProviders = new Dictionary<string, SuggestionProvider>();
+        private readonly Dictionary<string, LabelProvider> _labelProviders = new Dictionary<string, LabelProvider>();
+        private readonly Dictionary<string, SuggestionProvider> _suggestionProviders = new Dictionary<string, SuggestionProvider>();
 
-        private bool _initialized;
+        private bool _isInitialized;
 
         public KeywordSearchControl()
         {
@@ -51,8 +51,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
             new FrameworkPropertyMetadata(
                 (obj, args) =>
                 {
-                    IDatasetServicesManager datasetServicesManager = args.NewValue as IDatasetServicesManager;
-                    if (datasetServicesManager != null)
+                    if (args.NewValue is IDatasetServicesManager datasetServicesManager)
                     {
                         datasetServicesManager.DatasetOpened += (_, services) => ((KeywordSearchControl)obj).Init(new[] { "GoogLeNet" }, datasetServicesManager);
                     }
@@ -72,13 +71,13 @@ namespace ViretTool.PresentationLayer.Controls.Common
         private void Init(string[] annotationSources, IDatasetServicesManager datasetServicesManager)
         {
             //unregister previous events
-            foreach (SuggestionProvider suggestionProvider in mSuggestionProviders.Values)
+            foreach (SuggestionProvider suggestionProvider in _suggestionProviders.Values)
             {
                 suggestionProvider.SuggestionResultsReadyEvent -= suggestionTextBox.OnSuggestionResultsReady;
                 suggestionProvider.ShowSuggestionMessageEvent -= suggestionTextBox.OnShowSuggestionMessage;
             }
-            mSuggestionProviders.Clear();
-            mLabelProviders.Clear();
+            _suggestionProviders.Clear();
+            _labelProviders.Clear();
 
             suggestionTextBox.AnnotationSources = annotationSources;
             suggestionTextBox.AnnotationSource = annotationSources.First();
@@ -91,36 +90,36 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 string labelsFilePath = Directory.GetFiles(datasetServicesManager.CurrentDatasetFolder).First(file => file.EndsWith(".label"));
 
                 LabelProvider labelProvider = new LabelProvider(labelsFilePath);
-                mLabelProviders.Add(source, labelProvider);
+                _labelProviders.Add(source, labelProvider);
 
                 SuggestionProvider suggestionProvider = new SuggestionProvider(labelProvider, datasetServicesManager);
-                mSuggestionProviders.Add(source, suggestionProvider);
+                _suggestionProviders.Add(source, suggestionProvider);
                 suggestionProvider.SuggestionResultsReadyEvent += suggestionTextBox.OnSuggestionResultsReady;
                 suggestionProvider.ShowSuggestionMessageEvent += suggestionTextBox.OnShowSuggestionMessage;
             }
 
-            if (!_initialized)
+            if (!_isInitialized)
             {
                 suggestionTextBox.QueryChangedEvent += SuggestionTextBox_QueryChangedEvent;
                 suggestionTextBox.SuggestionFilterChangedEvent += SuggestionTextBox_SuggestionFilterChangedEvent;
                 suggestionTextBox.SuggestionsNotNeededEvent += SuggestionTextBox_SuggestionsNotNeededEvent;
                 suggestionTextBox.GetSuggestionSubtreeEvent += SuggestionTextBox_GetSuggestionSubtreeEvent;
-                _initialized = true;
+                _isInitialized = true;
             }
         }
 
-        private string GetFileNameByExtension(string datasetPath, string extension)
-        {
-            string stripFilename = System.IO.Path.GetFileNameWithoutExtension(datasetPath);
-            string modelFilename = stripFilename.Split('-')[0] + extension;
-            string parentDirectory = System.IO.Directory.GetParent(datasetPath).ToString();
+        //private string GetFileNameByExtension(string datasetPath, string extension)
+        //{
+        //    string stripFilename = System.IO.Path.GetFileNameWithoutExtension(datasetPath);
+        //    string modelFilename = stripFilename.Split('-')[0] + extension;
+        //    string parentDirectory = System.IO.Directory.GetParent(datasetPath).ToString();
 
-            return System.IO.Path.Combine(parentDirectory, modelFilename);
-        }
+        //    return System.IO.Path.Combine(parentDirectory, modelFilename);
+        //}
 
         private IEnumerable<IIdentifiable> SuggestionTextBox_GetSuggestionSubtreeEvent(IEnumerable<int> subtree, string filter, string annotationSource)
         {
-            return mSuggestionProviders[annotationSource].GetSuggestions(subtree, filter);
+            return _suggestionProviders[annotationSource].GetSuggestions(subtree, filter);
         }
 
         private void SuggestionTextBox_QueryChangedEvent(string query, string annotationSource)
@@ -138,32 +137,32 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 annotationSource);
         }
 
-        private SynsetClause[] TranslateQuery(IEnumerable<IQueryPart> query, LabelProvider lp)
-        {
-            List<List<int>> queryExanded = ExpandQuery(query, lp);
-            if (queryExanded == null)
-            {
-                return new SynsetClause[0];
-            }
+        //private SynsetClause[] TranslateQuery(IEnumerable<IQueryPart> query, LabelProvider lp)
+        //{
+        //    List<List<int>> queryExanded = ExpandQuery(query, lp);
+        //    if (queryExanded == null)
+        //    {
+        //        return new SynsetClause[0];
+        //    }
 
-            List<SynsetClause> resultClauses = new List<SynsetClause>();
-            foreach (List<int> clauseList in queryExanded)
-            {
-                SynsetClause clause = new SynsetClause(clauseList.Select(x => new Synset(lp.Labels[x].Name, x)).ToArray());
-                resultClauses.Add(clause);
-            }
+        //    List<SynsetClause> resultClauses = new List<SynsetClause>();
+        //    foreach (List<int> clauseList in queryExanded)
+        //    {
+        //        SynsetClause clause = new SynsetClause(clauseList.Select(x => new Synset(lp.Labels[x].Name, x)).ToArray());
+        //        resultClauses.Add(clause);
+        //    }
 
-            return resultClauses.ToArray();
-        }
+        //    return resultClauses.ToArray();
+        //}
 
         private void SuggestionTextBox_SuggestionFilterChangedEvent(string filter, string annotationSource)
         {
-            mSuggestionProviders[annotationSource].GetSuggestionsAsync(filter);
+            _suggestionProviders[annotationSource].GetSuggestionsAsync(filter);
         }
 
         private void SuggestionTextBox_SuggestionsNotNeededEvent()
         {
-            foreach (KeyValuePair<string, SuggestionProvider> provider in mSuggestionProviders)
+            foreach (KeyValuePair<string, SuggestionProvider> provider in _suggestionProviders)
             {
                 provider.Value.CancelSuggestions();
             }
@@ -177,52 +176,52 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         #region Parse query to list of ints
 
-        private List<List<int>> ExpandQuery(IEnumerable<IQueryPart> query, LabelProvider lp)
-        {
-            var list = new List<List<int>>();
-            list.Add(new List<int>());
+        //private List<List<int>> ExpandQuery(IEnumerable<IQueryPart> query, LabelProvider lp)
+        //{
+        //    List<List<int>> list = new List<List<int>>();
+        //    list.Add(new List<int>());
 
-            foreach (var item in query)
-            {
-                if (item.Type == TextBlockType.Class)
-                {
-                    if (item.UseChildren)
-                    {
-                        //IEnumerable<int> synsetIds = ExpandLabel(new int[] { item.Id }, lp);
-                        IEnumerable<int> synsetIds = new int[] { item.Id }; // we do not need to expand, it is precomputed
+        //    foreach (IQueryPart item in query)
+        //    {
+        //        if (item.Type == TextBlockType.Class)
+        //        {
+        //            if (item.UseChildren)
+        //            {
+        //                //IEnumerable<int> synsetIds = ExpandLabel(new int[] { item.Id }, lp);
+        //                IEnumerable<int> synsetIds = new int[] { item.Id }; // we do not need to expand, it is precomputed
 
-                        foreach (int synId in synsetIds)
-                        {
-                            int id = lp.Labels[synId].SynsetId;
+        //                foreach (int synId in synsetIds)
+        //                {
+        //                    int id = lp.Labels[synId].SynsetId;
 
-                            list[list.Count - 1].Add(id); //new synset
-                        }
-                    }
-                    else
-                    {
-                        int id = lp.Labels[item.Id].SynsetId;
+        //                    list[list.Count - 1].Add(id); //new synset
+        //                }
+        //            }
+        //            else
+        //            {
+        //                int id = lp.Labels[item.Id].SynsetId;
 
-                        list[list.Count - 1].Add(id); // new synset
-                    }
-                }
-                else if (item.Type == TextBlockType.AND)
-                {
-                    list.Add(new List<int>()); //finalize clause
-                }
-            }
+        //                list[list.Count - 1].Add(id); // new synset
+        //            }
+        //        }
+        //        else if (item.Type == TextBlockType.AND)
+        //        {
+        //            list.Add(new List<int>()); //finalize clause
+        //        }
+        //    }
 
-            for (int i = 0; i < list.Count; i++) // iterate clauses
-            {
-                if (list[i].Count == 0) // if a single clause is empty, return null
-                {
-                    return null;
-                }
+        //    for (int i = 0; i < list.Count; i++) // iterate clauses
+        //    {
+        //        if (list[i].Count == 0) // if a single clause is empty, return null
+        //        {
+        //            return null;
+        //        }
 
-                list[i] = list[i].Distinct().ToList(); // remove duplicates from each clause
-            }
+        //        list[i] = list[i].Distinct().ToList(); // remove duplicates from each clause
+        //    }
 
-            return list; // formula is array of clauses
-        }
+        //    return list; // formula is array of clauses
+        //}
 
         //private List<int> ExpandLabel(IEnumerable<int> ids, LabelProvider lp)
         //{

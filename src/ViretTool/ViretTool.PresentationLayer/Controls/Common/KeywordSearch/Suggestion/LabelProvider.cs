@@ -7,10 +7,10 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 {
     class LabelProvider
     {
-        private readonly string FilePath;
-        private readonly Dictionary<string, List<int>> IdMapping_ = new Dictionary<string, List<int>>();
+        private readonly string _filePath;
+        private readonly Dictionary<string, List<int>> _idMapping = new Dictionary<string, List<int>>();
 
-        private readonly Dictionary<int, Label> Labels_ = new Dictionary<int, Label>();
+        private readonly Dictionary<int, Label> _labels = new Dictionary<int, Label>();
 
         /// <summary>
         /// Asynchronously loads <see cref="Labels"/> from filePath argument.
@@ -18,19 +18,19 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         /// <param name="filePath">Relative or absolute location of .labels file.</param>
         public LabelProvider(string filePath)
         {
-            FilePath = filePath;
+            _filePath = filePath;
             LoadTask = Task.Factory.StartNew(LoadFromFile);
         }
 
         /// <summary>
         /// Mapping of label names to WordNet synset ids
         /// </summary>
-        public Dictionary<string, List<int>> IdMapping { get { return (LoadTask.Status == TaskStatus.RanToCompletion) ? IdMapping_ : null; } }
+        public Dictionary<string, List<int>> IdMapping { get { return (LoadTask.Status == TaskStatus.RanToCompletion) ? _idMapping : null; } }
 
         /// <summary>
         /// Mapping of WordNet synset ids to labels
         /// </summary>
-        public Dictionary<int, Label> Labels { get { return (LoadTask.Status == TaskStatus.RanToCompletion) ? Labels_ : null; } }
+        public Dictionary<int, Label> Labels { get { return (LoadTask.Status == TaskStatus.RanToCompletion) ? _labels : null; } }
 
         /// <summary>
         /// Task responsible for filling <see cref="Labels"/>. Access <see cref="Labels"/> only after completion.
@@ -44,8 +44,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                 return null;
             }
 
-            var parts = text.Split('#');
-            var ints = new int[parts.Length];
+            string[] parts = text.Split('#');
+            int[] ints = new int[parts.Length];
 
             for (int i = 0; i < parts.Length; i++)
             {
@@ -57,21 +57,21 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 
         private void LoadFromFile()
         {
-            using (StreamReader reader = new StreamReader(FilePath))
+            using (StreamReader reader = new StreamReader(_filePath))
             {
                 string line;
 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var parts = line.Split('~');
+                    string[] parts = line.Split('~');
                     if (parts.Length != 6)
                     {
                         throw new FormatException("Line has invalid number of parts.");
                     }
 
-                    var nameParts = parts[2].Split('#');
+                    string[] nameParts = parts[2].Split('#');
                     int minLenght = int.MaxValue;
-                    foreach (var item in nameParts)
+                    foreach (string item in nameParts)
                     {
                         int length = item.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length;
                         if (length < minLenght)
@@ -86,7 +86,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                         id = int.Parse(parts[0]);
                     }
 
-                    var label = new Label()
+                    Label label = new Label()
                                 {
                                     //Id = id,
                                     IsOnlyHypernym = (id == -1),
@@ -99,15 +99,15 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                                     NameLenghtInWords = minLenght
                                 };
 
-                    Labels_.Add(label.SynsetId, label);
+                    _labels.Add(label.SynsetId, label);
 
-                    if (!IdMapping_.ContainsKey(label.Name))
+                    if (!_idMapping.ContainsKey(label.Name))
                     {
-                        IdMapping_.Add(label.Name, new List<int> { label.SynsetId });
+                        _idMapping.Add(label.Name, new List<int> { label.SynsetId });
                     }
                     else
                     {
-                        IdMapping_[label.Name].Add(label.SynsetId);
+                        _idMapping[label.Name].Add(label.SynsetId);
                     }
                 }
             }

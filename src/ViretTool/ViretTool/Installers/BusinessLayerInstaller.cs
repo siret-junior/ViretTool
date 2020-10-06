@@ -63,7 +63,7 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => KeywordLabelFactory.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
                 Component.For<IKeywordTopScoringProvider>()
-                         .UsingFactoryMethod((_, context) => KeywordTopScoringFactory.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], 5))
+                         .UsingFactoryMethod((_, context) => KeywordTopScoringFactory.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
                 Component.For<IW2VVQueryToVectorProvider>()
                          .UsingFactoryMethod((_, context) => W2VVQueryToVectorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
@@ -106,12 +106,12 @@ namespace ViretTool.Installers
                 Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>(),
                 Component.For<IResultLogger>().ImplementedBy<ResultLogger>(),
                 Component.For<ITaskLogger>().ImplementedBy<TaskLogger>(),
-                Component.For<NasNetScorer>()
-                         .Instance(
-                             new NasNetScorer(
-                                 "Data\\NasNetMobile-retrained.pb",
-                                 "Data\\VBS2019_NasNetMobile-128PCA.pca_components",
-                                 "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")),
+                //Component.For<NasNetScorer>()
+                //         .Instance(
+                //             new NasNetScorer(
+                //                 "Data\\NasNetMobile-retrained.pb",
+                //                 "Data\\VBS2019_NasNetMobile-128PCA.pca_components",
+                //                 "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")),
                 Component.For<ExternalImageProvider>(),
                 Component.For<IQueryPersistingService>().ImplementedBy<QueryPersistingService>());
 

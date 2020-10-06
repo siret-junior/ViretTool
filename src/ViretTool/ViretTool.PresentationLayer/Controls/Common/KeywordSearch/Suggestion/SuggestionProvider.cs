@@ -15,14 +15,14 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 {
     class SuggestionProvider
     {
-        private readonly LabelProvider mLabelProvider;
+        private readonly LabelProvider _labelProvider;
         private readonly IDatasetServicesManager _datasetServicesManager;
-        private CancellationTokenSource CTS;
+        private CancellationTokenSource _cancellationTokenSource;
 
         /// <param name="labelProvider">Reference to a class managing suggestion dictionary</param>
         public SuggestionProvider(LabelProvider labelProvider, IDatasetServicesManager datasetServicesManager)
         {
-            mLabelProvider = labelProvider;
+            _labelProvider = labelProvider;
             _datasetServicesManager = datasetServicesManager;
         }
 
@@ -50,16 +50,16 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         {
             List<IIdentifiable> list = new List<IIdentifiable>();
 
-            if (!mLabelProvider.LoadTask.IsFaulted && mLabelProvider.LoadTask.IsCompleted)
+            if (!_labelProvider.LoadTask.IsFaulted && _labelProvider.LoadTask.IsCompleted)
             {
                 // build Aho-Corasick trie
                 AhoCorasick AC = new AhoCorasick();
                 AC.Add(filter);
                 AC.Build();
 
-                foreach (var item in withClasses)
+                foreach (int item in withClasses)
                 {
-                    Label l = mLabelProvider.Labels[item];
+                    Label l = _labelProvider.Labels[item];
 
                     SuggestionResultItem iCls = LabelToListItem(l, AC, true);
                     list.Add(iCls);
@@ -75,12 +75,12 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         /// <param name="filter">A string the result should be for</param>
         public void GetSuggestionsAsync(string filter)
         {
-            if (mLabelProvider.LoadTask.IsFaulted)
+            if (_labelProvider.LoadTask.IsFaulted)
             {
-                ShowSuggestionMessageEvent(mLabelProvider.LoadTask.Exception.InnerException.Message);
+                ShowSuggestionMessageEvent(_labelProvider.LoadTask.Exception.InnerException.Message);
                 return;
             }
-            else if (!mLabelProvider.LoadTask.IsCompleted)
+            else if (!_labelProvider.LoadTask.IsCompleted)
             {
                 ShowSuggestionMessageEvent("Labels not loaded yet...");
                 return;
@@ -90,11 +90,11 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                 ShowSuggestionMessageEvent("Loading...");
             }
 
-            CTS = new CancellationTokenSource();
+            _cancellationTokenSource = new CancellationTokenSource();
 
             Task.Factory.StartNew(
-                    () => { return GetList(filter, CTS.Token); },
-                    CTS.Token,
+                    () => { return GetList(filter, _cancellationTokenSource.Token); },
+                    _cancellationTokenSource.Token,
                     TaskCreationOptions.None,
                     TaskScheduler.Default)
                 .ContinueWith(
@@ -108,7 +108,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
 
                         SuggestionResultsReadyEvent(task.Result, filter);
                     },
-                    CTS.Token,
+                    _cancellationTokenSource.Token,
                     TaskContinuationOptions.NotOnCanceled,
                     TaskScheduler.Default);
         }
@@ -118,7 +118,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         /// </summary>
         public void CancelSuggestions()
         {
-            CTS?.Cancel();
+            _cancellationTokenSource?.Cancel();
         }
 
         #endregion
@@ -136,13 +136,9 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
             // find last part of the search string (castle+tree*human -> human)
             // do the suggestions only on the last part
             int lastPart = Math.Max(filter.LastIndexOf('+'), filter.LastIndexOf('*')) + 1;
-            string keepPart = string.Empty;
-
             if (lastPart != 0)
             {
-                keepPart = filter.Substring(0, lastPart);
                 filter = filter.Substring(lastPart).Trim();
-
                 if (filter == string.Empty)
                 {
                     return new List<SuggestionResultItem>();
@@ -154,11 +150,11 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
             AC.Add(filter);
             AC.Build();
 
-            var list = new List<SuggestionResultItem>();
+            List<SuggestionResultItem> list = new List<SuggestionResultItem>();
             // iterate over all the labels
-            foreach (var kvp in mLabelProvider.Labels)
+            foreach (KeyValuePair<int, Label> kvp in _labelProvider.Labels)
             {
-                var item = kvp.Value;
+                Label item = kvp.Value;
                 // stop if search canceled
                 if (token.IsCancellationRequested)
                 {
@@ -185,15 +181,15 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
         private SuggestionResultItem LabelToListItem(Label item, AhoCorasick AC, bool showAll = false)
         {
             // search in label name
-            var nameEnum = AC.Find(item.Name);
+            IEnumerable<AhoCorasick.Occurrence> nameEnum = AC.Find(item.Name);
             // search in description
-            var descriptionEnum = AC.Find(item.Description);
+            IEnumerable<AhoCorasick.Occurrence> descriptionEnum = AC.Find(item.Description);
 
             if (showAll || nameEnum.Any() || descriptionEnum.Any())
             {
                 // highlight the search phrase in the text and compute relevance of the search
-                var nameRel = HighlightAndRankPhrase(nameEnum, item.Name);
-                var descriptionRel = HighlightAndRankPhrase(descriptionEnum, item.Description);
+                HighlightedStringWithRelevance nameRel = HighlightAndRankPhrase(nameEnum, item.Name);
+                HighlightedStringWithRelevance descriptionRel = HighlightAndRankPhrase(descriptionEnum, item.Description);
 
                 string[] hyponymNames = null;
                 if (item.Hyponyms != null)
@@ -203,7 +199,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                     Label l;
                     for (int i = 0; i < item.Hyponyms.Length; i++)
                     {
-                        l = mLabelProvider.Labels[item.Hyponyms[i]];
+                        l = _labelProvider.Labels[item.Hyponyms[i]];
                         hyponymNames[i] = l.Names[0];
                     }
                 }
@@ -280,7 +276,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
             SuggestionResultItem.Relevance.NameBonus bonus = SuggestionResultItem.Relevance.NameBonus.None;
 
             StringBuilder builder = new StringBuilder();
-            foreach (var item in hits)
+            foreach (AhoCorasick.Occurrence item in hits)
             {
                 if (item.StartsAt < startsAt)
                 {

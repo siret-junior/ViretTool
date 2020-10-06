@@ -18,21 +18,19 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         public ColorSketchQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
-        //public IRankFusion RankFusion { get; }
 
         /// <summary>
         /// A thumbnail based signature in RGB format, stored as a 1D byte array.
         /// </summary>
-        private byte[][] _colorSignatures;
-        private int _signatureWidth = 26;     // TODO: load dynamically from provided initializer file
-        private int _signatureHeight = 15;
+        private readonly byte[][] _colorSignatures;
+        private readonly int _signatureWidth = 26;     // TODO: load dynamically from provided initializer file
+        private readonly int _signatureHeight = 15;
 
-        private Dictionary<Ellipse, float[]> _partialRankingCache = new Dictionary<Ellipse, float[]>();
+        private readonly Dictionary<Ellipse, float[]> _partialRankingCache = new Dictionary<Ellipse, float[]>();
 
 
         public ColorSignatureModel(IColorSignatureDescriptorProvider colorSignatures)
         {
-            //RankFusion = rankFusion;
             _colorSignatures = colorSignatures.Descriptors;
         }
 
@@ -209,8 +207,6 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
         /// <returns></returns>
         private Tuple<int[], Color, Ellipse.State> PrepareQuery(Ellipse ellipse)
         {
-            List<Tuple<int[], Color, Ellipse.State>> queries = new List<Tuple<int[], Color, Ellipse.State>>();
-
             double x = ellipse.PositionX * _signatureWidth, y = ellipse.PositionY * _signatureHeight;
             double ax = ellipse.HorizontalAxis * _signatureWidth, ay = ellipse.VerticalAxis * _signatureHeight;
             double ax2 = ax * ax;
@@ -222,8 +218,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.ColorSignature
                     if (1 >= (x - i - 0.5) * (x - i - 0.5) / ax2 + (y - j - 0.5) * (y - j - 0.5) / ay2)
                         offsets.Add(j * _signatureWidth * 3 + i * 3);
 
-            return new Tuple<int[], Color, Ellipse.State>(offsets.ToArray(), 
-                ColorSpaceHelper.RGBtoLabByte(ellipse.ColorR, ellipse.ColorG, ellipse.ColorB), ellipse.EllipseState);
+            return new Tuple<int[], Color, Ellipse.State>(
+                offsets.ToArray(), 
+                ColorSpaceHelper.RGBtoLabByte(ellipse.ColorR, ellipse.ColorG, ellipse.ColorB), 
+                ellipse.EllipseState);
         }
 
 

@@ -13,47 +13,43 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 {
     public class FloatVectorModel : ISemanticExampleModel
     {
-        private readonly NasNetScorer _nasNetScorer;
+        //private readonly NasNetScorer _nasNetScorer;
 
-        public FloatVectorModel(/*IRankFusion rankFusion, */IDescriptorProvider<float[]> semanticDescriptorProvider, NasNetScorer nasNetScorer)
+        public FloatVectorModel(IDescriptorProvider<float[]> semanticDescriptorProvider/*, NasNetScorer nasNetScorer*/)
         {
-            _nasNetScorer = nasNetScorer;
-            mFloatVectors = semanticDescriptorProvider.Descriptors;
-            //RankFusion = rankFusion;
+            //_nasNetScorer = nasNetScorer;
+            _floatVectors = semanticDescriptorProvider.Descriptors;
         }
 
         public SemanticExampleQuery CachedQuery { get; private set; }
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
-        //public IRankFusion RankFusion { get; }
+        
 
         /// <summary>
         /// Extracted features from DCNN, normalized to |v| = 1 and each dimension globally quantized to byte
         /// </summary>
-        public float[][] mFloatVectors;
+        public float[][] _floatVectors;
 
-        private int mVectorDimension;
-
-        private readonly string mDescriptorsFilename;
-
-        private Dictionary<int, float[]> mCache = new Dictionary<int, float[]>();
+        private readonly Dictionary<int, float[]> _cache = new Dictionary<int, float[]>();
 
         public void Clear()
         {
-            mCache.Clear();
+            _cache.Clear();
         }        
 
         public float[] AddQueryResultsToCache(int queryId, bool isPositiveExample)
         {
-            if (mCache.ContainsKey(queryId))
-                return mCache[queryId];
+            // TODO: review negative examples and either implement proper caching or remove negative examples altogether
+            if (_cache.ContainsKey(queryId))
+                return _cache[queryId];
 
-            float[] queryData = mFloatVectors[queryId];
+            float[] queryData = _floatVectors[queryId];
 
             float[] results = ComputeSimilarity(queryData, InputRanking.Ranks);
 
-            mCache.Add(queryId, results);
-            return mCache[queryId];
+            _cache.Add(queryId, results);
+            return _cache[queryId];
         }
 
         public float[] ComputeSimilarity(float[] queryData, float[] inputRanks)
@@ -70,20 +66,20 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
                         return;
                     }
 
-                    results[i] = CosineSimilarityNormalized01(mFloatVectors[i], queryData);
+                    results[i] = CosineSimilarityNormalized01(_floatVectors[i], queryData);
                 });
             return results;
         }
 
         public float[] ComputeSimilarity(float[] queryData)
         {
-            float[] results = new float[mFloatVectors.Length];
+            float[] results = new float[_floatVectors.Length];
             Parallel.For(
                 0,
                 results.Length,
                 i =>
                 {
-                    results[i] = CosineSimilarityNormalized01(mFloatVectors[i], queryData);
+                    results[i] = CosineSimilarityNormalized01(_floatVectors[i], queryData);
                 });
             return results;
         }
@@ -123,15 +119,15 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
                 });
             }
 
-            foreach (string externalImageRotated in query.ExternalImages)
-            {
-                float[] reducedFeatures = _nasNetScorer.GetReducedFeatures(externalImageRotated);
-                float[] partialResults = ComputeSimilarity(reducedFeatures, InputRanking.Ranks);
-                Parallel.For(0, InputRanking.Ranks.Length, i =>
-                                                           {
-                                                               ranking[i] += partialResults[i];
-                                                           });
-            }
+            //foreach (string externalImageRotated in query.ExternalImages)
+            //{
+            //    float[] reducedFeatures = _nasNetScorer.GetReducedFeatures(externalImageRotated);
+            //    float[] partialResults = ComputeSimilarity(reducedFeatures, InputRanking.Ranks);
+            //    Parallel.For(0, InputRanking.Ranks.Length, i =>
+            //                                               {
+            //                                                   ranking[i] += partialResults[i];
+            //                                               });
+            //}
 
             if (query.NegativeExampleIds != null)
             {
@@ -162,7 +158,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNFeatures
 
         public float[] GetFrameSemanticVector(int frameId)
         {
-            return mFloatVectors[frameId];
+            return _floatVectors[frameId];
         }
 
         public static float ComputeDistance(float[] vectorA, float[] vectorB)

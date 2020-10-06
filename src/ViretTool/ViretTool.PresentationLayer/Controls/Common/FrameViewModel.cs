@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Drawing;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
+using ViretTool.Core;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
-using ViretTool.Core;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using ViretTool.Core;
 using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
 
 namespace ViretTool.PresentationLayer.Controls.Common
@@ -466,9 +465,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
             return new FrameViewModel(VideoId, FrameNumber, _servicesManager);
         }
 
-        private bool originalIsColorShown = false;
-        private bool originalIsTextShown = false;
-        private bool originalAreFacesShown = false;
+        private bool _isOriginalColorShown = false;
+        private bool _isOriginalTextShown = false;
+        private bool _areOriginalFacesShown = false;
 
         public void ResetFrameNumber()
         {
@@ -478,8 +477,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
             FrameNumber = _originalFrameNumber;
 
-            (AreFacesShown, IsColorShown, IsTextShown) = (originalAreFacesShown, originalIsColorShown, originalIsTextShown);
-            (originalAreFacesShown, originalIsColorShown, originalIsTextShown) = (false, false, false);
+            (AreFacesShown, IsColorShown, IsTextShown) = (_areOriginalFacesShown, _isOriginalColorShown, _isOriginalTextShown);
+            (_areOriginalFacesShown, _isOriginalColorShown, _isOriginalTextShown) = (false, false, false);
 
             NotifyOfPropertyChange(nameof(CanSubmit));
             NotifyOfPropertyChange(nameof(ImageSource));
@@ -510,9 +509,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
             FrameNumber = allFrameNumbers[newIndex];
 
-            if (!(originalIsTextShown || originalIsColorShown || originalAreFacesShown))
+            if (!(_isOriginalTextShown || _isOriginalColorShown || _areOriginalFacesShown))
             {
-                (originalAreFacesShown, originalIsColorShown, originalIsTextShown) = (AreFacesShown, IsColorShown, IsTextShown);
+                (_areOriginalFacesShown, _isOriginalColorShown, _isOriginalTextShown) = (AreFacesShown, IsColorShown, IsTextShown);
                 (AreFacesShown, IsColorShown, IsTextShown) = (false, false, false);
             }
 

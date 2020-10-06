@@ -48,16 +48,16 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
         }
 
         // for normalized vectors !!
-        private static float DotProductL2Distance(float[] v1, float[] v2)
-        {
-            float result = 0;
-            for (int i = 0; i < v1.Length; i++)
-            {
-                result += v1[i] * v2[i];
-            }
+        //private static float DotProductL2Distance(float[] v1, float[] v2)
+        //{
+        //    float result = 0;
+        //    for (int i = 0; i < v1.Length; i++)
+        //    {
+        //        result += v1[i] * v2[i];
+        //    }
 
-            return 2 - 2 * result;
-        }
+        //    return 2 - 2 * result;
+        //}
 
         private static float GetSimilarityScore(int[,] grid, float[,] distances, int x, int y, int ID, int width, int height, int size)
         {
@@ -133,7 +133,7 @@ namespace ViretTool.BusinessLayer.OutputGridSorting
             }
 
             // organize grid
-            int swaps = 0, swapOld = 0;
+            int swaps = 0;
             int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
             float scoreBefore1 = 0, scoreBefore2 = 0, scoreAfter;
             bool keepItem1 = false, keepItem2 = false;

@@ -12,7 +12,7 @@ namespace ViretTool.BusinessLayer.Descriptors.KeywordTopScoring
     {
         public const string SYNSET_FRAMES_EXTENSION = ".synsetframes";
 
-        public static IKeywordTopScoringProvider FromDirectory(string directory, int topKScoreCount = 0)
+        public static IKeywordTopScoringProvider FromDirectory(string directory)
         {
             string inputFile = Directory.GetFiles(directory)
                     .Where(dir => Path.GetFileName(dir).EndsWith(SYNSET_FRAMES_EXTENSION))

@@ -35,22 +35,22 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         /// <summary>
         /// Indetifies TextBox part of the UI element
         /// </summary>
-        public const string PartTextBox = "PART_TextBox";
+        public const string PART_TEXTBOX = "PART_TextBox";
         /// <summary>
         /// Indetifies Popup (containing list of suggestions) part of the UI element
         /// </summary>
-        public const string PartPopup = "PART_SuggestionPopup";
+        public const string PART_POPUP = "PART_SuggestionPopup";
 
-        public const string PartSourceStack = "PART_SourceStack";
-        public const string PartResultStack = "PART_ResultStack";
+        public const string PART_SOURCE_STACK = "PART_SourceStack";
+        public const string PART_RESULT_STACK = "PART_ResultStack";
 
         public IDatasetServicesManager DatasetServicesManager { get; set; }
 
-        private TextBox TextBox_;
-        private List<SuggestionPopup> Popups_;
-        private WrapPanel RasultStack_;
+        private TextBox _textBox;
+        private List<SuggestionPopup> _popups;
+        private WrapPanel _resultStack;
 
-        private List<QueryTextBlock> Query_ = new List<QueryTextBlock>();
+        private readonly List<QueryTextBlock> _queryTextBlock = new List<QueryTextBlock>();
 
 
         /// <summary>
@@ -59,29 +59,33 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         public override void OnApplyTemplate() {
             base.OnApplyTemplate();
 
-            TextBox_ = (TextBox)Template.FindName(PartTextBox, this);
-            TextBox_.Foreground = System.Windows.Media.Brushes.Red;
+            _textBox = (TextBox)Template.FindName(PART_TEXTBOX, this);
+            _textBox.Foreground = System.Windows.Media.Brushes.Red;
 
-            Popups_ = new List<SuggestionPopup>();
-            Popups_.Add((SuggestionPopup)Template.FindName(PartPopup, this));
+            _popups = new List<SuggestionPopup>
+            {
+                (SuggestionPopup)Template.FindName(PART_POPUP, this)
+            };
 
-            TextBox_.TextChanged += TextBox_OnTextChanged;
-            TextBox_.PreviewKeyDown += TextBox_OnKeyDown;
-            TextBox_.LostFocus += TextBox_OnLostFocus;
-            TextBox_.MouseMove += TextBox_MouseMove;
+            _textBox.TextChanged += TextBox_OnTextChanged;
+            _textBox.PreviewKeyDown += TextBox_OnKeyDown;
+            _textBox.LostFocus += TextBox_OnLostFocus;
+            _textBox.MouseMove += TextBox_MouseMove;
 
-            Popups_[0].OnItemSelected += Popup_OnItemSelected;
-            Popups_[0].OnItemExpanded += Popup_OnItemExpanded;
-            Popups_[0].MouseLeftButtonDown += Popup_OnMouseLeft;
+            _popups[0].OnItemSelected += Popup_OnItemSelected;
+            _popups[0].OnItemExpanded += Popup_OnItemExpanded;
+            _popups[0].MouseLeftButtonDown += Popup_OnMouseLeft;
 
-            RasultStack_ = (WrapPanel)Template.FindName(PartResultStack, this);
+            _resultStack = (WrapPanel)Template.FindName(PART_RESULT_STACK, this);
 
-            StackPanel s = (StackPanel)Template.FindName(PartSourceStack, this);
+            StackPanel s = (StackPanel)Template.FindName(PART_SOURCE_STACK, this);
             for (int i = 0; i < AnnotationSources.Length; i++) {
-                RadioButton r = new RadioButton();
-                r.Tag = AnnotationSources[i];
-                r.Content = AnnotationSources[i];
-                r.GroupName = "AnnotationSources";
+                RadioButton r = new RadioButton
+                {
+                    Tag = AnnotationSources[i],
+                    Content = AnnotationSources[i],
+                    GroupName = "AnnotationSources"
+                };
                 r.Checked += AnnotationSourceButton_Checked;
                 r.Margin = new Thickness(0, 0, 10, 0);
                 if (i == 0) r.IsChecked = true;
@@ -168,8 +172,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         /// <param name="filter">A string, the suggestions are for</param>
         public void OnSuggestionResultsReady(IEnumerable<IIdentifiable> suggestions, string filter) {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate {
-                if (Popups_[0].IsPopupOpen && filter == GetLastWord(TextBox_.Text)) {
-                    Popups_[0].Open(MaxNumberOfElements < 0 ? suggestions : suggestions.Take(MaxNumberOfElements));
+                if (_popups[0].IsPopupOpen && filter == GetLastWord(_textBox.Text)) {
+                    _popups[0].Open(MaxNumberOfElements < 0 ? suggestions : suggestions.Take(MaxNumberOfElements));
                 }
             });
         }
@@ -188,26 +192,26 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         #region Control Methods
 
         private void Popup_Open() {
-            Popups_[0].Open(null);
+            _popups[0].Open(null);
 
             SuggestionsNotNeededEvent?.Invoke();
-            SuggestionFilterChangedEvent?.Invoke(GetLastWord(TextBox_.Text), AnnotationSource);
+            SuggestionFilterChangedEvent?.Invoke(GetLastWord(_textBox.Text), AnnotationSource);
         }
 
         private void Popup_CloseAll() {
             SuggestionsNotNeededEvent?.Invoke();
 
-            while (Popups_.Count > 1) {
+            while (_popups.Count > 1) {
                 Popup_CloseOne();
             }
             Popup_CloseOne();
         }
 
         private void Popup_CloseOne() {
-            Popups_[Popups_.Count - 1].Close();
+            _popups[_popups.Count - 1].Close();
 
-            if (Popups_.Count > 1) {
-                Popups_.RemoveAt(Popups_.Count - 1);
+            if (_popups.Count > 1) {
+                _popups.RemoveAt(_popups.Count - 1);
             }
         }
 
@@ -258,11 +262,11 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             try
             {
                 // compute hovered word boundaries
-                int hoveredCharIndex = TextBox_.GetCharacterIndexFromPoint(e.GetPosition(TextBox_), true);
-                (int StartIndex, int EndIndex) = GetWordIndexes(TextBox_.Text, hoveredCharIndex);
+                int hoveredCharIndex = _textBox.GetCharacterIndexFromPoint(e.GetPosition(_textBox), true);
+                (int StartIndex, int EndIndex) = GetWordIndexes(_textBox.Text, hoveredCharIndex);
 
                 // check whether tooltip update is necessary
-                if (_textBoxCachedText.Equals(TextBox_.Text) 
+                if (_textBoxCachedText.Equals(_textBox.Text) 
                     && StartIndex == _textBoxWordStartIndex 
                     && EndIndex == _textBoxWordEndIndex
                     && ToolTipBitmap != null)
@@ -270,7 +274,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                     // tooltip update not necessary
                     return;
                 }
-                _textBoxCachedText = TextBox_.Text;
+                _textBoxCachedText = _textBox.Text;
                 _textBoxWordStartIndex = StartIndex;
                 _textBoxWordEndIndex = EndIndex;
 
@@ -283,7 +287,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                 }
 
                 // compute output string
-                string hoveredWord = TextBox_.Text.Substring(StartIndex, EndIndex - StartIndex + 1);
+                string hoveredWord = _textBox.Text.Substring(StartIndex, EndIndex - StartIndex + 1);
 
                 // load tooltip, either from cache or compute it
                 if (!_keywordTooltipCache.TryGetValue(hoveredWord, out BitmapSource tooltipBitmap))
@@ -304,8 +308,8 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             }
         }
 
-        private Bitmap _canvasBitmap = new Bitmap(1000, 200);
-        private Bitmap _scaleBitmap = new Bitmap(1, 200);
+        private readonly Bitmap _canvasBitmap = new Bitmap(1000, 200);
+        private readonly Bitmap _scaleBitmap = new Bitmap(1, 200);
         private readonly int _tooltipRanksCount = 1000;
         private BitmapSource LoadBitmapForKeyword(string hoveredWord, float minScore = float.MinValue, float maxScore = float.MinValue)
         {
@@ -428,7 +432,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             
             Popup_CloseAll();
 
-            if (TextBox_.Text.Length != 0) {
+            if (_textBox.Text.Length != 0) {
                 Popup_Open();
             }
         }
@@ -436,28 +440,28 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         /// Manage navigation in suggestions popup and run search if pressed enter
         /// </summary>
         private void TextBox_OnKeyDown(object sender, KeyEventArgs e) {
-            if (!Popups_[0].IsPopupOpen) {
+            if (!_popups[0].IsPopupOpen) {
                 if (e.Key == Key.Enter)
                 {
                     
-                    QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
+                    QueryChangedEvent?.Invoke(_textBox.Text, AnnotationSource);
                     //LoadGraphs();
 
                     e.Handled = true;
                 }
-                else if (e.Key == Key.Back && TextBox_.Text == string.Empty) {
-                    if (Query_.Count > 0) {
-                        RasultStack_.Children.Remove(Query_[Query_.Count - 1]);
-                        Query_.RemoveAt(Query_.Count - 1);
-                        if (Query_.Count > 0) {
-                            RasultStack_.Children.Remove(Query_[Query_.Count - 1]);
-                            Query_.RemoveAt(Query_.Count - 1);
+                else if (e.Key == Key.Back && _textBox.Text == string.Empty) {
+                    if (_queryTextBlock.Count > 0) {
+                        _resultStack.Children.Remove(_queryTextBlock[_queryTextBlock.Count - 1]);
+                        _queryTextBlock.RemoveAt(_queryTextBlock.Count - 1);
+                        if (_queryTextBlock.Count > 0) {
+                            _resultStack.Children.Remove(_queryTextBlock[_queryTextBlock.Count - 1]);
+                            _queryTextBlock.RemoveAt(_queryTextBlock.Count - 1);
                         }
 
                         e.Handled = true;
                         //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
                     }
-                } else if ((e.Key == Key.Up || e.Key == Key.Down) && TextBox_.Text != string.Empty) {
+                } else if ((e.Key == Key.Up || e.Key == Key.Down) && _textBox.Text != string.Empty) {
                     Popup_Open();
                     e.Handled = true;
                 }
@@ -469,7 +473,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
                     Popup_CloseOne();
                     e.Handled = true;
                 } else {
-                    Popups_[Popups_.Count - 1].Popup_OnKeyDown(sender, e);
+                    _popups[_popups.Count - 1].Popup_OnKeyDown(sender, e);
                 }
             }
         }
@@ -497,7 +501,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             Popup_CloseAll();
 
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
-            QueryChangedEvent?.Invoke(TextBox_.Text, AnnotationSource);
+            QueryChangedEvent?.Invoke(_textBox.Text, AnnotationSource);
 
             e.Handled = true;
         }
@@ -508,7 +512,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             e.Handled = true;
 
             SuggestionPopup p = new SuggestionPopup();
-            p.Open(GetSuggestionSubtreeEvent?.Invoke(item.Children, TextBox_.Text, AnnotationSource));
+            p.Open(GetSuggestionSubtreeEvent?.Invoke(item.Children, _textBox.Text, AnnotationSource));
             p.ItemTemplateSelector = ItemTemplateSelector;
 
 
@@ -517,14 +521,14 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
             p.PopupBorderThickness = new Thickness(0, 1, 1, 1);
             p.MouseLeftButtonDown += Popup_OnMouseLeft;
 
-            Popups_.Add(p);
+            _popups.Add(p);
 
-            var actualWidth = (sender as SuggestionPopup)?.ActualWidth ?? 200;
+            double actualWidth = (sender as SuggestionPopup)?.ActualWidth ?? 200;
             int numberOfPopups = (int)Math.Floor((SystemParameters.PrimaryScreenWidth - 50) / actualWidth);
-            numberOfPopups = (Popups_.Count - 1) % (numberOfPopups);
+            numberOfPopups = (_popups.Count - 1) % (numberOfPopups);
             p.HorizontalOffset = actualWidth * numberOfPopups;
 
-            ((Grid)TextBox_.Parent).Children.Add(p);
+            ((Grid)_textBox.Parent).Children.Add(p);
         }
 
         private void Popup_OnMouseLeft(object sender, MouseButtonEventArgs e)
@@ -538,20 +542,19 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         }
 
         private void AnnotationSourceButton_Checked(object sender, RoutedEventArgs e) {
-            RadioButton rb = sender as RadioButton;
-            if (rb == null) return;
+            if (!(sender is RadioButton radioButton)) return;
 
             ClearQuery();
 
-            AnnotationSource = rb.Tag.ToString();
+            AnnotationSource = radioButton.Tag.ToString();
         }
 
         #endregion
 
         public void ClearQuery() {
-            RasultStack_.Children.Clear();
-            Query_.Clear();
-            TextBox_.Text = "";
+            _resultStack.Children.Clear();
+            _queryTextBlock.Clear();
+            _textBox.Text = "";
             //QueryChangedEvent?.Invoke(Query_, AnnotationSource);
             QueryChangedEvent?.Invoke("", AnnotationSource);
         }
@@ -559,18 +562,18 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch {
         private void QueryClass_MouseUp(object sender, MouseButtonEventArgs e) {
             QueryTextBlock b = sender as QueryTextBlock;
 
-            for (int i = 0; i < Query_.Count; i++) {
-                if (Query_[i].Id == b.Id) {
-                    if (i + 1 != Query_.Count) {
-                        RasultStack_.Children.Remove(Query_[i + 1]);
-                        Query_.RemoveAt(i + 1);
+            for (int i = 0; i < _queryTextBlock.Count; i++) {
+                if (_queryTextBlock[i].Id == b.Id) {
+                    if (i + 1 != _queryTextBlock.Count) {
+                        _resultStack.Children.Remove(_queryTextBlock[i + 1]);
+                        _queryTextBlock.RemoveAt(i + 1);
                     }
-                    RasultStack_.Children.Remove(Query_[i]);
-                    Query_.RemoveAt(i);
+                    _resultStack.Children.Remove(_queryTextBlock[i]);
+                    _queryTextBlock.RemoveAt(i);
 
-                    if (i != 0 && i == Query_.Count) {
-                        RasultStack_.Children.Remove(Query_[i - 1]);
-                        Query_.RemoveAt(i - 1);
+                    if (i != 0 && i == _queryTextBlock.Count) {
+                        _resultStack.Children.Remove(_queryTextBlock[i - 1]);
+                        _queryTextBlock.RemoveAt(i - 1);
                     }
                     break;
                 }

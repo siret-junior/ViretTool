@@ -211,7 +211,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId);
                 synsets.AddRange(_datasetServicesManager.CurrentDataset.KeywordSynsetProvider.GetDescriptor(frameId).Take(5).Select(x => x.synsetId).ToList());
             }
-            var aggregatedSynsetIDs = from synsetID in synsets
+            IEnumerable<int> aggregatedSynsetIDs = from synsetID in synsets
                     group synsetID by synsetID into groups
                     let count = groups.Count()
                     orderby count descending

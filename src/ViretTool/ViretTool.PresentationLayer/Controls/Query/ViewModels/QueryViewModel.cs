@@ -524,8 +524,8 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
             QuerySettingsChanged.OnNext(Unit.Default);
         }
 
-        private Bitmap _canvasBitmap = new Bitmap(1000, 400);
-        private Bitmap _scaleBitmap = new Bitmap(1, 400);
+        private readonly Bitmap _canvasBitmap = new Bitmap(1000, 400);
+        private readonly Bitmap _scaleBitmap = new Bitmap(1, 400);
         private readonly int _tooltipRanksCount = 1000;
         private BitmapSource LoadBitmapForRanking(BiTemporalRankingBuffer ranking, TemporalQueries primaryTemporalQuery,
             float minScore = float.MinValue, float maxScore = float.MinValue)

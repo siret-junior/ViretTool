@@ -21,14 +21,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 
         public bool Equals(FilteredRankingQuery<TQuery> other)
         {
-            return RankingQuery.Equals(other.RankingQuery) &&
-                IncludeTopKPercentage.Equals(other.IncludeTopKPercentage);
+            return RankingQuery.Equals(other.RankingQuery) 
+                && IncludeTopKPercentage.Equals(other.IncludeTopKPercentage);
         }
 
         public override bool Equals(object obj)
         {
-            return obj is FilteredRankingQuery<TQuery> query &&
-                   Equals(query);
+            return obj is FilteredRankingQuery<TQuery> query
+                && Equals(query);
         }
     }
 }

@@ -161,7 +161,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         /// <param name="selectedFrame"></param>
         /// <param name="typeOfMove">direction</param>
         /// <returns></returns>
-        public async virtual Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame, Func<int,int,int,int,int[]> typeOfMove)
+        public virtual async Task LoadMoveAtCurrentLayerDisplayForFrame(FrameViewModel selectedFrame, Func<int,int,int,int,int[]> typeOfMove)
         {
             await LoadFramesForIds(new int[] { _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber) }, typeOfMove);
         }

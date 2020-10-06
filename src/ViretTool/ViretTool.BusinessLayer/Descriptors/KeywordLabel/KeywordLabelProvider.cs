@@ -32,8 +32,7 @@ namespace ViretTool.BusinessLayer.Descriptors.KeywordLabel
         // TODO: label ID numbered from 0 sequentially is used here instead of the actual synset ID -> fix that
         public string GetLabel(int synsetId)
         {
-            string label;
-            if (SynsetToLabelMapping.TryGetValue(synsetId, out label))
+            if (SynsetToLabelMapping.TryGetValue(synsetId, out string label))
             {
                 return label;
             }

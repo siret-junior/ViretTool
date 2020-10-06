@@ -16,16 +16,16 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
 
-        private IKeywordTopScoringProvider _keywordScoringProvider;
-        private IW2VVQueryToVectorProvider _w2vvQueryToVectorProvider;
-        private ISemanticExampleModel _semanticExampleModel;
+        //private IKeywordTopScoringProvider _keywordScoringProvider;
+        private readonly IW2VVQueryToVectorProvider _w2vvQueryToVectorProvider;
+        private readonly ISemanticExampleModel _semanticExampleModel;
 
         public KeywordModel(
-            IKeywordTopScoringProvider keywordScoringProvider, 
+            //IKeywordTopScoringProvider keywordScoringProvider, 
             IW2VVQueryToVectorProvider w2vvQueryToVectorProvider,
             ISemanticExampleModel semanticExampleModel)
         {
-            _keywordScoringProvider = keywordScoringProvider;
+            //_keywordScoringProvider = keywordScoringProvider;
             _w2vvQueryToVectorProvider = w2vvQueryToVectorProvider;
             _semanticExampleModel = semanticExampleModel;
         }

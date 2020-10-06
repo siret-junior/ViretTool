@@ -11,7 +11,7 @@ namespace ViretTool.BusinessLayer.Services
 {
     public class ZoomDisplayProvider : IZoomDisplayProvider
     {
-        private readonly string ZOOM_DISPLAY_FILENAME = "zoomDisplay.txt";
+        private const string ZOOM_DISPLAY_FILENAME = "zoomDisplay.txt";
 
         /// <summary>
         /// Each element of List is a 2D array, each array represents SOM layer
@@ -26,11 +26,11 @@ namespace ViretTool.BusinessLayer.Services
         /// <summary>
         /// position of current centered frame
         /// </summary>
-        private int centerPositionInLayerCol;
+        private int _centerPositionInLayerCol;
         /// <summary>
         /// position of current centered frame
         /// </summary>
-        private int centerPositionInLayerRow;
+        private int _centerPositionInLayerRow;
         public ZoomDisplayProvider(IDatasetParameters datasetParameters, string datasetDirectory)
         {
             string filePath = Path.Combine(datasetDirectory, ZOOM_DISPLAY_FILENAME);
@@ -61,8 +61,8 @@ namespace ViretTool.BusinessLayer.Services
             }
 
             // Compute boundaries
-            (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, centerPositionInLayerRow, rowCount);
-            (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, centerPositionInLayerCol, columnCount);
+            (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, _centerPositionInLayerRow, rowCount);
+            (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, _centerPositionInLayerCol, columnCount);
 
             // Extract items from boundaries
             List<float> borders = ExtractDisplayItems(layer, rowStart, rowEnd, colStart*2, colEnd*2);
@@ -113,9 +113,9 @@ namespace ViretTool.BusinessLayer.Services
         {
             if (layerIndex < LayersIds.Count())
             {
-                if(--centerPositionInLayerCol < 0)
+                if(--_centerPositionInLayerCol < 0)
                 {
-                    centerPositionInLayerCol = LayersIds[layerIndex][0].Length - 1;
+                    _centerPositionInLayerCol = LayersIds[layerIndex][0].Length - 1;
                 }
                 return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
@@ -125,9 +125,9 @@ namespace ViretTool.BusinessLayer.Services
         {
             if (layerIndex < LayersIds.Count())
             {
-                if (++centerPositionInLayerCol >= LayersIds[layerIndex][0].Length)
+                if (++_centerPositionInLayerCol >= LayersIds[layerIndex][0].Length)
                 {
-                    centerPositionInLayerCol = 0;
+                    _centerPositionInLayerCol = 0;
                 }
                 return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
@@ -137,9 +137,9 @@ namespace ViretTool.BusinessLayer.Services
         {
             if (layerIndex < LayersIds.Count())
             {
-                if (--centerPositionInLayerRow < 0)
+                if (--_centerPositionInLayerRow < 0)
                 {
-                    centerPositionInLayerRow = LayersIds[layerIndex].Length - 1;
+                    _centerPositionInLayerRow = LayersIds[layerIndex].Length - 1;
                 }
                 return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
@@ -149,9 +149,9 @@ namespace ViretTool.BusinessLayer.Services
         {
             if (layerIndex < LayersIds.Count())
             {
-                if (++centerPositionInLayerRow >= LayersIds[layerIndex].Length)
+                if (++_centerPositionInLayerRow >= LayersIds[layerIndex].Length)
                 {
-                    centerPositionInLayerRow = 0;
+                    _centerPositionInLayerRow = 0;
                 }
                 return ComputeSectorAfterMoving(LayersIds[layerIndex], rowCount, columnCount);
             }
@@ -171,8 +171,8 @@ namespace ViretTool.BusinessLayer.Services
                 }
 
                 // Compute boundaries
-                (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, centerPositionInLayerRow, rowCount);
-                (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, centerPositionInLayerCol, columnCount);
+                (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, _centerPositionInLayerRow, rowCount);
+                (int colStart, int colEnd) = ComputeColBoundaries(layerWidth, _centerPositionInLayerCol, columnCount);
 
                 List<int> resultDisplay = ExtractDisplayItems(layer, rowStart, rowEnd, colStart, colEnd);
 
@@ -201,7 +201,7 @@ namespace ViretTool.BusinessLayer.Services
                 {
                     throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the SOM layer.");
                 }
-                (centerPositionInLayerCol, centerPositionInLayerRow) = (positionInLayerCol, positionInLayerRow);
+                (_centerPositionInLayerCol, _centerPositionInLayerRow) = (positionInLayerCol, positionInLayerRow);
                 
                 // get display boundaries in the SOM layer
                 (int rowStart, int rowEnd) = ComputeRowBoundaries(layerHeight, positionInLayerRow, rowCount);
@@ -242,8 +242,8 @@ namespace ViretTool.BusinessLayer.Services
                 int columnEnd = colStart + columnCount;
                 
                 // adjust current centered position
-                centerPositionInLayerCol = colStart + columnCount / 2 - 1;
-                centerPositionInLayerRow = rowStart + rowCount / 2 - 1;
+                _centerPositionInLayerCol = colStart + columnCount / 2 - 1;
+                _centerPositionInLayerRow = rowStart + rowCount / 2 - 1;
                 List<int> resultDisplay = ExtractDisplayItems(LayersIds[layerIndex], rowStart, rowEnd, colStart, columnEnd);
 
                 return resultDisplay.ToArray();
@@ -298,7 +298,7 @@ namespace ViretTool.BusinessLayer.Services
                 throw new ArgumentOutOfRangeException($"FrameID: {frameId} was not found in the higher SOM layer.");
             }
 
-            (centerPositionInLayerCol, centerPositionInLayerRow) = (positionInLayerCol, positionInLayerRow);
+            (_centerPositionInLayerCol, _centerPositionInLayerRow) = (positionInLayerCol, positionInLayerRow);
 
 
             // Compute boundaries
@@ -362,6 +362,7 @@ namespace ViretTool.BusinessLayer.Services
         /// <returns></returns>
         private (int positionInLayerCol, int positionInLayerRow) SearchHorizontalMargin(int distanceFromCenter, int[][] layer, int[][] higherLayer, int centerCol, int centerRow)
         {
+            // TODO: review unused parameter centerCol
             (int RowToBeSearched1, int RowToBeSearched2) = (centerRow - distanceFromCenter, centerRow + distanceFromCenter);
             int StartOfRowIterator = centerRow - distanceFromCenter + 1;
 
@@ -424,7 +425,7 @@ namespace ViretTool.BusinessLayer.Services
         /// <returns></returns>
         private static (int rowStart, int rowEnd) ComputeRowBoundaries(int layerHeight, int positionInLayerRow, int targetRowCount)
         {
-
+            // TODO: remove layerHeight parameter or check whether it's required for boundary checking
             int rowStart = positionInLayerRow - (targetRowCount / 2) + 1;
             int rowEnd = rowStart + targetRowCount;
 
@@ -440,6 +441,7 @@ namespace ViretTool.BusinessLayer.Services
         /// <returns></returns>
         private static (int colStart, int colEnd) ComputeColBoundaries(int layerWidth, int positionInLayerCol, int targetColumnCount)
         {
+            // TODO: remove layerWidth parameter or check whether it's required for boundary checking
             int colStart = positionInLayerCol - (targetColumnCount / 2) + 1;
             int colEnd = colStart + targetColumnCount;
 

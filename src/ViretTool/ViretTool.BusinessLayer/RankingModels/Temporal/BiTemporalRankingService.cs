@@ -7,8 +7,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
 {
     public class BiTemporalRankingService : IBiTemporalRankingService
     {
-        private object _lock = new object();
-        public object Lock => _lock;
+        public object Lock { get; } = new object();
 
         public IDatasetService DatasetService { get; private set; }
 
@@ -56,7 +55,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
                     // the main computation
                     BiTemporalRankingModule.ComputeRanking(query, InputRanking, OutputRanking);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw;
                 }

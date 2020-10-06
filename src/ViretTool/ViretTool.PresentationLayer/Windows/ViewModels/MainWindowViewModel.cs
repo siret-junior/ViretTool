@@ -189,7 +189,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
                 _isFirstQueryPrimary = value;
                 NotifyOfPropertyChange();
-                OnQuerySettingsChanged();
+                _ = OnQuerySettingsChanged();
             }
         }
 
@@ -589,7 +589,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        public async void OnClose(EventArgs e)
+        public async void OnClose(EventArgs eventArgs)
         {
             IsBusy = true;
             try
@@ -859,7 +859,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        _logger.Error($"Error submitting frame V{frameToSubmit.VideoId}, F{frameToSubmit.FrameNumber}");
+                        _logger.Error($"Error submitting frame V{frameToSubmit.VideoId}, F{frameToSubmit.FrameNumber}: {ex.Message}");
                     }
                 }
             }
