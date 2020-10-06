@@ -181,6 +181,11 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             CurrentPageNumber = 0;
             await base.LoadFramesForIds(sortedFrameIds);
+            for (int i = 0; i < _loadedFrames.Count() - ColumnCount; i++)
+            {
+                _loadedFrames[i].IsBottomBorderVisible = false;
+                _loadedFrames[i].IsRightBorderVisible = false;
+            }
         }
 
         public override Task LoadVideoForFrame(FrameViewModel frameViewModel)

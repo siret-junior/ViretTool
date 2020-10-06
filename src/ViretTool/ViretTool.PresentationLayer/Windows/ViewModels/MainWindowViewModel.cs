@@ -317,7 +317,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 NotifyOfPropertyChange();
             }
         }
-        private bool _isSomDisplayLoaded = false;
+        private bool _isSomDisplayLoaded = true;
         public bool IsSomDisplayLoaded
         {
             get { return _isSomDisplayLoaded; }
@@ -441,6 +441,11 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             await ShowInitialDisplay();
         }
 
+
+        /// <summary>
+        /// Show zoom display
+        /// </summary>
+        /// <returns></returns>
         private async Task ShowInitialDisplay()
         {
             if (_datasetServicesManager.IsDatasetOpened)
@@ -489,7 +494,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        // TODO: move keypress control to a separate component.
+        /// <summary>
+        /// Navigation over the SOM/Zoom display.
+        /// </summary>
+        /// <param name="e"></param>
         public void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -523,8 +531,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if (SomDisplayVisibility == Visibility.Visible)
                     {
-                        // TODO: log all user interactions!
                         SomDisplay.KeyLeftPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                            $"SomScrollLeft|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
                     }
                 }
                 if ((e.Key == Key.Up) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
@@ -537,8 +546,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if (SomDisplayVisibility == Visibility.Visible)
                     {
-                        // TODO: log all user interactions!
                         SomDisplay.KeyUpPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                           $"SomScrollUp|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
                     }
                 }
                 if ((e.Key == Key.Down) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
@@ -551,8 +561,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     }
                     else if (SomDisplayVisibility == Visibility.Visible)
                     {
-                        // TODO: log all user interactions!
+                        
                         SomDisplay.KeyDownPressed();
+                        _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.Exploration,
+                            $"SomScrollDown|L{ZoomDisplay.CurrentLayer}/{ZoomDisplay.LayerCount}");
                     }
                 }
             }
@@ -726,10 +738,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _cancellationTokenSource = new CancellationTokenSource();
                 //start async sorting computation - INFO - it's currently disabled
                 //_sortingTask = _gridSorter.GetSortedFrameIdsAsync(sortedIds.Take(TopFramesCount).ToList(), DetailViewModel.ColumnCount, _cancellationTokenSource);
-                
-                // TODO: consider catching and logging LoadSomDisplay exceptions.
+
                 _ = Task.Factory.StartNew(() => LoadSomDisplay(sortedIds));
-                
+
+
 
                 await QueryResults.LoadFramesForIds(sortedIds);
             }
@@ -742,13 +754,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 IsBusy = false;
             }
         }
-        private object _somLock = new object();
-        private void LoadSomDisplay(IList<int> sortedIds)
+
+        private async void LoadSomDisplay(IList<int> sortedIds)
         {
+            while (!IsSomDisplayLoaded)
+                await Task.Delay(100);
+
             IsSomDisplayLoaded = false;
-            lock(_somLock)
+            try
             {
-                SomDisplay.LoadFramesForIds(sortedIds);
+                await SomDisplay.LoadFramesForIds(sortedIds);
+            }
+            catch (Exception e)
+            {
+                LogError(e, "Error during SOM computing");
             }
             IsSomDisplayLoaded = true;
             

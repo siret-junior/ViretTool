@@ -90,7 +90,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-
+        /// <summary>
+        /// Computes faces overlay from descriptors
+        /// </summary>
         private void ComputeFacesOverlay()
         {
             if (!_servicesManager.IsDatasetOpened
@@ -102,6 +104,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
             IBoolSignatureDescriptorProvider textDescriptorProvider = _servicesManager.CurrentDataset.FaceSignatureProvider;
             FacesOverlay = ComputeBooleanOverlay(frameId, textDescriptorProvider, System.Drawing.Color.Lime);
         }
+
+        /// <summary>
+        /// Computes text overlay from descriptors
+        /// </summary>
         private void ComputeTextOverlay()
         {
             if (!_servicesManager.IsDatasetOpened 
@@ -141,6 +147,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
+
+        /// <summary>
+        /// Computes color overlay from descriptors
+        /// </summary>
         private void ComputeColorOverlay()
         {
             if (!_servicesManager.IsDatasetOpened
@@ -173,6 +183,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 ColorOverlay = _colorOverlay.ToBitmapSource();
             }
         }
+
+        /// <summary>
+        /// True if faces overlay is required in submit window
+        /// </summary>
         public bool AreFacesShown
         {
             get => _areFacesShown;
@@ -182,6 +196,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange(() => AreFacesShown);
             }
         }
+        /// <summary>
+        /// True if text overlay is required in submit window
+        /// </summary>
         public bool IsTextShown
         {
             get => _isTextShown;
@@ -192,6 +209,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
+        /// <summary>
+        /// True if color overlay is required in submit window
+        /// </summary>
         public bool IsColorShown
         {
             get => _isColorShown;
@@ -202,9 +222,15 @@ namespace ViretTool.PresentationLayer.Controls.Common
             }
         }
 
-
+        /// <summary>
+        /// Update of face/text/color overlay at current instance of FrameControl
+        /// </summary>
+        /// <param name="showFaces"></param>
+        /// <param name="showText"></param>
+        /// <param name="showColor"></param>
         public void ShowOverlay(bool showFaces, bool showText, bool showColor)
         {
+            // Compute coresponding overlay if particular overlay is null
             if(showFaces && FacesOverlay == null)
             {
                 ComputeFacesOverlay();
@@ -228,6 +254,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public virtual byte[] ImageSource => _servicesManager.CurrentDataset.ThumbnailService.GetThumbnail(VideoId, FrameNumber).Image;
         
+        /// <summary>
+        /// Instance of faces overlay
+        /// </summary>
         public BitmapSource FacesOverlay
         {
             get => _facesOverlay;
@@ -240,6 +269,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 }
             }
         }
+        /// <summary>
+        /// Instance of text overlay
+        /// </summary>
         public BitmapSource TextOverlay
         {
             get => _textOverlay;
@@ -252,6 +284,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 }
             }
         }
+
+        /// <summary>
+        /// Instance of color overlay
+        /// </summary>
         public BitmapSource ColorOverlay
         {
             get => _colorOverlay;
@@ -309,6 +345,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
+
+        /// <summary>
+        /// True if right border is visible
+        /// </summary>
         public bool IsRightBorderVisible
         {
             get => _isRightBorderVisible;
@@ -337,6 +377,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
+
+        /// <summary>
+        /// True if bottom border is visible
+        /// </summary>
         public bool IsBottomBorderVisible
         {
             get => _isBottomBorderVisible;
@@ -351,6 +395,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 NotifyOfPropertyChange();
             }
         }
+
+        /// <summary>
+        /// Color of bottom border
+        /// </summary>
         public System.Windows.Media.Color BottomBorderColor
         {
             get => _bottomBorderColor;
