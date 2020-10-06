@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ViretTool.DataLayer.DataIO.DescriptorIO.KeywordIO;
 
-namespace ViretTool.BusinessLayer.Descriptors
+namespace ViretTool.BusinessLayer.Descriptors.Keyword
 {
     public class KeywordDescriptorProvider : IDescriptorProvider<(int synsetId, float probability)[]>, IDisposable
     {
@@ -26,23 +26,6 @@ namespace ViretTool.BusinessLayer.Descriptors
         }
 
 
-        public static KeywordDescriptorProvider FromDirectory(string directory)
-        {
-            string inputFile = Directory.GetFiles(directory)
-                    .Where(dir => Path.GetFileName(dir).EndsWith(FrameSynsetsIOBase.KEYWORD_EXTENSION))
-                    .FirstOrDefault();
-
-            if (inputFile != null)
-            {
-                return new KeywordDescriptorProvider(inputFile);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
         public void Dispose()
         {
             _reader.Dispose();
@@ -57,11 +40,6 @@ namespace ViretTool.BusinessLayer.Descriptors
         public (int synsetId, float probability)[] GetDescriptor(int frameId)
         {
             return _reader.ReadSynsets(frameId);
-        }
-
-        public (int frameId, float probability)[] GetDescriptorInverted(int synsetId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.Descriptors.KeywordTopScoring;
 using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
@@ -15,12 +16,12 @@ namespace ViretTool.BusinessLayer.RankingModels.Similarity.Models.DCNNKeywords
         public RankingBuffer InputRanking { get; set; }
         public RankingBuffer OutputRanking { get; set; }
 
-        private IKeywordScoringProvider _keywordScoringProvider;
+        private IKeywordTopScoringProvider _keywordScoringProvider;
         private IW2VVQueryToVectorProvider _w2vvQueryToVectorProvider;
         private ISemanticExampleModel _semanticExampleModel;
 
         public KeywordModel(
-            IKeywordScoringProvider keywordScoringProvider, 
+            IKeywordTopScoringProvider keywordScoringProvider, 
             IW2VVQueryToVectorProvider w2vvQueryToVectorProvider,
             ISemanticExampleModel semanticExampleModel)
         {

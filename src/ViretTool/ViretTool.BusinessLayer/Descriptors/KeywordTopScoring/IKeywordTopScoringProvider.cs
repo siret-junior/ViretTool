@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViretTool.BusinessLayer.Descriptors
+namespace ViretTool.BusinessLayer.Descriptors.KeywordTopScoring
 {
-    public interface IKeywordScoringProvider
+    public interface IKeywordTopScoringProvider
     {
         int ScoringVectorSize { get; }
         int ScoringCount { get; }

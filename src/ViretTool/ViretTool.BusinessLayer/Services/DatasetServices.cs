@@ -1,6 +1,7 @@
 ﻿using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
+using ViretTool.BusinessLayer.Descriptors.KeywordTopScoring;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Thumbnails;
@@ -22,7 +23,7 @@ namespace ViretTool.BusinessLayer.Services
             IDescriptorProvider<float[]> semanticVectorProvider,
             IDescriptorProvider<(int synsetId, float probability)[]> keywordSynsetProvider,
             IKeywordLabelProvider<string> keywordLabelProvider,
-            IKeywordScoringProvider keywordScoringProvider,
+            IKeywordTopScoringProvider keywordScoringProvider,
             IBiTemporalRankingService rankingService,
             IDatasetParameters datasetParameters,
             IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider,
@@ -55,7 +56,7 @@ namespace ViretTool.BusinessLayer.Services
         public IDescriptorProvider<float[]> SemanticVectorProvider { get; }
         public IDescriptorProvider<(int synsetId, float probability)[]> KeywordSynsetProvider { get; }
         public IKeywordLabelProvider<string> KeywordLabelProvider { get; }
-        public IKeywordScoringProvider KeywordScoringProvider { get; }
+        public IKeywordTopScoringProvider KeywordScoringProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
         public IDatasetParameters DatasetParameters { get; }
         public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }

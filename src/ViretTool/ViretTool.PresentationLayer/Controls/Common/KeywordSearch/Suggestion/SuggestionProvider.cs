@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.Descriptors.KeywordTopScoring;
 using ViretTool.BusinessLayer.RankingModels.Similarity.Models;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.BusinessLayer.TextSearch;
@@ -207,7 +208,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion
                     }
                 }
 
-                IKeywordScoringProvider keywordScoringModel = _datasetServicesManager.CurrentDataset.KeywordScoringProvider;
+                IKeywordTopScoringProvider keywordScoringModel = _datasetServicesManager.CurrentDataset.KeywordScoringProvider;
                 (int frameId, float score)[] topScoring = keywordScoringModel.GetTopScoring(item.SynsetId);
                 IEnumerable<byte[]> images = topScoring
                     .Take(5)
