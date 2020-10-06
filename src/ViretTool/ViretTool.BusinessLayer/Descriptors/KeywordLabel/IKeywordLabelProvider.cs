@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViretTool.BusinessLayer.Descriptors
+namespace ViretTool.BusinessLayer.Descriptors.KeywordLabel
 {
     public interface IKeywordLabelProvider<T>
     {

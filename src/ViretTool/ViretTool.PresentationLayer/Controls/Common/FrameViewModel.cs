@@ -9,6 +9,7 @@ using ViretTool.Core;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ViretTool.Core;
+using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {

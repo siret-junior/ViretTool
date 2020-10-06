@@ -7,6 +7,7 @@ using Castle.Windsor;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.ExternalDescriptors;
 using ViretTool.BusinessLayer.RankingModels;
@@ -57,7 +58,7 @@ namespace ViretTool.Installers
                          .UsingFactoryMethod((_, context) => KeywordDescriptorProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
                 Component.For<IKeywordLabelProvider<string>>()
-                         .UsingFactoryMethod((_, context) => KeywordLabelProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
+                         .UsingFactoryMethod((_, context) => KeywordLabelFactory.FromDirectory((string)context.AdditionalArguments["datasetDirectory"]))
                          .LifestyleBoundTo<DatasetServices>(),
                 Component.For<IKeywordScoringProvider>()
                          .UsingFactoryMethod((_, context) => KeywordScoringProvider.FromDirectory((string)context.AdditionalArguments["datasetDirectory"], 5))

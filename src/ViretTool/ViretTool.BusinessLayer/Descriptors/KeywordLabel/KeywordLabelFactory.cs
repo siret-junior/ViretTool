@@ -5,48 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViretTool.BusinessLayer.Descriptors
+namespace ViretTool.BusinessLayer.Descriptors.KeywordLabel
 {
-    /// <summary>
-    /// Reused and modified from "ViretTool.PresentationLayer.Controls.Common.KeywordSearch.Suggestion.LabelProvider"
-    /// TODO: merge these 2 pieces of code
-    /// </summary>
-    public class KeywordLabelProvider : IKeywordLabelProvider<string>
+    public class KeywordLabelFactory
     {
         private const string KEYWORD_LABELS_EXTENSION = ".label";
 
-        public Dictionary<string, List<int>> LabelToSynsetMapping { get; } = new Dictionary<string, List<int>>();
-        public Dictionary<int, string> SynsetToLabelMapping { get; } = new Dictionary<int, string>();
-
-
-        public KeywordLabelProvider(string inputFile)
+        public static IKeywordLabelProvider<string> FromDirectory(string directory)
         {
-            LoadFromFile(inputFile);
-        }
-        
+            string inputFile = Directory.GetFiles(directory)
+                    .Where(dir => Path.GetFileName(dir).EndsWith(KEYWORD_LABELS_EXTENSION))
+                    .FirstOrDefault();
 
-        public List<int> GetSynsets(string label)
-        {
-            return LabelToSynsetMapping[label];
-        }
-
-        // TODO: label ID numbered from 0 sequentially is used here instead of the actual synset ID -> fix that
-        public string GetLabel(int synsetId)
-        {
-            string label;
-            if (SynsetToLabelMapping.TryGetValue(synsetId, out label))
+            if (inputFile != null)
             {
-                return label;
+                return FromFile(inputFile);
             }
             else
             {
-                return $"==({synsetId}) NO LABEL==";
+                return new KeywordLabelProviderDummy();
             }
         }
 
 
-        public void LoadFromFile(string inputFile)
+        public static IKeywordLabelProvider<string> FromFile(string inputFile)
         {
+            Dictionary<string, List<int>> labelToSynsetMapping = new Dictionary<string, List<int>>();
+            Dictionary<int, string> synsetToLabelMapping = new Dictionary<int, string>();
+
             using (StreamReader reader = new StreamReader(inputFile))
             {
                 string line;
@@ -96,36 +82,22 @@ namespace ViretTool.BusinessLayer.Descriptors
                     // TODO: label ID numbered from 0 sequentially is used here instead of the actual synset ID -> fix that
                     if (synsetId != -1)
                     {
-                        SynsetToLabelMapping.Add(synsetId, synsetName);
+                        synsetToLabelMapping.Add(synsetId, synsetName);
                     }
 
-                    if (!LabelToSynsetMapping.ContainsKey(synsetName))
+                    if (!labelToSynsetMapping.ContainsKey(synsetName))
                     {
-                        LabelToSynsetMapping.Add(synsetName, new List<int> { synsetId });
+                        labelToSynsetMapping.Add(synsetName, new List<int> { synsetId });
                     }
                     else
                     {
-                        LabelToSynsetMapping[synsetName].Add(synsetId);
+                        labelToSynsetMapping[synsetName].Add(synsetId);
                     }
                 }
             }
+
+            return new KeywordLabelProvider(labelToSynsetMapping, synsetToLabelMapping);
         }
 
-
-        public static KeywordLabelProvider FromDirectory(string directory)
-        {
-            string inputFile = Directory.GetFiles(directory)
-                    .Where(dir => Path.GetFileName(dir).EndsWith(KEYWORD_LABELS_EXTENSION))
-                    .FirstOrDefault();
-
-            if (inputFile != null)
-            {
-                return new KeywordLabelProvider(inputFile);
-            }
-            else
-            {
-                return null;
-            }
-        }
     }
 }

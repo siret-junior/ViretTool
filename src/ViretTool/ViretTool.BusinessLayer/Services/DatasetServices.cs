@@ -1,5 +1,6 @@
 ﻿using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Descriptors;
+using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.Thumbnails;
