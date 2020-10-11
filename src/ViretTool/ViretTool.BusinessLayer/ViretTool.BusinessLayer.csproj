@@ -119,9 +119,14 @@
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
     <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionFilters.cs" />
+    <Compile Include="ResultLogging\IResultLog.cs" />
     <Compile Include="ResultLogging\IResultLogger.cs" />
-    <Compile Include="ResultLogging\Result.cs" />
-    <Compile Include="ResultLogging\ResultLog.cs" />
+    <Compile Include="ResultLogging\ResultBase.cs" />
+    <Compile Include="ResultLogging\ResultLifelog.cs" />
+    <Compile Include="ResultLogging\ResultLogLifelog.cs" />
+    <Compile Include="ResultLogging\ResultLogVBS.cs" />
+    <Compile Include="ResultLogging\ResultVBS.cs" />
+    <Compile Include="ResultLogging\ResultLogBase.cs" />
     <Compile Include="ResultLogging\ResultLogger.cs" />
     <Compile Include="Services\Helper\CosineSimilarityHelper.cs" />
     <Compile Include="Services\IDatasetParameters.cs" />
@@ -215,7 +220,9 @@
     <Compile Include="Submission\FrameToSubmit.cs" />
     <Compile Include="Submission\ISubmissionService.cs" />
     <Compile Include="Submission\QueryPersistingService.cs" />
-    <Compile Include="Submission\SubmissionService.cs" />
+    <Compile Include="Submission\SubmissionServiceBase.cs" />
+    <Compile Include="Submission\SubmissionServiceLifelog.cs" />
+    <Compile Include="Submission\SubmissionServiceVBS.cs" />
     <Compile Include="TaskLogging\ITaskLogger.cs" />
     <Compile Include="TaskLogging\TaskLogger.cs" />
     <Compile Include="Thumbnails\CachedThumbnailService.cs" />

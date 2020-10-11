@@ -12,6 +12,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Temporal
         public float Rank { get; }
         public int PairId { get; }
 
+        // TODO: rename ranked->scored
         public PairedRankedFrame(int id, float rank, int pairId)
         {
             Id = id;

@@ -102,7 +102,8 @@ namespace ViretTool.Installers
 
             //singleton services
             container.Register(
-                Component.For<ISubmissionService>().ImplementedBy<SubmissionService>(),
+                // TODO: set submission service dynamically (VBS/LSC) when dataset is opened
+                Component.For<ISubmissionService>().ImplementedBy<SubmissionServiceLifelog>(),
                 Component.For<IInteractionLogger>().ImplementedBy<InteractionLogger>(),
                 Component.For<IResultLogger>().ImplementedBy<ResultLogger>(),
                 Component.For<ITaskLogger>().ImplementedBy<TaskLogger>(),
@@ -114,6 +115,7 @@ namespace ViretTool.Installers
                 //                 "Data\\VBS2019_NasNetMobile-128PCA.pca_mean")),
                 Component.For<ExternalImageProvider>(),
                 Component.For<IQueryPersistingService>().ImplementedBy<QueryPersistingService>());
+
 
             //transient services
             container.Register(

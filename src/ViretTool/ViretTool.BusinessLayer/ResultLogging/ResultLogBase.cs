@@ -21,7 +21,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
         All, Top, Sample
     }
 
-    public class ResultLog
+    public abstract class ResultLogBase : IResultLog
     {
         public string TeamName { get; set; } = "VIRET";
         public int TeamId { get; set; }
@@ -40,18 +40,18 @@ namespace ViretTool.BusinessLayer.ResultLogging
         public ResultSetAvailability ResultSetAvailability { get; set;}
         
         public SubmissionType Type { get; set; }
-        public Result[] Results { get; set; }
 
 
         private readonly object _lockObject = new object();
 
-        public ResultLog()
+
+        public ResultLogBase()
         {
             TeamId = int.Parse(ConfigurationManager.AppSettings["teamId"] ?? "7");
             MemberId = int.Parse(ConfigurationManager.AppSettings["memberId"] ?? "-1");
         }
 
-        public ResultLog(BiTemporalQuery query, Result[] results) : this()
+        public ResultLogBase(BiTemporalQuery query) : this()
         {
             UsedCategories = GetUsedCategories(query);
             UsedTypes = GetUsedTypes(query);
@@ -59,8 +59,26 @@ namespace ViretTool.BusinessLayer.ResultLogging
             SortType = GetSortType(query);
             ResultSetAvailability = ResultSetAvailability.All;
             Type = SubmissionType.Result;
-            Results = results;
         }
+
+        public string GetJson(long unixTimestamp)
+        {
+            lock (_lockObject)
+            {
+                TimeStamp = unixTimestamp;
+                return LowercaseJsonSerializer.SerializeObject(this);
+            }
+        }
+
+        public string GetJsonIndented(long unixTimestamp)
+        {
+            lock (_lockObject)
+            {
+                TimeStamp = unixTimestamp;
+                return LowercaseJsonSerializer.SerializeObjectIndented(this);
+            }
+        }
+
 
         private static LogCategory[] GetUsedCategories(BiTemporalQuery query)
         {
@@ -105,8 +123,10 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
             // max frames
             if (query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled
-                || query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled)
+                || query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled
+                )
             {
+                // TODO: lifelog
                 usedLogCategories.Add(LogCategory.Filter);
             }
             else if (query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Disabled
@@ -115,8 +135,6 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 // should be always on by default
                 throw new NotImplementedException("Unexpected behavior.");
             }
-
-            // TODO: lifelog is not send because the result log is used only in VBS
 
             return usedLogCategories.ToArray();
         }
@@ -177,7 +195,8 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 || query.LatterFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Disabled)
             {
                 // should be always on by default
-                throw new NotImplementedException("Unexpected behavior.");
+                //throw new NotImplementedException("Unexpected behavior.");
+                // TODO: should not throw exception during log submission
             }
 
             // TODO: lifelog is not send because the result log is used only in VBS
@@ -225,6 +244,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
             }
 
             // semantic example
+            // TODO: simplify
             if (query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.PositiveExampleIds.Any()
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.NegativeExampleIds.Any()
                 || query.BiTemporalSimilarityQuery.SemanticExampleQuery.FormerQuery.ExternalImages.Any()
@@ -323,9 +343,11 @@ namespace ViretTool.BusinessLayer.ResultLogging
                 case BiTemporalQuery.TemporalQueries.Former:
                     primaryFusionQuery = query.FormerFusionQuery;
                     break;
+
                 case BiTemporalQuery.TemporalQueries.Latter:
                     primaryFusionQuery = query.LatterFusionQuery;
                     break;
+
                 default:
                     throw new NotImplementedException("Unknown primary temporal query.");
             }
@@ -334,37 +356,25 @@ namespace ViretTool.BusinessLayer.ResultLogging
             {
                 case FusionQuery.SimilarityModels.ColorSketch:
                     return LogType.Color;
+
                 case FusionQuery.SimilarityModels.Keyword:
                     return LogType.JointEmbedding;
+
                 case FusionQuery.SimilarityModels.SemanticExample:
                     return LogType.GlobalFeatures;
+
                 case FusionQuery.SimilarityModels.FaceSketch:
                 case FusionQuery.SimilarityModels.TextSketch:
                     return LogType.LocalizedObject;
+
                 case FusionQuery.SimilarityModels.None:
                     return LogType.None;
+
                 default:
                     throw new NotImplementedException("Unknown sorting similarity model.");
             }
         }
 
 
-        internal string GetContent(long unixTimestamp)
-        {
-            lock (_lockObject)
-            {
-                TimeStamp = unixTimestamp;
-                return LowercaseJsonSerializer.SerializeObject(this);
-            }
-        }
-
-        internal string GetContentIndented(long unixTimestamp)
-        {
-            lock (_lockObject)
-            {
-                TimeStamp = unixTimestamp;
-                return LowercaseJsonSerializer.SerializeObjectIndented(this);
-            }
-        }
     }
 }
