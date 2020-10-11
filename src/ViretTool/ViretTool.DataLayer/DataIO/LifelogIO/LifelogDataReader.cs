@@ -18,7 +18,20 @@ namespace ViretTool.DataLayer.DataIO.LifelogIO
             foreach (dynamic item in data)
             {
                 string fileName = item.id;
-                TimeSpan time = TimeSpan.ParseExact(fileName.Split('_')[1], "hhmmss", CultureInfo.InvariantCulture);
+                
+                // backwards compatibility LSC2018-2019
+                TimeSpan time;
+                try
+                {
+                    string timeString = item.time;
+                    time = TimeSpan.ParseExact(timeString, "hhmmss", CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    // TODO: throwing an exception is very inefficient
+                    time = TimeSpan.ParseExact(fileName.Split('_')[1], "hhmmss", CultureInfo.InvariantCulture);
+                }
+
                 bool fromVideo = item.fromVideo;
 
                 yield return new LifelogFrameInfo(
