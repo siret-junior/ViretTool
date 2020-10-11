@@ -31,7 +31,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
 
         public InteractionLog Log { get; } = new InteractionLog();
 
-        public async void LogInteraction(LogCategory category, LogType type, string value = null, string attributes = null)
+        public async void LogInteraction(LogCategory category, LogType type, string value = null/*, string attributes = null*/)
         {
             await Task.Run(
                 () =>
@@ -39,16 +39,16 @@ namespace ViretTool.BusinessLayer.ActionLogging
                     lock (_lockObject)
                     {
                         long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                        if (Log.Events.Count > 0 && Log.Events.Last().Category == category && Log.Events.Last().Type == type)
+                        if (Log.Events.Count > 0 && Log.Events.Last().Category == category && Log.Events.Last().Type[0] == type)
                         {
-                            long lastEventTime = Log.Events[Log.Events.Count - 1].TimeStamp;
+                            long lastEventTime = Log.Events[Log.Events.Count - 1].Timestamp;
                             if (Math.Abs(lastEventTime - currentTime) < TimeDelayMiliseconds)
                             {
                                 return;
                             }
                         }
 
-                        Action action = new Action(currentTime, category, type, value, attributes);
+                        Action action = new Action(currentTime, category, type, value/*, attributes*/);
                         Log.Events.Add(action);
 
                         StoreLog(LowercaseJsonSerializer.SerializeObjectIndented(action));
@@ -68,8 +68,8 @@ namespace ViretTool.BusinessLayer.ActionLogging
         {
             lock (_lockObject)
             {
-                Log.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                return LowercaseJsonSerializer.SerializeObject(Log);
+                Log.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                return CamelcaseJsonSerializer.SerializeObject(Log);
             }
         }
 
@@ -89,7 +89,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
         {
             lock (_lockObject)
             {
-                return Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.TimeStamp ?? 0;
+                return Log.Events.LastOrDefault(e => e.Category != LogCategory.Browsing)?.Timestamp ?? 0;
             }
         }
 

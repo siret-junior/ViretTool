@@ -5,25 +5,25 @@ namespace ViretTool.BusinessLayer.ActionLogging
 {
     public class Action
     {
-        public Action(long timeStamp, LogCategory category, LogType type, string value = null, string attributes = null)
+        public Action(long timestamp, LogCategory category, LogType type, string value = null/*, string attributes = null*/)
         {
-            TimeStamp = timeStamp;
+            Timestamp = timestamp;
             Category = category;
-            Type = type;
+            Type = new LogType[] { type };
             Value = value;
-            Attributes = attributes;
+            //Attributes = attributes;
         }
 
-        public long TimeStamp { get; }
+        public long Timestamp { get; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public LogCategory Category { get; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public LogType Type { get; }
+        //[JsonConverter(typeof(StringEnumConverter))]
+        public LogType[] Type { get; }
 
         public string Value { get; }
 
-        public string Attributes { get; }
+        //public string Attributes { get; }
     }
 }

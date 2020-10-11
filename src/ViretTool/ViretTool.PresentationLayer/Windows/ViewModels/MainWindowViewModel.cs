@@ -239,20 +239,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        public string TeamName
-        {
-            get => _interactionLogger.Log.TeamName;
-            set
-            {
-                if (_interactionLogger.Log.TeamName == value)
-                {
-                    return;
-                }
+        //public string TeamName
+        //{
+        //    get => _interactionLogger.Log.TeamName;
+        //    set
+        //    {
+        //        if (_interactionLogger.Log.TeamName == value)
+        //        {
+        //            return;
+        //        }
 
-                _interactionLogger.Log.TeamName = value;
-                NotifyOfPropertyChange();
-            }
-        }
+        //        _interactionLogger.Log.TeamName = value;
+        //        NotifyOfPropertyChange();
+        //    }
+        //}
 
         public int MemberId
         {

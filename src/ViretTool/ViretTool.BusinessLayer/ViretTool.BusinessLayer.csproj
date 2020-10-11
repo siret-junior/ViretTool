@@ -135,6 +135,7 @@
     <Compile Include="Services\SomGeneratorProvider.cs" />
     <Compile Include="Services\ZoomDisplayProvider.cs" />
     <Compile Include="SOMGridSorting\SOMWrapper.cs" />
+    <Compile Include="Submission\CamelcaseJsonSerializer.cs" />
     <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />

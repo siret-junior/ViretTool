@@ -281,7 +281,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public void OnGridScrollChanged(LogType logType, string detailDescription = null)
         {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged", detailDescription);
+            _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged" + $"|{detailDescription}");
         }
 
         #endregion --[ Events ]--

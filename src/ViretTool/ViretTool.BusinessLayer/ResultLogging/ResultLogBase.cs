@@ -23,19 +23,19 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
     public abstract class ResultLogBase : IResultLog
     {
-        public string TeamName { get; set; } = "VIRET";
+        //public string Teamname { get; set; } = "VIRET";
         public int TeamId { get; set; }
         public int MemberId { get; set; }
-        public long TimeStamp { get; set; }
+        public long Timestamp { get; set; }
 
         
         public LogCategory[] UsedCategories { get; set; }
         
         public LogType[] UsedTypes { get; set; }
 
-        public string Value { get; set; }
+        public string[] Values { get; set; }
 
-        public LogType SortType { get; set; }
+        public LogType[] SortType { get; set; }
         
         public ResultSetAvailability ResultSetAvailability { get; set;}
         
@@ -55,8 +55,8 @@ namespace ViretTool.BusinessLayer.ResultLogging
         {
             UsedCategories = GetUsedCategories(query);
             UsedTypes = GetUsedTypes(query);
-            Value = GetValue(query);
-            SortType = GetSortType(query);
+            Values = GetValues(query);
+            SortType = new LogType[] { GetSortType(query) };
             ResultSetAvailability = ResultSetAvailability.All;
             Type = SubmissionType.Result;
         }
@@ -65,8 +65,8 @@ namespace ViretTool.BusinessLayer.ResultLogging
         {
             lock (_lockObject)
             {
-                TimeStamp = unixTimestamp;
-                return LowercaseJsonSerializer.SerializeObject(this);
+                Timestamp = unixTimestamp;
+                return CamelcaseJsonSerializer.SerializeObject(this);
             }
         }
 
@@ -74,8 +74,8 @@ namespace ViretTool.BusinessLayer.ResultLogging
         {
             lock (_lockObject)
             {
-                TimeStamp = unixTimestamp;
-                return LowercaseJsonSerializer.SerializeObjectIndented(this);
+                Timestamp = unixTimestamp;
+                return CamelcaseJsonSerializer.SerializeObjectIndented(this);
             }
         }
 
@@ -204,7 +204,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
             return usedLogTypes.ToArray();
         }
 
-        private static string GetValue(BiTemporalQuery query)
+        private static string[] GetValues(BiTemporalQuery query)
         {
             List<string> usedLogTypes = new List<string>();
 
@@ -332,7 +332,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
             // TODO: lifelog is not send because the result log is used only in VBS
             // TODO: add ASR
-            return string.Join(";", usedLogTypes);
+            return usedLogTypes.ToArray();
         }
 
         private static LogType GetSortType(BiTemporalQuery query)

@@ -35,7 +35,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
 
     public interface IInteractionLogger : IDisposable
     {
-        void LogInteraction(LogCategory category, LogType type, string value = null, string attributes = null);
+        void LogInteraction(LogCategory category, LogType type, string value = null/*, string attributes = null*/);
         void ResetLog();
         InteractionLog Log { get; }
         string GetContent();

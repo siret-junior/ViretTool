@@ -14,11 +14,11 @@ namespace ViretTool.BusinessLayer.ActionLogging
             MemberId = int.Parse(ConfigurationManager.AppSettings["memberId"] ?? "-1");
         }
 
-        public string TeamName { get; set; } = "VIRET";
+        //public string TeamName { get; set; } = "VIRET";
         public int TeamId { get; set; }
         public int MemberId { get; set; }
 
-        public long TimeStamp { get; set; }
+        public long Timestamp { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public SubmissionType Type { get; set; }
 
