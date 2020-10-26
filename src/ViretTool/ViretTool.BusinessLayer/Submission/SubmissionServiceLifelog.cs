@@ -21,12 +21,26 @@ namespace ViretTool.BusinessLayer.Submission
 
         protected override string GetUrlForSubmission(int teamId, int memberId, FrameToSubmit frameToSubmit)
         {
-            int frameId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(frameToSubmit.VideoId, frameToSubmit.FrameNumber);
-            LifelogFrameMetadata metadata = _datasetServicesManager.CurrentDataset.LifelogDescriptorProvider[frameId];
+            string fileName;
+            if (_datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frameToSubmit.VideoId, frameToSubmit.FrameNumber, out int frameId))
+            {
+                fileName = _datasetServicesManager.CurrentDataset.LifelogDescriptorProvider[frameId].FileName;
+
+                string fileName2 = _datasetServicesManager.CurrentDataset.LifelogDescriptorProvider.GetFilenameForFrame(frameToSubmit.VideoId, frameToSubmit.FrameNumber);
+                if (!fileName.Equals(fileName2))
+                {
+                    _logger.Error($"Lifelog filenames for V:{frameToSubmit.VideoId} F:{frameToSubmit.FrameNumber} do not match: \"{fileName}\" vs. \"{fileName2}\".");
+                }
+            }
+            else
+            {
+                fileName = _datasetServicesManager.CurrentDataset.LifelogDescriptorProvider.GetFilenameForFrame(frameToSubmit.VideoId, frameToSubmit.FrameNumber);
+            }
+
             return $"{SubmissionUrl}?" +
                 $"team={teamId}" +
                 $"&member={memberId}" +
-                $"&item={metadata.FileName}" +
+                $"&item={fileName}" +
                 $"&session={SessionId}"; 
         }
 

@@ -26,7 +26,7 @@ namespace ViretTool.BusinessLayer.Services
             IKeywordTopScoringProvider keywordScoringProvider,
             IBiTemporalRankingService rankingService,
             IDatasetParameters datasetParameters,
-            IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider,
+            ILifelogDescriptorProvider lifelogDescriptorProvider,
             IInitialDisplayProvider initialDisplayProvider,
             IZoomDisplayProvider zoomDisplayProvider,
             SomGeneratorProvider somGeneratorProvider)
@@ -59,7 +59,7 @@ namespace ViretTool.BusinessLayer.Services
         public IKeywordTopScoringProvider KeywordScoringProvider { get; }
         public IBiTemporalRankingService RankingService { get; }
         public IDatasetParameters DatasetParameters { get; }
-        public IDescriptorProvider<LifelogFrameMetadata> LifelogDescriptorProvider { get; }
+        public ILifelogDescriptorProvider LifelogDescriptorProvider { get; }
         public IInitialDisplayProvider InitialDisplayProvider { get; }
         public IZoomDisplayProvider ZoomDisplayProvider { get; }
         public SomGeneratorProvider SomGeneratorProvider { get; }

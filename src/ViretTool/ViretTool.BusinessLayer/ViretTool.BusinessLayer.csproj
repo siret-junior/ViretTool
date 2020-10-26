@@ -84,6 +84,7 @@
     <Compile Include="Descriptors\IBoolSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IColorSignatureDescriptorProvider.cs" />
     <Compile Include="Descriptors\IFaceSignatureDescriptorProvider.cs" />
+    <Compile Include="Descriptors\ILifelogDescriptorProvider.cs" />
     <Compile Include="Descriptors\KeywordLabel\IKeywordLabelProvider.cs" />
     <Compile Include="Descriptors\KeywordTopScoring\IKeywordTopScoringProvider.cs" />
     <Compile Include="Descriptors\ITextSignatureDescriptorProvider.cs" />

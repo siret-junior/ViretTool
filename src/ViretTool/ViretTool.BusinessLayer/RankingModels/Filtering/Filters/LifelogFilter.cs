@@ -10,10 +10,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 {
     public class LifelogFilter : ILifelogFilter
     {
-        private readonly IDescriptorProvider<LifelogFrameMetadata> _lifelogDescriptorProvider;
+        private readonly ILifelogDescriptorProvider _lifelogDescriptorProvider;
         private LifelogFilteringQuery _cacheQuery;
 
-        public LifelogFilter(IDescriptorProvider<LifelogFrameMetadata> lifelogDescriptorProvider)
+        public LifelogFilter(ILifelogDescriptorProvider lifelogDescriptorProvider)
         {
             _lifelogDescriptorProvider = lifelogDescriptorProvider;
         }

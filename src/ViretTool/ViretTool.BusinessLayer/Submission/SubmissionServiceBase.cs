@@ -27,7 +27,7 @@ namespace ViretTool.BusinessLayer.Submission
             Timeout = TimeSpan.FromMilliseconds(int.Parse(ConfigurationManager.AppSettings["networkTimeout"]))
         };
         private readonly IInteractionLogger _interactionLogger;
-        private readonly ILogger _logger;
+        protected readonly ILogger _logger;
         protected readonly IDatasetServicesManager _datasetServicesManager;
         private readonly string _networkLogDirectory = Path.Combine("Logs", "NetworkLogs");
         private readonly string _networkLogDirectoryPOST = Path.Combine("Logs", "NetworkLogsPOST");

@@ -48,7 +48,21 @@ namespace ViretTool.DataLayer.DataIO.LifelogIO
 
         private double? GetGpsCoordinate(string gpsCoordinate)
         {
-            return string.IsNullOrWhiteSpace(gpsCoordinate) ? (double?)null : double.Parse(gpsCoordinate, CultureInfo.InvariantCulture);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(gpsCoordinate) || gpsCoordinate.Equals("NULL"))
+                {
+                    return null;
+                }
+                else 
+                { 
+                    return double.Parse(gpsCoordinate, CultureInfo.InvariantCulture); 
+                }
+            }
+            catch 
+            {
+                return null;
+            }
         }
     }
 }

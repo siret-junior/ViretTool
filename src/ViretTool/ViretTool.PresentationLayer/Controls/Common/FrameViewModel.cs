@@ -76,17 +76,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     return false;
                 }
 
-                if (!_servicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
-                {
-                    return true;
-                }
+                //if (!_servicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
+                //{
+                //    return true;
+                //}
 
-                if (!_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
-                {
-                    return false;
-                }
+                //if (!_servicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(VideoId, FrameNumber, out int frameId))
+                //{
+                //    return false;
+                //}
 
-                return !_servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId].FromVideo;
+                //return !_servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId].FromVideo;
+                return true;
             }
         }
 
