@@ -37,6 +37,7 @@ namespace ViretTool.DataLayer.DataIO.LifelogIO
                 yield return new LifelogFrameInfo(
                     fileName,
                     fromVideo,
+                    DateTime.ParseExact((string)item.date, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     (DayOfWeek)((int)item.weekday % 7),
                     time,
                     (int?)item.heartrate,

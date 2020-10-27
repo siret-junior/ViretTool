@@ -164,6 +164,7 @@
     <Compile Include="Controls\DisplayControl\ViewModels\DetailViewModel.cs" />
     <Compile Include="Converters\BooleanToVisibilityHiddenConverter.cs" />
     <Compile Include="Converters\DayOfWeekLableConverter.cs" />
+    <Compile Include="Converters\MonthOfYearLabelConverter.cs" />
     <Compile Include="Helpers\ColorInterpolationHelper.cs" />
     <Compile Include="Helpers\QueryBuilder.cs" />
     <Compile Include="Windows\ViewModels\SubmitControlViewModel.cs" />

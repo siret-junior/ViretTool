@@ -47,6 +47,7 @@ namespace ViretTool.BusinessLayer.Descriptors
             return new LifelogFrameMetadata(
                 lifelogFrameInfo.FileName,
                 lifelogFrameInfo.FromVideo,
+                lifelogFrameInfo.Date,
                 lifelogFrameInfo.DayOfWeek,
                 lifelogFrameInfo.Time,
                 lifelogFrameInfo.HeartRate,

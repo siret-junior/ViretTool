@@ -340,6 +340,8 @@ namespace ViretTool.PresentationLayer.Helpers
 
             return new LifelogFilteringQuery(
                 lifelogFilters.SelectedDaysOfWeek.ToArray(),
+                lifelogFilters.SelectedMonthsOfYear.ToArray(),
+                lifelogFilters.SelectedYears.ToArray(),
                 TimeSpan.FromHours(lifelogFilters.StartTimeHour),
                 TimeSpan.FromHours(lifelogFilters.EndTimeHour),
                 lifelogFilters.HeartbeatLow,

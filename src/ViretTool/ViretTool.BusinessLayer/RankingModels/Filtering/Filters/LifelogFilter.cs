@@ -69,13 +69,18 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
                     }
 
                     LifelogFrameMetadata metadata = _lifelogDescriptorProvider[id];
-                    if (!query.DaysOfWeek.Contains(metadata.DayOfWeek) ||
-                        metadata.HeartRate < query.HeartRateLow ||
-                        metadata.HeartRate > query.HeartRateHigh ||
-                        metadata.Time < query.TimeFrom ||
-                        metadata.Time > query.TimeTo ||
-                        query.IsGpsDefinedByString && !query.GpsLocation.Equals(metadata.GpsLocation, StringComparison.InvariantCultureIgnoreCase))
+                    if (!query.DaysOfWeek.Contains(metadata.DayOfWeek)
+                        || !query.MonthsOfYear.Contains(metadata.Month)
+                        || !query.Years.Contains(metadata.Year)
+                        || metadata.HeartRate < query.HeartRateLow 
+                        || metadata.HeartRate > query.HeartRateHigh 
+                        || metadata.Time < query.TimeFrom 
+                        || metadata.Time > query.TimeTo 
+                        || (query.IsGpsDefinedByString 
+                            && !query.GpsLocation.Equals(metadata.GpsLocation, StringComparison.InvariantCultureIgnoreCase))
+                    )
                     {
+                        // filter out
                         outputRanks[id] = float.MinValue;
                         return;
                     }

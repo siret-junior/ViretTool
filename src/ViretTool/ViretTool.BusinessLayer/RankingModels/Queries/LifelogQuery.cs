@@ -9,10 +9,14 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
         public LifelogFilteringQuery()
         {
             DaysOfWeek = new DayOfWeek[0];
+            MonthsOfYear = new int[0];
+            Years = new int[0];
         }
 
         public LifelogFilteringQuery(
             DayOfWeek[] daysOfWeek,
+            int[] monthsOfYear,
+            int[] years,
             TimeSpan timeFrom,
             TimeSpan timeTo,
             int heartRateLow,
@@ -22,6 +26,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
             double? gpsLongitude)
         {
             DaysOfWeek = daysOfWeek;
+            MonthsOfYear = monthsOfYear;
+            Years = years;
             TimeFrom = timeFrom;
             TimeTo = timeTo;
             HeartRateLow = heartRateLow;
@@ -32,6 +38,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
         }
 
         public DayOfWeek[] DaysOfWeek { get; }
+        public int[] MonthsOfYear { get; }
+        public int[] Years { get; }
         public TimeSpan TimeFrom { get; }
         public TimeSpan TimeTo { get; }
         public int HeartRateLow { get; }

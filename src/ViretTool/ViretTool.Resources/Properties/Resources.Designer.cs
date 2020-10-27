@@ -349,6 +349,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Month:.
+        /// </summary>
+        public static string MonthOfYearLabel {
+            get {
+                return ResourceManager.GetString("MonthOfYearLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next &gt;.
         /// </summary>
         public static string NextPageButtonText {
@@ -660,6 +669,15 @@ namespace ViretTool.Resources.Properties {
         public static string WorkingText {
             get {
                 return ResourceManager.GetString("WorkingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year:.
+        /// </summary>
+        public static string YearLabel {
+            get {
+                return ResourceManager.GetString("YearLabel", resourceCulture);
             }
         }
         

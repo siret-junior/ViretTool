@@ -40,6 +40,60 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         }
     }
 
+    public class MonthOfYearViewModel : PropertyChangedBase
+    {
+        private bool _isSelected;
+
+        public MonthOfYearViewModel(int monthOfYear)
+        {
+            MonthOfYear = monthOfYear;
+        }
+
+        public int MonthOfYear { get; }
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected == value)
+                {
+                    return;
+                }
+
+                _isSelected = value;
+                NotifyOfPropertyChange();
+            }
+        }
+    }
+
+    public class YearViewModel : PropertyChangedBase
+    {
+        private bool _isSelected;
+
+        public YearViewModel(int year)
+        {
+            Year = year;
+        }
+
+        public int Year { get; }
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected == value)
+                {
+                    return;
+                }
+
+                _isSelected = value;
+                NotifyOfPropertyChange();
+            }
+        }
+    }
+
     public class LifelogFilterViewModel : PropertyChangedBase, INotifyDataErrorInfo
     {
         private readonly ILogger _logger;
@@ -56,23 +110,58 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         {
             _logger = logger;
             _interationLogger = interationLogger;
+            
             //all days are generated and monday is first
             Array daysOfWeek = Enum.GetValues(typeof(DayOfWeek));
             DaysOfWeek = new BindableCollection<DayOfWeekViewModel>(
                 daysOfWeek.Cast<DayOfWeek>()
                 .OrderBy(d => ((int)d + daysOfWeek.Length - 1) % daysOfWeek.Length)
                 .Select(d => new DayOfWeekViewModel(d)));
+            MonthsOfYear = new BindableCollection<MonthOfYearViewModel>(
+                Enumerable.Range(1, 12)
+                .Select(month => new MonthOfYearViewModel(month)));
+            Years = new BindableCollection<YearViewModel>(
+               new int[] { 2015, 2016, 2017, 2018 }
+               .Select(year => new YearViewModel(year)));
             Reset();
 
-            DaysOfWeek.ForEach(
-                d => d.PropertyChanged += (sender, args) => NotifyFiltersChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)));
-            PropertyChanged += (sender, args) => NotifyFiltersChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender));
 
-            
+            // days
+            DaysOfWeek.ForEach(
+                d => d.PropertyChanged += 
+                    (sender, args) => NotifyFiltersChanged(
+                        args.PropertyName, 
+                        sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)
+                    )
+            );
+            // months
+            MonthsOfYear.ForEach(
+                m => m.PropertyChanged +=
+                    (sender, args) => NotifyFiltersChanged(
+                        args.PropertyName,
+                        sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)
+                    )
+            );
+            // years
+            Years.ForEach(
+                y => y.PropertyChanged +=
+                    (sender, args) => NotifyFiltersChanged(
+                        args.PropertyName,
+                        sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)
+                    )
+            );
+
+
+            PropertyChanged +=
+                (sender, args) => NotifyFiltersChanged(
+                    args.PropertyName,
+                    sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)
+                );
         }
 
         public BindableCollection<DayOfWeekViewModel> DaysOfWeek { get; }
-
+        public BindableCollection<MonthOfYearViewModel> MonthsOfYear { get; }
+        public BindableCollection<YearViewModel> Years { get; }
         public int EndTimeHour
         {
             get => _endTimeHour;
@@ -122,6 +211,10 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
 
         public IEnumerable<DayOfWeek> SelectedDaysOfWeek =>
             DaysOfWeek.Any(d => d.IsSelected) ? DaysOfWeek.Where(d => d.IsSelected).Select(d => d.DayOfWeek) : DaysOfWeek.Select(d => d.DayOfWeek);
+        public IEnumerable<int> SelectedMonthsOfYear =>
+                    MonthsOfYear.Any(m => m.IsSelected) ? MonthsOfYear.Where(m => m.IsSelected).Select(m => m.MonthOfYear) : MonthsOfYear.Select(m => m.MonthOfYear);
+        public IEnumerable<int> SelectedYears =>
+                    Years.Any(y => y.IsSelected) ? Years.Where(y => y.IsSelected).Select(y => y.Year) : Years.Select(y => y.Year);
 
         public int StartTimeHour
         {
@@ -153,6 +246,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         public void Reset()
         {
             DaysOfWeek.ForEach(d => d.IsSelected = false);
+            MonthsOfYear.ForEach(m => m.IsSelected = false);
             StartTimeHour = 2;
             EndTimeHour = 23;
             HeartbeatLow = 00;

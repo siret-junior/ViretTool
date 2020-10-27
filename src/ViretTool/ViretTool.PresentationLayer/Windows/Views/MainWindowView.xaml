@@ -75,14 +75,15 @@
 
                         <Grid Grid.Row="0" FocusVisualStyle="{x:Null}" Focusable="False">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
+                            <!-- Menu -->
                             <Menu Grid.Row="0" Width="Auto" Background="White" Focusable="False">
-                                <MenuItem Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
+                                <!-- File -->
+                                <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
                                     <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
                                     <Separator />
                                     <MenuItem Header="{x:Static properties:Resources.HideBwFilterText}" cal:Message.Attach="[Event Click] = [Action ShowHideBwFilters]"/>
@@ -106,15 +107,21 @@
                                     <Separator />
                                     <MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>
                                 </MenuItem>
-                                <MenuItem Header="{x:Static properties:Resources.TestButtonText}" 
+                                <!-- Test -->
+                                <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.TestButtonText}" 
                                           cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"
                                           FocusVisualStyle="{x:Null}" Focusable="False"></MenuItem>
                             </Menu>
 
-                            <Button x:Name="ClearAll" Grid.Column="1" Margin="0,4,0,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
+                            <Button x:Name="ClearAll" Grid.Column="1" 
+                                    Margin="0,0,0,0" Padding="5 3 5 3"
+                                    Content="{x:Static properties:Resources.ClearAllText}"
+                                    Background="IndianRed" />
                             <!-- Logs are now sent periodically (default: every 30 seconds). -->
                             <!--<Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />-->
-                            <Button x:Name="ShowInitialDisplayClicked" Grid.Column="3" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.ShowInitialDisplayText}" />
+                            <Button x:Name="ShowInitialDisplayClicked" Grid.Column="2" 
+                                    Margin="1,0,0,0" Padding="5 3 5 3" 
+                                    Content="{x:Static properties:Resources.ShowInitialDisplayText}" />
                         </Grid>
 
                         <!-- Lifelog -->

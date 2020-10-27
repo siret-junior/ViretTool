@@ -4,10 +4,12 @@ namespace ViretTool.BusinessLayer.Descriptors.Models
 {
     public class LifelogFrameMetadata
     {
-        public LifelogFrameMetadata(string fileName, bool fromVideo, DayOfWeek dayOfWeek, TimeSpan time, int? heartRate, string gpsLocation, double? gpsLatitude, double? gpsLongitude)
+        public LifelogFrameMetadata(string fileName, bool fromVideo, DateTime date, DayOfWeek dayOfWeek, TimeSpan time, int? heartRate, string gpsLocation, double? gpsLatitude, double? gpsLongitude)
         {
             FileName = fileName;
             FromVideo = fromVideo;
+            Month = date.Month;
+            Year = date.Year;
             DayOfWeek = dayOfWeek;
             Time = time;
             HeartRate = heartRate;
@@ -18,6 +20,8 @@ namespace ViretTool.BusinessLayer.Descriptors.Models
 
         public string FileName { get; }
         public bool FromVideo { get; }
+        public int Month { get; }
+        public int Year { get; }
         public DayOfWeek DayOfWeek { get; }
         public TimeSpan Time { get; }
         public int? HeartRate { get; }
