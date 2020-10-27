@@ -41,7 +41,10 @@ namespace ViretTool.BusinessLayer.RankingModels.Filtering.Filters
 
         private bool HasQueryOrInputChanged(LifelogFilteringQuery query, RankingBuffer inputRanking)
         {
-            return query == null && _cacheQuery != null || _cacheQuery == null && query != null || !Equals(query, _cacheQuery) || inputRanking.IsUpdated;
+            return (query == null && _cacheQuery != null) 
+                || (_cacheQuery == null && query != null) 
+                || !Equals(query, _cacheQuery) 
+                || inputRanking.IsUpdated;
         }
 
         private void ApplyLifelogFilters()

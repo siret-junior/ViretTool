@@ -142,6 +142,15 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displays.
+        /// </summary>
+        public static string DisplaySwitchLabel {
+            get {
+                return ResourceManager.GetString("DisplaySwitchLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End time (h):.
         /// </summary>
         public static string EndTimeLabel {

@@ -72,7 +72,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static properties:Resources.StartTimeLabel }" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Text="{Binding StartTimeHour}" >
+            <TextBox Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" MinWidth="20" Text="{Binding StartTimeHour}" >
                 <i:Interaction.Behaviors>
                     <behaviors:TextBoxEnterKeyUpdateBehavior />
                 </i:Interaction.Behaviors>

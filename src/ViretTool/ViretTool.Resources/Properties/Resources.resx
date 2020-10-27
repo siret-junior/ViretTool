@@ -324,4 +324,7 @@
   <data name="TranscriptFilterLabel" xml:space="preserve">
     <value>Transcript filter</value>
   </data>
+  <data name="DisplaySwitchLabel" xml:space="preserve">
+    <value>Displays</value>
+  </data>
 </root>

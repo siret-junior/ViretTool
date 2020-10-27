@@ -10,7 +10,7 @@ namespace ViretTool.BusinessLayer.ActionLogging
         public InteractionLog()
         {
             Events = new List<Action>();
-            TeamId = int.Parse(ConfigurationManager.AppSettings["teamId"] ?? "7");
+            TeamId = int.Parse(ConfigurationManager.AppSettings["teamId"] ?? "-1");
             MemberId = int.Parse(ConfigurationManager.AppSettings["memberId"] ?? "-1");
         }
 

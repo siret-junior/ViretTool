@@ -112,35 +112,47 @@
                             </Menu>
 
                             <Button x:Name="ClearAll" Grid.Column="1" Margin="0,4,0,0" Padding="4" Content="{x:Static properties:Resources.ClearAllText}" />
-                            <Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />
+                            <!-- Logs are now sent periodically (default: every 30 seconds). -->
+                            <!--<Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />-->
                             <Button x:Name="ShowInitialDisplayClicked" Grid.Column="3" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.ShowInitialDisplayText}" />
                         </Grid>
 
-                        <GroupBox Grid.Row="1" Margin="6" Header="{x:Static properties:Resources.LSCFiltersLabel}" Visibility="{Binding LscFiltersVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <!-- Lifelog -->
+                        <GroupBox Grid.Row="1" Margin="5 0 5 0" Visibility="{Binding LscFiltersVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <GroupBox.Header>
+                                <TextBlock FontWeight="Bold" Text="{x:Static properties:Resources.LSCFiltersLabel}" />
+                            </GroupBox.Header>
                             <ContentControl x:Name="LifelogFilterViewModel" />
                         </GroupBox>
+
+                        <!-- Disabled for LSC -->
                         <!--
                         <GroupBox Grid.Row="2" Margin="6" Header="{x:Static properties:Resources.TranscriptFilterLabel}" >
                             <ContentControl x:Name="TranscriptFilterViewModel" />
                         </GroupBox>-->
 
-                        <GroupBox Grid.Row="3" Margin="6" Visibility="Visible">
-                            <StackPanel>
-                                <RadioButton Content="Linear Search" IsChecked="{Binding Path=IsResultDisplayVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                                <RadioButton Content="SOM Search" IsChecked="{Binding Path=IsSomDisplayVisible,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        <!-- Displays -->
+                        <GroupBox Grid.Row="3" Margin="5 0 5 0">
+                            <GroupBox.Header>
+                                <TextBlock FontWeight="Bold" Text="{x:Static properties:Resources.DisplaySwitchLabel}" />
+                            </GroupBox.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Margin="0 6 6 0" Content="Linear Search" IsChecked="{Binding Path=IsResultDisplayVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <RadioButton Margin="0 6 6 0" Content="SOM Search" IsChecked="{Binding Path=IsSomDisplayVisible,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                              IsEnabled="{Binding Path=IsSomDisplayLoaded, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             </StackPanel>
                         </GroupBox>
 
-                        <GroupBox Grid.Row="4" Margin="6">
+                        <!-- Model queries -->
+                        <GroupBox Grid.Row="4" Margin="5 5 5 0">
                             <GroupBox.Header>
-                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary}" Style="{StaticResource PrimaryCheckBoxStyle}" />
+                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary}" Style="{StaticResource PrimaryCheckBoxStyle}" FontWeight="Bold"/>
                             </GroupBox.Header>
                             <ContentControl x:Name="Query1" />
                         </GroupBox>
-                        <GroupBox Grid.Row="5" Margin="6">
+                        <GroupBox Grid.Row="5" Margin="5 5 5 0">
                             <GroupBox.Header>
-                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary, Converter={StaticResource InvertedBooleanConverter}}" Style="{StaticResource PrimaryCheckBoxStyle}" />
+                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary, Converter={StaticResource InvertedBooleanConverter}}" Style="{StaticResource PrimaryCheckBoxStyle}" FontWeight="Bold" />
                             </GroupBox.Header>
                             <ContentControl x:Name="Query2" />
                         </GroupBox>
@@ -148,7 +160,7 @@
                     </Grid>
                 </ScrollViewer>
 
-                <GridSplitter  Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
 
                 <!-- result displays -->
                 <Grid Grid.Column="2">
@@ -174,9 +186,11 @@
                 </Grid>
             </Grid>
         </common:BusyIndicator>
+        
         <Popup IsOpen="{Binding IsDetailVisible}" Placement="Center">
             <ContentControl cal:View.Model="{Binding DetailViewModel}"/>
         </Popup>
+        
     </Grid>
 </Window>
 

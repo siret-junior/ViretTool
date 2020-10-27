@@ -59,12 +59,16 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
             //all days are generated and monday is first
             Array daysOfWeek = Enum.GetValues(typeof(DayOfWeek));
             DaysOfWeek = new BindableCollection<DayOfWeekViewModel>(
-                daysOfWeek.Cast<DayOfWeek>().OrderBy(d => ((int)d + daysOfWeek.Length - 1) % daysOfWeek.Length).Select(d => new DayOfWeekViewModel(d)));
+                daysOfWeek.Cast<DayOfWeek>()
+                .OrderBy(d => ((int)d + daysOfWeek.Length - 1) % daysOfWeek.Length)
+                .Select(d => new DayOfWeekViewModel(d)));
             Reset();
 
             DaysOfWeek.ForEach(
                 d => d.PropertyChanged += (sender, args) => NotifyFiltersChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender)));
             PropertyChanged += (sender, args) => NotifyFiltersChanged(args.PropertyName, sender.GetType().GetProperty(args.PropertyName)?.GetValue(sender));
+
+            
         }
 
         public BindableCollection<DayOfWeekViewModel> DaysOfWeek { get; }
