@@ -247,6 +247,7 @@ namespace ViretTool.PresentationLayer.Controls.Common.LifelogFilters
         {
             DaysOfWeek.ForEach(d => d.IsSelected = false);
             MonthsOfYear.ForEach(m => m.IsSelected = false);
+            Years.ForEach(m => m.IsSelected = false);
             StartTimeHour = 2;
             EndTimeHour = 23;
             HeartbeatLow = 00;
