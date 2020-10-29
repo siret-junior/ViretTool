@@ -8,6 +8,7 @@ namespace ViretTool.BusinessLayer.Descriptors.Models
         {
             FileName = fileName;
             FromVideo = fromVideo;
+            Day = date.Day;
             Month = date.Month;
             Year = date.Year;
             DayOfWeek = dayOfWeek;
@@ -20,6 +21,7 @@ namespace ViretTool.BusinessLayer.Descriptors.Models
 
         public string FileName { get; }
         public bool FromVideo { get; }
+        public int Day { get; }
         public int Month { get; }
         public int Year { get; }
         public DayOfWeek DayOfWeek { get; }

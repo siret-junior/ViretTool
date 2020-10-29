@@ -60,6 +60,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                 if (_servicesManager.CurrentDataset.DatasetParameters.IsLifelogData)
                 {
                     LifelogFrameMetadata metadata = _servicesManager.CurrentDataset.LifelogDescriptorProvider[frameId];
+                    //return $"(HR:{metadata.HeartRate}) {metadata.Year}/{metadata.Month:00}/{metadata.Day} {metadata.Time.Hours}:{metadata.Time.Minutes:D2}";
                     return $"{metadata.Time.Hours}:{metadata.Time.Minutes:D2}";
                 }
 
