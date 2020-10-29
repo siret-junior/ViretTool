@@ -14,8 +14,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     public class PageDisplayControlViewModel : DisplayControlViewModelBase
     {
         private int _currentPageNumber;
-        private int _maxFramesFromShot = 1;     // TODO: pull these parameters from properties
-        private int _maxFramesFromVideo = 3;
+        private int _maxFramesFromShot;
+        private int _maxFramesFromVideo;
         private bool _isLargeFramesChecked;
         private FrameViewModel _gpsFrame;
 
@@ -30,7 +30,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 {
                     // TODO: pull these parameters from properties
                     _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 50 : 3;
+                    _maxFramesFromShot = services.DatasetParameters.IsLifelogData ? 5 : 1;
                     NotifyOfPropertyChange(nameof(MaxFramesFromVideo));
+                    NotifyOfPropertyChange(nameof(MaxFramesFromShot));
                 };
         }
 

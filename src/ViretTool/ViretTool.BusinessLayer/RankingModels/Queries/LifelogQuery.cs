@@ -5,6 +5,7 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 {
     public class LifelogFilteringQuery : IEquatable<LifelogFilteringQuery>
     {
+        public const int HEARTRATE_MAX = 250;
         //empty
         public LifelogFilteringQuery()
         {
@@ -62,6 +63,8 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
             }
 
             return DaysOfWeek.SequenceEqual(other.DaysOfWeek) &&
+                   MonthsOfYear.SequenceEqual(other.MonthsOfYear) &&
+                   Years.SequenceEqual(other.Years) &&
                    TimeFrom.Equals(other.TimeFrom) &&
                    TimeTo.Equals(other.TimeTo) &&
                    HeartRateLow == other.HeartRateLow &&
@@ -73,5 +76,21 @@ namespace ViretTool.BusinessLayer.RankingModels.Queries
 
         public bool IsGpsDefinedByString => !string.IsNullOrWhiteSpace(GpsLocation);
         public bool IsGpsDefinedByCoordinates => GpsLatitude.HasValue && GpsLongitude.HasValue;
+
+        public bool IsEmpty()
+        {
+            // TODO: this is dataset dependent
+            return (DaysOfWeek == null || DaysOfWeek.Length == 0 || DaysOfWeek.Length == 7)
+                && (MonthsOfYear == null || MonthsOfYear.Length == 0 || MonthsOfYear.Length == 12)
+                && (Years == null || Years.Length == 0 || Years.Length == 4)
+                && TimeFrom.Equals(new TimeSpan(0, 0, 0))
+                && TimeTo.Equals(new TimeSpan(24, 0, 0))
+                && HeartRateLow == 0
+                && HeartRateHigh == HEARTRATE_MAX
+                && (GpsLocation == null || GpsLocation.Equals(""))
+                && GpsLatitude == null
+                && GpsLongitude == null
+                ;
+        }
     }
 }

@@ -8,5 +8,11 @@
         {
             VideoTranscriptQuery = videoTranscriptQuery;
         }
+
+        public bool IsEmpty()
+        {
+            return VideoTranscriptQuery == null
+                || VideoTranscriptQuery.Equals("");
+        }
     }
 }
