@@ -50,10 +50,10 @@ namespace ViretTool.BusinessLayer.Services
             if (inputFrameIds.Count < DECREASE_BASE_THRESHOLD)
             {
                 // set SOM to display dimensions
-                //outputWidth = columnCount;
-                //outputHeight = rowCount;
-                outputWidth = DECREASED_WIDTH;
-                outputHeight = DECREASED_HEIGHT;
+                outputWidth = columnCount;
+                outputHeight = rowCount;
+                //outputWidth = DECREASED_WIDTH;
+                //outputHeight = DECREASED_HEIGHT;
                 outputSize = outputWidth * outputHeight;
             }
 
