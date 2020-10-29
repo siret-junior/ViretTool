@@ -8,12 +8,12 @@ namespace ViretTool.BusinessLayer.ResultLogging
 {
     public class ResultLifelog : ResultBase
     {
-        public string Video { get; set; }
+        public string Item { get; set; }
 
 
-        public ResultLifelog(string video, float score, int rank) : base(score, rank)
+        public ResultLifelog(string item, float score, int rank) : base(score, rank)
         {
-            Video = video;
+            Item = item;
         }
     }
 }

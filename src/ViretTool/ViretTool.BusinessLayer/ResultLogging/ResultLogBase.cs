@@ -24,7 +24,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
     public abstract class ResultLogBase : IResultLog
     {
         //public string Teamname { get; set; } = "VIRET";
-        public int TeamId { get; set; }
+        //public int TeamId { get; set; }
         public int MemberId { get; set; }
         public long Timestamp { get; set; }
 

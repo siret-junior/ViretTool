@@ -52,7 +52,7 @@ namespace ViretTool.BusinessLayer.Services
             }
             catch (Exception e)
             {
-                _logger.Error(e.Message, e);
+                _logger.Info(e.Message, e);
                 return (128, 72);
             }
         }
