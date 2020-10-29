@@ -47,7 +47,7 @@ namespace ViretTool.BusinessLayer.ResultLogging
 
         public ResultLogBase()
         {
-            TeamId = int.Parse(ConfigurationManager.AppSettings["teamId"] ?? "7");
+            //TeamId = int.Parse(ConfigurationManager.AppSettings["teamId"] ?? "7");
             MemberId = int.Parse(ConfigurationManager.AppSettings["memberId"] ?? "-1");
         }
 
