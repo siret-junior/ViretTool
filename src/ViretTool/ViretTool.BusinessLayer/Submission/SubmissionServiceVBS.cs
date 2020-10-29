@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
+using Newtonsoft.Json;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
@@ -58,6 +60,19 @@ namespace ViretTool.BusinessLayer.Submission
                 .ToArray();
 
             return new ResultLogVBS(query, results);
+        }
+
+        protected override void LogSubmissionLocally(FrameToSubmit frameToSubmit)
+        {
+            string timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+            string logPath = Path.Combine(_submitLogDirectory, $"{timestamp}.json");
+            string json = JsonConvert.SerializeObject(new
+            {
+                Timestamp = timestamp,
+                Video = frameToSubmit.VideoId,
+                Frame = frameToSubmit.FrameNumber,
+            }, Formatting.Indented);
+            File.WriteAllText(logPath, json);
         }
     }
 }

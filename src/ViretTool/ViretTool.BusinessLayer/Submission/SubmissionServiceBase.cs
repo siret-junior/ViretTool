@@ -32,6 +32,7 @@ namespace ViretTool.BusinessLayer.Submission
         private readonly string _networkLogDirectory = Path.Combine("Logs", "NetworkLogs");
         private readonly string _networkLogDirectoryPOST = Path.Combine("Logs", "NetworkLogsPOST");
         private readonly string _resultLogDirectory = Path.Combine("Logs", "ResultLogs");
+        protected readonly string _submitLogDirectory = Path.Combine("Logs", "SubmitLogs");
         private readonly StreamWriter _streamWriterNetwork;
         private readonly StreamWriter _streamWriterNetworkPOST;
         private readonly System.Timers.Timer _timer = new System.Timers.Timer();
@@ -63,7 +64,8 @@ namespace ViretTool.BusinessLayer.Submission
             Directory.CreateDirectory(_networkLogDirectory);
             Directory.CreateDirectory(_networkLogDirectoryPOST);
             Directory.CreateDirectory(_resultLogDirectory);
-            
+            Directory.CreateDirectory(_submitLogDirectory);
+
             // setup network loggers
             string logFilename = $"NetworkLog_{Environment.MachineName}_{DateTime.UtcNow:yyyy-MM-dd_HH-mm-ss.ffff}.txt";
             _streamWriterNetwork = new StreamWriter(Path.Combine(_networkLogDirectory, logFilename))
@@ -95,7 +97,7 @@ namespace ViretTool.BusinessLayer.Submission
                 _interactionLogger.Log.Type = SubmissionType.Submit;
                 string url = GetUrlForSubmission(_interactionLogger.Log.TeamId, _interactionLogger.Log.MemberId, frameToSubmit);
 
-                
+
                 // Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the semaphore is released 
                 string responseString;
                 await _semaphore.WaitAsync();
@@ -122,7 +124,12 @@ namespace ViretTool.BusinessLayer.Submission
                 _logger.Error(message, ex);
                 return message;
             }
+            finally 
+            {
+                _ = Task.Run(() => LogSubmissionLocally(frameToSubmit));
+            }
         }
+
 
         public async Task<string> SubmitLogAsync()
         {
@@ -215,6 +222,7 @@ namespace ViretTool.BusinessLayer.Submission
             return $"{ResultLoggingUrl}?team={teamId}&member={memberId}&session={SessionId}";
         }
 
+        protected abstract void LogSubmissionLocally(FrameToSubmit frameToSubmit);
 
         private async Task<HttpResponseMessage> GetAsyncLogged(string url)
         {

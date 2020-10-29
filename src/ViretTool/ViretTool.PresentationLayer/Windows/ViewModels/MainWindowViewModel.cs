@@ -471,6 +471,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         /// <returns></returns>
         private async Task ShowInitialDisplay()
         {
+            // TODO: result logging currently visible frames
             if (_datasetServicesManager.IsDatasetOpened)
             {
                 IsBusy = true;
@@ -789,6 +790,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        // TODO: result logging currently visible frames
         private async void LoadSomDisplay(IList<int> sortedIds)
         {
             // TODO: refactor
@@ -805,7 +807,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 LogError(e, "Error during SOM computing");
             }
             IsSomDisplayLoaded = true;
-            
         }
         private void UpdateTestFramesPositionIfActive(List<int> sortedIds)
         {
