@@ -21,6 +21,10 @@ namespace ViretTool.BusinessLayer.Services
         /// <param name="deepFeaturesProvider">Descriptors</param>
         /// <returns></returns>
         int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider);
+        
+        // TODO: refactor
+        int[] GetInitialLayerUnconstrained(int rowCount, int columnCount, int outputSize, int outputWidth, int outputHeight, int[] inputFrameIdsArray, IDescriptorProvider<float[]> deepFeaturesProvider);
+
         /// <summary>
         /// Compute number of layers
         /// </summary>

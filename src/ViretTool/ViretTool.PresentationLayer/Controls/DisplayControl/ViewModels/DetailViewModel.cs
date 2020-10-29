@@ -82,7 +82,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
 
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}" + "|SampleLayer");
+            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}|SampleLayer");
         }
     }
 }

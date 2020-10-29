@@ -8,50 +8,89 @@ using ViretTool.BusinessLayer.SOMGridSorting;
 using ViretTool.BusinessLayer.Descriptors;
 using ViretTool.DataLayer.DataIO.ZoomDisplayIO;
 using ViretTool.Core;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ViretTool.BusinessLayer.Services
 {
     public class SomGeneratorProvider : ZoomDisplayProvider
     {
-        public SomGeneratorProvider(IDatasetParameters datasetParameters, string datasetDirectory) 
-            : base(datasetParameters, datasetDirectory)
+        IDatasetServicesManager _datasetServicesManager;
+        
+        public SomGeneratorProvider(IDatasetServicesManager datasetServicesManager, string datasetDirectory) 
+            : base(datasetServicesManager, datasetDirectory)
         {
             // TODO: set SOM initialization here whenever dataset is loaded (using datasetServicesManager.DatasetOpened event).
             // TODO: access IDescriptorProvider<float[]> through passed datasetServicesManager
+            _datasetServicesManager = datasetServicesManager;
         }
-        private const int _baseWidth = 20;
-        private const int _baseHeight = 20;
+        private const int BASE_WIDTH = 20;
+        private const int BASE_HEIGHT = 20;
 
-        private const int _minimalLayerWidth = 10;
-        private const int _minimalLayerHeight = 10;
+        private const int DECREASED_WIDTH = 12;
+        private const int DECREASED_HEIGHT = 12;
 
+        private const int SOM_EPOCHS = 20;
+        private const int DECREASE_BASE_THRESHOLD = 100;
+
+        private Random _random = new Random();
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public override int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             LayersIds.Clear();
             BorderSimilarities.Clear();
 
-            // compute base layer
-            int datasetSize = _baseHeight * _baseWidth;
-            int rlen = 20;
-            int[] inputFrameIdsArray = inputFrameIds.Take(datasetSize).ToArray();
+            // compute output size
+            int outputWidth = BASE_WIDTH;
+            int outputHeight = BASE_HEIGHT;
+            int outputSize = outputWidth * outputHeight;
 
-            if (datasetSize > inputFrameIdsArray.Length)
+            int[] inputFrameIdsArray;
+            if (inputFrameIds.Count < DECREASE_BASE_THRESHOLD)
             {
-                AddCopiesToInputFrameIds(ref inputFrameIdsArray, datasetSize);
+                // set SOM to display dimensions
+                //outputWidth = columnCount;
+                //outputHeight = rowCount;
+                outputWidth = DECREASED_WIDTH;
+                outputHeight = DECREASED_HEIGHT;
+                outputSize = outputWidth * outputHeight;
             }
 
+            // preprocess input frames
+            if (inputFrameIds.Count >= outputSize)
+            {
+                inputFrameIdsArray = inputFrameIds.Take(outputSize).ToArray();
+                //inputFrameIdsArray = inputFrameIds.ToArray();
+                //Array.Resize(ref inputFrameIdsArray, outputSize);
+            }
+            else
+            {
+                inputFrameIdsArray = ExtendBySampledFrames(inputFrameIds.ToList(), outputSize).ToArray();
+                //int[] tmp = ExtendBySampledFrames(inputFrameIds.ToList(), outputSize).ToArray();
+                //inputFrameIdsArray = new int[tmp.Length];
+                //Array.Copy(tmp, inputFrameIdsArray, tmp.Length);
+            }
+
+            return GetInitialLayerUnconstrained(rowCount, columnCount, outputSize, outputWidth, outputHeight, inputFrameIdsArray, deepFeaturesProvider);
+        }
+
+        // TODO: refactor, this is just a hotfix
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public override int[] GetInitialLayerUnconstrained(int displayHeight, int displayWidth, int outputSize, int outputWidth, int outputHeight, int[] inputFrameIdsArray, IDescriptorProvider<float[]> deepFeaturesProvider)
+        {
             (float[] framesData, int dimension) = ExtractDataFromSemanticVectors(inputFrameIdsArray, deepFeaturesProvider);
 
-            int[] somResult1D = SOMWrapper.GetSomRepresentants(framesData, datasetSize, dimension, _baseWidth, _baseHeight, rlen, inputFrameIdsArray);
-            
-            
-            int[][] somBaseLayer = somResult1D.To2DArray(_baseWidth, _baseHeight);
- 
+            int[] somResult1D = SOMWrapper.GetSomRepresentants(framesData, outputSize, dimension, outputWidth, outputHeight, SOM_EPOCHS, inputFrameIdsArray);
+
+
+            int[][] somBaseLayer = somResult1D.To2DArray(outputWidth, outputHeight);
+
             // Compute border similarities for base layer
             float[][] somBaseBorderSimilarities = ComputeBorderSimilarities(somBaseLayer, deepFeaturesProvider);
 
             //// compute the additional layer sizes based on the base layer dimensions
-            List<(int layerWidth, int layerHeight)> layerSizes = ComputeAdditionalLayerSizesBottomUp(_baseWidth, _baseHeight);
+            List<(int layerWidth, int layerHeight)> layerSizes = ComputeAdditionalLayerSizesBottomUp(outputWidth, outputHeight, displayWidth, displayHeight);
 
             // compute additional layers from bottom up to fulfill predicate
             // that each layer above is a subset of the layer below
@@ -71,7 +110,7 @@ namespace ViretTool.BusinessLayer.Services
                 borderStack.Push(ComputeBorderSimilarities(layer, deepFeaturesProvider));
             }
 
-            
+
             // store layers
             while (layerStack.Count > 0)
             {
@@ -82,7 +121,7 @@ namespace ViretTool.BusinessLayer.Services
             // TODO: consider using a single structure for both: frameIds and also its borders
 
             // zoom into base layer
-            return ZoomIntoLayer(0, LayersIds[0][0][0], rowCount, columnCount);
+            return ZoomIntoLayer(0, LayersIds[0][0][0], displayHeight, displayWidth);
         }
 
         /// <summary>
@@ -90,23 +129,28 @@ namespace ViretTool.BusinessLayer.Services
         /// </summary>
         /// <param name="originalInputFrameIds"></param>
         /// <param name="intendedSize"></param>
-        private void AddCopiesToInputFrameIds(ref int[] originalInputFrameIds, int intendedSize)
+        private List<int> ExtendBySampledFrames(List<int> inputList, int intendedSize)
         {
-
-            int startIndex = originalInputFrameIds.Length;
-            Array.Resize(ref originalInputFrameIds, intendedSize);
-
-
-            int originalArrayIterator = 0;
-            for(int i = startIndex; i < intendedSize; i++)
+            // empty input list fallback
+            if (inputList.Count == 0)
             {
-                if(originalArrayIterator >= startIndex)
-                {
-                    originalArrayIterator = 0;
-                }
-                originalInputFrameIds[i] = originalInputFrameIds[originalArrayIterator++];
+                return Enumerable.Repeat(0, intendedSize).ToList();
             }
 
+            // sample randomly
+            int nMissingFrames = intendedSize - inputList.Count;
+            List<int> randomSamples = new List<int>();
+            while (randomSamples.Count < nMissingFrames)
+            {
+                randomSamples.AddRange(inputList
+                    .OrderBy(x => _random.Next())
+                    .Take(nMissingFrames - randomSamples.Count)
+                );
+            }
+
+            // extend the input list
+            inputList.AddRange(randomSamples);
+            return inputList;
         }
 
         /// <summary>
@@ -115,24 +159,26 @@ namespace ViretTool.BusinessLayer.Services
         /// <param name="baseLayerWidth"></param>
         /// <param name="baseLayerHeight"></param>
         /// <returns></returns>
-        private List<(int layerWidth, int layerHeight)> ComputeAdditionalLayerSizesBottomUp(int baseLayerWidth, int baseLayerHeight)
+        private List<(int layerWidth, int layerHeight)> ComputeAdditionalLayerSizesBottomUp(
+            int baseLayerWidth, int baseLayerHeight, 
+            int outputWidth, int outputHeight)
         {
             List<(int layerWidth, int layerHeight)> result = new List<(int layerWidth, int layerHeight)>();
 
-
-            baseLayerWidth /= 2;
-            baseLayerHeight /= 2;
-
-            while (baseLayerHeight >= _minimalLayerHeight && baseLayerWidth >= _minimalLayerWidth)
+            // add intermediate layers
+            int layerWidth = baseLayerWidth / 2;
+            int layerHeight = baseLayerHeight / 2;
+            while (layerWidth > outputWidth && layerHeight > outputHeight)
             {
-                
-                result.Add((baseLayerWidth, baseLayerHeight));
+                result.Add((outputWidth, outputHeight));
 
-                baseLayerWidth /= 2;
-                baseLayerHeight /= 2;
+                layerWidth /= 2;
+                layerHeight /= 2;
             }
 
-            
+            // add the top layer matching display size
+            result.Add((outputWidth, outputHeight));
+
             return result;
         }
 
@@ -213,7 +259,7 @@ namespace ViretTool.BusinessLayer.Services
         /// <param name="somBaseLayer"></param>
         /// <param name="inputFrameIdsArray">Ranks from ranking pipeline</param>
         /// <returns></returns>
-        (int frameIDs, int ranks)[][] assignRankToEachElement(int[][] somBaseLayer, int[] inputFrameIdsArray)
+        private (int frameIDs, int ranks)[][] assignRankToEachElement(int[][] somBaseLayer, int[] inputFrameIdsArray)
         {
             (int frameIDs, int ranks)[][] result = new (int frameIDs, int ranks)[somBaseLayer.Length][];
 

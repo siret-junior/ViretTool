@@ -17,6 +17,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     public class SomResultDisplayControlViewModel : ZoomDisplayControlViewModel
     {
         //private FrameViewModel _gpsFrame;
+        private Random _random = new Random();
 
         public SomResultDisplayControlViewModel(
             ILogger logger,
@@ -31,13 +32,19 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
 
+        public override async Task LoadFramesForIds(IList<int> inputFrameIds)
+        {
+            await LoadFramesForIds(inputFrameIds, false);
+        }
+
         /// <summary>
         /// Computes SOM structure from given framIDs
         /// </summary>
         /// <param name="inputFrameIds">Frame IDs</param>
         /// <returns></returns>
-        public override async Task LoadFramesForIds(IList<int> inputFrameIds)
+        public async Task LoadFramesForIds(IList<int> inputFrameIds, bool useUnconstrained = false)
         {
+
             // update row and column count before usage
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
@@ -47,7 +54,23 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             try
             {
                 // compute ids
-                ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
+                if (useUnconstrained)
+                {
+                    // extend to square dimensions by random sample
+                    int baseSize = (int)Math.Ceiling(Math.Sqrt(inputFrameIds.Count));
+                    int extendedCount = baseSize * baseSize;
+                    List<int> extendedIds = inputFrameIds.ToList();
+                    extendedIds.AddRange(
+                        Enumerable.Range(0, extendedCount - inputFrameIds.Count)
+                        .Select(x => _random.Next(inputFrameIds.Count))
+                    );
+
+                    ids = _zoomDisplayProvider.GetInitialLayerUnconstrained(RowCount, ColumnCount, extendedCount, baseSize, baseSize, extendedIds.ToArray(), _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
+                }
+                else
+                {
+                    ids = _zoomDisplayProvider.GetInitialLayer(RowCount, ColumnCount, inputFrameIds, _datasetServicesManager.CurrentDataset.SemanticVectorProvider);
+                }
             }
             // if user screen is bigger than top layer then compute smaller layer and resize image height/width 
             catch (ArgumentOutOfRangeException)
@@ -78,6 +101,21 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
+        public async Task LoadRandomSample(int count = 400)
+        {
+            int frameCount = _datasetServicesManager.CurrentDataset.DatasetService.FrameCount;
+
+            if (count == frameCount)
+            {
+                await LoadFramesForIds(Enumerable.Range(0, count).ToArray(), true);
+                return;
+            }
+
+            int[] randomIds = Enumerable.Range(0, count)
+                .Select(x => _random.Next(frameCount))
+                .ToArray();
+            await LoadFramesForIds(randomIds, true);
+        }
 
         protected override void UpdateVisibleFrames()
         {

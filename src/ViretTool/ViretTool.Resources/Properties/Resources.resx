@@ -304,7 +304,7 @@
     <value>Small frames</value>
   </data>
   <data name="ShowInitialDisplayText" xml:space="preserve">
-    <value>Zoom display</value>
+    <value>Dataset sample</value>
   </data>
   <data name="FetchTaskList" xml:space="preserve">
     <value>Fetch task list</value>

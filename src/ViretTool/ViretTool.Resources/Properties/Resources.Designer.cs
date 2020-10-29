@@ -457,7 +457,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zoom display.
+        ///   Looks up a localized string similar to Dataset sample.
         /// </summary>
         public static string ShowInitialDisplayText {
             get {

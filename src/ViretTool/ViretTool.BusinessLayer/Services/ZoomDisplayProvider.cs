@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using ViretTool.BusinessLayer.Descriptors;
@@ -11,7 +12,7 @@ namespace ViretTool.BusinessLayer.Services
 {
     public class ZoomDisplayProvider : IZoomDisplayProvider
     {
-        private const string ZOOM_DISPLAY_FILENAME = "zoomDisplay.txt";
+        //private const string ZOOM_DISPLAY_FILENAME = "zoomDisplay.txt";
 
         /// <summary>
         /// Each element of List is a 2D array, each array represents SOM layer
@@ -31,22 +32,29 @@ namespace ViretTool.BusinessLayer.Services
         /// position of current centered frame
         /// </summary>
         private int _centerPositionInLayerRow;
-        public ZoomDisplayProvider(IDatasetParameters datasetParameters, string datasetDirectory)
+
+        public ZoomDisplayProvider(IDatasetServicesManager datasetServicesManager, string datasetDirectory)
         {
-            string filePath = Path.Combine(datasetDirectory, ZOOM_DISPLAY_FILENAME);
-            ZoomDisplayReader zoomDisplayReader = new ZoomDisplayReader(filePath);
+            //string filePath = Path.Combine(datasetDirectory, ZOOM_DISPLAY_FILENAME);
+            //ZoomDisplayReader zoomDisplayReader = new ZoomDisplayReader(filePath);
 
             // Read the SOM map from file
-            (LayersIds, BorderSimilarities) = zoomDisplayReader.ReadLayersIdsFromFile();
+            //(LayersIds, BorderSimilarities) = zoomDisplayReader.ReadLayersIdsFromFile();
+
+            // the data is now computed in realtime
+            LayersIds = new List<int[][]>();
+            BorderSimilarities = new List<float[][]>();
         }
 
-
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public (float BottomBorder, float RightBorder) GetBorderSimilarity(int layerIndex, int frameID)
         {
             float[][] layerSimilarities = BorderSimilarities[layerIndex];
             (int Col, int Row) = GetArrayItemPosition(frameID, LayersIds[layerIndex]);
-            return (layerSimilarities[Row][Col * 2], layerSimilarities[Row][Col * 2 + 1]);
+            return (layerSimilarities[Row][Col * 2], layerSimilarities[Row][Col * 2 + 1]);            
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public float[] GetBorderSimilarities(int layerIndex, int rowCount, int columnCount)
         {
 
@@ -69,15 +77,26 @@ namespace ViretTool.BusinessLayer.Services
 
             return borders.ToArray();
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int GetMaxDepth()
         {
             return LayersIds.Count - 1;
         }
+        
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public virtual int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
             return GetInitialLayer(rowCount, columnCount);
         }
 
+        public virtual int[] GetInitialLayerUnconstrained(int rowCount, int columnCount, int outputSize, int outputWidth, int outputHeight, int[] inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
+        {
+            //return GetInitialLayer(rowCount, columnCount, inputFrameIds, deepFeaturesProvider);
+            throw new NotImplementedException();
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] GetInitialLayer(int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null
@@ -89,6 +108,7 @@ namespace ViretTool.BusinessLayer.Services
             return null;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public (int[] Array, int Width, int Height) GetSmallLayer(int layerIndex, int rowCount, int columnCount)
         {
             int layerHeight = LayersIds[layerIndex].Length;
@@ -100,6 +120,8 @@ namespace ViretTool.BusinessLayer.Services
             int[] Array = LayersIds[layerIndex].Take(layerHeight).SelectMany(x => x.Take(Width).ToArray()).ToArray();
             return (Array, Width, Height);
         }
+        
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] ZoomIntoLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null
@@ -109,6 +131,8 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] MoveLeft(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             if (layerIndex < LayersIds.Count())
@@ -121,6 +145,8 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+        
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] MoveRight(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             if (layerIndex < LayersIds.Count())
@@ -133,6 +159,8 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] MoveUp(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             if (layerIndex < LayersIds.Count())
@@ -145,6 +173,8 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] MoveDown(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             if (layerIndex < LayersIds.Count())
@@ -180,6 +210,8 @@ namespace ViretTool.BusinessLayer.Services
             }
             return null;
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] ZoomIntoLayer(int[][] layer, int frameId, int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null
@@ -214,6 +246,7 @@ namespace ViretTool.BusinessLayer.Services
             else return null;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] Resize(int layerIndex, int frameId, int rowCount, int columnCount)
         {
             // if any IO exception occured while reading file, then LayersIds could be null
@@ -251,6 +284,8 @@ namespace ViretTool.BusinessLayer.Services
             }
             else return null;
         }
+        
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public int[] ZoomOutOfLayer(int layerIndex, int frameId, int rowCount, int columnCount)
         {
 

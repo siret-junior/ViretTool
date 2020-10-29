@@ -124,6 +124,8 @@ namespace ViretTool.BusinessLayer.ResultLogging
             // max frames
             if (query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled
                 || query.FormerFilteringQuery.CountFilteringQuery.FilterState == CountFilteringQuery.State.Enabled
+                // if lifelog is present, then it is always filtering (using default filtering values)
+                //|| query. 
                 )
             {
                 // TODO: lifelog
