@@ -9,7 +9,7 @@
 			 xmlns:common="clr-namespace:ViretTool.PresentationLayer.Controls.Common"
 			 xmlns:viewModels="clr-namespace:ViretTool.PresentationLayer.Windows.ViewModels"
 			 mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="1080" d:DesignWidth="1920"
              d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
 			 Title="{x:Static properties:Resources.AppTitle}"
              WindowStyle="None" ResizeMode="NoResize" AllowDrop="True"
@@ -194,7 +194,7 @@
             </Grid>
         </common:BusyIndicator>
         
-        <Popup IsOpen="{Binding IsDetailVisible}" Placement="Center">
+        <Popup IsOpen="{Binding IsDetailViewVisible}" Placement="Center">
             <ContentControl cal:View.Model="{Binding DetailViewModel}"/>
         </Popup>
         

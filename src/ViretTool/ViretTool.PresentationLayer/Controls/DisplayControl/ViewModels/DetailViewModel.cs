@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Castle.Core.Logging;
 using ViretTool.BusinessLayer.ActionLogging;
@@ -17,8 +18,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             IDatasetServicesManager datasetServicesManager,
             IInteractionLogger interactionLogger) : base(logger, datasetServicesManager, interactionLogger)
         {
-            ColumnCount = 10;
-            RowCount = 12;
+            ColumnCount = 9;
+            RowCount = 8;
         }
 
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();

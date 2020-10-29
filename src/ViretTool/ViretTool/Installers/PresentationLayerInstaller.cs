@@ -18,7 +18,7 @@ namespace ViretTool.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IGridSorter>().ImplementedBy<GridSorterFast>());
+            //container.Register(Component.For<IGridSorter>().ImplementedBy<GridSorterFast>());
 
             container.Register(
                 Component.For<MainWindowView>(), //default lifestyle is singleton
