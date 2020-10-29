@@ -27,8 +27,8 @@ namespace ViretTool.BusinessLayer.Services
         private const int BASE_WIDTH = 20;
         private const int BASE_HEIGHT = 20;
 
-        private const int DECREASED_WIDTH = 12;
-        private const int DECREASED_HEIGHT = 12;
+        private const int DISPLAY_WIDTH_TOLERANCE = 2;
+        private const int DISPLAY_HEIGHT_TOLERANCE = 2;
 
         private const int SOM_EPOCHS = 20;
         private const int DECREASE_BASE_THRESHOLD = 100;
@@ -52,8 +52,6 @@ namespace ViretTool.BusinessLayer.Services
                 // set SOM to display dimensions
                 outputWidth = columnCount;
                 outputHeight = rowCount;
-                //outputWidth = DECREASED_WIDTH;
-                //outputHeight = DECREASED_HEIGHT;
                 outputSize = outputWidth * outputHeight;
             }
 
@@ -168,7 +166,8 @@ namespace ViretTool.BusinessLayer.Services
             // add intermediate layers
             int layerWidth = baseLayerWidth / 2;
             int layerHeight = baseLayerHeight / 2;
-            while (layerWidth > outputWidth && layerHeight > outputHeight)
+            while (layerWidth > outputWidth + DISPLAY_WIDTH_TOLERANCE 
+                && layerHeight > outputHeight + DISPLAY_HEIGHT_TOLERANCE)
             {
                 result.Add((outputWidth, outputHeight));
 
