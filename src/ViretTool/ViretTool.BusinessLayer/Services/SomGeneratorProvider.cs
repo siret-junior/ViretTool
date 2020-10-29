@@ -87,8 +87,12 @@ namespace ViretTool.BusinessLayer.Services
             // Compute border similarities for base layer
             float[][] somBaseBorderSimilarities = ComputeBorderSimilarities(somBaseLayer, deepFeaturesProvider);
 
-            //// compute the additional layer sizes based on the base layer dimensions
-            List<(int layerWidth, int layerHeight)> layerSizes = ComputeAdditionalLayerSizesBottomUp(outputWidth, outputHeight, displayWidth, displayHeight);
+            // compute the additional layer sizes based on the base layer dimensions
+            List<(int layerWidth, int layerHeight)> additionalLayerSizes = new List<(int layerWidth, int layerHeight)>();
+            if (outputWidth > displayWidth || outputHeight > displayHeight)
+            {
+                additionalLayerSizes = ComputeAdditionalLayerSizesBottomUp(outputWidth, outputHeight, displayWidth, displayHeight);
+            }
 
             // compute additional layers from bottom up to fulfill predicate
             // that each layer above is a subset of the layer below
@@ -101,7 +105,7 @@ namespace ViretTool.BusinessLayer.Services
 
             (int frameIDs, int ranks)[][] rankedSomBaseLayer = assignRankToEachElement(somBaseLayer, inputFrameIdsArray);
 
-            foreach ((int layerWidth, int layerHeight) in layerSizes)
+            foreach ((int layerWidth, int layerHeight) in additionalLayerSizes)
             {
                 int[][] layer = SubsampleLayer(rankedSomBaseLayer, layerWidth, layerHeight);
                 layerStack.Push(layer);
