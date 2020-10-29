@@ -38,9 +38,6 @@ namespace ViretTool.BusinessLayer.Services
         [MethodImpl(MethodImplOptions.Synchronized)]
         public override int[] GetInitialLayer(int rowCount, int columnCount, IList<int> inputFrameIds, IDescriptorProvider<float[]> deepFeaturesProvider)
         {
-            LayersIds.Clear();
-            BorderSimilarities.Clear();
-
             // compute output size
             int outputWidth = BASE_WIDTH;
             int outputHeight = BASE_HEIGHT;
@@ -112,8 +109,9 @@ namespace ViretTool.BusinessLayer.Services
                 borderStack.Push(ComputeBorderSimilarities(layer, deepFeaturesProvider));
             }
 
-
             // store layers
+            LayersIds.Clear();
+            BorderSimilarities.Clear();
             while (layerStack.Count > 0)
             {
                 LayersIds.Add(layerStack.Pop());
