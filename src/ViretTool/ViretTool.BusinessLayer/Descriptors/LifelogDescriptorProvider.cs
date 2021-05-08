@@ -20,7 +20,9 @@ namespace ViretTool.BusinessLayer.Descriptors
                               ? new LifelogDataReader().Read(Path.Combine(datasetDirectory, datasetParameters.LifelogDataFileName)).Select(Convert).ToArray()
                               : new LifelogFrameMetadata[0];
 
-            _filenameMapping = LoadFilenameMapping(Directory.GetFiles(datasetDirectory).Where(fileName => fileName.EndsWith("filenames.txt")).First());
+            _filenameMapping = datasetParameters.IsLifelogData
+                    ? LoadFilenameMapping(Directory.GetFiles(datasetDirectory).Where(fileName => fileName.EndsWith("filenames.txt")).First())
+                    : null;
 
             //File.WriteAllLines("debug2.txt", _filenameMapping.Keys.Select(key => $"V:{key.videoId}, F:{key.frameNumber}, N:{_filenameMapping[key]}"));
         }
