@@ -63,6 +63,8 @@
 
                 <!-- left panel (models) -->
                 <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    
+                    
                     <Grid FocusVisualStyle="{x:Null}" Focusable="False">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -73,6 +75,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
+                        <!-- Controls -->
                         <Grid Grid.Row="0" FocusVisualStyle="{x:Null}" Focusable="False">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -112,33 +115,23 @@
                                           cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"
                                           FocusVisualStyle="{x:Null}" Focusable="False"></MenuItem>
                             </Menu>
-
+                            
+                            <!-- Clear button -->
                             <Button x:Name="ClearAll" Grid.Column="1" 
                                     Margin="0,0,0,0" Padding="5 3 5 3"
                                     Content="{x:Static properties:Resources.ClearAllText}"
                                     Background="IndianRed" />
-                            <!-- Logs are now sent periodically (default: every 30 seconds). -->
-                            <!--<Button x:Name="SendLogs" Grid.Column="2" Margin="2,4,0,0" Padding="4" Content="{x:Static properties:Resources.SendLogsText}" IsEnabled="{Binding LscFiltersVisible, Converter={StaticResource InvertedBooleanConverter}}" />-->
-                            <Button x:Name="ShowInitialDisplayClicked" Grid.Column="2" 
-                                    Margin="1,0,0,0" Padding="5 3 5 3" 
-                                    Content="{x:Static properties:Resources.ShowInitialDisplayText}" />
                         </Grid>
 
-                        <!-- Lifelog -->
-                        <GroupBox Grid.Row="1" Margin="5 0 5 0" Visibility="{Binding LscFiltersVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <GroupBox.Header>
-                                <TextBlock FontWeight="Bold" Text="{x:Static properties:Resources.LSCFiltersLabel}" />
-                            </GroupBox.Header>
-                            <ContentControl x:Name="LifelogFilterViewModel" />
-                        </GroupBox>
 
-                        <!-- Disabled for LSC -->
+                        <!-- TODO: consider keeping -->
                         <!--
                         <GroupBox Grid.Row="2" Margin="6" Header="{x:Static properties:Resources.TranscriptFilterLabel}" >
                             <ContentControl x:Name="TranscriptFilterViewModel" />
                         </GroupBox>-->
 
-                        <!-- Displays -->
+                        <!-- TODO: consider removing -->
+                        <!-- Display switch -->
                         <GroupBox Grid.Row="3" Margin="5 0 5 0">
                             <GroupBox.Header>
                                 <TextBlock FontWeight="Bold" Text="{x:Static properties:Resources.DisplaySwitchLabel}" />
@@ -169,7 +162,7 @@
 
                 <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
 
-                <!-- result displays -->
+                <!-- Displays -->
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -182,18 +175,22 @@
                             <ColumnDefinition Width="162" />
                         </Grid.ColumnDefinitions>
 
+                        <!-- Result displays -->
                         <ContentControl Grid.Column="0" x:Name="QueryResults" Visibility="{Binding ResultDisplayVisibility}" />
-                        <ContentControl Grid.Column="0" x:Name="ZoomDisplay" Visibility="{Binding ZoomDisplayVisibility}" />
                         <ContentControl Grid.Column="0" x:Name="SomDisplay" Visibility="{Binding SomDisplayVisibility}" />
                         <TextBlock Grid.Column="0" x:Name="TestFramesPosition" Margin="330,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
 
                         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
+                        
+                        <!-- Temporal context display -->
                         <ContentControl Grid.Column="2" x:Name="DetailView" />
+                        
                     </Grid>
                 </Grid>
             </Grid>
         </common:BusyIndicator>
-        
+
+        <!-- Video detail window -->
         <Popup IsOpen="{Binding IsDetailViewVisible}" Placement="Center">
             <ContentControl cal:View.Model="{Binding DetailViewModel}"/>
         </Popup>

@@ -14,7 +14,6 @@ using Microsoft.Win32;
 using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.ExternalDescriptors;
-using ViretTool.BusinessLayer.OutputGridSorting;
 using ViretTool.BusinessLayer.RankingModels.Temporal;
 using ViretTool.BusinessLayer.RankingModels.Temporal.Queries;
 using ViretTool.BusinessLayer.ResultLogging;
@@ -57,7 +56,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         
         // display control
         private Visibility _resultDisplayVisibility;
-        //private Visibility _zoomDisplayVisibility;
         private Visibility _somDisplayVisibility;
 
         // jobs
@@ -68,9 +66,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public MainWindowViewModel(
             ILogger logger,
             IWindowManager windowManager,
-            //ZoomDisplayControlViewModel zoomDisplay,
             SomResultDisplayControlViewModel somDisplay,
-            PageDisplayControlViewModel queryResults,
+            ResultDisplayViewModel queryResults,
             ScrollDisplayControlViewModel detailView,
             DetailViewModel detailViewModel,
             SubmitControlViewModel submitControlViewModel,
@@ -103,11 +100,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             QueryResults = queryResults;
             SomDisplay = somDisplay;
-            //ZoomDisplay = zoomDisplay;
             ResultDisplayVisibility = Visibility.Hidden;
             SomDisplayVisibility = Visibility.Visible;
-            //ZoomDisplayVisibility = Visibility.Hidden; // TODO: remove? SOM display should cover this
-
+            
             DetailView = detailView;
             DetailViewModel = detailViewModel;
             Query1 = query1;
@@ -118,9 +113,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Observable.Merge(Query1.QuerySettingsChanged, 
                              Query2.QuerySettingsChanged, 
                              LifelogFilterViewModel.FiltersChanged, 
-                             QueryResults.QuerySettingsChanged, 
-                             SomDisplay.QuerySettingsChanged,
-                             //ZoomDisplay.QuerySettingsChanged,
+                             QueryResults.QueryChanged, 
+                             SomDisplay.QueryChanged,
                              TranscriptFilterViewModel.QuerySettingsChanged)
                       .Where(_ => !IsBusy)
                       .Throttle(TimeSpan.FromMilliseconds(50))
@@ -130,7 +124,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             /**** Assign events and event handlers **************************/
 
             // FrameViewModel events (buttons, etc.)
-            DisplayControlViewModelBase[] displays = { queryResults, somDisplay, /*zoomDisplay,*/ detailView, detailViewModel };
+            DisplayControlViewModelBase[] displays = { queryResults, somDisplay, detailView, detailViewModel };
             foreach (DisplayControlViewModelBase display in displays)
             {
                 display.FramesForQueryChanged += (sender, framesToQuery) =>
@@ -142,8 +136,6 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 display.FrameForZoomIntoChanged += async (sender, selectedFrame) => await OnFrameForZoomIntoChanged(selectedFrame);
                 display.FrameForZoomOutChanged += async (sender, selectedFrame) => await OnFrameForZoomOutChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
-                // TODO: fix
-                display.FrameForGpsChanged += (sender, selectedFrame) => queryResults.GpsFrame = selectedFrame.Clone();
                 // Right scroll panel (shot view)
                 display.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             }
@@ -162,7 +154,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         public TranscriptFilterViewModel TranscriptFilterViewModel { get; }
 
         // displays
-        public PageDisplayControlViewModel QueryResults { get; }
+        public ResultDisplayViewModel QueryResults { get; }
         public SomResultDisplayControlViewModel SomDisplay { get; }
         //public ZoomDisplayControlViewModel ZoomDisplay { get; }
         
@@ -441,8 +433,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             // lifelog
             LifelogFilterViewModel.Reset();
-            QueryResults.DeleteGpsFrame();
-
+            
             // logging
             _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.ResetAll);
 
@@ -742,7 +733,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                             QueryResults.MaxFramesFromVideo,
                             QueryResults.MaxFramesFromShot,
                             _datasetServicesManager.CurrentDataset.DatasetParameters,
-                            QueryResults.GpsFrame,
+                            null,
                             LifelogFilterViewModel,
                             TranscriptFilterViewModel);
 

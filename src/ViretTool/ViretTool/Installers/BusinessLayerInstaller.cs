@@ -37,12 +37,12 @@ namespace ViretTool.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //factory
+            // factory
             container.Register(
                 Component.For<IDatabaseServicesFactory>().AsFactory(),
                 Component.For<DatasetServices>().LifestyleTransient());
 
-            //services bound to dataset
+            // services bound to dataset
             container.Register(
                 Component.For<IDatasetServicesManager>().ImplementedBy<DatasetServicesManager>().LifestyleSingleton(),
 

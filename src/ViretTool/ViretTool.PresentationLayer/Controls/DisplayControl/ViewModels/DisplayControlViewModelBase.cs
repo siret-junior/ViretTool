@@ -36,14 +36,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         protected readonly ILogger _logger;
         
         protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
-        protected int _defaultImageHeight;
-        protected int _defaultImageWidth;
-
+        
         private bool _isBusy;
         private int _rowCount;
         private int _columnCount;
-        private int _imageHeight = 1;
-        private int _imageWidth = 1;
+        private int _imageHeight = 160;
+        private int _imageWidth = 90;
         private bool _isInitialDisplayShown;
 
 
@@ -58,8 +56,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             _datasetServicesManager.DatasetOpened += 
                 (_, services) =>
                 {
-                    ImageHeight = _defaultImageHeight = services.DatasetParameters.DefaultFrameHeight;
-                    ImageWidth = _defaultImageWidth = services.DatasetParameters.DefaultFrameWidth;
+                    ImageHeight = services.DatasetParameters.DefaultFrameHeight;
+                    ImageWidth = services.DatasetParameters.DefaultFrameWidth;
                 };
         }
 
@@ -162,10 +160,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public double LargeFramesMultiplier => 1.5;
-
-        public virtual bool IsLargeFramesChecked { get; set; } = false;
-
         #endregion --[ Properties ]--
 
 
@@ -192,7 +186,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public event EventHandler<FrameViewModel> FrameForVideoChanged;             // video inspection
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;       // TODO: rename. (video scrolling playback / scrolling sidebar?)
         public event EventHandler<FrameViewModel> FrameForSortChanged;              // TODO: remove? (unused - used to be noodle map)
-        public event EventHandler<FrameViewModel> FrameForGpsChanged;               // lifelog specific GPS coordinates
         public event EventHandler<FrameViewModel> FrameForZoomIntoChanged;          // ZoomDisplay zoom in
         public event EventHandler<FrameViewModel> FrameForZoomOutChanged;           // ZoomDisplay zoom out
         public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;    // submit collection
@@ -202,7 +195,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         #region --[ Events ]--
 
-        public ISubject<Unit> QuerySettingsChanged { get; } = new Subject<Unit>();
+        public ISubject<Unit> QueryChanged { get; } = new Subject<Unit>();
 
         public void OnAddToQueryClicked(FrameViewModel frameViewModel, AddToQueryEventArgs args)
         {
@@ -219,11 +212,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public void OnAddToGpsClicked(FrameViewModel frameViewModel)
-        {
-            BeforeEventAction();
-            FrameForGpsChanged?.Invoke(this, frameViewModel);
-        }
 
         public void OnFrameSelected(FrameViewModel frameViewModel)
         {
@@ -355,7 +343,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected void NotifyQuerySettingsChanged()
         {
-            QuerySettingsChanged.OnNext(Unit.Default);
+            QueryChanged.OnNext(Unit.Default);
         }
 
         protected virtual void BeforeEventAction()

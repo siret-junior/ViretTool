@@ -134,13 +134,13 @@
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModelBase.cs" />
     <Compile Include="Controls\Common\FrameViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\FramesToQuery.cs" />
-    <Compile Include="Controls\DisplayControl\ViewModels\PageDisplayControlViewModel.cs" />
+    <Compile Include="Controls\DisplayControl\ViewModels\ResultDisplayViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollableDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\SomResultDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ZoomDisplayControlViewModel.cs" />
-    <Compile Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml.cs">
-      <DependentUpon>PageDisplayControlView.xaml</DependentUpon>
+    <Compile Include="Controls\DisplayControl\Views\ResultDisplayView.xaml.cs">
+      <DependentUpon>ResultDisplayView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml.cs">
       <DependentUpon>ScrollDisplayControlView.xaml</DependentUpon>
@@ -253,7 +253,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\DisplayControl\Views\PageDisplayControlView.xaml">
+    <Page Include="Controls\DisplayControl\Views\ResultDisplayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

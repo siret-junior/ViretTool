@@ -28,68 +28,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Filter -->
-        <common:FilterControl Grid.Row="0" FilterName="{x:Static properties:Resources.BwFilterText}" OutputValue="{Binding BwFilterValue}" State="{Binding BwFilterState}"
-                              Visibility="{Binding IsBwFilterVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <common:FilterControl Grid.Row="1" FilterName="{x:Static properties:Resources.PercentageBlackFilterText}"  OutputValue="{Binding PercentageBlackFilterValue}" State="{Binding PercentageBlackFilterState}"
-                              Visibility="{Binding IsBwFilterVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
+        
         <!-- Keyword -->
-        <common:ModelControl Grid.Row="2" x:Name="KeywordModel" ModelName="{x:Static properties:Resources.KeywordModelName}" OutputValue="{Binding KeywordValue}" UseForSorting="{Binding KeywordUseForSorting}"
-                             cal:Message.Attach="[Event ModelCleared] = [Action OnKeywordsCleared()];[Event SortingExplicitlyChanged] = [Action OnSortingExplicitlyChanged(KeywordModel.Name, KeywordModel.UseForSorting)]"
-                             ToolTipService.InitialShowDelay="0"
-                             ToolTipService.VerticalOffset="20">
-            <common:ModelControl.ToolTip>
-                <ToolTip Visibility="Visible">
-                    <StackPanel Orientation="Vertical">
-                        <Image Source="{Binding KeywordToolTipBitmap}" />
-                    </StackPanel>
-                </ToolTip>
-            </common:ModelControl.ToolTip>
-        </common:ModelControl>
-        <common:KeywordSearchControl x:Name="keywordSearchControl" Grid.Row="3" QueryResult="{Binding KeywordQueryResult}" DatasetServicesManager="{Binding DatasetServicesManager, Mode=OneTime}" />
+        <common:ModelControl 
+            Grid.Row="2" 
+            x:Name="KeywordModel" 
+            ModelName="{x:Static properties:Resources.KeywordModelName}" 
+            OutputValue="{Binding KeywordValue}" 
+            UseForSorting="{Binding KeywordUseForSorting}"
+            cal:Message.Attach="[Event ModelCleared] = [Action OnKeywordsCleared()];[Event SortingExplicitlyChanged] = [Action OnSortingExplicitlyChanged(KeywordModel.Name, KeywordModel.UseForSorting)]" />
 
-        <!-- Colors -->
-        <common:ModelControl Grid.Row="4" x:Name="SketchesModel" ModelName="{x:Static properties:Resources.SketchModelName}" OutputValue="{Binding ColorValue}" UseForSorting="{Binding ColorUseForSorting}"
-                             cal:Message.Attach="[Event ModelCleared] = [Action OnSketchesCleared()];[Event SortingExplicitlyChanged] = [Action OnSortingExplicitlyChanged(SketchesModel.Name, SketchesModel.UseForSorting)]"
-                             ToolTipService.InitialShowDelay="0"
-                             ToolTipService.VerticalOffset="20">
-            <common:ModelControl.ToolTip>
-                <ToolTip Visibility="Visible">
-                    <StackPanel Orientation="Vertical">
-                        <Image Source="{Binding ColorToolTipBitmap}" />
-                    </StackPanel>
-                </ToolTip>
-            </common:ModelControl.ToolTip>
-        </common:ModelControl>
-        <common:SketchCanvas Grid.Row="5" QueryResult="{Binding SketchQueryResult}" CanvasWidth="{Binding CanvasWidth}" CanvasHeight="{Binding CanvasHeight}" />
+        <common:KeywordSearchControl 
+            x:Name="keywordSearchControl" 
+            Grid.Row="3" 
+            QueryResult="{Binding KeywordQueryResult}" 
+            DatasetServicesManager="{Binding DatasetServicesManager, Mode=OneTime}" />
 
-        <!-- Semantic examples -->
-        <common:ModelControl Grid.Row="6" x:Name="SemanticModel" ModelName="{x:Static properties:Resources.SemanticModelName}" OutputValue="{Binding SemanticValue}" UseForSorting="{Binding SemanticUseForSorting}"
-                             cal:Message.Attach="[Event ModelCleared] = [Action OnQueryObjectsCleared()];[Event SortingExplicitlyChanged] = [Action OnSortingExplicitlyChanged(SemanticModel.Name, SemanticModel.UseForSorting)]"
-                             ToolTipService.InitialShowDelay="0"
-                             ToolTipService.VerticalOffset="20">
-            <common:ModelControl.ToolTip>
-                <ToolTip Visibility="Visible">
-                    <StackPanel Orientation="Vertical">
-                        <Image Source="{Binding SemanticToolTipBitmap}" />
-                    </StackPanel>
-                </ToolTip>
-            </common:ModelControl.ToolTip>
-        </common:ModelControl>
-        <ItemsControl x:Name="ImagesDisplay" Grid.Row="7" ItemsSource="{Binding QueryObjects}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <common:FrameControl Width="{Binding DataContext.ImageWidth, ElementName=ImagesDisplay, Mode=OneWay}"
-                                         Height="{Binding DataContext.ImageHeight, ElementName=ImagesDisplay, Mode=OneWay}"
-                                         cal:Message.Attach="[Event RemoveFromQueryClicked] = [Action RemoveFromQueryClicked($dataContext)];"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
     </Grid>
 </UserControl>

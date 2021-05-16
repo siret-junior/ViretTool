@@ -11,15 +11,13 @@ using Action = System.Action;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
-    public class PageDisplayControlViewModel : DisplayControlViewModelBase
+    public class ResultDisplayViewModel : DisplayControlViewModelBase
     {
         private int _currentPageNumber;
         private int _maxFramesFromShot;
         private int _maxFramesFromVideo;
-        private bool _isLargeFramesChecked;
-        private FrameViewModel _gpsFrame;
 
-        public PageDisplayControlViewModel(
+        public ResultDisplayViewModel(
             ILogger logger,
             IDatasetServicesManager datasetServicesManager,
             IInteractionLogger iterationLogger)
@@ -36,23 +34,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 };
         }
 
-        public FrameViewModel GpsFrame
-        {
-            get => _gpsFrame;
-            set {
-                if (_gpsFrame?.Equals(value) == true)
-                {
-                    return;
-                }
-
-                _gpsFrame = value;
-                
-                // TODO: enable lifelog filter
-                //_interactionLogger.LogInteraction(LogCategory.Filter, LogType.Lifelog, _gpsFrame == null ? "" : $"{_gpsFrame.VideoId}|{_gpsFrame.FrameNumber}");
-                NotifyQuerySettingsChanged();
-                NotifyOfPropertyChange();
-            }
-        }
 
         public int MaxFramesFromShot
         {
@@ -106,22 +87,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public int LastPageNumber => _loadedFrames.Any() ? (int)Math.Ceiling(_loadedFrames.Count / ((double)RowCount * ColumnCount)) - 1 : 0;
 
-        public override bool IsLargeFramesChecked
-        {
-            get => _isLargeFramesChecked;
-            set
-            {
-                if (_isLargeFramesChecked == value)
-                {
-                    return;
-                }
-
-                _isLargeFramesChecked = value;
-                OnLargeFramesChanged();
-                NotifyOfPropertyChange();
-            }
-        }
-
         
         public void FirstPageButton()
         {
@@ -167,10 +132,6 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             UpdateVisibleFrames();
         }
 
-        public void DeleteGpsFrame()
-        {
-            GpsFrame = null;
-        }
 
         public override async Task LoadInitialDisplay()
         {
@@ -197,81 +158,49 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         protected override void UpdateVisibleFrames()
-        {            
-            // TODO: move to a separate method
+        {
+            // don't update if there is nothing to update
+            if (_loadedFrames.Count == 0) return;
+
+            // update rows and columns based on display size
             RowCount = DisplayHeight / ImageHeight;
             ColumnCount = DisplayWidth / ImageWidth;
-            NotifyOfPropertyChange(nameof(LastPageNumber));
+            
             List<FrameViewModel> viewModelsToAdd = _loadedFrames;
-            if (!IsLargeFramesChecked)
-            {
-                int itemsCount = RowCount * ColumnCount;
-                //order by top fram in a video ID a then by frame numbers in a video
-                viewModelsToAdd = _loadedFrames.Skip(CurrentPageNumber * itemsCount)
-                                               .Take(itemsCount)
-                                               .GroupBy(f => f.VideoId)
-                                               .SelectMany(
-                                                   g =>
-                                                   {
-                                                       FrameViewModel[] orderedFrames = g.OrderBy(f => f.FrameNumber).ToArray();
-                                                       orderedFrames[orderedFrames.Length - 1].IsLastInVideo = true;
-                                                       return orderedFrames;
-                                                   })
-                                               .ToList();
-            }
-            else
-            {
-                ScrollToRow(0);
-                VisibleFrames.Clear();
-                viewModelsToAdd.ForEach(f => f.IsLastInVideo = false);
 
-                // show temporal context
-                List<FrameViewModel> viewModelsWithContext = new List<FrameViewModel>();
-                for (int iFrame = 0; iFrame < viewModelsToAdd.Count && iFrame < 200; iFrame++)
+            ScrollToRow?.Invoke(0);
+            VisibleFrames.Clear();
+            viewModelsToAdd.ForEach(f => f.IsLastInVideo = false);
+
+            // show temporal context
+            List<FrameViewModel> viewModelsWithContext = new List<FrameViewModel>();
+            int middleFrameOffset = ColumnCount / 2;
+            for (int iFrame = 0; iFrame < viewModelsToAdd.Count && iFrame < 200; iFrame++)
+            {
+                FrameViewModel primaryViewModel = viewModelsToAdd[iFrame];
+                int[] videoFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumbersForVideo(primaryViewModel.VideoId);
+                int frameIndex = Array.IndexOf(videoFrameNumbers, primaryViewModel.FrameNumber);
+                int startIndex = (frameIndex - middleFrameOffset >= 0) ? frameIndex - middleFrameOffset : 0;
+
+
+                List<FrameViewModel> frameContext = videoFrameNumbers
+                    .Skip(startIndex)
+                    .Take(ColumnCount)
+                    .Select(frameNumber => ConvertThumbnailToViewModel(primaryViewModel.VideoId, frameNumber))
+                    .ToList();
+
+                while (frameContext.Count() < ColumnCount)
                 {
-                    FrameViewModel primaryViewModel = viewModelsToAdd[iFrame];
-                    int[] videoFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumbersForVideo(primaryViewModel.VideoId);
-                    int frameIndex = Array.IndexOf(videoFrameNumbers, primaryViewModel.FrameNumber);
-                    int startIndex = (frameIndex - 2 >= 0) ? frameIndex - 2 : 0;
-
-
-                    List<FrameViewModel> frameContext = videoFrameNumbers
-                        .Skip(startIndex)
-                        .Take(ColumnCount)
-                        .Select(frameNumber => ConvertThumbnailToViewModel(primaryViewModel.VideoId, frameNumber))
-                        .ToList();
-                    
-                    while (frameContext.Count() < ColumnCount)
-                    {
-                        frameContext.Add(ConvertThumbnailToViewModel(0, 0));
-                    }
-
-                    viewModelsWithContext.AddRange(frameContext);
+                    frameContext.Add(ConvertThumbnailToViewModel(0, 0));
                 }
-                viewModelsToAdd = viewModelsWithContext;
+
+                viewModelsWithContext.AddRange(frameContext);
             }
+            viewModelsToAdd = viewModelsWithContext;
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
         }
 
 
-        private void OnLargeFramesChanged()
-        {
-            if (_isLargeFramesChecked)
-            {
-                ImageHeight = (int)(_defaultImageHeight * LargeFramesMultiplier);
-                ImageWidth = (int)(_defaultImageWidth * LargeFramesMultiplier);
-            }
-            else
-            {
-                ImageHeight = _defaultImageHeight;
-                ImageWidth = _defaultImageWidth;
-            }
-
-            ScrollToRow(0);
-            ResetGrid();
-            VisibleFrames.Clear();
-            UpdateVisibleFrames();
-        }
     }
 }
