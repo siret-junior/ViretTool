@@ -90,9 +90,6 @@
     <Compile Include="Behaviors\ScrollToColumnOrRowIndexBehavior.cs" />
     <Compile Include="Behaviors\TextBoxEnterKeyUpdateBehavior.cs" />
     <Compile Include="Controls\Common\BusyIndicator.cs" />
-    <Compile Include="Controls\Common\LifelogFilters\LifelogFilterView.xaml.cs">
-      <DependentUpon>LifelogFilterView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Common\DownloadedFrameViewModel.cs" />
     <Compile Include="Controls\Common\FrameControl.xaml.cs">
       <DependentUpon>FrameControl.xaml</DependentUpon>
@@ -101,35 +98,9 @@
       <DependentUpon>KeywordSearchControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Common\KeywordSearch\KeywordQueryResult.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\QueryTextBlock.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\SuggestionPopup.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\SuggestionTextBox.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Suggestion\IIdentifiable.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Suggestion\IQueryPart.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Suggestion\Label.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Suggestion\LabelProvider.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Suggestion\SuggestionProvider.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Suggestion\SuggestionResultItem.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Themes\StringHighlightingConverter.cs" />
-    <Compile Include="Controls\Common\KeywordSearch\Themes\SuggestionTemplateSelector.cs" />
-    <Compile Include="Controls\Common\LifelogFilters\LifelogFilterViewModel.cs" />
     <Compile Include="Controls\Common\ModelControl.xaml.cs">
       <DependentUpon>ModelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Common\SketchCanvas.xaml.cs">
-      <DependentUpon>SketchCanvas.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Common\Sketches\ImageType.cs" />
-    <Compile Include="Controls\Common\Sketches\SketchType.cs" />
-    <Compile Include="Controls\Common\Sketches\SketchColorPicker.xaml.cs">
-      <DependentUpon>SketchColorPicker.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Common\Sketches\SketchColorPoint.cs" />
-    <Compile Include="Controls\Common\Sketches\SketchQueryResult.cs" />
-    <Compile Include="Controls\Common\TranscriptFilter\TranscriptFilterView.xaml.cs">
-      <DependentUpon>TranscriptFilterView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Common\TranscriptFilter\TranscriptFilterViewModel.cs" />
     <Compile Include="Controls\Common\VirtualizedUniformGrid.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\DisplayControlViewModelBase.cs" />
     <Compile Include="Controls\Common\FrameViewModel.cs" />
@@ -137,19 +108,8 @@
     <Compile Include="Controls\DisplayControl\ViewModels\ResultDisplayViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollableDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\ViewModels\ScrollDisplayControlViewModel.cs" />
-    <Compile Include="Controls\DisplayControl\ViewModels\SomResultDisplayControlViewModel.cs" />
-    <Compile Include="Controls\DisplayControl\ViewModels\ZoomDisplayControlViewModel.cs" />
     <Compile Include="Controls\DisplayControl\Views\ResultDisplayView.xaml.cs">
       <DependentUpon>ResultDisplayView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml.cs">
-      <DependentUpon>ScrollDisplayControlView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DisplayControl\Views\SomResultDisplayControlView.xaml.cs">
-      <DependentUpon>SomResultDisplayControlView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DisplayControl\Views\ZoomDisplayControlView.xaml.cs">
-      <DependentUpon>ZoomDisplayControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Query\ViewModels\QueryViewModel.cs" />
     <Compile Include="Controls\Common\FilterControl.xaml.cs">
@@ -199,9 +159,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj">
-      <Project>{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}</Project>
-      <Name>ViretTool.BusinessLayer.ExternalDescriptors</Name>
+    <ProjectReference Include="..\ViretCore\ViretCore.csproj">
+      <Project>{ca949c08-9ca8-4ce1-899b-41a6858b08e0}</Project>
+      <Name>ViretCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj">
       <Project>{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}</Project>
@@ -217,10 +177,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\Common\LifelogFilters\LifelogFilterView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Common\FrameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -229,27 +185,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Common\KeywordSearch\Themes\SuggestionPopup.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Common\KeywordSearch\Themes\SuggestionTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\Common\ModelControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Common\SketchCanvas.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Common\Sketches\SketchColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Common\TranscriptFilter\TranscriptFilterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -258,18 +194,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Common\FilterControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\DisplayControl\Views\ScrollDisplayControlView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\DisplayControl\Views\SomResultDisplayControlView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\DisplayControl\Views\ZoomDisplayControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

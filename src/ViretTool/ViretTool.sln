@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretTool.BusinessLayer.ExternalDescriptors", "ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj", "{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViretCore", "ViretCore\ViretCore.csproj", "{CA949C08-9CA8-4CE1-899B-41A6858B08E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,14 +84,11 @@ Global
 		{5B076C61-E554-4B37-98F0-63169881A426}.Release RAM|x64.Build.0 = Release|x64
 		{5B076C61-E554-4B37-98F0-63169881A426}.Release|x64.ActiveCfg = Release|x64
 		{5B076C61-E554-4B37-98F0-63169881A426}.Release|x64.Build.0 = Release|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug RAM|x64.ActiveCfg = Debug|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug RAM|x64.Build.0 = Debug|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug|x64.ActiveCfg = Debug|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Debug|x64.Build.0 = Debug|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release RAM|x64.ActiveCfg = Release|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release RAM|x64.Build.0 = Release|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release|x64.ActiveCfg = Release|x64
-		{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}.Release|x64.Build.0 = Release|x64
+		{CA949C08-9CA8-4CE1-899B-41A6858B08E0}.Debug RAM|x64.ActiveCfg = Debug|x64
+		{CA949C08-9CA8-4CE1-899B-41A6858B08E0}.Debug|x64.ActiveCfg = Debug|x64
+		{CA949C08-9CA8-4CE1-899B-41A6858B08E0}.Debug|x64.Build.0 = Debug|x64
+		{CA949C08-9CA8-4CE1-899B-41A6858B08E0}.Release RAM|x64.ActiveCfg = Release|x64
+		{CA949C08-9CA8-4CE1-899B-41A6858B08E0}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

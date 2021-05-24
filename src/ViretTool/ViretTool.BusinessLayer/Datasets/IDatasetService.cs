@@ -1,4 +1,5 @@
-﻿using ViretTool.DataLayer.DataModel;
+﻿using Viret;
+using Viret.DataModel;
 
 namespace ViretTool.BusinessLayer.Datasets
 {

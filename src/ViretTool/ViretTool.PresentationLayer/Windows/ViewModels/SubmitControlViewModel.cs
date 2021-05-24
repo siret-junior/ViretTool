@@ -30,8 +30,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _datasetServicesManager = datasetServicesManager;
             datasetServicesManager.DatasetOpened += (_, services) =>
                                                     {
-                                                        ImageHeight = services.DatasetParameters.DefaultFrameHeight;
-                                                        ImageWidth = services.DatasetParameters.DefaultFrameWidth;
+                                                        ImageHeight = 108;// services.DatasetParameters.DefaultFrameHeight;
+                                                        ImageWidth = 192;// services.DatasetParameters.DefaultFrameWidth;
                                                     };
         }
 
@@ -62,98 +62,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        /// <summary>
-        /// True if text overlay is required
-        /// </summary>
-        public bool IsTextChecked
-        {
-            get => _isTextChecked;
-            set
-            {
-                _isTextChecked = value;
-
-                if (value == true)
-                {
-                    UpdateOverlay(false, true, false);
-                }
-
-                NotifyOfPropertyChange("IsTextChecked");
-            }
-        }
-        /// <summary>
-        /// True if faces overlay is required
-        /// </summary>
-        public bool IsFacesChecked
-        {
-            get => _isFacesChecked;
-            set
-            {
-                _isFacesChecked = value;
-
-                if (value == true)
-                {
-                    UpdateOverlay(true, false, false);
-                }
-
-                NotifyOfPropertyChange("IsFacesChecked");
-            }
-        }
-
-        /// <summary>
-        /// True if color overlay is required 
-        /// </summary>
-        public bool IsColorChecked
-        {
-            get => _isColorChecked;
-            set
-            {
-                _isColorChecked = value;
-
-                if (value == true)
-                {
-                    UpdateOverlay(false, false, true);
-                }
-
-                NotifyOfPropertyChange("IsColorChecked");
-            }
-        }
-        /// <summary>
-        /// True if both text and faces overlay is required 
-        /// </summary>
-        public bool IsTextFacesChecked
-        {
-            get => _isTextFacesChecked;
-            set
-            {
-                _isTextFacesChecked = value;
-
-                if (value == true)
-                {
-                    UpdateOverlay(true, true, false);
-                }
-
-                NotifyOfPropertyChange("IsTextFacesChecked");
-            }
-        }
-
-        /// <summary>
-        /// True if no overlay is required
-        /// </summary>
-        public bool IsNothingChecked
-        {
-            get => _isNothingChecked;
-            set
-            {
-                _isNothingChecked = value;
-
-                if (value == true)
-                {
-                    UpdateOverlay(false, false, false);
-                }
-
-                NotifyOfPropertyChange("IsNothingChecked");
-            }
-        }
+        
 
 
         /// <summary>
@@ -171,19 +80,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 }
             }
         }
-        /// <summary>
-        /// Function updates face/text/color overlay in each frameControl from current instance of SubmitControlView
-        /// </summary>
-        /// <param name="showFaces"></param>
-        /// <param name="showText"></param>
-        /// <param name="showColor"></param>
-        private void UpdateOverlay(bool showFaces, bool showText, bool showColor)
-        {
-            foreach(FrameViewModel frame in SubmittedFrames)
-            {
-                frame.ShowOverlay(showFaces, showText, showColor);
-            }
-        }
+        
         public BindableCollection<FrameViewModel> SubmittedFrames { get; } = new BindableCollection<FrameViewModel>();
 
 
@@ -204,22 +101,22 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _aggregatedLabel = null;
 
             // compute labels 
-            List<int> synsets = new List<int>();
+            //List<int> synsets = new List<int>();
 
-            foreach (FrameViewModel frame in selectedFrames)
-            {
-                _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId);
-                synsets.AddRange(_datasetServicesManager.CurrentDataset.KeywordSynsetProvider.GetDescriptor(frameId).Take(5).Select(x => x.synsetId).ToList());
-            }
-            IEnumerable<int> aggregatedSynsetIDs = from synsetID in synsets
-                    group synsetID by synsetID into groups
-                    let count = groups.Count()
-                    orderby count descending
-                    select groups.Key;
-            AggregatedLabel = string.Join(", ", aggregatedSynsetIDs.ToArray()
-                    .Select(synsetID =>
-                        $"{_datasetServicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsetID)}")
-                    );
+            //foreach (FrameViewModel frame in selectedFrames)
+            //{
+            //    _datasetServicesManager.CurrentDataset.DatasetService.TryGetFrameIdForFrameNumber(frame.VideoId, frame.FrameNumber, out int frameId);
+            //    synsets.AddRange(_datasetServicesManager.CurrentDataset.KeywordSynsetProvider.GetDescriptor(frameId).Take(5).Select(x => x.synsetId).ToList());
+            //}
+            //IEnumerable<int> aggregatedSynsetIDs = from synsetID in synsets
+            //        group synsetID by synsetID into groups
+            //        let count = groups.Count()
+            //        orderby count descending
+            //        select groups.Key;
+            //AggregatedLabel = string.Join(", ", aggregatedSynsetIDs.ToArray()
+            //        .Select(synsetID =>
+            //            $"{_datasetServicesManager.CurrentDataset.KeywordLabelProvider.GetLabel(synsetID)}")
+            //        );
         }
 
         public void RemoveFromQueryClicked(FrameViewModel frameViewModel)

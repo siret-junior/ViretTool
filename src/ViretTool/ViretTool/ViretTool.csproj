@@ -163,9 +163,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj">
-      <Project>{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}</Project>
-      <Name>ViretTool.BusinessLayer.ExternalDescriptors</Name>
+    <ProjectReference Include="..\ViretCore\ViretCore.csproj">
+      <Project>{ca949c08-9ca8-4ce1-899b-41a6858b08e0}</Project>
+      <Name>ViretCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViretTool.BusinessLayer\ViretTool.BusinessLayer.csproj">
       <Project>{737B3FB5-E62B-4ED8-A75F-EC16470B94C9}</Project>

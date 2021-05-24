@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Caliburn.Micro;
 using Castle.Core.Logging;
-using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 
@@ -12,9 +11,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         protected ScrollableDisplayControlViewModel(
             ILogger logger,
-            IDatasetServicesManager datasetServicesManager,
-            IInteractionLogger interactionLogger)
-            : base(logger, datasetServicesManager, interactionLogger)
+            IDatasetServicesManager datasetServicesManager/*,
+            IInteractionLogger interactionLogger*/)
+            : base(logger, datasetServicesManager/*, interactionLogger*/)
         {
         }
 

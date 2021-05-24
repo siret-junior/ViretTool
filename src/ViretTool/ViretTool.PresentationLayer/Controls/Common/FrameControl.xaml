@@ -9,7 +9,7 @@
              mc:Ignorable="d"
              xmlns:debug="debug-mode"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="108" d:DesignWidth="192"
              d:DataContext="{d:DesignInstance local:FrameViewModel}">
 
     <UserControl.Resources>
@@ -20,10 +20,11 @@
             <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
             <Grid x:Key="CommonControls" x:Shared="False" ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" ToolTipService.Placement="Top">
                 <Grid.ToolTip >
-                    <TextBlock Name="KeywordLabel" FontSize="20" Text="{Binding Label, IsAsync=True}" />
+                    <TextBlock Name="ToolTipLabel" FontSize="20" Text="{Binding ToolTipLabel, IsAsync=True}" />
                 </Grid.ToolTip>
 
-               <Image Name="Image" Stretch="Fill" >
+                <!-- Thumbnail -->
+                <Image Name="Image" Stretch="Fill" >
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source" Value="{Binding ImageSource, Mode=OneWay, IsAsync=False}"/>
@@ -35,26 +36,15 @@
                         </Style>
                     </Image.Style>
                 </Image>
-                <Image Name="FacesOverlay" Stretch="Fill" Opacity="0.8"
-                       RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
-                       Source="{Binding FacesOverlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                       Visibility="{Binding AreFacesShown, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                <Image Name="TextOverlay" Stretch="Fill" Opacity="0.8" 
-                       RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
-                       Source="{Binding TextOverlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                       Visibility="{Binding IsTextShown, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                <Image Name="ColorOverlay" Stretch="Fill" 
-                       RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
-                       Source="{Binding ColorOverlay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                       Visibility="{Binding IsColorShown, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-
+                
+                <!-- Selection rectangles -->
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
                            Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"
                            Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
 
-                
-                <Border BorderThickness="0,0,0,4" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
+                <!-- Borders -->
+                <!--<Border BorderThickness="0,0,0,4" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
                     <Border.BorderBrush>
                         <SolidColorBrush Color="{Binding BottomBorderColor}"/>
                     </Border.BorderBrush>
@@ -63,17 +53,18 @@
                     <Border.BorderBrush>
                         <SolidColorBrush Color="{Binding RightBorderColor}" />
                     </Border.BorderBrush>
-                </Border>
+                </Border>-->
 
-                <TextBlock Name="VideoIdLabel" FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}" />
+                <!-- Labels -->
+                <TextBlock Name="TopLeftLabel" FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}" />
 
-                <TextBlock FontSize="8" Padding="1" Margin="0,0,3,0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <TextBlock Name="TopRightLabel" FontSize="8" Padding="1" Margin="0,0,3,0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Text" Value="{Binding FrameMetadata, Mode=OneWay, IsAsync=True}"/>
+                            <Setter Property="Text" Value="{Binding TopRightLabel, Mode=OneWay, IsAsync=True}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsClicked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Mode=OneWay, IsAsync=True}" Value="True">
-                                    <Setter Property="Text" Value="{Binding FrameMetadata, Mode=OneWay}"/>
+                                    <Setter Property="Text" Value="{Binding TopRightLabel, Mode=OneWay}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -81,32 +72,9 @@
                 </TextBlock>
                 <!--<Label Name="groupLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" />
                 <Label Name="frameLabel" FontSize="8" Padding="1" Background="LightSkyBlue" HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Top" />-->
-                <Grid Name="GridForZoomInto" Height="16" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,32" Opacity="0.6"
-                      Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="9*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="ZoomIntoButton" Grid.Column="1" FontSize="7" Background="Yellow" Click="ZoomIntoClicked"
-                                Visibility="{Binding Path=ShowZoomInto, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
-                            <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.ZoomIntoButtonText}"/>
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid Name="GridForZoomOut" Height="16" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,16" Opacity="0.6"
-                      Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="9*" />
-                            <ColumnDefinition Width="1*" />
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="ZoomOutButton" Grid.Column="2" FontSize="7" Background="Yellow" Click="ZoomOutClicked"
-                                Visibility="{Binding Path=ShowZoomOut, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
-                            <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.ZoomOutButtonText}"/>
-                        </Button>
-                    </Grid>
-                </Grid>
+                
+                
+                <!-- Buttons -->
                 <Grid Name="DisplayButtons" Height="16" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Opacity="0.6"
                       Visibility="{Binding Path=IsMouseOverFrame, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, IsAsync=True}">
                     <Grid>
@@ -128,32 +96,12 @@
                                 </MultiBinding>
                             </StackPanel.Visibility>
                             <Button FontSize="7" Background="LightCoral" Click="ButtonAddClicked" Tag="1">
-                                <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,-3,0,0">
-                                    <Run Text="+" FontSize="14"/><Run FontSize="6" Text="1"/>
-                                </TextBlock>
-                            </Button>
-                            <Button FontSize="7" Background="LightCoral" Click="ButtonAddClicked" Tag="2">
-                                <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,-3,0,0">
-                                    <Run Text="+" FontSize="14"/><Run FontSize="6" Text="2"/>
+                                <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,0,0" Padding ="5">
+                                    <Run Text="Similar" FontSize="12"/>
                                 </TextBlock>
                             </Button>
                         </StackPanel>
-                        <Button Grid.Column="1" FontSize="7" Background="LightCoral" Click="ButtonAddGpsClicked">
-                            <Button.Visibility>
-                                <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">
-                                    <Binding Path="GpsAddVisible" />
-                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}" Path="IsSelectable" IsAsync="True" />
-                                    <Binding Path="CanAddToQuery" />
-                                </MultiBinding>
-                            </Button.Visibility>
-                            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,-3,0,0">
-                                <Run Text="+" FontSize="14"/><Run FontSize="6" Text="G"/>
-                            </TextBlock>
-                        </Button>
-                        <Button Name="Remove" Grid.Column="3" FontSize="7" Background="DeepSkyBlue" Click="ButtonRemovedClicked"
-                                Visibility="{Binding Path=IsNotSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock FontSize="16" VerticalAlignment="Top" Margin="0, -6, 0, 0" FontWeight="Bold">-</TextBlock>
-                        </Button>
+                        
                         <Button x:Name="VideoButton" Grid.Column="6" FontSize="7" Background="DeepSkyBlue" Click="VideoClicked"
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.VideoButtonText}"/>

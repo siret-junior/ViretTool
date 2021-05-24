@@ -17,7 +17,8 @@ using Castle.MicroKernel.Registration;
 using Castle.Services.Logging.NLogIntegration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using ViretTool.BusinessLayer.ActionLogging;
+using Viret;
+//using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.PresentationLayer.Windows.ViewModels;
 
 namespace ViretTool
@@ -41,7 +42,7 @@ namespace ViretTool
 
         protected override void OnExit(object sender, EventArgs e)
         {
-            _container.Resolve<IInteractionLogger>().Dispose();
+            _container.Resolve<ViretCore>().Dispose();
         }
 
         protected override void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

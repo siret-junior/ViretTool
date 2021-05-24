@@ -4,7 +4,8 @@ using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
-using ViretTool.BusinessLayer.ActionLogging;
+using Viret.Logging.DresApi;
+using Viret.Ranking.ContextAware;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
@@ -19,16 +20,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public ResultDisplayViewModel(
             ILogger logger,
-            IDatasetServicesManager datasetServicesManager,
-            IInteractionLogger iterationLogger)
-            : base(logger, datasetServicesManager, iterationLogger)
+            IDatasetServicesManager datasetServicesManager/*,
+            IInteractionLogger interactionLogger*/)
+            : base(logger, datasetServicesManager/*, interactionLogger*/)
         {
             datasetServicesManager.DatasetOpened += 
                 (_, services) =>
                 {
                     // TODO: pull these parameters from properties
-                    _maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 50 : 3;
-                    _maxFramesFromShot = services.DatasetParameters.IsLifelogData ? 5 : 1;
+                    //_maxFramesFromVideo = services.DatasetParameters.IsLifelogData ? 50 : 3;
+                    //_maxFramesFromShot = services.DatasetParameters.IsLifelogData ? 5 : 1;
+                    _maxFramesFromVideo = 3;
+                    _maxFramesFromShot = 1;
                     NotifyOfPropertyChange(nameof(MaxFramesFromVideo));
                     NotifyOfPropertyChange(nameof(MaxFramesFromShot));
                 };
@@ -46,7 +49,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _maxFramesFromShot = value;
-                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
+                _interactionLogger.LogInteraction(EventCategory.Filter, EventType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
                 NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
@@ -63,7 +66,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _maxFramesFromVideo = value;
-                _interactionLogger.LogInteraction(LogCategory.Filter, LogType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
+                _interactionLogger.LogInteraction(EventCategory.Filter, EventType.MaxFrames, $"{MaxFramesFromVideo}|{MaxFramesFromShot}");
                 NotifyQuerySettingsChanged();
                 NotifyOfPropertyChange();
             }
@@ -80,7 +83,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 }
 
                 _currentPageNumber = value;
-                _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.RankedList, $"CurrentPage:{value}");
+                _interactionLogger.LogInteraction(EventCategory.Browsing, EventType.RankedList, $"CurrentPage:{value}");
                 NotifyOfPropertyChange();
             }
         }
@@ -133,12 +136,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
 
-        public override async Task LoadInitialDisplay()
-        {
-            CurrentPageNumber = 0;
-            await base.LoadInitialDisplay();
-            NotifyOfPropertyChange(nameof(LastPageNumber));
-        }
+        //public override async Task LoadInitialDisplay()
+        //{
+        //    CurrentPageNumber = 0;
+        //    await base.LoadInitialDisplay();
+        //    NotifyOfPropertyChange(nameof(LastPageNumber));
+        //}
 
         public override async Task LoadFramesForIds(IList<int> sortedFrameIds)
         {
@@ -149,6 +152,27 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                 _loadedFrames[i].IsBottomBorderVisible = false;
                 _loadedFrames[i].IsRightBorderVisible = false;
             }
+        }
+
+        public async Task LoadFramesForAnnotatedIds(IList<int> sortedFrameIds, IList<string> annotations, IList<double> scores)
+        {
+            CurrentPageNumber = 0;
+            await base.LoadFramesForIds(sortedFrameIds);
+            for (int i = 0; i < _loadedFrames.Count(); i++)
+            {
+                _loadedFrames[i].IsBottomBorderVisible = false;
+                _loadedFrames[i].IsRightBorderVisible = false;
+                _loadedFrames[i].Annotation = annotations[i];
+                _loadedFrames[i].Score = scores[i];
+            }
+        }
+
+        public async Task LoadFramesForAnnotatedSegments(IList<AnnotatedVideoSegment> sortedSegments)
+        {
+            List<int> sortedFrameIds = sortedSegments.SelectMany(segment => Enumerable.Range(segment.SegmentFirstFrameIndex, segment.Length)).ToList();
+            List<string> annotations = sortedSegments.SelectMany(segment => segment.Annotations).ToList();
+            List<double> scores = sortedSegments.SelectMany(segment => segment.Scores).ToList();
+            await LoadFramesForAnnotatedIds(sortedFrameIds, annotations, scores);
         }
 
         public override Task LoadVideoForFrame(FrameViewModel frameViewModel)
@@ -170,33 +194,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
             ScrollToRow?.Invoke(0);
             VisibleFrames.Clear();
-            viewModelsToAdd.ForEach(f => f.IsLastInVideo = false);
-
-            // show temporal context
-            List<FrameViewModel> viewModelsWithContext = new List<FrameViewModel>();
-            int middleFrameOffset = ColumnCount / 2;
-            for (int iFrame = 0; iFrame < viewModelsToAdd.Count && iFrame < 200; iFrame++)
-            {
-                FrameViewModel primaryViewModel = viewModelsToAdd[iFrame];
-                int[] videoFrameNumbers = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumbersForVideo(primaryViewModel.VideoId);
-                int frameIndex = Array.IndexOf(videoFrameNumbers, primaryViewModel.FrameNumber);
-                int startIndex = (frameIndex - middleFrameOffset >= 0) ? frameIndex - middleFrameOffset : 0;
-
-
-                List<FrameViewModel> frameContext = videoFrameNumbers
-                    .Skip(startIndex)
-                    .Take(ColumnCount)
-                    .Select(frameNumber => ConvertThumbnailToViewModel(primaryViewModel.VideoId, frameNumber))
-                    .ToList();
-
-                while (frameContext.Count() < ColumnCount)
-                {
-                    frameContext.Add(ConvertThumbnailToViewModel(0, 0));
-                }
-
-                viewModelsWithContext.AddRange(frameContext);
-            }
-            viewModelsToAdd = viewModelsWithContext;
+            //viewModelsToAdd.ForEach(f => f.IsLastInVideo = false);
 
             AddFramesToVisibleItems(VisibleFrames, viewModelsToAdd);
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Castle.Core.Logging;
-using ViretTool.BusinessLayer.ActionLogging;
+using Viret.Logging.DresApi;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
 
@@ -15,8 +15,8 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         public DetailViewModel(
             ILogger logger,
-            IDatasetServicesManager datasetServicesManager,
-            IInteractionLogger interactionLogger) : base(logger, datasetServicesManager, interactionLogger)
+            IDatasetServicesManager datasetServicesManager/*,
+            IInteractionLogger interactionLogger*/) : base(logger, datasetServicesManager/*, interactionLogger*/)
         {
             ColumnCount = 9;
             RowCount = 8;
@@ -83,7 +83,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
 
-            _interactionLogger.LogInteraction(LogCategory.Browsing, LogType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}|SampleLayer");
+            _interactionLogger.LogInteraction(EventCategory.Browsing, EventType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}|SampleLayer");
         }
     }
 }

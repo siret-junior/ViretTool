@@ -75,20 +75,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionLogging\Action.cs" />
-    <Compile Include="ActionLogging\Event.cs" />
-    <Compile Include="ActionLogging\IInteractionLogger.cs" />
-    <Compile Include="ActionLogging\InteractionLog.cs" />
-    <Compile Include="ActionLogging\InteractionLogger.cs" />
-    <Compile Include="Descriptors\BoolSignatureDescriptorProvider.cs" />
-    <Compile Include="Descriptors\IBoolSignatureDescriptorProvider.cs" />
-    <Compile Include="Descriptors\IColorSignatureDescriptorProvider.cs" />
-    <Compile Include="Descriptors\IFaceSignatureDescriptorProvider.cs" />
-    <Compile Include="Descriptors\ILifelogDescriptorProvider.cs" />
     <Compile Include="Descriptors\KeywordLabel\IKeywordLabelProvider.cs" />
     <Compile Include="Descriptors\KeywordTopScoring\IKeywordTopScoringProvider.cs" />
-    <Compile Include="Descriptors\ITextSignatureDescriptorProvider.cs" />
-    <Compile Include="Descriptors\ITranscriptProvider.cs" />
     <Compile Include="Descriptors\IW2VVQueryToVectorProvider.cs" />
     <Compile Include="Descriptors\KeywordTopScoring\KeywordTopScoringProviderDummy.cs" />
     <Compile Include="Descriptors\KeywordTopScoring\KeywordTopScoringFactory.cs" />
@@ -99,134 +87,18 @@
     <Compile Include="Descriptors\KeywordLabel\KeywordLabelProviderDummy.cs" />
     <Compile Include="Descriptors\KeywordTopScoring\KeywordTopScoringProvider.cs" />
     <Compile Include="Descriptors\Keyword\KeywordDescriptorProviderDummy.cs" />
-    <Compile Include="Descriptors\LifelogDescriptorProvider.cs" />
-    <Compile Include="Descriptors\Models\LifelogFrameMetadata.cs" />
-    <Compile Include="Descriptors\TranscriptProvider.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\ILifelogFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\ITranscriptFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\LifelogFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\TranscriptFilter.cs" />
-    <Compile Include="RankingModels\Queries\LifelogQuery.cs" />
-    <Compile Include="RankingModels\Queries\TranscriptFilteringQuery.cs" />
-    <Compile Include="RankingModels\Similarity\Models\BoolSketchModelSkeleton.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\FaceSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\FaceSketchModelSkeleton.cs" />
-    <Compile Include="RankingModels\Similarity\Models\TextSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\TextSketchModelSkeleton.cs" />
     <Compile Include="Descriptors\W2VVQueryToVectorProvider.cs" />
-    <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionProduct.cs" />
-    <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionFilters.cs" />
-    <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionProduct.cs" />
-    <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionSum.cs" />
-    <Compile Include="RankingModels\Temporal\Fusion\IBiTemporalRankFusionFilters.cs" />
-    <Compile Include="ResultLogging\IResultLog.cs" />
-    <Compile Include="ResultLogging\IResultLogger.cs" />
-    <Compile Include="ResultLogging\ResultBase.cs" />
-    <Compile Include="ResultLogging\ResultLifelog.cs" />
-    <Compile Include="ResultLogging\ResultLogLifelog.cs" />
-    <Compile Include="ResultLogging\ResultLogVBS.cs" />
-    <Compile Include="ResultLogging\ResultVBS.cs" />
-    <Compile Include="ResultLogging\ResultLogBase.cs" />
-    <Compile Include="ResultLogging\ResultLogger.cs" />
     <Compile Include="Services\Helper\CosineSimilarityHelper.cs" />
     <Compile Include="Services\IDatasetParameters.cs" />
-    <Compile Include="Services\IInitialDisplayProvider.cs" />
-    <Compile Include="Services\IZoomDisplayProvider.cs" />
-    <Compile Include="Services\SomGeneratorProvider.cs" />
-    <Compile Include="Services\ZoomDisplayProvider.cs" />
-    <Compile Include="SOMGridSorting\SOMWrapper.cs" />
-    <Compile Include="Submission\CamelcaseJsonSerializer.cs" />
-    <Compile Include="Submission\LowercaseJsonSerializer.cs" />
     <Compile Include="Datasets\DatasetService.cs" />
     <Compile Include="Datasets\IDatasetService.cs" />
-    <Compile Include="Descriptors\ColorSaturationDescriptorProvider.cs" />
-    <Compile Include="Descriptors\ColorSignatureDescriptorProvider.cs" />
-    <Compile Include="Descriptors\PercentOfBlackDescriptorProvider.cs" />
     <Compile Include="Descriptors\SemanticVectorDescriptorProvider.cs" />
-    <Compile Include="OutputGridSorting\GridSorter.cs" />
-    <Compile Include="OutputGridSorting\GridSorterFast.cs" />
-    <Compile Include="OutputGridSorting\IGridSorter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\ICountRestrictionFilter.cs" />
-    <Compile Include="RankingModels\Filtering\IRankFilteringModule.cs" />
-    <Compile Include="RankingModels\Filtering\RankFilteringModule.cs" />
-    <Compile Include="RankingModels\Fusion\FusionModule.cs" />
-    <Compile Include="RankingModels\Fusion\IFusionModule.cs" />
-    <Compile Include="RankingModels\Queries\FusionQuery.cs" />
-    <Compile Include="RankingModels\Queries\IFusionQuery.cs" />
-    <Compile Include="RankingModels\Similarity\Models\BoolSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\IBoolSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\IFaceSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\ITextSketchModel.cs" />
-    <Compile Include="RankingModels\Temporal\IBiTemporalRankingModule.cs" />
-    <Compile Include="RankingModels\Temporal\IBiTemporalRankingService.cs" />
-    <Compile Include="RankingModels\Temporal\Similarity\IBiTemporalSimilarityModel.cs" />
-    <Compile Include="RankingModels\Temporal\Queries\BiTemporalModelQuery.cs" />
-    <Compile Include="RankingModels\Queries\FilteredRankingQuery.cs" />
-    <Compile Include="RankingModels\Queries\IFilteringQuery.cs" />
-    <Compile Include="RankingModels\Queries\IQuery.cs" />
-    <Compile Include="RankingModels\Queries\ISimilarityQuery.cs" />
-    <Compile Include="RankingModels\Filtering\FilterState.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\FilterBase.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\CountRestrictionFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\IColorSaturationFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\IPercentOfBlackFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\IThresholdFilter.cs" />
-    <Compile Include="RankingModels\Filtering\Filters\ThresholdFilter.cs" />
-    <Compile Include="RankingModels\Filtering\IFilter.cs" />
-    <Compile Include="RankingModels\Filtering\FilteringModule.cs" />
-    <Compile Include="RankingModels\Filtering\IFilteringModule.cs" />
-    <Compile Include="RankingModels\Temporal\BiTemporalRankingBuffer.cs" />
-    <Compile Include="RankingModels\Temporal\BiTemporalRankingModule.cs" />
-    <Compile Include="RankingModels\Temporal\BiTemporalSimilarityModule.cs" />
-    <Compile Include="RankingModels\Temporal\Fusion\BiTemporalRankFusionSum.cs" />
-    <Compile Include="RankingModels\Temporal\IBiTemporalRankFusion.cs" />
-    <Compile Include="RankingModels\Queries\CountFilteringQuery.cs" />
-    <Compile Include="RankingModels\Queries\Synset.cs" />
-    <Compile Include="RankingModels\Queries\SynsetGroup.cs" />
-    <Compile Include="RankingModels\Temporal\Queries\BiTemporalQuery.cs" />
-    <Compile Include="RankingModels\Queries\ThresholdFilteringQuery.cs" />
-    <Compile Include="RankingModels\RankedFrame.cs" />
-    <Compile Include="RankingModels\RankingBuffer.cs" />
-    <Compile Include="RankingModels\Similarity\Models\ColorSignatureModel\ColorSignatureModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNFeatures\FloatVectorModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\IDFLoader.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordSearchFrame.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\KeywordSubModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\DCNNKeywords\ListComparer.cs" />
-    <Compile Include="RankingModels\Similarity\Models\IColorSketchModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\IKeywordModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\ISemanticExampleModel.cs" />
-    <Compile Include="RankingModels\Similarity\Models\ISimilarityModel.cs" />
-    <Compile Include="RankingModels\Queries\Ellipse.cs" />
-    <Compile Include="RankingModels\Temporal\BiTemporalRankingService.cs" />
-    <Compile Include="RankingModels\Queries\ColorSketchQuery.cs" />
-    <Compile Include="RankingModels\Queries\SemanticExampleQuery.cs" />
-    <Compile Include="RankingModels\Queries\FilteringQuery.cs" />
-    <Compile Include="RankingModels\Queries\KeywordQuery.cs" />
-    <Compile Include="RankingModels\Temporal\Queries\BiTemporalSimilarityQuery.cs" />
     <Compile Include="Descriptors\IDescriptorProvider.cs" />
-    <Compile Include="RankingModels\Temporal\IBiTemporalSimilarityModule.cs" />
-    <Compile Include="RankingModels\Temporal\PairedRankedFrame.cs" />
-    <Compile Include="RankingModels\Temporal\Similarity\BiTemporalSimilarityModel.cs" />
-    <Compile Include="RankingModels\Temporal\Queries\BiTemporalColorSketchQuery.cs" />
-    <Compile Include="RankingModels\Temporal\Queries\BiTemporalKeywordQuery.cs" />
-    <Compile Include="RankingModels\Temporal\Queries\BiTemporalSemanticExampleQuery.cs" />
-    <Compile Include="RankingModels\Temporal\BiTemporalRankedResultSet.cs" />
-    <Compile Include="RankingModels\Temporal\TemporalRankedResultSet.cs" />
     <Compile Include="Services\DatasetServicesManager.cs" />
     <Compile Include="Services\DatasetServices.cs" />
     <Compile Include="Services\IDatabaseServicesFactory.cs" />
     <Compile Include="Services\IDatasetServicesManager.cs" />
-    <Compile Include="Submission\FrameToSubmit.cs" />
-    <Compile Include="Submission\ISubmissionService.cs" />
-    <Compile Include="Submission\QueryPersistingService.cs" />
-    <Compile Include="Submission\SubmissionServiceBase.cs" />
-    <Compile Include="Submission\SubmissionServiceLifelog.cs" />
-    <Compile Include="Submission\SubmissionServiceVBS.cs" />
-    <Compile Include="TaskLogging\ITaskLogger.cs" />
-    <Compile Include="TaskLogging\TaskLogger.cs" />
     <Compile Include="Thumbnails\CachedThumbnailService.cs" />
     <Compile Include="Thumbnails\IThumbnailService.cs" />
     <Compile Include="Thumbnails\JpegThumbnailService.cs" />
@@ -234,9 +106,9 @@
     <Compile Include="TextSearch\AhoCorasick.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ViretTool.BusinessLayer.ExternalDescriptors\ViretTool.BusinessLayer.ExternalDescriptors.csproj">
-      <Project>{9EB09F6E-E474-4FB4-B7DE-017C91C198FF}</Project>
-      <Name>ViretTool.BusinessLayer.ExternalDescriptors</Name>
+    <ProjectReference Include="..\ViretCore\ViretCore.csproj">
+      <Project>{ca949c08-9ca8-4ce1-899b-41a6858b08e0}</Project>
+      <Name>ViretCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\ViretTool.Core\ViretTool.Core.csproj">
       <Project>{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}</Project>
@@ -251,11 +123,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RankingModels\Similarity\Models\W2VV\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="SOMGridSorting\CEmbedSomDLL.dll" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

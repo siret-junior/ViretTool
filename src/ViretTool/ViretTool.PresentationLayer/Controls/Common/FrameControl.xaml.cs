@@ -281,12 +281,12 @@ namespace ViretTool.PresentationLayer.Controls.Common
             if (e.Delta < 0)
             {
                 IsScrollingRight = true;
-                frameViewModel.ScrollNext();
+                frameViewModel.ScrollToNextFrame();
             }
             else if (e.Delta > 0)
             {
                 IsScrollingLeft = true;
-                frameViewModel.ScrollPrevious();
+                frameViewModel.ScrollToPreviousFrame();
             }
 
             e.Handled = true;

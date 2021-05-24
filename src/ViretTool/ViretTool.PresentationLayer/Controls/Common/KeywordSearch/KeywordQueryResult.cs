@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ViretTool.BusinessLayer.RankingModels.Queries;
+//using ViretTool.BusinessLayer.RankingModels.Queries;
 
 namespace ViretTool.PresentationLayer.Controls.Common.KeywordSearch
 {

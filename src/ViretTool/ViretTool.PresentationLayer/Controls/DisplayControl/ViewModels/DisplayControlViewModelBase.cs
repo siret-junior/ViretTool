@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Caliburn.Micro;
 using Castle.Core.Logging;
-using ViretTool.BusinessLayer.ActionLogging;
+//using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.Core;
 using ViretTool.PresentationLayer.Controls.Common;
 using Action = System.Action;
+using Viret.DataModel;
+using Viret.Logging;
+using Viret.Logging.DresApi;
 
 namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 {
@@ -32,7 +35,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     public abstract class DisplayControlViewModelBase : PropertyChangedBase
     {
         protected readonly IDatasetServicesManager _datasetServicesManager;
-        protected readonly IInteractionLogger _interactionLogger;
+        protected InteractionLogger _interactionLogger;
         protected readonly ILogger _logger;
         
         protected List<FrameViewModel> _loadedFrames = new List<FrameViewModel>();
@@ -47,17 +50,20 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         protected DisplayControlViewModelBase(
             ILogger logger, 
-            IDatasetServicesManager datasetServicesManager, 
-            IInteractionLogger interactionLogger)
+            IDatasetServicesManager datasetServicesManager/*, 
+            IInteractionLogger interactionLogger*/)
         {
             _logger = logger;
             _datasetServicesManager = datasetServicesManager;
-            _interactionLogger = interactionLogger;
+            
             _datasetServicesManager.DatasetOpened += 
                 (_, services) =>
                 {
-                    ImageHeight = services.DatasetParameters.DefaultFrameHeight;
-                    ImageWidth = services.DatasetParameters.DefaultFrameWidth;
+                    _interactionLogger = datasetServicesManager.CurrentDataset.ViretCore.InteractionLogger;
+                    
+                    ImageWidth = (int)(DisplayWidth / 10.0);
+                    ImageHeight = (int)(ImageWidth / 16.0 * 9.0);
+
                 };
         }
 
@@ -267,9 +273,9 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameForScrollVideoChanged?.Invoke(this, frameViewModel.Clone());
         }
 
-        public void OnGridScrollChanged(LogType logType, string detailDescription = null)
+        public void OnGridScrollChanged(EventType eventType, string detailDescription = null)
         {
-            _interactionLogger.LogInteraction(LogCategory.Browsing, logType, "ScrollChanged" + $"|{detailDescription}");
+            _interactionLogger.LogInteraction(EventCategory.Browsing, eventType, "ScrollChanged" + $"|{detailDescription}");
         }
 
         #endregion --[ Events ]--
@@ -315,28 +321,28 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         // TODO: move this implementation to PageDisplay, leave an abstract method.
-        public virtual async Task LoadInitialDisplay()
-        {
-            IsInitialDisplayShown = false;
-            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
-            if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed)
-            {
-                IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
-                _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-                AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
+        //public virtual async Task LoadInitialDisplay()
+        //{
+        //    IsInitialDisplayShown = false;
+        //    IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+        //    if (_datasetServicesManager.CurrentDataset.DatasetParameters.IsInitialDisplayPrecomputed)
+        //    {
+        //        IReadOnlyList<int> ids = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.InitialDisplayIds;
+        //        _loadedFrames = await Task.Run(() => ids.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
+        //        AddFramesToVisibleItems(VisibleFrames, _loadedFrames);
 
-                RowCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.RowCount;
-                ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
-                ScrollToRow(0);
-                IsInitialDisplayShown = true;
-            }
-            else
-            {
-                Random random = new Random(); //shuffle initial images randomly
-                _loadedFrames = await Task.Run(() => datasetService.VideoIds.SelectMany(LoadAllThumbnails).OrderBy(_ => random.Next()).ToList());
-                UpdateVisibleFrames();
-            }
-        }
+        //        RowCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.RowCount;
+        //        ColumnCount = _datasetServicesManager.CurrentDataset.InitialDisplayProvider.ColumnCount;
+        //        ScrollToRow(0);
+        //        IsInitialDisplayShown = true;
+        //    }
+        //    else
+        //    {
+        //        Random random = new Random(); //shuffle initial images randomly
+        //        _loadedFrames = await Task.Run(() => datasetService.VideoIds.SelectMany(LoadAllThumbnails).OrderBy(_ => random.Next()).ToList());
+        //        UpdateVisibleFrames();
+        //    }
+        //}
 
         #endregion --[ Public methods ]--
 

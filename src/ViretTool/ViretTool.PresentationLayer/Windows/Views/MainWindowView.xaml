@@ -51,142 +51,52 @@
             <common:BusyIndicator.IsBusy>
                 <MultiBinding Converter="{StaticResource BooleanOrToBooleanConverter}">
                     <Binding Path="IsBusy" />
-                    <Binding Path="QueryResults.IsBusy" />
+                    <!--<Binding Path="QueryResults.IsBusy" />-->
                 </MultiBinding>
             </common:BusyIndicator.IsBusy>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <!-- left panel (models) -->
-                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    
-                    
-                    <Grid FocusVisualStyle="{x:Null}" Focusable="False">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                <!-- top panel -->
+                <Grid Grid.Row="0" FocusVisualStyle="{x:Null}" Focusable="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                        <!-- Controls -->
-                        <Grid Grid.Row="0" FocusVisualStyle="{x:Null}" Focusable="False">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <!-- Menu -->
-                            <Menu Grid.Row="0" Width="Auto" Background="White" Focusable="False">
-                                <!-- File -->
-                                <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
-                                    <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
-                                    <Separator />
-                                    <MenuItem Header="{x:Static properties:Resources.HideBwFilterText}" cal:Message.Attach="[Event Click] = [Action ShowHideBwFilters]"/>
-                                    <Separator />
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static properties:Resources.TeamNameText}" />
-                                        <TextBox x:Name="TeamName" Margin="4,0,0,0" Width="50"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static properties:Resources.TeamIdText}" />
-                                        <TextBox x:Name="TeamId" Margin="4,0,0,0" Width="20"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Static properties:Resources.MemberIdText}" />
-                                        <TextBox x:Name="MemberId" Margin="4,0,0,0" Width="20"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Submission URL" />
-                                        <TextBox x:Name="SubmissionUrl" Margin="4,0,0,0" Width="120"/>
-                                    </StackPanel>
-                                    <Separator />
-                                    <MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>
-                                </MenuItem>
-                                <!-- Test -->
-                                <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.TestButtonText}" 
+                    <!-- Menu -->
+                    <Menu Grid.Column="0" Width="Auto" Background="White" Focusable="False">
+                        <!-- File -->
+                        <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
+                            <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
+                            <Separator />
+                            <MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>
+                        </MenuItem>
+                        <!-- Test -->
+                        <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.TestButtonText}" 
                                           cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"
                                           FocusVisualStyle="{x:Null}" Focusable="False"></MenuItem>
-                            </Menu>
-                            
-                            <!-- Clear button -->
-                            <Button x:Name="ClearAll" Grid.Column="1" 
+                    </Menu>
+
+                    <!-- Clear button -->
+                    <Button Grid.Column="1" x:Name="ClearAll"  
                                     Margin="0,0,0,0" Padding="5 3 5 3"
                                     Content="{x:Static properties:Resources.ClearAllText}"
                                     Background="IndianRed" />
-                        </Grid>
+                    
+                    <!-- textbox input -->
+                    <ContentControl Grid.Column="2" x:Name="Query" />
+                </Grid>
 
-
-                        <!-- TODO: consider keeping -->
-                        <!--
-                        <GroupBox Grid.Row="2" Margin="6" Header="{x:Static properties:Resources.TranscriptFilterLabel}" >
-                            <ContentControl x:Name="TranscriptFilterViewModel" />
-                        </GroupBox>-->
-
-                        <!-- TODO: consider removing -->
-                        <!-- Display switch -->
-                        <GroupBox Grid.Row="3" Margin="5 0 5 0">
-                            <GroupBox.Header>
-                                <TextBlock FontWeight="Bold" Text="{x:Static properties:Resources.DisplaySwitchLabel}" />
-                            </GroupBox.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Margin="0 6 6 0" Content="Linear Search" IsChecked="{Binding Path=IsResultDisplayVisible, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                                <RadioButton Margin="0 6 6 0" Content="SOM Search" IsChecked="{Binding Path=IsSomDisplayVisible,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                             IsEnabled="{Binding Path=IsSomDisplayLoaded, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                            </StackPanel>
-                        </GroupBox>
-
-                        <!-- Model queries -->
-                        <GroupBox Grid.Row="4" Margin="5 5 5 0">
-                            <GroupBox.Header>
-                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary}" Style="{StaticResource PrimaryCheckBoxStyle}" FontWeight="Bold"/>
-                            </GroupBox.Header>
-                            <ContentControl x:Name="Query1" />
-                        </GroupBox>
-                        <GroupBox Grid.Row="5" Margin="5 5 5 0">
-                            <GroupBox.Header>
-                                <CheckBox IsChecked="{Binding IsFirstQueryPrimary, Converter={StaticResource InvertedBooleanConverter}}" Style="{StaticResource PrimaryCheckBoxStyle}" FontWeight="Bold" />
-                            </GroupBox.Header>
-                            <ContentControl x:Name="Query2" />
-                        </GroupBox>
-
-                    </Grid>
-                </ScrollViewer>
-
-                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
+                <GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Stretch" Focusable="False" />
 
                 <!-- Displays -->
-                <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                <ContentControl Grid.Row="2" x:Name="ResultDisplay" />
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="162" />
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Result displays -->
-                        <ContentControl Grid.Column="0" x:Name="QueryResults" Visibility="{Binding ResultDisplayVisibility}" />
-                        <ContentControl Grid.Column="0" x:Name="SomDisplay" Visibility="{Binding SomDisplayVisibility}" />
-                        <TextBlock Grid.Column="0" x:Name="TestFramesPosition" Margin="330,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"></TextBlock>
-
-                        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Focusable="False" />
-                        
-                        <!-- Temporal context display -->
-                        <ContentControl Grid.Column="2" x:Name="DetailView" />
-                        
-                    </Grid>
-                </Grid>
             </Grid>
         </common:BusyIndicator>
 
