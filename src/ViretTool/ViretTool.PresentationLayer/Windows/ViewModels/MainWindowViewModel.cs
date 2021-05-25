@@ -488,7 +488,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
 
             int keyframeId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber);
-            await DetailViewModel.LoadSortedDisplay(selectedFrame, _viretCore.KnnRanker.ComputeKnnRanking(keyframeId).Take(1000).ToArray());
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, _viretCore.KnnRankerBert.ComputeKnnRanking(keyframeId).Take(1000).ToArray());
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)

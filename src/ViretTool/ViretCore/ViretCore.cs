@@ -25,7 +25,8 @@ namespace Viret
         
         public Dataset Dataset { get; private set; }
         public ThumbnailReader ThumbnailReader { get; private set; }
-        public KnnRanker KnnRanker { get; private set; }
+        public KnnRanker KnnRankerBert { get; private set; }
+        public KnnRanker KnnRankerClip { get; private set; }
         public W2vvBowToVector W2vvBowToVector { get; private set; }
         public W2vvTextToVectorRemote W2vvTextToVectorRemote { get; private set; }
         public ContextAwareRanker ContextAwareRanker { get; private set; }
@@ -42,24 +43,26 @@ namespace Viret
             W2vvTextToVectorRemote = new W2vvTextToVectorRemote("TODO server URL");
         }
 
-        public void LoadFromDirectory(string inputDirectory, int maxVideos = -1)
+        public void LoadFromDirectory(string inputDirectory, int maxVideos = 75)
         {
             // TODO: tasks, dispose
             Console.WriteLine($"Loading dataset...");
-            Dataset = Dataset.FromDirectory(inputDirectory, maxVideos);
+            Dataset = Dataset.FromDirectory(inputDirectory, maxVideos, ".dataset");
 
             Console.WriteLine($"Loading thumbnails...");
-            ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory, maxVideos);
+            ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory, maxVideos, ".thumbnails");
 
             Console.WriteLine($"Loading kNN ranker...");
             int maxKeyframes = (maxVideos > 0) ? Dataset.Keyframes.Count : -1;
-            KnnRanker = KnnRanker.FromDirectory(inputDirectory, maxKeyframes);
+            KnnRankerBert = KnnRanker.FromDirectory(inputDirectory, maxKeyframes, ".w2vv-bert");
+            //KnnRankerClip = KnnRanker.FromDirectory(inputDirectory, maxKeyframes, ".w2vv-clip");
 
             Console.WriteLine($"Loading W2VV BOW to vector...");
-            W2vvBowToVector = W2vvBowToVector.FromDirectory(inputDirectory);
+            W2vvBowToVector = W2vvBowToVector.FromDirectory(inputDirectory, "w2vv");
 
             Console.WriteLine($"Loading context-aware ranker...");
-            ContextAwareRanker = new ContextAwareRanker(KnnRanker.Vectors, Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray());
+            int[] videoLastFrameIds = Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray();
+            ContextAwareRanker = new ContextAwareRanker(KnnRankerBert.Vectors, videoLastFrameIds);
             RankingService = new RankingService(W2vvBowToVector, W2vvTextToVectorRemote, ContextAwareRanker);
 
             IsLoaded = true;

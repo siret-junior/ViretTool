@@ -27,9 +27,9 @@ namespace Viret.Ranking.W2VV
             _pcaMeanVector = LoadFloatTable(Path.Combine(inputDirectory, Directory.GetFiles(inputDirectory, "*w2vv.pca.mean.bin").First()), VECTOR_DIMENSION)[0];
         }
 
-        public static W2vvBowToVector FromDirectory(string path)
+        public static W2vvBowToVector FromDirectory(string path, string subDirectory = "w2vv")
         {
-            return new W2vvBowToVector(Path.Combine(path, "w2vv"));
+            return new W2vvBowToVector(Path.Combine(path, subDirectory));
         }
 
         public float[] BowToVector(string[] query, bool applyPCA = true)
