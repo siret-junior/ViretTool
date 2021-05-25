@@ -114,10 +114,6 @@
       <Project>{B573AFBC-D180-47D1-8BCE-47D0D72A8A96}</Project>
       <Name>ViretTool.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ViretTool.DataLayer\ViretTool.DataLayer.csproj">
-      <Project>{F7058311-7616-4EA5-B2D2-35E502782537}</Project>
-      <Name>ViretTool.DataLayer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

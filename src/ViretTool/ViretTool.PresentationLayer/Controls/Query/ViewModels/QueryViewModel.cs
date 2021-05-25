@@ -203,7 +203,7 @@ namespace ViretTool.PresentationLayer.Controls.Query.ViewModels
                 }
 
                 _keywordQueryResult = value;
-                _interactionLogger.LogInteraction(EventCategory.Text, EventType.JointEmbedding, _keywordQueryResult?.FullQuery + $"|{(int)KeywordValue}%|{KeywordUseForSorting}");
+                _interactionLogger.LogInteraction(EventCategory.Text, EventType.JointEmbedding, _keywordQueryResult?.FullQuery);
 
                 KeywordUseForSorting = _keywordQueryResult?.Query?.Any() == true;
                 NotifyOfPropertyChange();

@@ -151,20 +151,20 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             }
         }
 
-        public bool IsInitialDisplayShown
-        {
-            get => _isInitialDisplayShown;
-            set
-            {
-                if (_isInitialDisplayShown == value)
-                {
-                    return;
-                }
+        //public bool IsInitialDisplayShown
+        //{
+        //    get => _isInitialDisplayShown;
+        //    set
+        //    {
+        //        if (_isInitialDisplayShown == value)
+        //        {
+        //            return;
+        //        }
 
-                _isInitialDisplayShown = value;
-                NotifyOfPropertyChange();
-            }
-        }
+        //        _isInitialDisplayShown = value;
+        //        NotifyOfPropertyChange();
+        //    }
+        //}
 
         #endregion --[ Properties ]--
 
@@ -189,12 +189,13 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         #region --[ Event handlers ]--
 
         public event EventHandler<FramesToQuery> FramesForQueryChanged;             // similarity query
+        public event EventHandler<FrameViewModel> FrameForSimilarChanged;           // display similar
         public event EventHandler<FrameViewModel> FrameForVideoChanged;             // video inspection
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;       // TODO: rename. (video scrolling playback / scrolling sidebar?)
-        public event EventHandler<FrameViewModel> FrameForSortChanged;              // TODO: remove? (unused - used to be noodle map)
-        public event EventHandler<FrameViewModel> FrameForZoomIntoChanged;          // ZoomDisplay zoom in
-        public event EventHandler<FrameViewModel> FrameForZoomOutChanged;           // ZoomDisplay zoom out
         public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;    // submit collection
+        //public event EventHandler<FrameViewModel> FrameForSortChanged;            // TODO: remove? (unused - used to be noodle map)
+        //public event EventHandler<FrameViewModel> FrameForZoomIntoChanged;        // ZoomDisplay zoom in
+        //public event EventHandler<FrameViewModel> FrameForZoomOutChanged;         // ZoomDisplay zoom out
 
         #endregion --[ Event handlers ]--
 
@@ -244,22 +245,28 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         }
 
         // TODO: remove, unused?
-        public void OnSortDisplay(FrameViewModel frameViewModel)
-        {
-            BeforeEventAction();
-            FrameForSortChanged?.Invoke(this, frameViewModel);
-        }
+        //public void OnSortDisplay(FrameViewModel frameViewModel)
+        //{
+        //    BeforeEventAction();
+        //    FrameForSortChanged?.Invoke(this, frameViewModel);
+        //}
 
-        public void OnZoomIntoDisplay(FrameViewModel frameViewModel)
-        {
-            BeforeEventAction();
-            FrameForZoomIntoChanged?.Invoke(this, frameViewModel);
-        }
+        //public void OnZoomIntoDisplay(FrameViewModel frameViewModel)
+        //{
+        //    BeforeEventAction();
+        //    FrameForZoomIntoChanged?.Invoke(this, frameViewModel);
+        //}
 
-        public void OnZoomOutDisplay(FrameViewModel frameViewModel)
+        //public void OnZoomOutDisplay(FrameViewModel frameViewModel)
+        //{
+        //    BeforeEventAction();
+        //    FrameForZoomOutChanged?.Invoke(this, frameViewModel);
+        //}
+
+        public void OnSimilarDisplay(FrameViewModel frameViewModel)
         {
             BeforeEventAction();
-            FrameForZoomOutChanged?.Invoke(this, frameViewModel);
+            FrameForSimilarChanged?.Invoke(this, frameViewModel);
         }
 
         public void OnVideoDisplay(FrameViewModel frameViewModel)
@@ -303,7 +310,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
                             .Select(frameId => ConvertThumbnailToViewModel(videoId, frameId))
                             .ToList());
             SelectFrame(frameViewModel);
-            IsInitialDisplayShown = false;
+            //IsInitialDisplayShown = false;
             UpdateVisibleFrames();
         }
 
@@ -316,7 +323,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             // TODO: .Where(f => f != null) should not happen! Investigate why is this used here and possibly remove it!
             _loadedFrames = await Task.Run(() => sortedFrameIds.Select(GetFrameViewModelForFrameId).Where(f => f != null).ToList());
-            IsInitialDisplayShown = false;
+            //IsInitialDisplayShown = false;
             UpdateVisibleFrames();
         }
 

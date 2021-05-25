@@ -98,7 +98,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 display.FramesForQueryChanged += (sender, framesToQuery) => Query.UpdateQueryObjects(framesToQuery);
                 display.SubmittedFramesChanged += async (sender, submittedFrames) => await OnSubmittedFramesChanged(submittedFrames);
                 // TODO: unused?
-                display.FrameForSortChanged += async (sender, selectedFrame) => await OnFrameForSortChanged(selectedFrame);
+                display.FrameForSimilarChanged += async (sender, selectedFrame) => await OnFrameForSimilarChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
                 display.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
             }
@@ -481,6 +481,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        private async Task OnFrameForSimilarChanged(FrameViewModel selectedFrame)
+        {
+            IsBusy = true;
+            IsDetailViewVisible = true;
+            _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+
+            int keyframeId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber);
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, _viretCore.KnnRanker.ComputeKnnRanking(keyframeId).Take(1000).ToArray());
+        }
+
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)
         {
             IsBusy = true;
@@ -490,25 +500,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             await DetailViewModel.LoadVideoForFrame(selectedFrame);
         }
 
-        private async Task OnFrameForSortChanged(FrameViewModel selectedFrame)
-        {
-            IsBusy = true;
-            int[] sortedIds = await _sortingTask;
-            if (!sortedIds.Any())
-            {
-                MessageBox.Show(Resources.Properties.Resources.MapNotAvailableText);
-                IsBusy = false;
-                return;
-            }
-
-            _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
-            IsDetailViewVisible = true;
-            await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedIds);
-        }
+        
         private async Task OnFrameForScrollVideoChanged(FrameViewModel selectedFrame)
         {
-            _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.TemporalContext, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
-            //await DetailView.LoadVideoForFrame(selectedFrame);
+            await Task.Run(() => _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.TemporalContext, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}"));
         }
 
         private void CloseDetailViewModel()

@@ -95,21 +95,17 @@
                                     <Binding Path="CanAddToQuery" />
                                 </MultiBinding>
                             </StackPanel.Visibility>
-                            <Button FontSize="7" Background="LightCoral" Click="ButtonAddClicked" Tag="1">
+                            <Button FontSize="7" Background="LightCoral" Click="SimilarClicked" Tag="1">
                                 <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,0,0" Padding ="5">
                                     <Run Text="Similar" FontSize="12"/>
                                 </TextBlock>
                             </Button>
                         </StackPanel>
-                        
+
                         <Button x:Name="VideoButton" Grid.Column="6" FontSize="7" Background="DeepSkyBlue" Click="VideoClicked"
                                 Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
                             <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.VideoButtonText}"/>
                         </Button>
-                        <!--<Button x:Name="SortedButton" Grid.Column="4" FontSize="7" Background="DeepSkyBlue" Click="SortedClicked"
-                                Visibility="{Binding Path=IsSelectable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FrameControl}}, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True}">
-                            <TextBlock FontSize="8" VerticalAlignment="Top" Margin="0, 0, 0, 0" FontWeight="Bold" Text="{x:Static properties:Resources.MapButtonText}"/>
-                        </Button>-->
                         <Button x:Name="SubmitButton" Grid.Column="7" FontSize="7" Background="DarkSeaGreen" Click="SubmitClicked">
                             <Button.Visibility>
                                 <MultiBinding Converter="{StaticResource BooleanAndToVisibilityConverter}">

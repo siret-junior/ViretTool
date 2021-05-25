@@ -84,7 +84,9 @@ namespace Viret.Submission
 
         public void FlushBrowsingEvents()
         {
-            throw new NotImplementedException();
+            _localLogger.WriteLine("================================================================================");
+            _localLogger.WriteLine($"TODO: flushing browsing events at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.");
+
         }
 
         public void Dispose()

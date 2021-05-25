@@ -40,20 +40,26 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(RoutedEventHandler),
             typeof(FrameControl));
 
-        public static readonly RoutedEvent SortDisplayEvent = EventManager.RegisterRoutedEvent(
-            nameof(SortDisplay),
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(FrameControl));
+        //public static readonly RoutedEvent SortDisplayEvent = EventManager.RegisterRoutedEvent(
+        //    nameof(SortDisplay),
+        //    RoutingStrategy.Bubble,
+        //    typeof(RoutedEventHandler),
+        //    typeof(FrameControl));
 
-        public static readonly RoutedEvent ZoomIntoDisplayEvent = EventManager.RegisterRoutedEvent(
-            nameof(ZoomIntoDisplay),
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(FrameControl));
+        //public static readonly RoutedEvent ZoomIntoDisplayEvent = EventManager.RegisterRoutedEvent(
+        //    nameof(ZoomIntoDisplay),
+        //    RoutingStrategy.Bubble,
+        //    typeof(RoutedEventHandler),
+        //    typeof(FrameControl));
 
-        public static readonly RoutedEvent ZoomOutDisplayEvent = EventManager.RegisterRoutedEvent(
-            nameof(ZoomOutDisplay),
+        //public static readonly RoutedEvent ZoomOutDisplayEvent = EventManager.RegisterRoutedEvent(
+        //    nameof(ZoomOutDisplay),
+        //    RoutingStrategy.Bubble,
+        //    typeof(RoutedEventHandler),
+        //    typeof(FrameControl));
+
+        public static readonly RoutedEvent SimilarDisplayEvent = EventManager.RegisterRoutedEvent(
+            nameof(SimilarDisplay),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(FrameControl));
@@ -83,17 +89,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
             typeof(FrameControl),
             null);
 
-        public static readonly DependencyProperty ShowZoomOutProperty = DependencyProperty.Register(
-            nameof(ShowZoomOut),
-            typeof(bool),
-            typeof(FrameControl),
-            null);
+        //public static readonly DependencyProperty ShowZoomOutProperty = DependencyProperty.Register(
+        //    nameof(ShowZoomOut),
+        //    typeof(bool),
+        //    typeof(FrameControl),
+        //    null);
 
-        public static readonly DependencyProperty ShowZoomIntoProperty = DependencyProperty.Register(
-            nameof(ShowZoomInto),
-            typeof(bool),
-            typeof(FrameControl),
-            null);
+        //public static readonly DependencyProperty ShowZoomIntoProperty = DependencyProperty.Register(
+        //    nameof(ShowZoomInto),
+        //    typeof(bool),
+        //    typeof(FrameControl),
+        //    null);
 
         public static readonly DependencyProperty IsClickedProperty = DependencyProperty.Register(
             nameof(IsClicked),
@@ -124,17 +130,17 @@ namespace ViretTool.PresentationLayer.Controls.Common
             private set => SetValue(IsMouseOverFrameProperty, value);
         }
 
-        public bool ShowZoomOut
-        {
-            get => (bool)GetValue(ShowZoomOutProperty);
-            set => SetValue(ShowZoomOutProperty, value);
-        }
+        //public bool ShowZoomOut
+        //{
+        //    get => (bool)GetValue(ShowZoomOutProperty);
+        //    set => SetValue(ShowZoomOutProperty, value);
+        //}
 
-        public bool ShowZoomInto
-        {
-            get => (bool)GetValue(ShowZoomIntoProperty);
-            set => SetValue(ShowZoomIntoProperty, value);
-        }
+        //public bool ShowZoomInto
+        //{
+        //    get => (bool)GetValue(ShowZoomIntoProperty);
+        //    set => SetValue(ShowZoomIntoProperty, value);
+        //}
 
         public bool IsSelectable
         {
@@ -192,22 +198,28 @@ namespace ViretTool.PresentationLayer.Controls.Common
             remove => RemoveHandler(FramesSubmittedEvent, value);
         }
 
-        public event RoutedEventHandler SortDisplay
-        {
-            add => AddHandler(SortDisplayEvent, value);
-            remove => RemoveHandler(SortDisplayEvent, value);
-        }
+        //public event RoutedEventHandler SortDisplay
+        //{
+        //    add => AddHandler(SortDisplayEvent, value);
+        //    remove => RemoveHandler(SortDisplayEvent, value);
+        //}
 
-        public event RoutedEventHandler ZoomIntoDisplay
-        {
-            add => AddHandler(ZoomIntoDisplayEvent, value);
-            remove => RemoveHandler(ZoomIntoDisplayEvent, value);
-        }
+        //public event RoutedEventHandler ZoomIntoDisplay
+        //{
+        //    add => AddHandler(ZoomIntoDisplayEvent, value);
+        //    remove => RemoveHandler(ZoomIntoDisplayEvent, value);
+        //}
 
-        public event RoutedEventHandler ZoomOutDisplay
+        //public event RoutedEventHandler ZoomOutDisplay
+        //{
+        //    add => AddHandler(ZoomOutDisplayEvent, value);
+        //    remove => RemoveHandler(ZoomOutDisplayEvent, value);
+        //}
+        
+        public event RoutedEventHandler SimilarDisplay
         {
-            add => AddHandler(ZoomOutDisplayEvent, value);
-            remove => RemoveHandler(ZoomOutDisplayEvent, value);
+            add => AddHandler(SimilarDisplayEvent, value);
+            remove => RemoveHandler(SimilarDisplayEvent, value);
         }
 
         public event RoutedEventHandler VideoDisplay
@@ -306,10 +318,10 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     throw new ArgumentException("Unknown sender");
             }
         }
-        private void ButtonAddGpsClicked(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(AddToGpsQueryClickedEvent));
-        }
+        //private void ButtonAddGpsClicked(object sender, RoutedEventArgs e)
+        //{
+        //    RaiseEvent(new RoutedEventArgs(AddToGpsQueryClickedEvent));
+        //}
 
         private void ButtonRemovedClicked(object sender, RoutedEventArgs e)
         {
@@ -321,18 +333,23 @@ namespace ViretTool.PresentationLayer.Controls.Common
             RaiseEvent(new RoutedEventArgs(FramesSubmittedEvent));
         }
 
-        private void SortedClicked(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
-        }
+        //private void SortedClicked(object sender, RoutedEventArgs e)
+        //{
+        //    RaiseEvent(new RoutedEventArgs(SortDisplayEvent));
+        //}
 
-        private void ZoomIntoClicked(object sender, RoutedEventArgs e)
+        //private void ZoomIntoClicked(object sender, RoutedEventArgs e)
+        //{
+        //    RaiseEvent(new RoutedEventArgs(ZoomIntoDisplayEvent));
+        //}
+        //private void ZoomOutClicked(object sender, RoutedEventArgs e)
+        //{
+        //    RaiseEvent(new RoutedEventArgs(ZoomOutDisplayEvent));
+        //}
+
+        private void SimilarClicked(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(ZoomIntoDisplayEvent));
-        }
-        private void ZoomOutClicked(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(ZoomOutDisplayEvent));
+            RaiseEvent(new RoutedEventArgs(SimilarDisplayEvent));
         }
         private void VideoClicked(object sender, RoutedEventArgs e)
         {

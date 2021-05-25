@@ -20,6 +20,7 @@ namespace Viret.Ranking.ContextAware
 
         public readonly int SegmentFirstFrameIndex;
         public readonly int Length;
+        
 
         /// <summary>
         /// Overall score of the segment, higher score is better

@@ -27,6 +27,7 @@ namespace Viret
         public ThumbnailReader ThumbnailReader { get; private set; }
         public KnnRanker KnnRanker { get; private set; }
         public W2vvBowToVector W2vvBowToVector { get; private set; }
+        public W2vvTextToVectorRemote W2vvTextToVectorRemote { get; private set; }
         public ContextAwareRanker ContextAwareRanker { get; private set; }
         public RankingService RankingService { get; private set; }
 
@@ -36,8 +37,9 @@ namespace Viret
         public ViretCore()
         {
             InteractionLogger = new InteractionLogger();
-            ItemSubmitter = new ItemSubmitter("TODO", "TODO from config file");
-            LogSubmitter = new LogSubmitter("TODO", "TODO from config file", InteractionLogger);
+            ItemSubmitter = new ItemSubmitter("TODO server URL", "TODO sessionId from config file");
+            LogSubmitter = new LogSubmitter("TODO server URL", "TODO sessionId from config file", InteractionLogger);
+            W2vvTextToVectorRemote = new W2vvTextToVectorRemote("TODO server URL");
         }
 
         public void LoadFromDirectory(string inputDirectory)
@@ -53,7 +55,7 @@ namespace Viret
             W2vvBowToVector = W2vvBowToVector.FromDirectory(inputDirectory);
             Console.WriteLine($"Loading context-aware ranker...");
             ContextAwareRanker = new ContextAwareRanker(KnnRanker.Vectors, Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray());
-            RankingService = new RankingService(W2vvBowToVector, ContextAwareRanker);
+            RankingService = new RankingService(W2vvBowToVector, W2vvTextToVectorRemote, ContextAwareRanker);
 
             IsLoaded = true;
         }

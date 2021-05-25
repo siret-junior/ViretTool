@@ -63,7 +63,7 @@
     <Compile Include="Ranking\Knn\KnnRanker.cs" />
     <Compile Include="Ranking\RankingService.cs" />
     <Compile Include="Ranking\W2VV\W2vvBowToVector.cs" />
-    <Compile Include="Ranking\W2VV\W2vvTextToVectoRemote.cs" />
+    <Compile Include="Ranking\W2VV\W2vvTextToVectorRemote.cs" />
     <Compile Include="Submission\ItemSubmitter.cs" />
     <Compile Include="Submission\LogSubmitter.cs" />
     <Compile Include="Thumbnails\ThumbnailJpeg.cs" />

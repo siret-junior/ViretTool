@@ -36,7 +36,7 @@
                                                                      [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
                                                                      [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                      [Event FrameSelected] = [Action OnFrameSelected($dataContext)];
-                                                                     [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
+                                                                     [Event SimilarDisplay] = [Action OnSimilarDisplay($dataContext)];
                                                                      [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
                                                                      [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];" 
                                                  IsSelectable="True" />
@@ -74,7 +74,7 @@
                                                                      [Event AddToGpsQueryClicked] = [Action OnAddToGpsClicked($dataContext)];
                                                                      [Event FramesSubmitted] = [Action OnFramesSubmitted($dataContext)];
                                                                      [Event FrameSelected] = [Action OnFrameSelectedSampled($dataContext)];
-                                                                     [Event SortDisplay] = [Action OnSortDisplay($dataContext)];
+                                                                     [Event SimilarDisplay] = [Action OnSimilarDisplay($dataContext)];
                                                                      [Event VideoDisplay] = [Action OnVideoDisplay($dataContext)];
                                                                      [Event ScrollVideoDisplay] = [Action OnScrollVideoDisplay($dataContext)];" 
                                                  IsSelectable="True">
