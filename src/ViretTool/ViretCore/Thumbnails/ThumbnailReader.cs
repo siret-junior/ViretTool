@@ -52,22 +52,21 @@ namespace Viret.Thumbnails
         private readonly object _lockObject = new object();
 
 
-        public ThumbnailReader(string inputFile)
+        public ThumbnailReader(string inputFile, int maxVideos = -1)
         {
             BaseBinaryReader = new BinaryReader(File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read));
 
             // load blob metadata
             BlobCount = BaseBinaryReader.ReadInt32();
+            
+            byte[] BlobOffsetsBytes = BaseBinaryReader.ReadBytes(BlobCount * sizeof(long));
             BlobOffsets = new long[BlobCount];
-            for (int i = 0; i < BlobCount; i++)
-            {
-                BlobOffsets[i] = BaseBinaryReader.ReadInt64();
-            }
+            Buffer.BlockCopy(BlobOffsetsBytes, 0, BlobOffsets, 0, BlobOffsetsBytes.Length);
+
+            byte[] BlobLengthsBytes = BaseBinaryReader.ReadBytes(BlobCount * sizeof(int));
             BlobLengths = new int[BlobCount];
-            for (int i = 0; i < BlobCount; i++)
-            {
-                BlobLengths[i] = BaseBinaryReader.ReadInt32();
-            }
+            Buffer.BlockCopy(BlobLengthsBytes, 0, BlobLengths, 0, BlobLengthsBytes.Length);
+
 
             // load filetype metadata
             int metadataLength = BaseBinaryReader.ReadInt32();
@@ -75,16 +74,15 @@ namespace Viret.Thumbnails
             ThumbnailHeight = BaseBinaryReader.ReadInt32();
             VideoCount = BaseBinaryReader.ReadInt32();
             FramesPerSecond = BaseBinaryReader.ReadInt32();
+            
+            byte[] VideoOffsetsBytes = BaseBinaryReader.ReadBytes(VideoCount * sizeof(int));
             VideoOffsets = new int[VideoCount];
-            for (int i = 0; i < VideoCount; i++)
-            {
-                VideoOffsets[i] = BaseBinaryReader.ReadInt32();
-            }
+            Buffer.BlockCopy(VideoOffsetsBytes, 0, VideoOffsets, 0, VideoOffsetsBytes.Length);
+
+            byte[] VideoFrameCountsBytes = BaseBinaryReader.ReadBytes(VideoCount * sizeof(int));
             VideoFrameCounts = new int[VideoCount];
-            for (int i = 0; i < VideoCount; i++)
-            {
-                VideoFrameCounts[i] = BaseBinaryReader.ReadInt32();
-            }
+            Buffer.BlockCopy(VideoFrameCountsBytes, 0, VideoFrameCounts, 0, VideoFrameCountsBytes.Length);
+
 
             // load globalId <-> (videoId, frameId) mappings
             GlobalIdToVideoFrame = new (int videoId, int frameNumber)[ThumbnailCount];
@@ -95,6 +93,10 @@ namespace Viret.Thumbnails
                 int videoId = BaseBinaryReader.ReadInt32();
                 int frameNumber = BaseBinaryReader.ReadInt32();
 
+                if (maxVideos > 0 && videoId >= maxVideos)
+                {
+                    break;
+                }
                 if (!_videoFrameToGlobalId.ContainsKey(videoId))
                 {
                     _videoFrameToGlobalId.Add(videoId, new Dictionary<int, int>());
@@ -106,14 +108,14 @@ namespace Viret.Thumbnails
         }
 
 
-        public static ThumbnailReader FromDirectory(string inputDirectory, string extension = ".thumbnails")
+        public static ThumbnailReader FromDirectory(string inputDirectory, int maxVideos = -1, string extension = ".thumbnails")
         {
             string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
             if (inputFile == null)
             {
                 throw new FileNotFoundException($"Thumbnails file was not found in directory '{inputDirectory}'");
             }
-            return new ThumbnailReader(inputFile);
+            return new ThumbnailReader(inputFile, maxVideos);
         }
 
 

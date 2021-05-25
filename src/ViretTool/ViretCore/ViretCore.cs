@@ -42,17 +42,22 @@ namespace Viret
             W2vvTextToVectorRemote = new W2vvTextToVectorRemote("TODO server URL");
         }
 
-        public void LoadFromDirectory(string inputDirectory)
+        public void LoadFromDirectory(string inputDirectory, int maxVideos = -1)
         {
             // TODO: tasks, dispose
             Console.WriteLine($"Loading dataset...");
-            Dataset = Dataset.FromDirectory(inputDirectory);
+            Dataset = Dataset.FromDirectory(inputDirectory, maxVideos);
+
             Console.WriteLine($"Loading thumbnails...");
-            ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory);
+            ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory, maxVideos);
+
             Console.WriteLine($"Loading kNN ranker...");
-            KnnRanker = KnnRanker.FromDirectory(inputDirectory);
+            int maxKeyframes = (maxVideos > 0) ? Dataset.Keyframes.Count : -1;
+            KnnRanker = KnnRanker.FromDirectory(inputDirectory, maxKeyframes);
+
             Console.WriteLine($"Loading W2VV BOW to vector...");
             W2vvBowToVector = W2vvBowToVector.FromDirectory(inputDirectory);
+
             Console.WriteLine($"Loading context-aware ranker...");
             ContextAwareRanker = new ContextAwareRanker(KnnRanker.Vectors, Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray());
             RankingService = new RankingService(W2vvBowToVector, W2vvTextToVectorRemote, ContextAwareRanker);

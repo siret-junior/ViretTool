@@ -18,7 +18,7 @@ namespace Viret.Ranking.Knn
             Vectors = vectors;
         }
 
-        public static KnnRanker FromFile(string inputFile)
+        public static KnnRanker FromFile(string inputFile, int maxKeyframes = -1)
         {
             using (BinaryReader reader = new BinaryReader(File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
@@ -30,6 +30,12 @@ namespace Viret.Ranking.Knn
                 // read filetype metadata
                 int metadataLength = reader.ReadInt32();
 
+                // trim dataset if required
+                if (maxKeyframes > 0)
+                {
+                    blobCount = maxKeyframes;
+                }
+
                 // load vectors
                 float[][] vectors = new float[blobCount][];
                 for (int iBlob = 0; iBlob < blobCount; iBlob++)
@@ -40,7 +46,7 @@ namespace Viret.Ranking.Knn
                     vectors[iBlob] = floatArray;
                 }
 
-                if (reader.BaseStream.Position != reader.BaseStream.Length)
+                if (maxKeyframes < 0 && reader.BaseStream.Position != reader.BaseStream.Length)
                 {
                     throw new DataMisalignedException($"There are still some data left at the end of the file.");
                 }
@@ -49,14 +55,14 @@ namespace Viret.Ranking.Knn
             }    
         }
 
-        public static KnnRanker FromDirectory(string inputDirectory, string extension = ".w2vv")
+        public static KnnRanker FromDirectory(string inputDirectory, int maxKeyframes = -1, string extension = ".w2vv")
         {
             string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
             if (inputFile == null)
             {
-                throw new FileNotFoundException($"Thumbnails file was not found in directory '{inputDirectory}'");
+                throw new FileNotFoundException($"W2VV features file was not found in directory '{inputDirectory}'");
             }
-            return FromFile(inputFile);
+            return FromFile(inputFile, maxKeyframes);
         }
 
 

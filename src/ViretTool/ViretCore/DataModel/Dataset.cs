@@ -36,7 +36,7 @@ namespace Viret.DataModel
         public readonly List<Keyframe> Keyframes = new List<Keyframe>();
 
 
-        public Dataset(string inputFile)
+        public Dataset(string inputFile, int maxVideos = -1)
         {
             // parse records
             var records = File.ReadAllLines(inputFile)
@@ -64,14 +64,17 @@ namespace Viret.DataModel
             // build a tree structure
             foreach (var record in records.OrderBy(record => record.Id))
             {
+                if (maxVideos > 0 && record.VideoId >= maxVideos)
+                {
+                    break;
+                }
                 Video video = GetOrAppendVideo(this, record.VideoId);
                 Shot shot = GetOrAppendShot(video, record.ShotId, record.ShotStartFrame, record.ShotEndFrame);
                 AppendKeyframe(shot, record.FrameNumber);
             }
         }
 
-
-        public static Dataset FromDirectory(string inputDirectory, string extension = ".dataset")
+        public static Dataset FromDirectory(string inputDirectory, int maxVideos = -1, string extension = ".dataset")
         {
             string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
             if (inputFile == null)
@@ -79,7 +82,7 @@ namespace Viret.DataModel
                 throw new FileNotFoundException($"Dataset file was not found in directory '{inputDirectory}'");
             }
 
-            return new Dataset(inputFile);
+            return new Dataset(inputFile, maxVideos);
         }
 
 
