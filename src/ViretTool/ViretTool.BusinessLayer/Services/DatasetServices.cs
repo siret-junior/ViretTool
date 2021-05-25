@@ -1,10 +1,6 @@
 ﻿using Viret;
 using Viret.Thumbnails;
 using ViretTool.BusinessLayer.Datasets;
-using ViretTool.BusinessLayer.Descriptors;
-using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
-using ViretTool.BusinessLayer.Descriptors.KeywordTopScoring;
-using ViretTool.BusinessLayer.Thumbnails;
 
 namespace ViretTool.BusinessLayer.Services
 {

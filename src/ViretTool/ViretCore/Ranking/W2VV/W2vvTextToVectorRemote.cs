@@ -15,7 +15,7 @@ namespace Viret.Ranking.W2VV
             ServerUrl = serverUrl;
         }
 
-        public float[] TextToVector(string[] query)
+        public /* async? */ float[] TextToVector(string[] query)
         {
             throw new NotImplementedException();
         }

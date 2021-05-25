@@ -5,10 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ViretTool.Core;
-using ViretTool.BusinessLayer.Descriptors;
-//using ViretTool.BusinessLayer.Descriptors.Models;
 using ViretTool.BusinessLayer.Services;
-using ViretTool.BusinessLayer.Descriptors.KeywordLabel;
 using Color = System.Windows.Media.Color;
 
 namespace ViretTool.PresentationLayer.Controls.Common

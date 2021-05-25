@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 //using ViretTool.DataLayer.DataModel;
-using ViretTool.DataLayer.DataIO.DatasetIO;
 using Viret;
 using Viret.DataModel;
 
