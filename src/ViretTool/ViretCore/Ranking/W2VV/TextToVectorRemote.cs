@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Viret.Ranking.W2VV
 {
-    public class W2vvTextToVectorRemote
+    public class TextToVectorRemote
     {
         public readonly string ServerUrl;
 
-        public W2vvTextToVectorRemote(string serverUrl)
+        public TextToVectorRemote(string inputDirectory, string subdirectory, string serverUrl)
         {
             ServerUrl = serverUrl;
         }

@@ -7,7 +7,7 @@ using Viret.DataModel;
 using Viret.Logging;
 using Viret.Ranking;
 using Viret.Ranking.ContextAware;
-using Viret.Ranking.Knn;
+using Viret.Ranking.Features;
 using Viret.Ranking.W2VV;
 using Viret.Submission;
 using Viret.Thumbnails;
@@ -25,10 +25,15 @@ namespace Viret
         
         public Dataset Dataset { get; private set; }
         public ThumbnailReader ThumbnailReader { get; private set; }
-        public KnnRanker KnnRankerBert { get; private set; }
-        public KnnRanker KnnRankerClip { get; private set; }
-        public W2vvBowToVector W2vvBowToVector { get; private set; }
-        public W2vvTextToVectorRemote W2vvTextToVectorRemote { get; private set; }
+
+        public FeatureVectors FeatureVectorsW2vv { get; private set; }
+        public FeatureVectors FeatureVectorsBert { get; private set; }
+        public FeatureVectors FeatureVectorsClip { get; private set; }
+
+        public BowToVectorW2vv BowToVectorW2vv { get; private set; }
+        public TextToVectorRemote TextToVectorRemoteBert { get; private set; }
+        public TextToVectorRemote TextToVectorRemoteClip { get; private set; }
+
         public ContextAwareRanker ContextAwareRanker { get; private set; }
         public RankingService RankingService { get; private set; }
 
@@ -40,30 +45,30 @@ namespace Viret
             InteractionLogger = new InteractionLogger();
             ItemSubmitter = new ItemSubmitter("TODO server URL", "TODO sessionId from config file");
             LogSubmitter = new LogSubmitter("TODO server URL", "TODO sessionId from config file", InteractionLogger);
-            W2vvTextToVectorRemote = new W2vvTextToVectorRemote("TODO server URL");
         }
 
-        public void LoadFromDirectory(string inputDirectory, int maxVideos = 75)
+        // TODO: tasks, dispose
+        public void LoadFromDirectory(string inputDirectory, int maxVideos = -1)
         {
-            // TODO: tasks, dispose
-            Console.WriteLine($"Loading dataset...");
+            // base
             Dataset = Dataset.FromDirectory(inputDirectory, maxVideos, ".dataset");
-
-            Console.WriteLine($"Loading thumbnails...");
             ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory, maxVideos, ".thumbnails");
-
-            Console.WriteLine($"Loading kNN ranker...");
             int maxKeyframes = (maxVideos > 0) ? Dataset.Keyframes.Count : -1;
-            KnnRankerBert = KnnRanker.FromDirectory(inputDirectory, maxKeyframes, ".w2vv-bert");
-            //KnnRankerClip = KnnRanker.FromDirectory(inputDirectory, maxKeyframes, ".w2vv-clip");
 
-            Console.WriteLine($"Loading W2VV BOW to vector...");
-            W2vvBowToVector = W2vvBowToVector.FromDirectory(inputDirectory, "w2vv");
+            // features
+            FeatureVectorsW2vv = FeatureVectors.FromDirectory(inputDirectory, maxKeyframes, ".w2vv");
+            //FeatureVectorsBert = FeatureVectors.FromDirectory(inputDirectory, maxKeyframes, ".bert");
+            //FeatureVectorsClip = FeatureVectors.FromDirectory(inputDirectory, maxKeyframes, ".clip");
 
-            Console.WriteLine($"Loading context-aware ranker...");
+            // text to vector services
+            BowToVectorW2vv = BowToVectorW2vv.FromDirectory(inputDirectory, "w2vv");
+            //TextToVectorRemoteBert = new TextToVectorRemote(inputDirectory, "bert", "TODO server URL");
+            //TextToVectorRemoteClip = new TextToVectorRemote(inputDirectory, "clip", "TODO server URL");
+
+            // ranking
             int[] videoLastFrameIds = Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray();
-            ContextAwareRanker = new ContextAwareRanker(KnnRankerBert.Vectors, videoLastFrameIds);
-            RankingService = new RankingService(W2vvBowToVector, W2vvTextToVectorRemote, ContextAwareRanker);
+            ContextAwareRanker = new ContextAwareRanker(FeatureVectorsW2vv.Vectors, videoLastFrameIds);
+            RankingService = new RankingService(this);
 
             IsLoaded = true;
         }

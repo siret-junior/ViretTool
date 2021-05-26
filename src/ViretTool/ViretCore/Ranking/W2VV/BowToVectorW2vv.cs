@@ -7,29 +7,27 @@ using System.Threading.Tasks;
 
 namespace Viret.Ranking.W2VV
 {
-    public class W2vvBowToVector
+    public class BowToVectorW2vv
     {
         private const int VECTOR_DIMENSION = 2048;
 
         private readonly Dictionary<string, int> _wordToIdDictionary;
         private readonly float[][] _wordIdToVector;
         private readonly float[] _biasVector;
-        private readonly float[][] _pcaMatrix;
-        private readonly float[] _pcaMeanVector;
+        private readonly PcaConversion _pcaConversion;
 
-        public W2vvBowToVector(string inputDirectory)
+        public BowToVectorW2vv(string inputDirectory)
         {
             _wordToIdDictionary = LoadDictionary(Path.Combine(inputDirectory, "word2idx.txt"));
-
             _wordIdToVector = LoadFloatTable(Path.Combine(inputDirectory, "txt_weight-11147x2048floats.bin"), VECTOR_DIMENSION);
             _biasVector = LoadFloatTable(Path.Combine(inputDirectory, "txt_bias-2048floats.bin"), VECTOR_DIMENSION)[0];
-            _pcaMatrix = LoadFloatTable(Path.Combine(inputDirectory, Directory.GetFiles(inputDirectory, "*w2vv.pca.matrix.bin").First()), VECTOR_DIMENSION);
-            _pcaMeanVector = LoadFloatTable(Path.Combine(inputDirectory, Directory.GetFiles(inputDirectory, "*w2vv.pca.mean.bin").First()), VECTOR_DIMENSION)[0];
+
+            _pcaConversion = new PcaConversion(inputDirectory, VECTOR_DIMENSION);
         }
 
-        public static W2vvBowToVector FromDirectory(string path, string subDirectory = "w2vv")
+        public static BowToVectorW2vv FromDirectory(string path, string subDirectory = "w2vv")
         {
-            return new W2vvBowToVector(Path.Combine(path, subDirectory));
+            return new BowToVectorW2vv(Path.Combine(path, subDirectory));
         }
 
         public float[] BowToVector(string[] query, bool applyPCA = true)
@@ -59,19 +57,9 @@ namespace Viret.Ranking.W2VV
             // apply PCA if required
             if (applyPCA)
             {
-                NormalizeVector(vector);
-                SubtractVector(vector, _pcaMeanVector);
-                float[] result = new float[_pcaMatrix.Length];
-                for (int iRow = 0; iRow < _pcaMatrix.Length; iRow++)
-                {
-                    float[] row = _pcaMatrix[iRow];
-                    result[iRow] = GetDotProduct(row, vector);
-                }
-                vector = result;
-                NormalizeVector(vector);
+                vector = _pcaConversion.ApplyPCA(vector);
             }
 
-            // 512-dim vector with PCA or 2048-dim vector without PCA
             return vector;
         }
 
@@ -83,24 +71,6 @@ namespace Viret.Ranking.W2VV
             }
         }
 
-        private void SubtractVector(float[] vector, float[] subtraction)
-        {
-            for (int i = 0; i < vector.Length; i++)
-            {
-                vector[i] -= subtraction[i];
-            }
-        }
-
-        private float GetDotProduct(float[] v1, float[] v2)
-        {
-            double result = 0;
-            for (int i = 0; i < v1.Length; i++)
-            {
-                result += v1[i] * v2[i];
-            }
-            return (float)result;
-        }
-
         private void TanhElements(float[] v)
         {
             for (int i = 0; i < v.Length; i++)
@@ -108,18 +78,6 @@ namespace Viret.Ranking.W2VV
                 v[i] = (float)Math.Tanh(v[i]);
             }
         }
-
-        private void NormalizeVector(float[] v)
-        {
-            float size = (float)Math.Sqrt(GetDotProduct(v, v));
-            if (size == 0) return;
-
-            for (int i = 0; i < v.Length; i++)
-            {
-                v[i] /= size;
-            }
-        }
-
 
         private Dictionary<string, int> LoadDictionary(string inputFile)
         {

@@ -15,15 +15,12 @@ namespace Viret.Ranking
     /// </summary>
     public class RankingService
     {
-        public readonly W2vvBowToVector W2vvBowToVector;
-        public readonly W2vvTextToVectorRemote W2vvTextToVectorRemote;
-        public readonly ContextAwareRanker ContextAwareRanker;
-
-        public RankingService(W2vvBowToVector w2vvBowToVector, W2vvTextToVectorRemote w2vvTextToVectorRemote, ContextAwareRanker contextAwareRanker) 
+        public readonly ViretCore ViretCore;
+        public enum RankingModel { W2vvBow, W2vvBert, Clip }
+        
+        public RankingService(ViretCore viretCore) 
         {
-            W2vvBowToVector = w2vvBowToVector;
-            W2vvTextToVectorRemote = w2vvTextToVectorRemote;
-            ContextAwareRanker = contextAwareRanker;
+            ViretCore = viretCore;
         }
 
         public void PreloadQuery(string[] querySentences)
@@ -32,17 +29,17 @@ namespace Viret.Ranking
         }
 
 
-        public List<VideoSegment> ComputeRankedResultSet(string[] querySentences)
+        public List<VideoSegment> ComputeRankedResultSet(string[] querySentences, RankingModel rankingModel = RankingModel.W2vvBow)
         {
             // first pass through W2VV
             string[][] sentencesOfWords = querySentences.Select(sentence => sentence.Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries)).ToArray();
-            float[][] queryVectors = sentencesOfWords.Select(sentenceWords => W2vvBowToVector.BowToVector(sentenceWords)).ToArray();
+            float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.BowToVectorW2vv.BowToVector(sentenceWords)).ToArray();
             // alternatively through remote W2VV service
             //float[][] queryVectors = sentencesOfWords.Select(sentenceWords => W2vvTextToVectorRemote.TextToVector(sentenceWords)).ToArray();
 
             // then through context-aware ranking
             int segmentSize = 10;
-            List<VideoSegment> resultSet = ContextAwareRanker.RankVideoSegments(queryVectors, segmentSize);
+            List<VideoSegment> resultSet = ViretCore.ContextAwareRanker.RankVideoSegments(queryVectors, segmentSize);
 
             // order by score
             List<VideoSegment> rankedResultSet = resultSet

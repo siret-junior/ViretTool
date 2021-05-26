@@ -6,19 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Viret.Ranking.Knn
+namespace Viret.Ranking.Features
 {
-    public class KnnRanker
+    public class FeatureVectors
     {
         public readonly float[][] Vectors;
 
 
-        public KnnRanker(float[][] vectors)
+        public FeatureVectors(float[][] vectors)
         {
             Vectors = vectors;
         }
 
-        public static KnnRanker FromFile(string inputFile, int maxKeyframes = -1)
+        public static FeatureVectors FromFile(string inputFile, int maxKeyframes = -1)
         {
             using (BinaryReader reader = new BinaryReader(File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
@@ -51,11 +51,11 @@ namespace Viret.Ranking.Knn
                     throw new DataMisalignedException($"There are still some data left at the end of the file.");
                 }
 
-                return new KnnRanker(vectors);
+                return new FeatureVectors(vectors);
             }    
         }
 
-        public static KnnRanker FromDirectory(string inputDirectory, int maxKeyframes = -1, string extension = ".w2vv")
+        public static FeatureVectors FromDirectory(string inputDirectory, int maxKeyframes = -1, string extension = ".w2vv")
         {
             string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
             if (inputFile == null)

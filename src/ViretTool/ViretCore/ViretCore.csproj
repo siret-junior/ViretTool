@@ -60,10 +60,11 @@
     <Compile Include="Ranking\ContextAware\AnnotatedVideoSegment.cs" />
     <Compile Include="Ranking\ContextAware\ContextAwareRanker.cs" />
     <Compile Include="Ranking\ContextAware\VideoSegment.cs" />
-    <Compile Include="Ranking\Knn\KnnRanker.cs" />
+    <Compile Include="Ranking\Features\FeatureVectors.cs" />
     <Compile Include="Ranking\RankingService.cs" />
-    <Compile Include="Ranking\W2VV\W2vvBowToVector.cs" />
-    <Compile Include="Ranking\W2VV\W2vvTextToVectorRemote.cs" />
+    <Compile Include="Ranking\W2VV\BowToVectorW2vv.cs" />
+    <Compile Include="Ranking\W2VV\PcaConversion.cs" />
+    <Compile Include="Ranking\W2VV\TextToVectorRemote.cs" />
     <Compile Include="Submission\ItemSubmitter.cs" />
     <Compile Include="Submission\LogSubmitter.cs" />
     <Compile Include="Thumbnails\ThumbnailJpeg.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="ViretCore.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Ranking\SpeechToText\" />
+    <Folder Include="SpeechToText\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
