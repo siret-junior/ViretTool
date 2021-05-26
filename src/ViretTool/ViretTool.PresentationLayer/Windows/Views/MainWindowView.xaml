@@ -46,7 +46,7 @@
     </Window.Resources>
 
 
-    <Grid>
+    <Grid x:Name="MainContainerGrid"> <!-- TODO: why is this encapulated in a grid? Does it need to be? -->
         <common:BusyIndicator>
             <common:BusyIndicator.IsBusy>
                 <MultiBinding Converter="{StaticResource BooleanOrToBooleanConverter}">
@@ -54,8 +54,10 @@
                     <!--<Binding Path="QueryResults.IsBusy" />-->
                 </MultiBinding>
             </common:BusyIndicator.IsBusy>
-            <Grid>
+            
+            <Grid x:Name="MainLayoutGrid">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="32"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
@@ -71,28 +73,34 @@
                     <!-- Menu -->
                     <Menu Grid.Column="0" Width="Auto" Background="White" Focusable="False">
                         <!-- File -->
-                        <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
+                        <MenuItem Height="32" Padding="15 3 15 3" Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
                             <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
                             <Separator />
                             <MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>
                         </MenuItem>
                         <!-- Test -->
-                        <MenuItem Padding="10 3 10 3" Header="{x:Static properties:Resources.TestButtonText}" 
+                        <MenuItem Height="32" Padding="15 3 15 3" Header="{x:Static properties:Resources.TestButtonText}" 
                                           cal:Message.Attach="[Event Click] = [Action OpenTestWindow]"
                                           FocusVisualStyle="{x:Null}" Focusable="False"></MenuItem>
                     </Menu>
 
                     <!-- Clear button -->
                     <Button Grid.Column="1" x:Name="ClearAll"  
+                                    Height="32" VerticalAlignment="Top"
                                     Margin="0,0,0,0" Padding="5 3 5 3"
                                     Content="{x:Static properties:Resources.ClearAllText}"
                                     Background="IndianRed" />
                     
-                    <!-- textbox input -->
+                    <!-- Textbox input -->
                     <ContentControl Grid.Column="2" x:Name="Query" />
+
+                    <!-- Model selector -->
+                    <!-- Model remote status? -->
+                    
                 </Grid>
 
-                <GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Stretch" Focusable="False" />
+                <!-- GridSplitter -->
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Focusable="False" />
 
                 <!-- Displays -->
                 <ContentControl Grid.Row="2" x:Name="ResultDisplay" />
