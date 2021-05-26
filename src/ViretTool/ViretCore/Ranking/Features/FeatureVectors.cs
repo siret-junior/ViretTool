@@ -55,12 +55,12 @@ namespace Viret.Ranking.Features
             }    
         }
 
-        public static FeatureVectors FromDirectory(string inputDirectory, int maxKeyframes = -1, string extension = ".w2vv")
+        public static FeatureVectors FromDirectory(string inputDirectory, string extension, int maxKeyframes = -1)
         {
             string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
             if (inputFile == null)
             {
-                throw new FileNotFoundException($"W2VV features file was not found in directory '{inputDirectory}'");
+                throw new FileNotFoundException($"Features file with extension '{extension}' was not found in directory '{inputDirectory}'.");
             }
             return FromFile(inputFile, maxKeyframes);
         }

@@ -19,6 +19,7 @@ namespace Viret
     /// </summary>
     public class ViretCore : IDisposable
     {
+        // TODO: error/warn/info logger
         public InteractionLogger InteractionLogger { get; private set; }
         public ItemSubmitter ItemSubmitter { get; private set; }
         public LogSubmitter LogSubmitter { get; private set; }
@@ -34,7 +35,9 @@ namespace Viret
         public TextToVectorRemote TextToVectorRemoteBert { get; private set; }
         public TextToVectorRemote TextToVectorRemoteClip { get; private set; }
 
-        public ContextAwareRanker ContextAwareRanker { get; private set; }
+        public ContextAwareRanker ContextAwareRankerW2vv { get; private set; }
+        public ContextAwareRanker ContextAwareRankerBert { get; private set; }
+        public ContextAwareRanker ContextAwareRankerClip { get; private set; }
         public RankingService RankingService { get; private set; }
 
         public bool IsLoaded { get; private set; } = false;
@@ -56,18 +59,20 @@ namespace Viret
             int maxKeyframes = (maxVideos > 0) ? Dataset.Keyframes.Count : -1;
 
             // features
-            FeatureVectorsW2vv = FeatureVectors.FromDirectory(inputDirectory, maxKeyframes, ".w2vv");
-            //FeatureVectorsBert = FeatureVectors.FromDirectory(inputDirectory, maxKeyframes, ".bert");
-            //FeatureVectorsClip = FeatureVectors.FromDirectory(inputDirectory, maxKeyframes, ".clip");
+            FeatureVectorsW2vv = FeatureVectors.FromDirectory(inputDirectory, ".w2vv", maxKeyframes);
+            //FeatureVectorsBert = FeatureVectors.FromDirectory(inputDirectory, ".bert", maxKeyframes);
+            //FeatureVectorsClip = FeatureVectors.FromDirectory(inputDirectory, ".clip", maxKeyframes);
 
             // text to vector services
             BowToVectorW2vv = BowToVectorW2vv.FromDirectory(inputDirectory, "w2vv");
-            //TextToVectorRemoteBert = new TextToVectorRemote(inputDirectory, "bert", "TODO server URL");
-            //TextToVectorRemoteClip = new TextToVectorRemote(inputDirectory, "clip", "TODO server URL");
+            //TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(inputDirectory, "bert", 1024);
+            //TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(inputDirectory, "clip", 640);
 
             // ranking
             int[] videoLastFrameIds = Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray();
-            ContextAwareRanker = new ContextAwareRanker(FeatureVectorsW2vv.Vectors, videoLastFrameIds);
+            ContextAwareRankerW2vv = new ContextAwareRanker(FeatureVectorsW2vv.Vectors, videoLastFrameIds);
+            //ContextAwareRankerBert = new ContextAwareRanker(FeatureVectorsBert.Vectors, videoLastFrameIds);
+            //ContextAwareRankerClip = new ContextAwareRanker(FeatureVectorsClip.Vectors, videoLastFrameIds);
             RankingService = new RankingService(this);
 
             IsLoaded = true;

@@ -25,9 +25,9 @@ namespace Viret.Ranking.W2VV
             _pcaConversion = new PcaConversion(inputDirectory, VECTOR_DIMENSION);
         }
 
-        public static BowToVectorW2vv FromDirectory(string path, string subDirectory = "w2vv")
+        public static BowToVectorW2vv FromDirectory(string inputDirectory, string subDirectory = "w2vv")
         {
-            return new BowToVectorW2vv(Path.Combine(path, subDirectory));
+            return new BowToVectorW2vv(Path.Combine(inputDirectory, subDirectory));
         }
 
         public float[] BowToVector(string[] query, bool applyPCA = true)

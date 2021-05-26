@@ -40,7 +40,7 @@ namespace Viret.Ranking.ContextAware
         /// </summary>
         /// <param name="queryVectors">List of normalized query feature vectors</param>
         /// <param name="segmentSize">Number of frames in one segment</param>
-        public List<VideoSegment> RankVideoSegments(IList<float[]> queryVectors, int segmentSize)
+        public List<VideoSegment> RankVideoSegments(IList<float[]> queryVectors, int segmentSize = 10)
         {
             // computes query scores, but uses cache -> needs reset with new search!
             List<double[]> frameScoresForEachQuery = ComputeScoresForQueries(queryVectors);

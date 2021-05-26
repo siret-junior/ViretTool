@@ -31,20 +31,41 @@ namespace Viret.Ranking
 
         public List<VideoSegment> ComputeRankedResultSet(string[] querySentences, RankingModel rankingModel = RankingModel.W2vvBow)
         {
-            // first pass through W2VV
+            // split to sentences of words
             string[][] sentencesOfWords = querySentences.Select(sentence => sentence.Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries)).ToArray();
-            float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.BowToVectorW2vv.BowToVector(sentenceWords)).ToArray();
-            // alternatively through remote W2VV service
-            //float[][] queryVectors = sentencesOfWords.Select(sentenceWords => W2vvTextToVectorRemote.TextToVector(sentenceWords)).ToArray();
 
-            // then through context-aware ranking
-            int segmentSize = 10;
-            List<VideoSegment> resultSet = ViretCore.ContextAwareRanker.RankVideoSegments(queryVectors, segmentSize);
+            // context-aware ranking based on the selected ranking model
+            List<VideoSegment> resultSet;
+            switch (rankingModel)
+            {
+                case RankingModel.W2vvBow:
+                    {
+                        float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.BowToVectorW2vv.BowToVector(sentenceWords)).ToArray();
+                        resultSet = ViretCore.ContextAwareRankerW2vv.RankVideoSegments(queryVectors);
+                    }
+                    break;
+                case RankingModel.W2vvBert:
+                    {
+                        // TODO: parallel?
+                        float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteBert.TextToVector(sentenceWords)).ToArray();
+                        resultSet = ViretCore.ContextAwareRankerBert.RankVideoSegments(queryVectors);
+                    }
+                    break;
+                case RankingModel.Clip:
+                    {
+                        // TODO: parallel?
+                        float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteClip.TextToVector(sentenceWords)).ToArray();
+                        resultSet = ViretCore.ContextAwareRankerClip.RankVideoSegments(queryVectors);
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException($"Unexpected ranking model: '{Enum.GetName(typeof(RankingModel), rankingModel)}'.");
+            }
 
             // order by score
             List<VideoSegment> rankedResultSet = resultSet
                 .OrderByDescending(segment => segment.Score)
-                .ThenByDescending(segment => segment.SegmentFirstFrameIndex)
+                .ThenByDescending(segment => segment.SegmentFirstFrameIndex)    // TODO: pivot
                 .ToList();
 
             return rankedResultSet;
