@@ -34,6 +34,28 @@ namespace ViretTool.PresentationLayer.Helpers
             return Color.FromArgb((int)(rgbResult.R * 255), (int)(rgbResult.G * 255), (int)(rgbResult.B * 255));
         }
 
+        public static System.Windows.Media.Color InterpolateColorHSV(double interpolation, bool useShortRotation = false)
+        {
+            Color colorFrom = Color.Red;
+            Color colorTo = Color.Blue;
+            ColorRGB rgbFrom = new ColorRGB(colorFrom.R / 255.0, colorFrom.G / 255.0, colorFrom.B / 255.0);
+            ColorRGB rgbTo = new ColorRGB(colorTo.R / 255.0, colorTo.G / 255.0, colorTo.B / 255.0);
+
+            ColorHSV hsvFrom = new ColorHSV(rgbFrom);
+            ColorHSV hsvTo = new ColorHSV(rgbTo);
+
+            (hsvFrom, hsvTo) = FixDesaturatedColors(hsvFrom, hsvTo);
+
+            double resultHue = InterpolateHue(interpolation, hsvFrom, hsvTo, useShortRotation);
+            double resultSaturation = InterpolateSaturation(interpolation, hsvFrom, hsvTo);
+            double resultValue = InterpolateValue(interpolation, hsvFrom, hsvTo);
+
+            ColorHSV hsvResult = new ColorHSV(resultHue, resultSaturation, resultValue);
+            ColorRGB rgbResult = new ColorRGB(hsvResult);
+
+            return System.Windows.Media.Color.FromRgb((byte)(rgbResult.R * 255), (byte)(rgbResult.G * 255), (byte)(rgbResult.B * 255));
+        }
+
         private static (ColorHSV hsvFrom, ColorHSV hsvTo) FixDesaturatedColors(ColorHSV hsvFrom, ColorHSV hsvTo)
         {
             // both desaturated

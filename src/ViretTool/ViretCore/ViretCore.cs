@@ -51,7 +51,7 @@ namespace Viret
         }
 
         // TODO: tasks, dispose
-        public void LoadFromDirectory(string inputDirectory, int maxVideos = -1)
+        public void LoadFromDirectory(string inputDirectory, int maxVideos = 75)
         {
             // base
             Dataset = Dataset.FromDirectory(inputDirectory, maxVideos, ".dataset");

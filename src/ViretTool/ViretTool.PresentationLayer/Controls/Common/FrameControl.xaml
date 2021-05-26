@@ -38,6 +38,8 @@
                 </Image>
                 
                 <!-- Selection rectangles -->
+                <Rectangle Fill="Transparent" Stroke="{Binding HighlightColor, IsAsync=True}" StrokeThickness="3"
+                           Visibility="{Binding IsHighlighted, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
                            Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"

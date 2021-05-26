@@ -64,8 +64,20 @@ namespace Viret.Ranking
 
             // order by score
             List<VideoSegment> rankedResultSet = resultSet
+                // prioritize score
                 .OrderByDescending(segment => segment.Score)
-                .ThenByDescending(segment => segment.SegmentFirstFrameIndex)    // TODO: pivot
+                // then placement of the query close to center
+                .ThenBy(segment => 
+                    // distance between
+                    Math.Abs(
+                        // middle keyframeId
+                        segment.SegmentFirstFrameIndex + (segment.Length - 1) / 2
+                        // average keyframeId
+                        - segment.KeyframeIdForEachQuery.Average()
+                    )
+                )
+                // alternatively placement of the query from the beginning of the segment
+                //.ThenByDescending(segment => segment.SegmentFirstFrameIndex)
                 .ToList();
 
             return rankedResultSet;

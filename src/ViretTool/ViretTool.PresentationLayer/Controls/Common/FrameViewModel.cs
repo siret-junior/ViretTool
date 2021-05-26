@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
-using System.Drawing;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using ViretTool.Core;
 using ViretTool.BusinessLayer.Services;
 using Color = System.Windows.Media.Color;
+using Brushes = System.Windows.Media.Brushes;
+using ViretTool.PresentationLayer.Helpers;
 
 namespace ViretTool.PresentationLayer.Controls.Common
 {
@@ -71,8 +72,21 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public int FrameNumber { get; private set; }
 
         public virtual byte[] ImageSource => _servicesManager.CurrentDataset.ThumbnailService.ReadThumbnail(VideoId, FrameNumber).ImageJpeg;
+
+
+        public bool IsHighlighted => Annotation != null && !Annotation.Equals("");
+
+        private Brush[] _highlightColors = new Brush[] 
+        { 
+            Brushes.Red, Brushes.Lime, Brushes.Blue, 
+            Brushes.Salmon, Brushes.PaleGreen, Brushes.LightBlue,
+            Brushes.Cyan, Brushes.Magenta, Brushes.Yellow, Brushes.Orange, Brushes.Olive, Brushes.Silver
+        };
+
+        public Brush HighlightColor => _highlightColors[VideoId % _highlightColors.Length];
         
-        
+        // TODO: not working
+        //public Brush HighlightColor => new SolidColorBrush(ColorInterpolationHelper.InterpolateColorHSV(VideoId % 24 / 24.0)); 
 
         public bool IsSelectedForDetail
         {
