@@ -60,7 +60,9 @@ namespace Viret.Ranking.Features
             string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
             if (inputFile == null)
             {
-                throw new FileNotFoundException($"Features file with extension '{extension}' was not found in directory '{inputDirectory}'.");
+                // TODO: temporarily fail silently
+                return null;
+                //throw new FileNotFoundException($"Features file with extension '{extension}' was not found in directory '{inputDirectory}'.");
             }
             return FromFile(inputFile, maxKeyframes);
         }

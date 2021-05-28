@@ -68,6 +68,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Menu -->
@@ -95,6 +96,12 @@
                     <ContentControl Grid.Column="2" x:Name="Query" />
 
                     <!-- Model selector -->
+                    <StackPanel Grid.Column="3" Margin="5">
+                        <RadioButton IsChecked="{Binding IsW2vvChecked}">W2VV</RadioButton>
+                        <RadioButton IsChecked="{Binding IsBertChecked}">BERT</RadioButton>
+                        <RadioButton IsChecked="{Binding IsClipChecked}">CLIP</RadioButton>
+                    </StackPanel>
+                    
                     <!-- Model remote status? -->
                     
                 </Grid>

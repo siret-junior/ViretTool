@@ -23,13 +23,14 @@ namespace Viret.Ranking
             ViretCore = viretCore;
         }
 
-        public void PreloadQuery(string[] querySentences)
+        public void PreloadQuery(string[] querySentences, RankingModel rankingModel)
         {
             throw new NotImplementedException();
         }
 
 
-        public List<VideoSegment> ComputeRankedResultSet(string[] querySentences, RankingModel rankingModel = RankingModel.W2vvBow)
+
+        public List<VideoSegment> ComputeRankedResultSet(string[] querySentences, RankingModel rankingModel)
         {
             // split to sentences of words
             string[][] sentencesOfWords = querySentences.Select(sentence => sentence.Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries)).ToArray();
@@ -40,12 +41,22 @@ namespace Viret.Ranking
             {
                 case RankingModel.W2vvBow:
                     {
+                        if (ViretCore.BowToVectorW2vv == null || ViretCore.ContextAwareRankerW2vv == null)
+                        {
+                            resultSet = new List<VideoSegment>();
+                            break;
+                        }
                         float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.BowToVectorW2vv.BowToVector(sentenceWords)).ToArray();
                         resultSet = ViretCore.ContextAwareRankerW2vv.RankVideoSegments(queryVectors);
                     }
                     break;
                 case RankingModel.W2vvBert:
                     {
+                        if (ViretCore.TextToVectorRemoteBert == null || ViretCore.ContextAwareRankerBert == null)
+                        {
+                            resultSet = new List<VideoSegment>();
+                            break;
+                        }
                         // TODO: parallel?
                         float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteBert.TextToVector(sentenceWords)).ToArray();
                         resultSet = ViretCore.ContextAwareRankerBert.RankVideoSegments(queryVectors);
@@ -53,6 +64,11 @@ namespace Viret.Ranking
                     break;
                 case RankingModel.Clip:
                     {
+                        if (ViretCore.TextToVectorRemoteClip == null || ViretCore.ContextAwareRankerClip == null)
+                        {
+                            resultSet = new List<VideoSegment>();
+                            break;
+                        }
                         // TODO: parallel?
                         float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteClip.TextToVector(sentenceWords)).ToArray();
                         resultSet = ViretCore.ContextAwareRankerClip.RankVideoSegments(queryVectors);

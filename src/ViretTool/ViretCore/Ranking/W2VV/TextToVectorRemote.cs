@@ -30,7 +30,15 @@ namespace Viret.Ranking.W2VV
 
         public static TextToVectorRemote FromDirectory(string inputDirectory, string subDirectory, int vectorDimension)
         {
-            return new TextToVectorRemote(Path.Combine(inputDirectory, subDirectory), vectorDimension);
+            try
+            {
+                return new TextToVectorRemote(Path.Combine(inputDirectory, subDirectory), vectorDimension);
+            }
+            catch
+            {
+                // TODO: temporarily fail silently
+                return null;
+            }
         }
 
         public /* async? */ float[] TextToVector(string[] query)

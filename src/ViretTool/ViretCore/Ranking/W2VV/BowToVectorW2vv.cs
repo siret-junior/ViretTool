@@ -27,7 +27,15 @@ namespace Viret.Ranking.W2VV
 
         public static BowToVectorW2vv FromDirectory(string inputDirectory, string subDirectory = "w2vv")
         {
-            return new BowToVectorW2vv(Path.Combine(inputDirectory, subDirectory));
+            try
+            {
+                return new BowToVectorW2vv(Path.Combine(inputDirectory, subDirectory));
+            }
+            catch
+            {
+                // TODO: temporarily fail silently
+                return null;
+            }
         }
 
         public float[] BowToVector(string[] query, bool applyPCA = true)

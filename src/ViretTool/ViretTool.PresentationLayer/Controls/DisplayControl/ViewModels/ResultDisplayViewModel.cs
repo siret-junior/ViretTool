@@ -184,7 +184,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         protected override void UpdateVisibleFrames()
         {
             // don't update if there is nothing to update
-            if (_loadedFrames.Count == 0) return;
+            //if (_loadedFrames.Count == 0) return;
 
             // update rows and columns based on display size
             RowCount = DisplayHeight / ImageHeight;

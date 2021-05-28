@@ -24,6 +24,7 @@ using ViretTool.PresentationLayer.Controls.Common;
 using ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels;
 using ViretTool.PresentationLayer.Controls.Query.ViewModels;
 using ViretTool.PresentationLayer.Helpers;
+using static Viret.Ranking.RankingService;
 
 namespace ViretTool.PresentationLayer.Windows.ViewModels
 {
@@ -110,16 +111,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _testControlViewModel.Deactivated += (sender, args) => TestFramesPosition = string.Empty;
         }
 
+        // panels
         public QueryViewModel Query { get; }
-        
-        // displays
         public ResultDisplayViewModel ResultDisplay { get; }
         
         // windows
-        // TODO: fix ambiguous names
         public DisplayControlViewModelBase DetailView { get; }
         public DetailViewModel DetailViewModel { get; }
 
+        // busy indicator selector
         public bool IsBusy
         {
             get => _isBusy;
@@ -163,6 +163,69 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 _testFramesPosition = value;
                 NotifyOfPropertyChange();
+            }
+        }
+
+
+        // ranking model tri-selector
+        private bool _isW2vvChecked = false;
+        private bool _isBertChecked = false;
+        private bool _isClipChecked = true;
+        public bool IsW2vvChecked
+        {
+            get { return _isW2vvChecked; }
+            set
+            {
+                if (_isW2vvChecked == value)
+                {
+                    return;
+                }
+                _isW2vvChecked = value;
+                if (_isW2vvChecked)
+                {
+                    _isBertChecked = false;
+                    _isClipChecked = false;
+                }
+                NotifyOfPropertyChange();
+                OnQuerySettingsChanged();
+            }
+        }
+        public bool IsBertChecked
+        {
+            get { return _isBertChecked; }
+            set
+            {
+                if (_isBertChecked == value)
+                {
+                    return;
+                }
+                _isBertChecked = value;
+                if (_isBertChecked)
+                {
+                    _isW2vvChecked = false;
+                    _isClipChecked = false;
+                }
+                NotifyOfPropertyChange();
+                OnQuerySettingsChanged();
+            }
+        }
+        public bool IsClipChecked
+        {
+            get { return _isClipChecked; }
+            set
+            {
+                if (_isClipChecked == value)
+                {
+                    return;
+                }
+                _isClipChecked = value;
+                if (_isClipChecked)
+                {
+                    _isW2vvChecked = false;
+                    _isBertChecked = false;
+                }
+                NotifyOfPropertyChange();
+                OnQuerySettingsChanged();
             }
         }
 
@@ -307,6 +370,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             if (!_datasetServicesManager.IsDatasetOpened)
             {
+                MessageBox.Show($"Please open a multimedia database (File -> Open database).", "No database loaded", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -321,10 +385,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                         // collect GUI query settings
                         string textualQuery = Query.KeywordQueryResult?.FullQuery ?? "";
                         string[] querySentences = textualQuery.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        QueryEvent textualQueryEvent = new QueryEvent(EventCategory.Text, EventType.Caption, textualQuery);
+                        RankingModel rankingModel = _isW2vvChecked ? RankingModel.W2vvBow 
+                                            : _isBertChecked ? RankingModel.W2vvBert 
+                                            : _isClipChecked ? RankingModel.Clip 
+                                            : throw new Exception("No ranking model is selected!");
+                        string loggedTextualQueryValue = $"{Enum.GetName(typeof(RankingModel), rankingModel)}:{textualQuery}";
+                        QueryEvent textualQueryEvent = new QueryEvent(EventCategory.Text, EventType.Caption, loggedTextualQueryValue);
 
                         // compute ranked result
-                        List<VideoSegment> resultSet = _datasetServicesManager.ViretCore.RankingService.ComputeRankedResultSet(querySentences);
+                        List<VideoSegment> resultSet = _datasetServicesManager.ViretCore.RankingService.ComputeRankedResultSet(querySentences, rankingModel);
 
                         // apply presentation filters (filter overlapping)
                         bool[] keyframeMask = new bool[_datasetServicesManager.CurrentDataset.DatasetService.FrameCount];
@@ -367,6 +436,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                         
                         return annotatedSegments;
                     });
+                //if (videoSegmentResults.Count == 0)
+                //{
+                //    MessageBox.Show($"The search found no results.", "No results", MessageBoxButton.OK, MessageBoxImage.Information);
+                //}
 
                 // update test window
                 List<int> sortedIds = videoSegmentResults.Select(segment => segment.SegmentFirstFrameIndex).ToList();

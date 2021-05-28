@@ -51,7 +51,7 @@ namespace Viret
         }
 
         // TODO: tasks, dispose
-        public void LoadFromDirectory(string inputDirectory, int maxVideos = 75)
+        public void LoadFromDirectory(string inputDirectory, int maxVideos = -1)
         {
             // base
             Dataset = Dataset.FromDirectory(inputDirectory, maxVideos, ".dataset");
@@ -60,19 +60,19 @@ namespace Viret
 
             // features
             FeatureVectorsW2vv = FeatureVectors.FromDirectory(inputDirectory, ".w2vv", maxKeyframes);
-            //FeatureVectorsBert = FeatureVectors.FromDirectory(inputDirectory, ".bert", maxKeyframes);
-            //FeatureVectorsClip = FeatureVectors.FromDirectory(inputDirectory, ".clip", maxKeyframes);
+            FeatureVectorsBert = FeatureVectors.FromDirectory(inputDirectory, ".bert", maxKeyframes);
+            FeatureVectorsClip = FeatureVectors.FromDirectory(inputDirectory, ".clip", maxKeyframes);
 
             // text to vector services
             BowToVectorW2vv = BowToVectorW2vv.FromDirectory(inputDirectory, "w2vv");
-            //TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(inputDirectory, "bert", 1024);
-            //TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(inputDirectory, "clip", 640);
+            TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(inputDirectory, "bert", 1024);
+            TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(inputDirectory, "clip", 640);
 
             // ranking
             int[] videoLastFrameIds = Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray();
-            ContextAwareRankerW2vv = new ContextAwareRanker(FeatureVectorsW2vv.Vectors, videoLastFrameIds);
-            //ContextAwareRankerBert = new ContextAwareRanker(FeatureVectorsBert.Vectors, videoLastFrameIds);
-            //ContextAwareRankerClip = new ContextAwareRanker(FeatureVectorsClip.Vectors, videoLastFrameIds);
+            ContextAwareRankerW2vv = FeatureVectorsW2vv == null ? null : new ContextAwareRanker(FeatureVectorsW2vv.Vectors, videoLastFrameIds);
+            ContextAwareRankerBert = FeatureVectorsBert == null ? null : new ContextAwareRanker(FeatureVectorsBert.Vectors, videoLastFrameIds);
+            ContextAwareRankerClip = FeatureVectorsClip == null ? null : new ContextAwareRanker(FeatureVectorsClip.Vectors, videoLastFrameIds);
             RankingService = new RankingService(this);
 
             IsLoaded = true;
