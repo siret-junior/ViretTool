@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,8 @@ namespace Viret.Ranking.ContextAware
         /// </summary>
         public readonly int[] VideoLastFrameIds;
 
+
+        private readonly ConcurrentDictionary<string, double[]> _queryScoreCache = new ConcurrentDictionary<string, double[]>();
 
         public ContextAwareRanker(float[][] keyframeVectors, int[] videoLastFrameIds)
         {
@@ -55,6 +58,15 @@ namespace Viret.Ranking.ContextAware
             }
 
             return segments;
+        }
+
+
+        /// <summary>
+        /// Preloads query and stores it in cache
+        /// </summary>
+        public void PreloadQueryConcurrent(IList<float[]> queryVectors)
+        {
+            ComputeScoresForQueries(queryVectors);
         }
 
 
@@ -109,24 +121,21 @@ namespace Viret.Ranking.ContextAware
             return segments;
         }
 
-        private readonly Dictionary<string, double[]> _cache = new Dictionary<string, double[]>();
-        private List<double[]> ComputeScoresForQueries(IList<float[]> queries)
+        private List<double[]> ComputeScoresForQueries(IList<float[]> queryVectors)
         {
             List<double[]> scoreLists = new List<double[]>();
 
-            foreach (float[] query in queries)
+            foreach (float[] queryVector in queryVectors)
             {
-                double[] scores;
-                string key = string.Join(",", query);
-
-                if (!_cache.ContainsKey(key))
+                string key = string.Join(",", queryVector);
+                if (!_queryScoreCache.TryGetValue(key, out double[] scores))
                 {
                     scores = new double[KeyframeVectors.Length];
-                    Parallel.For(0, KeyframeVectors.Length, i => { scores[i] = DotProductPlusOne(query, KeyframeVectors[i]); });
-                    _cache.Add(key, scores);
+                    Parallel.For(0, KeyframeVectors.Length, i => { scores[i] = DotProductPlusOne(queryVector, KeyframeVectors[i]); });
+                    _queryScoreCache.TryAdd(key, scores);
                 }
 
-                scoreLists.Add(_cache[key]);
+                scoreLists.Add(scores);
             }
 
             return scoreLists;

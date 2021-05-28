@@ -269,6 +269,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IsBusy = false;
         }
 
+        public void Exit()
+        {
+            Application.Current.Shutdown();
+        }
 
         // TODO: move to individual displays
         /// <summary>

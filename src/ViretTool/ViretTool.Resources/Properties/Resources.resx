@@ -333,4 +333,7 @@
   <data name="YearLabel" xml:space="preserve">
     <value>Year:</value>
   </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
 </root>

@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Viret;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common.KeywordSearch;
 
@@ -13,6 +14,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
 {
     public partial class KeywordSearchControl : UserControl
     {
+        private readonly ViretCore _viretCore;
         public KeywordSearchControl()
         {
             InitializeComponent();
@@ -81,12 +83,18 @@ namespace ViretTool.PresentationLayer.Controls.Common
             else if (e.Key == Key.Space)
             {
                 // word completed
-                // TODO
+                // TODO ?
             }
             else if (e.Key == Key.OemSemicolon)
             {
                 // sentence completed
-                // TODO
+                if (DatasetServicesManager.ViretCore.IsLoaded)
+                {
+                    DatasetServicesManager.ViretCore.RankingService.PreloadQuery(textBox.Text
+                        .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(sentence => sentence.Trim())
+                        .ToArray());
+                }
             }
         }
 

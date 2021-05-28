@@ -23,19 +23,20 @@ namespace Viret.Ranking
             ViretCore = viretCore;
         }
 
-        public void PreloadQuery(string[] querySentences, RankingModel rankingModel)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
+        /// <summary>
+        /// Computes ranked result set for the selected model.
+        /// </summary>
+        /// <param name="querySentences"></param>
+        /// <param name="rankingModel"></param>
+        /// <returns></returns>
         public List<VideoSegment> ComputeRankedResultSet(string[] querySentences, RankingModel rankingModel)
         {
+            if (querySentences == null || querySentences.Length == 0) return new List<VideoSegment>();
+
             // split to sentences of words
             string[][] sentencesOfWords = querySentences.Select(sentence => sentence.Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries)).ToArray();
 
-            // context-aware ranking based on the selected ranking model
+            // context-aware ranking based on the selected ranking model (TODO: consider implementing a common interface)
             List<VideoSegment> resultSet;
             switch (rankingModel)
             {
@@ -97,6 +98,46 @@ namespace Viret.Ranking
                 .ToList();
 
             return rankedResultSet;
+        }
+
+
+        /// <summary>
+        /// Preloads queries for all models.
+        /// </summary>
+        /// <param name="querySentences"></param>
+        public void PreloadQuery(string[] querySentences)
+        {
+            if (querySentences == null || querySentences.Length == 0) return;
+
+            // split to sentences of words
+            string[][] sentencesOfWords = querySentences.Select(sentence => sentence.Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries)).ToArray();
+
+            if (ViretCore.BowToVectorW2vv != null && ViretCore.ContextAwareRankerW2vv != null)
+            {
+                Task.Run(() =>
+                {
+                    float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.BowToVectorW2vv.BowToVector(sentenceWords)).ToArray();
+                    ViretCore.ContextAwareRankerW2vv.PreloadQueryConcurrent(queryVectors);
+                });
+            }
+
+            if (ViretCore.TextToVectorRemoteBert != null && ViretCore.ContextAwareRankerBert != null)
+            {
+                Task.Run(() =>
+                {
+                    float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteBert.TextToVector(sentenceWords)).ToArray();
+                    ViretCore.ContextAwareRankerBert.PreloadQueryConcurrent(queryVectors);
+                });
+            }
+
+            if (ViretCore.TextToVectorRemoteClip != null && ViretCore.ContextAwareRankerClip != null)
+            {
+                Task.Run(() =>
+                {
+                    float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteClip.TextToVector(sentenceWords)).ToArray();
+                    ViretCore.ContextAwareRankerClip.RankVideoSegments(queryVectors);
+                });
+            }
         }
     }
 }

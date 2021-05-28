@@ -77,7 +77,8 @@
                         <MenuItem Height="32" Padding="15 3 15 3" Header="{x:Static properties:Resources.FileHeader}" FocusVisualStyle="{x:Null}" Focusable="False">
                             <MenuItem Header="{x:Static properties:Resources.OpenDatabaseHeader}" cal:Message.Attach="[Event Click] = [Action OpenDatabase]"/>
                             <Separator />
-                            <MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>
+                            <!--<MenuItem Header="{x:Static properties:Resources.FetchTaskList}" cal:Message.Attach="[Event Click] = [Action FetchTaskList]"/>-->
+                            <MenuItem Header="{x:Static properties:Resources.Exit}" cal:Message.Attach="[Event Click] = [Action Exit]"/>
                         </MenuItem>
                         <!-- Test -->
                         <MenuItem Height="32" Padding="15 3 15 3" Header="{x:Static properties:Resources.TestButtonText}" 
