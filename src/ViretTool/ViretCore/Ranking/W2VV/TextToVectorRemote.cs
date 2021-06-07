@@ -42,46 +42,32 @@ namespace Viret.Ranking.W2VV
             }
         }
 
-        public /* async? */ float[] TextToVector(string[] query)
+        public /* async? */ float[] TextToVector(string[] queryKeywords)
         {
-            if (query.Length < 1)
+            if (queryKeywords == null || queryKeywords.Length == 0)
             {
                 float[] vector = new float[VectorDimension]; // TODO: convert query to vector
                 vector = _pcaConversion.ApplyPCA(vector);
                 return vector;
             }
-            //my%20text%20query
-            StringBuilder URLBuilder = new StringBuilder();
 
+            // build url
             // TODO: add actual server url
             // --- HERE ADD ACTUAL SERVER URL ---//
             string serverUrl = "http://195.113.18.36:42013/";
-
-            URLBuilder.Append(serverUrl);
-
             string service = "clip/"; // change to "bert/" if BERT is needed
+            string queryUrlEncoded = Uri.EscapeDataString(string.Join(" ", queryKeywords)); // my%20text%20query 
+            string url = serverUrl + service + queryUrlEncoded;
 
-            URLBuilder.Append(service);
-            // --- END OF "HERE ADD ACTUAL SERVER URL" ---//
-
-            bool firstKeyword = true;
-            foreach (string keyword in query)
+            // get data
+            byte[] responseDataBytes;
+            using (WebClient webClient = new WebClient())
             {
-                if (!firstKeyword)
-                    URLBuilder.Append("%20");
-                else
-                    firstKeyword = false;
-
-                URLBuilder.Append(keyword);
+                // TODO: Endianness?
+                responseDataBytes = webClient.DownloadData(url);
             }
 
-            string url = URLBuilder.ToString();
-
-            WebClient webClient = new WebClient();
-
-            byte[] responseDataBytes = webClient.DownloadData(url);
-
-            // TODO: Endianness?
+            // convert to floats
             float[] responseVectorFloats = new float[VectorDimension];
             if (responseVectorFloats.Length * sizeof(float) != responseDataBytes.Length)
             {
@@ -90,6 +76,7 @@ namespace Viret.Ranking.W2VV
             }
             Buffer.BlockCopy(responseDataBytes, 0, responseVectorFloats, 0, responseDataBytes.Length);
 
+            // apply PCA
             float[] resultVector = _pcaConversion.ApplyPCA(responseVectorFloats);
 
             return resultVector;
