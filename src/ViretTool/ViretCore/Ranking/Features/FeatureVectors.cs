@@ -85,13 +85,25 @@ namespace Viret.Ranking.Features
             return ranks;
         }
 
+        public IEnumerable<(int ItemId, double Score)> ComputeKnnRankingWithScores(float[] queryVector)
+        {
+            return Vectors.Select<float[], (int ItemId, double Score)>((vector, index) => (index, GetSimilarity(vector, queryVector)))
+                .OrderByDescending(item => item.Score);
+        }
+
         public int[] ComputeKnnRanking(int vectorId)
         {
             // TODO: cache or pre-compute
             return ComputeKnnRanking(Vectors[vectorId]);
         }
 
-        private static double GetSimilarity(float[] x, float[] y)
+
+        public double GetSimilarity(int keyframeId1, int keyframeId2)
+        {
+            return GetSimilarity(Vectors[keyframeId1], Vectors[keyframeId2]);
+        }
+
+        public static double GetSimilarity(float[] x, float[] y)
         {
             return DotProductPlusOne(x, y);
         }

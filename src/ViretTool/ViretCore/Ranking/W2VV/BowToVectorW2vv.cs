@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Viret.Ranking.W2VV
         private const int VECTOR_DIMENSION = 2048;
 
         private readonly Dictionary<string, int> _wordToIdDictionary;
+        private readonly ConcurrentDictionary<string, float[]> _queryVectorCache = new ConcurrentDictionary<string, float[]>();
         private readonly float[][] _wordIdToVector;
         private readonly float[] _biasVector;
         private readonly PcaConversion _pcaConversion;
@@ -40,6 +42,13 @@ namespace Viret.Ranking.W2VV
 
         public float[] BowToVector(string[] query, bool applyPCA = true)
         {
+            // check cache
+            string cacheKey = string.Join("~", query);
+            if (_queryVectorCache.TryGetValue(cacheKey, out float[] cachedVector))
+            {
+                return cachedVector;
+            }
+
             float[] vector = new float[VECTOR_DIMENSION];
 
             // convert known words to vectors and add them together
@@ -68,6 +77,7 @@ namespace Viret.Ranking.W2VV
                 vector = _pcaConversion.ApplyPCA(vector);
             }
 
+            _queryVectorCache.TryAdd(cacheKey, vector);
             return vector;
         }
 

@@ -34,6 +34,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             //_queryPersistingService.SaveTestObjects(videoId, Frames.Select(f => f.FrameNumber).ToList());
         }
 
+        public void InitializeFrameSelectively(int keyframeId)
+        {
+            IDatasetService datasetService = _datasetServicesManager.CurrentDataset.DatasetService;
+            int videoId = datasetService.GetVideoIdForFrameId(keyframeId);
+            int frameNumber = datasetService.GetFrameNumberForFrameId(keyframeId);
+
+            Frames.Clear();
+            Frames.Add(new FrameViewModel(videoId, frameNumber, _datasetServicesManager));
+        }
+
         protected override void OnDeactivate(bool close)
         {
             if (close)
