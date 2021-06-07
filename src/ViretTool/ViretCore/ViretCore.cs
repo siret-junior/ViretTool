@@ -65,7 +65,7 @@ namespace Viret
 
             // text to vector services
             BowToVectorW2vv = BowToVectorW2vv.FromDirectory(inputDirectory, "w2vv");
-            TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(inputDirectory, "bert", 1024);
+            TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(inputDirectory, "bert", 2048);
             TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(inputDirectory, "clip", 640);
 
             // ranking
