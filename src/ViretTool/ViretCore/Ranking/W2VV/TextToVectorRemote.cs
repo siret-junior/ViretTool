@@ -79,18 +79,18 @@ namespace Viret.Ranking.W2VV
 
             WebClient webClient = new WebClient();
 
-            byte[] responseData = webClient.DownloadData(url);
+            byte[] responseDataBytes = webClient.DownloadData(url);
 
             // TODO: Endianness?
-            float[] responseVector = new float[VectorDimension];
-
-            // any more elegant way to convert byte[2560] to float[640]?
-            for(int i = 0; i < VectorDimension; i++)
+            float[] responseVectorFloats = new float[VectorDimension];
+            if (responseVectorFloats.Length * sizeof(float) != responseDataBytes.Length)
             {
-                responseVector[i] = BitConverter.ToSingle(responseData, i * 4);
+                throw new InvalidDataException($"Remote text-to-vector service returned vector bytes of incorrect length."
+                    + $"Expected: {responseVectorFloats.Length * sizeof(float)}, received: {responseDataBytes.Length}.");
             }
-            
-            float[] resultVector = _pcaConversion.ApplyPCA(responseVector);
+            Buffer.BlockCopy(responseDataBytes, 0, responseVectorFloats, 0, responseDataBytes.Length);
+
+            float[] resultVector = _pcaConversion.ApplyPCA(responseVectorFloats);
 
             return resultVector;
         }
