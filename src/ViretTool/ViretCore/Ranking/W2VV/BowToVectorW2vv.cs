@@ -40,6 +40,23 @@ namespace Viret.Ranking.W2VV
             }
         }
 
+        public bool ContainsWord(string word)
+        {
+            return _wordToIdDictionary.ContainsKey(word);
+        }
+
+        public float[] BowToVector(string query)
+        {
+            return BowToVector(FulltextToWordArray(query));
+        }
+
+        public static string[] FulltextToWordArray(string fulltext)
+        {
+            return fulltext
+                .Trim(new char[] { '.' })
+                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         public float[] BowToVector(string[] query, bool applyPCA = true)
         {
             // check cache
