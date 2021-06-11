@@ -21,19 +21,39 @@ namespace Viret.Ranking.W2VV
 
         private readonly PcaConversion _pcaConversion;
 
-        public TextToVectorRemote(string inputDirectory, int vectorDimension)
+        public TextToVectorRemote(string serverUrlFile, string pcaMatrixFile, string pcaMeanFile, int vectorDimension)
         {
-            ServerUrl = File.ReadAllText(Path.Combine(inputDirectory, "server.url"));
+            ServerUrl = File.ReadAllText(serverUrlFile);
+            _pcaConversion = new PcaConversion(pcaMatrixFile, pcaMeanFile, vectorDimension);
             VectorDimension = vectorDimension;
-
-            _pcaConversion = new PcaConversion(inputDirectory, vectorDimension);
         }
 
-        public static TextToVectorRemote FromDirectory(string inputDirectory, string subDirectory, int vectorDimension)
+        public static TextToVectorRemote FromDirectory(string inputDirectory, string serverUrlPattern,
+            string pcaMatrixPattern, string pcaMeanPattern, int vectorDimension)
         {
+            // load filenames based on patterns
+            string serverUrlFile = Directory.GetFiles(inputDirectory, serverUrlPattern).FirstOrDefault();
+            string pcaMatrixFile = Directory.GetFiles(inputDirectory, pcaMatrixPattern).FirstOrDefault();
+            string pcaMeanFile = Directory.GetFiles(inputDirectory, pcaMeanPattern).FirstOrDefault();
+
             try
             {
-                return new TextToVectorRemote(Path.Combine(inputDirectory, subDirectory), vectorDimension);
+                // check if files exist
+                foreach ((string file, string pattern) in new (string, string)[]
+                {
+                    (serverUrlFile, serverUrlPattern),
+                    (pcaMatrixFile, pcaMatrixPattern), 
+                    (pcaMeanFile, pcaMeanPattern)
+                })
+                {
+                    if (file == null)
+                    {
+                        throw new FileNotFoundException($"File '{file}' was not found in directory '{inputDirectory}'.");
+                    }
+                }
+
+                // load the instance
+                return new TextToVectorRemote(serverUrlFile, pcaMatrixFile, pcaMeanFile, vectorDimension);
             }
             catch
             {

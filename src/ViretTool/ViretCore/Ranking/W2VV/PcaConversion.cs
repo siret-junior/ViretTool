@@ -12,12 +12,10 @@ namespace Viret.Ranking.W2VV
         private readonly float[][] _pcaMatrix;
         private readonly float[] _pcaMeanVector;
 
-        public PcaConversion(string inputDirectory, int vectorDimension, 
-            string matrixFileExtension = ".pca.matrix.bin", 
-            string meanFileExtension = ".pca.mean.bin")
+        public PcaConversion(string matrixFile, string meanFile, int vectorDimension)
         {
-            _pcaMatrix = LoadFloatTable(Path.Combine(inputDirectory, Directory.GetFiles(inputDirectory, $"*{matrixFileExtension}").First()), vectorDimension);
-            _pcaMeanVector = LoadFloatTable(Path.Combine(inputDirectory, Directory.GetFiles(inputDirectory, $"*{meanFileExtension}").First()), vectorDimension)[0];
+            _pcaMatrix = LoadFloatTable(matrixFile, vectorDimension);
+            _pcaMeanVector = LoadFloatTable(meanFile, vectorDimension)[0];
         }
 
         public float[] ApplyPCA(float[] vector)

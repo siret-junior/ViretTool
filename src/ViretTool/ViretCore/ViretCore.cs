@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,19 +55,33 @@ namespace Viret
         public void LoadFromDirectory(string inputDirectory, int maxVideos = -1)
         {
             // base
-            Dataset = Dataset.FromDirectory(inputDirectory, maxVideos, ".dataset");
-            ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory, maxVideos, ".thumbnails");
+            Dataset = Dataset.FromDirectory(inputDirectory, "frame-ID-to-filepath.*.csv", maxVideos);
+            ThumbnailReader = ThumbnailReader.FromDirectory(inputDirectory, "*.thumbnails", maxVideos);
             int maxKeyframes = (maxVideos > 0) ? Dataset.Keyframes.Count : -1;
 
             // features
-            FeatureVectorsW2vv = FeatureVectors.FromDirectory(inputDirectory, ".w2vv", maxKeyframes);
-            FeatureVectorsBert = FeatureVectors.FromDirectory(inputDirectory, ".bert", maxKeyframes);
-            FeatureVectorsClip = FeatureVectors.FromDirectory(inputDirectory, ".clip", maxKeyframes);
+            FeatureVectorsW2vv = FeatureVectors.FromDirectory(Path.Combine(inputDirectory, "W2VV_BoW"), "frame-features.*.bin", maxKeyframes);
+            FeatureVectorsBert = FeatureVectors.FromDirectory(Path.Combine(inputDirectory, "W2VV_BERT"), "frame-features.*.bin", maxKeyframes);
+            FeatureVectorsClip = FeatureVectors.FromDirectory(Path.Combine(inputDirectory, "CLIP"), "frame-features.*.bin", maxKeyframes);
 
             // text to vector services
-            BowToVectorW2vv = BowToVectorW2vv.FromDirectory(inputDirectory, "w2vv");
-            TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(inputDirectory, "bert", 2048);
-            TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(inputDirectory, "clip", 640);
+            BowToVectorW2vv = BowToVectorW2vv.FromDirectory(Path.Combine(inputDirectory, "W2VV_BoW"), 
+                "keyword-to-ID.*.csv", 
+                "keyword-dense-weigths.*.float32.bin", 
+                "keyword-dense-bias.*.float32.bin", 
+                "PCA-matrix.*.float32.bin", 
+                "PCA-mean.*.float32.bin",
+                vectorDimension: 2048);
+            TextToVectorRemoteBert = TextToVectorRemote.FromDirectory(Path.Combine(inputDirectory, "W2VV_BERT"), 
+                "server.url", 
+                "PCA-matrix.*.float32.bin", 
+                "PCA-mean.*.float32.bin",
+                vectorDimension: 2048);
+            TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(Path.Combine(inputDirectory, "CLIP"),
+                "server.url",
+                "PCA-matrix.*.float32.bin",
+                "PCA-mean.*.float32.bin",
+                vectorDimension: 640);
 
             // ranking
             int[] videoLastFrameIds = Dataset.Videos.Select(video => video.Keyframes.Last().Id).ToArray();
