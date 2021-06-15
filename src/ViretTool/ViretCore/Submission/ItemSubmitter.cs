@@ -37,7 +37,7 @@ namespace Viret.Submission
             try
             {
                 // V3C1 videoIds are decremented by 1
-                string url = $"{SubmissionServerUrl}?item={videoId + 1}&frame={frameId}&session={SessionId}";
+                string url = $"{SubmissionServerUrl}/submit?item={(videoId + 1):00000}&frame={frameId}&session={SessionId}";
                 _localLogger.WriteLine("================================================================================");
                 _localLogger.WriteLine($"Sending submission at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{url}");
                 using (HttpClient httpClient = new HttpClient())
