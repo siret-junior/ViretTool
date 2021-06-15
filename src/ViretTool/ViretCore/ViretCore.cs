@@ -53,12 +53,12 @@ namespace Viret
             if (File.Exists(configFile))
             {
                 Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile));
-                File.WriteAllText(configFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
             }
             else
             {
-                File.WriteAllText(configFile, JsonConvert.SerializeObject(new Config(), Formatting.Indented));
+                Config = Config.Default;
             }
+            File.WriteAllText(configFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
 
             InteractionLogger = new InteractionLogger();
             ItemSubmitter = new ItemSubmitter(Config.DresServer, Config.SessionId);

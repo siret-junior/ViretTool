@@ -10,5 +10,11 @@ namespace Viret
     {
         public string DresServer { get; set; }
         public string SessionId { get; set; }
+
+        public static readonly Config Default = new Config
+        {
+            DresServer = "https://localhost",
+            SessionId = ""
+        };
     }
 }
