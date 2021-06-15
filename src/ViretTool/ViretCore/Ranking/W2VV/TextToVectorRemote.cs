@@ -72,12 +72,8 @@ namespace Viret.Ranking.W2VV
             }
 
             // build url
-            // TODO: add actual server url
-            // --- HERE ADD ACTUAL SERVER URL ---//
-            string serverUrl = "http://195.113.18.36:42013/";
-            string service = "clip/"; // change to "bert/" if BERT is needed
             string queryUrlEncoded = Uri.EscapeDataString(string.Join(" ", queryKeywords)); // my%20text%20query 
-            string url = serverUrl + service + queryUrlEncoded;
+            string url = ServerUrl + queryUrlEncoded;
 
             // get data
             byte[] responseDataBytes;
