@@ -18,20 +18,47 @@ namespace Viret.Ranking.W2VV
         private readonly float[] _biasVector;
         private readonly PcaConversion _pcaConversion;
 
-        public BowToVectorW2vv(string inputDirectory)
+        public BowToVectorW2vv(string keywordToIdFile, string keywordWeightsFile, string keywordBiasFile, 
+            string pcaMatrixFile, string pcaMeanFile, int vectorDimension)
         {
-            _wordToIdDictionary = LoadDictionary(Path.Combine(inputDirectory, "word2idx.txt"));
-            _wordIdToVector = LoadFloatTable(Path.Combine(inputDirectory, "txt_weight-11147x2048floats.bin"), VECTOR_DIMENSION);
-            _biasVector = LoadFloatTable(Path.Combine(inputDirectory, "txt_bias-2048floats.bin"), VECTOR_DIMENSION)[0];
+            _wordToIdDictionary = LoadDictionary(keywordToIdFile);
+            _wordIdToVector = LoadFloatTable(keywordWeightsFile, VECTOR_DIMENSION);
+            _biasVector = LoadFloatTable(keywordBiasFile, VECTOR_DIMENSION)[0];
 
-            _pcaConversion = new PcaConversion(inputDirectory, VECTOR_DIMENSION);
+            _pcaConversion = new PcaConversion(pcaMatrixFile, pcaMeanFile, vectorDimension);
         }
 
-        public static BowToVectorW2vv FromDirectory(string inputDirectory, string subDirectory = "w2vv")
+        public static BowToVectorW2vv FromDirectory(string inputDirectory,
+            string keywordToIdPattern, string keywordWeightsPattern, string keywordBiasPattern,
+            string pcaMatrixPattern, string pcaMeanPattern, int vectorDimension)
         {
+            // load filenames based on patterns
+            string keywordToIdFile = Directory.GetFiles(inputDirectory, keywordToIdPattern).FirstOrDefault();
+            string keywordWeightsFile = Directory.GetFiles(inputDirectory, keywordWeightsPattern).FirstOrDefault();
+            string keywordBiasFile = Directory.GetFiles(inputDirectory, keywordBiasPattern).FirstOrDefault();
+            string pcaMatrixFile = Directory.GetFiles(inputDirectory, pcaMatrixPattern).FirstOrDefault();
+            string pcaMeanFile = Directory.GetFiles(inputDirectory, pcaMeanPattern).FirstOrDefault();
+
             try
             {
-                return new BowToVectorW2vv(Path.Combine(inputDirectory, subDirectory));
+                // check if files exist
+                foreach ((string file, string pattern) in new (string, string)[] 
+                { 
+                    (keywordToIdFile, keywordToIdPattern),
+                    (keywordWeightsFile, keywordWeightsPattern), 
+                    (keywordBiasFile, keywordBiasPattern),
+                    (pcaMatrixFile, pcaMatrixPattern), 
+                    (pcaMeanFile, pcaMeanPattern) 
+                })
+                {
+                    if (file == null)
+                    {
+                        throw new FileNotFoundException($"File '{pattern}' was not found in directory '{inputDirectory}'.");
+                    }
+                }
+
+                // load the instance
+                return new BowToVectorW2vv(keywordToIdFile, keywordWeightsFile, keywordBiasFile, pcaMatrixFile, pcaMeanFile, vectorDimension);
             }
             catch
             {

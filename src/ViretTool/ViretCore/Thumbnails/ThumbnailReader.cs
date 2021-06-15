@@ -108,12 +108,12 @@ namespace Viret.Thumbnails
         }
 
 
-        public static ThumbnailReader FromDirectory(string inputDirectory, int maxVideos = -1, string extension = ".thumbnails")
+        public static ThumbnailReader FromDirectory(string inputDirectory, string filePattern, int maxVideos = -1)
         {
-            string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
+            string inputFile = Directory.GetFiles(inputDirectory, filePattern).FirstOrDefault();
             if (inputFile == null)
             {
-                throw new FileNotFoundException($"Thumbnails file was not found in directory '{inputDirectory}'");
+                throw new FileNotFoundException($"Thumbnails file '{filePattern}' was not found in directory '{inputDirectory}'.");
             }
             return new ThumbnailReader(inputFile, maxVideos);
         }

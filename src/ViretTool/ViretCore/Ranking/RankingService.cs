@@ -79,7 +79,7 @@ namespace Viret.Ranking
                     throw new NotImplementedException($"Unexpected ranking model: '{Enum.GetName(typeof(RankingModel), rankingModel)}'.");
             }
 
-            // order by score
+            // order the result set
             List<VideoSegment> rankedResultSet = resultSet
                 // prioritize score
                 .OrderByDescending(segment => segment.Score)

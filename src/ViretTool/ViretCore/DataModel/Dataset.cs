@@ -74,12 +74,12 @@ namespace Viret.DataModel
             }
         }
 
-        public static Dataset FromDirectory(string inputDirectory, int maxVideos = -1, string extension = ".dataset")
+        public static Dataset FromDirectory(string inputDirectory, string filePattern, int maxVideos = -1)
         {
-            string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
+            string inputFile = Directory.GetFiles(inputDirectory, filePattern).FirstOrDefault();
             if (inputFile == null)
             {
-                throw new FileNotFoundException($"Dataset file was not found in directory '{inputDirectory}'");
+                throw new FileNotFoundException($"Dataset file '{filePattern}' was not found in directory '{inputDirectory}'.");
             }
 
             return new Dataset(inputFile, maxVideos);

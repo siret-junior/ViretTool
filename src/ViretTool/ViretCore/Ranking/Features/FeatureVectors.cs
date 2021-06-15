@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Viret.Ranking.Features
@@ -18,30 +19,22 @@ namespace Viret.Ranking.Features
             Vectors = vectors;
         }
 
-        public static FeatureVectors FromFile(string inputFile, int maxKeyframes = -1)
+        public static FeatureVectors FromFile(string inputFile, int vectorDimension, int vectorCount, int maxKeyframes = -1)
         {
             using (BinaryReader reader = new BinaryReader(File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
             {
-                // read blob metadata
-                int blobCount = reader.ReadInt32();
-                int blobLength = reader.ReadInt32();
-                int vectorLength = blobLength / sizeof(float);
-
-                // read filetype metadata
-                int metadataLength = reader.ReadInt32();
-
                 // trim dataset if required
                 if (maxKeyframes > 0)
                 {
-                    blobCount = maxKeyframes;
+                    vectorCount = maxKeyframes;
                 }
 
                 // load vectors
-                float[][] vectors = new float[blobCount][];
-                for (int iBlob = 0; iBlob < blobCount; iBlob++)
+                float[][] vectors = new float[vectorCount][];
+                for (int iBlob = 0; iBlob < vectorCount; iBlob++)
                 {
-                    byte[] byteArray = reader.ReadBytes(vectorLength * sizeof(float));
-                    float[] floatArray = new float[vectorLength];
+                    byte[] byteArray = reader.ReadBytes(vectorDimension * sizeof(float));
+                    float[] floatArray = new float[vectorDimension];
                     Buffer.BlockCopy(byteArray, 0, floatArray, 0, byteArray.Length);
                     vectors[iBlob] = floatArray;
                 }
@@ -52,19 +45,28 @@ namespace Viret.Ranking.Features
                 }
 
                 return new FeatureVectors(vectors);
-            }    
+            }
         }
 
-        public static FeatureVectors FromDirectory(string inputDirectory, string extension, int maxKeyframes = -1)
+        public static FeatureVectors FromDirectory(string inputDirectory, string filePattern, int maxKeyframes = -1)
         {
-            string inputFile = Directory.GetFiles(inputDirectory, $"*{extension}").FirstOrDefault();
+            string inputFile = Directory.GetFiles(inputDirectory, filePattern).FirstOrDefault();
             if (inputFile == null)
             {
                 // TODO: temporarily fail silently
                 return null;
                 //throw new FileNotFoundException($"Features file with extension '{extension}' was not found in directory '{inputDirectory}'.");
             }
-            return FromFile(inputFile, maxKeyframes);
+            Regex regex = new Regex(@".*\.(?<vectorCount>[0-9]+)x(?<vectorDimension>[0-9]+)\..*");
+            Match match = regex.Match(Path.GetFileNameWithoutExtension(inputFile));
+            if (!match.Success)
+            {
+                throw new FileNotFoundException($"Error parsing vector count and vector dimension from '{inputFile}' ({regex.ToString()})");
+            }
+
+            int vectorCount = int.Parse(match.Groups["vectorCount"].Value);
+            int vectorDimension = int.Parse(match.Groups["vectorDimension"].Value);
+            return FromFile(inputFile, vectorDimension, vectorCount, maxKeyframes);
         }
 
 
