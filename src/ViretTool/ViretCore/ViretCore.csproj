@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="DataModel\Dataset.cs" />
     <Compile Include="DataModel\Keyframe.cs" />
     <Compile Include="DataModel\Shot.cs" />

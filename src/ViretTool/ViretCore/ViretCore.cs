@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Viret.DataModel;
 using Viret.Logging;
 using Viret.Ranking;
@@ -20,6 +21,8 @@ namespace Viret
     /// </summary>
     public class ViretCore : IDisposable
     {
+        public Config Config { get; private set; }
+
         // TODO: error/warn/info logger
         public InteractionLogger InteractionLogger { get; private set; }
         public ItemSubmitter ItemSubmitter { get; private set; }
@@ -46,9 +49,20 @@ namespace Viret
 
         public ViretCore()
         {
+            string configFile = "config.json";
+            if (File.Exists(configFile))
+            {
+                Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile));
+                File.WriteAllText(configFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
+            }
+            else
+            {
+                File.WriteAllText(configFile, JsonConvert.SerializeObject(new Config(), Formatting.Indented));
+            }
+
             InteractionLogger = new InteractionLogger();
-            ItemSubmitter = new ItemSubmitter("TODO server URL", "TODO sessionId from config file");
-            LogSubmitter = new LogSubmitter("TODO server URL", "TODO sessionId from config file", InteractionLogger);
+            ItemSubmitter = new ItemSubmitter(Config.DresServer, Config.SessionId);
+            LogSubmitter = new LogSubmitter(Config.DresServer, Config.SessionId, InteractionLogger);
         }
 
         // TODO: tasks, dispose
