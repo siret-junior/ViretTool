@@ -18,7 +18,11 @@
             <converters:BooleanToVisibilityHiddenConverter x:Key="BooleanToVisibilityHiddenConverter" />
             <converters:BooleanAndToVisibilityConverter x:Key="BooleanAndToVisibilityConverter" />
             <converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
-            <Grid x:Key="CommonControls" x:Shared="False" ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" ToolTipService.Placement="Top">
+            <Grid x:Key="CommonControls" 
+                  x:Shared="False" 
+                  ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" 
+                  ToolTipService.Placement="Top"
+                  Margin="0, 0, 0, 5">
                 <Grid.ToolTip >
                     <TextBlock Name="ToolTipLabel" FontSize="20" Text="{Binding ToolTipLabel, IsAsync=True}" />
                 </Grid.ToolTip>
