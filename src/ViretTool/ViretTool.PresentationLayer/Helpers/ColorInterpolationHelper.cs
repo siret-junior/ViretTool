@@ -39,8 +39,8 @@ namespace ViretTool.PresentationLayer.Helpers
             interpolation = Math.Min(interpolation, 1.0);
             interpolation = Math.Max(interpolation, 0);
 
-            Color colorFrom = Color.Magenta;
-            Color colorTo = Color.Blue;
+            Color colorFrom = Color.Lime;
+            Color colorTo = Color.Red;
             ColorRGB rgbFrom = new ColorRGB(colorFrom.R / 255.0, colorFrom.G / 255.0, colorFrom.B / 255.0);
             ColorRGB rgbTo = new ColorRGB(colorTo.R / 255.0, colorTo.G / 255.0, colorTo.B / 255.0);
 

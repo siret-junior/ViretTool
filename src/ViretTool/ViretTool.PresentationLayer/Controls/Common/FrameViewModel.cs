@@ -214,7 +214,7 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     return;
                 }
                 _score = value;
-                HighlightColor = new SolidColorBrush(ColorInterpolationHelper.InterpolateColorHSV((_scoreTop - _score) / (_scoreTop - _scoreBottom)));
+                HighlightColor = new SolidColorBrush(ColorInterpolationHelper.InterpolateColorHSV((_scoreTop - _score) / (_scoreTop - _scoreBottom), true));
                 NotifyOfPropertyChange();
             }
         }
