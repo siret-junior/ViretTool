@@ -76,17 +76,14 @@ namespace ViretTool.PresentationLayer.Controls.Common
 
         public bool IsHighlighted => Annotation != null && !Annotation.Equals("");
 
-        private Brush[] _highlightColors = new Brush[] 
-        { 
-            Brushes.Red, Brushes.Lime, Brushes.Blue, 
-            Brushes.Salmon, Brushes.PaleGreen, Brushes.LightBlue,
-            Brushes.Cyan, Brushes.Magenta, Brushes.Yellow, Brushes.Orange, Brushes.Olive, Brushes.Silver
-        };
+        //private Brush[] _highlightColors = new Brush[] 
+        //{ 
+        //    Brushes.Red, Brushes.Lime, Brushes.Blue, 
+        //    Brushes.Salmon, Brushes.PaleGreen, Brushes.LightBlue,
+        //    Brushes.Cyan, Brushes.Magenta, Brushes.Yellow, Brushes.Orange, Brushes.Olive, Brushes.Silver
+        //};
 
-        public Brush HighlightColor => _highlightColors[VideoId % _highlightColors.Length];
-        
-        // TODO: not working
-        //public Brush HighlightColor => new SolidColorBrush(ColorInterpolationHelper.InterpolateColorHSV(VideoId % 24 / 24.0)); 
+        public Brush HighlightColor { get; set; } = new SolidColorBrush(Color.FromRgb(0, 0, 0));
 
         public bool IsSelectedForDetail
         {
@@ -203,7 +200,24 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public int VideoId { get; }
 
         public string Annotation { get; set; }
-        public double Score { get; set; }
+
+        private double _score = 0;
+        private double _scoreTop = 1.7;
+        private double _scoreBottom = 1;
+        public double Score 
+        {
+            get => _score; 
+            set 
+            {
+                if (_score == value)
+                {
+                    return;
+                }
+                _score = value;
+                HighlightColor = new SolidColorBrush(ColorInterpolationHelper.InterpolateColorHSV((_scoreTop - _score) / (_scoreTop - _scoreBottom)));
+                NotifyOfPropertyChange();
+            }
+        }
         public string ToolTipLabel
         {
             get => $"{Annotation} ({Score.ToString("0.00")})";

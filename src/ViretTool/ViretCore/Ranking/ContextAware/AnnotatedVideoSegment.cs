@@ -25,8 +25,6 @@ namespace Viret.Ranking.ContextAware
             for(int iQuery = 0; iQuery < query.Length; iQuery++)
             {
                 int keyframeId = videoSegment.KeyframeIdForEachQuery[iQuery];
-                // TODO: why index out of bounds?
-                // HERE: keyframeId = 0, videoSegment.SegmentFirstFrameIndex = 11 => indexInSegment = -11 =>> index out of bounds!!
                 int indexInSegment = keyframeId - videoSegment.SegmentFirstFrameIndex;
                 Annotations[indexInSegment] = query[iQuery];
                 Scores[indexInSegment] = videoSegment.ScoresForEachQuery[iQuery];

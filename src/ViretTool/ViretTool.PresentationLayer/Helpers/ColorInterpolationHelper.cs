@@ -36,7 +36,10 @@ namespace ViretTool.PresentationLayer.Helpers
 
         public static System.Windows.Media.Color InterpolateColorHSV(double interpolation, bool useShortRotation = false)
         {
-            Color colorFrom = Color.Red;
+            interpolation = Math.Min(interpolation, 1.0);
+            interpolation = Math.Max(interpolation, 0);
+
+            Color colorFrom = Color.Magenta;
             Color colorTo = Color.Blue;
             ColorRGB rgbFrom = new ColorRGB(colorFrom.R / 255.0, colorFrom.G / 255.0, colorFrom.B / 255.0);
             ColorRGB rgbTo = new ColorRGB(colorTo.R / 255.0, colorTo.G / 255.0, colorTo.B / 255.0);
@@ -83,33 +86,20 @@ namespace ViretTool.PresentationLayer.Helpers
 
         private static double InterpolateHue(double interpolation, ColorHSV hsvFrom, ColorHSV hsvTo, bool useShortRotation)
         {
-            // find shortest difference vector
-            double hueDifferenceRegular = hsvTo.H - hsvFrom.H;
-            double hueDifferenceOverflow = (hsvTo.H + 1) - hsvFrom.H;
-            double hueDifferenceShort;
-            if (Math.Abs(hueDifferenceRegular) <= Math.Abs(hueDifferenceOverflow))
+            double hueDifferenceShort = Math.Abs(hsvTo.H - hsvFrom.H);
+            double differenceDirection = Math.Sign(hsvTo.H - hsvFrom.H);
+            if (hueDifferenceShort >= 0.5)
             {
-                hueDifferenceShort = hueDifferenceRegular;
+                hueDifferenceShort = 1 - hueDifferenceShort;
+                differenceDirection *= -1;
             }
-            else
-            {
-                hueDifferenceShort = hueDifferenceOverflow;
-            }
+            double hueDifferenceLong = 1 - hueDifferenceShort;
 
-            // switch to longer difference vector if needed
-            double hueDifferenceLong;
-            if (hueDifferenceShort > 0)
-            {
-                hueDifferenceLong = hueDifferenceShort - 1;
-            }
-            else
-            {
-                hueDifferenceLong = hueDifferenceShort + 1;
-            }
-            double hueDifference = (useShortRotation ? hueDifferenceShort : hueDifferenceLong);
+            double hueDifference = useShortRotation ? hueDifferenceShort : hueDifferenceLong;
+            differenceDirection = useShortRotation ? differenceDirection : differenceDirection * -1;
 
             // interpolate
-            double resultHue = hsvFrom.H + (hueDifference * interpolation);
+            double resultHue = hsvFrom.H + (hueDifference * interpolation) * differenceDirection;
 
             // clip if needed
             if (resultHue > 1)
