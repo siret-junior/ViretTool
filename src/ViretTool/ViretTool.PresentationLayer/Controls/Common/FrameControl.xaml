@@ -22,8 +22,8 @@
                   x:Shared="False" 
                   ToolTipService.ShowDuration="{x:Static Member=sys:Int32.MaxValue}" 
                   ToolTipService.Placement="Top"
-                  Margin="0, 0, 0, 5">
-                <Grid.ToolTip >
+                  Margin="0, 16, 0, 0">
+                <Grid.ToolTip>
                     <TextBlock Name="ToolTipLabel" FontSize="20" Text="{Binding ToolTipLabel, IsAsync=True}" />
                 </Grid.ToolTip>
 
@@ -44,10 +44,10 @@
                 <!-- Selection rectangles -->
                 <Rectangle Fill="Transparent" Stroke="{Binding HighlightColor, IsAsync=True}" StrokeThickness="3"
                            Visibility="{Binding IsHighlighted, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
-                <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
+                <!--<Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4"
                            Visibility="{Binding IsSelectedForQuery, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
                 <Rectangle Fill="Transparent" Stroke="Lime" StrokeThickness="4" StrokeDashArray="4 4"
-                           Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>
+                           Visibility="{Binding IsSelectedForDetail, Converter={StaticResource BooleanToVisibilityConverter}, IsAsync=True, FallbackValue=Collapsed}"/>-->
 
                 <!-- Borders -->
                 <!--<Border BorderThickness="0,0,0,4" Visibility="{Binding IsBottomBorderVisible, Converter={StaticResource BooleanToVisibilityHiddenConverter}, Mode=OneWay, IsAsync=True}">
@@ -64,7 +64,7 @@
                 <!-- Labels -->
                 <TextBlock Name="TopLeftLabel" FontSize="8" Padding="1" HorizontalAlignment="Left" VerticalAlignment="Top" Background="LightSkyBlue" Text="{Binding VideoId, IsAsync=True}" />
 
-                <TextBlock Name="TopRightLabel" FontSize="8" Padding="1" Margin="0,0,3,0" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <TextBlock Name="TopRightLabel" FontSize="10" Padding="1" Margin="0,-16,0,0" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Top">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="Text" Value="{Binding TopRightLabel, Mode=OneWay, IsAsync=True}"/>
