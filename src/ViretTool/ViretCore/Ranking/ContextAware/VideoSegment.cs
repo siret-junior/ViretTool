@@ -27,6 +27,14 @@ namespace Viret.Ranking.ContextAware
         /// </summary>
         public double Score = 1;
 
+        public VideoSegment(VideoSegment videoSegment)
+        {
+            KeyframeIdForEachQuery = videoSegment.KeyframeIdForEachQuery;
+            ScoresForEachQuery = videoSegment.ScoresForEachQuery;
+            SegmentFirstFrameIndex = videoSegment.SegmentFirstFrameIndex;
+            Length = videoSegment.Length;
+            Score = videoSegment.Score;
+        }
         public VideoSegment(int queryCount, int segmentFirstKeyframeIndex, int segmentSize)
         {
             KeyframeIdForEachQuery = new int[queryCount];

@@ -17,10 +17,11 @@ namespace Viret.Ranking.ContextAware
         }
 
         public AnnotatedVideoSegment(VideoSegment videoSegment, string[] query)
-            : base(videoSegment.KeyframeIdForEachQuery.Length, videoSegment.SegmentFirstFrameIndex, videoSegment.Length)
+            : base(videoSegment)
         {
             Annotations = Enumerable.Repeat("", videoSegment.Length).ToArray();
             Scores = new double[videoSegment.Length];
+            Score = videoSegment.Score;
 
             for(int iQuery = 0; iQuery < query.Length; iQuery++)
             {
