@@ -294,7 +294,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             IsBusy = true;
             try
             {
-                _viretCore.LogSubmitter.FlushBrowsingEvents();
+                // TODO: flush logs if needed (currently not needed)
             }
             catch (Exception exception)
             {
@@ -413,7 +413,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                             segment.Length,
                             segment.Score, rank)
                             ).ToList();
-                        Task.Run(() => _datasetServicesManager.ViretCore.LogSubmitter.SubmitResultLog(resultSetLog, textualQueryEvent));
+                        Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, textualQueryEvent, 
+                            $"textQuery-{Enum.GetName(typeof(RankingModel), rankingModel)}",
+                            $"top{_viretCore.Config.SegmentsInResultDisplay}SegmentsOfLength{_viretCore.Config.VideoSegmentLength}"));
 
                         return annotatedSegments;
                     });

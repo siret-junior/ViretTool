@@ -48,7 +48,7 @@ namespace Viret.Ranking
                             break;
                         }
                         float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.BowToVectorW2vv.BowToVector(sentenceWords)).ToArray();
-                        resultSet = ViretCore.ContextAwareRankerW2vv.RankVideoSegments(queryVectors);
+                        resultSet = ViretCore.ContextAwareRankerW2vv.RankVideoSegments(queryVectors, ViretCore.Config.VideoSegmentLength);
                     }
                     break;
                 case RankingModel.W2vvBert:
@@ -60,7 +60,7 @@ namespace Viret.Ranking
                         }
                         // TODO: parallel?
                         float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteBert.TextToVector(sentenceWords)).ToArray();
-                        resultSet = ViretCore.ContextAwareRankerBert.RankVideoSegments(queryVectors);
+                        resultSet = ViretCore.ContextAwareRankerBert.RankVideoSegments(queryVectors, ViretCore.Config.VideoSegmentLength);
                     }
                     break;
                 case RankingModel.Clip:
@@ -72,7 +72,7 @@ namespace Viret.Ranking
                         }
                         // TODO: parallel?
                         float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteClip.TextToVector(sentenceWords)).ToArray();
-                        resultSet = ViretCore.ContextAwareRankerClip.RankVideoSegments(queryVectors);
+                        resultSet = ViretCore.ContextAwareRankerClip.RankVideoSegments(queryVectors, ViretCore.Config.VideoSegmentLength);
                     }
                     break;
                 default:
@@ -135,7 +135,7 @@ namespace Viret.Ranking
                 Task.Run(() =>
                 {
                     float[][] queryVectors = sentencesOfWords.Select(sentenceWords => ViretCore.TextToVectorRemoteClip.TextToVector(sentenceWords)).ToArray();
-                    ViretCore.ContextAwareRankerClip.RankVideoSegments(queryVectors);
+                    ViretCore.ContextAwareRankerClip.PreloadQueryConcurrent(queryVectors);
                 });
             }
         }

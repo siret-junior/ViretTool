@@ -21,20 +21,16 @@ namespace Viret.Logging.DresApi
         public List<QueryEvent> Events { get; }
 
 
-        public QueryResultLog(long timestamp, List<QueryResult> resultSet, QueryEvent query, List<QueryEvent> browsingEvents)
+        public QueryResultLog(long timestamp, List<QueryResult> resultSet, QueryEvent query, string sortType, string resultSetAvailability)
         {
             TimeStamp = timestamp;
-            SortType = "TODO";
-            ResultSetAvailability = "TODO";
+            SortType = sortType;
+            ResultSetAvailability = resultSetAvailability;
             Results = resultSet;
             Events = new List<QueryEvent>();
             if (query != null)
             {
                 Events.Add(query);
-            }
-            if (browsingEvents != null && browsingEvents.Count > 0)
-            {
-                Events.AddRange(browsingEvents);
             }
         }
 

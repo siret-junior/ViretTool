@@ -26,7 +26,7 @@ namespace Viret
         // TODO: error/warn/info logger
         public InteractionLogger InteractionLogger { get; private set; }
         public ItemSubmitter ItemSubmitter { get; private set; }
-        public LogSubmitter LogSubmitter { get; private set; }
+        public ResultLogger ResultLogger { get; private set; }
         
         public Dataset Dataset { get; private set; }
         public ThumbnailReader ThumbnailReader { get; private set; }
@@ -61,8 +61,8 @@ namespace Viret
             File.WriteAllText(configFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
 
             InteractionLogger = new InteractionLogger();
+            ResultLogger = new ResultLogger(Config.DresServer, Config.SessionId);
             ItemSubmitter = new ItemSubmitter(Config.DresServer, Config.SessionId);
-            LogSubmitter = new LogSubmitter(Config.DresServer, Config.SessionId, InteractionLogger);
         }
 
         // TODO: tasks, dispose
@@ -112,7 +112,7 @@ namespace Viret
             // static
             InteractionLogger.Dispose();
             ItemSubmitter.Dispose();
-            LogSubmitter.Dispose();
+            ResultLogger.Dispose();
 
             // dataset dependent
             ThumbnailReader?.Dispose();

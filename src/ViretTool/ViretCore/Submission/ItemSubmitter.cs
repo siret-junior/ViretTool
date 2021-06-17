@@ -40,14 +40,14 @@ namespace Viret.Submission
             {
                 // V3C1 videoIds are decremented by 1
                 string url = $"{SubmissionServerUrl}/submit?item={(videoId + 1):00000}&frame={frameId}&session={SessionId}";
-                _localLogger.WriteLine("================================================================================");
-                _localLogger.WriteLine($"Sending submission at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{url}");
+                _localLogger.WriteLine("================================================================================\n"
+                    + $"Sending submission at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{url}");
                 using (HttpClient httpClient = new HttpClient())
                 using (HttpResponseMessage response = httpClient.GetAsync(url).Result)
                 {
                     string responseString = response.Content.ReadAsStringAsync().Result;
-                    _localLogger.WriteLine("--------------------------------------------------------------------------------");
-                    _localLogger.WriteLine($"Response received at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{responseString}");
+                    _localLogger.WriteLine("--------------------------------------------------------------------------------\n" 
+                        + $"Response received at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{responseString}");
 
                     SuccessfulSubmissionsStatus status = JsonConvert.DeserializeObject<SuccessfulSubmissionsStatus>(responseString);
                     //throw new Exception(status.Description);
@@ -61,8 +61,8 @@ namespace Viret.Submission
             }
             catch (HttpRequestException ex)
             {
-                _localLogger.WriteLine("--------------------------------------------------------------------------------");
-                _localLogger.WriteLine($"Error submitting candidate video {videoId} and frame {frameId}: {ex}");
+                _localLogger.WriteLine("--------------------------------------------------------------------------------" 
+                    + $"Error submitting candidate video {videoId} and frame {frameId}: {ex}");
                 throw new HttpRequestException($"Error submitting candidate video {videoId} and frame {frameId}: {ex}", ex);
             }
         }
