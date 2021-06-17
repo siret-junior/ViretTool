@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Viret.Logging.DresApi;
 
 namespace Viret.Submission
 {
@@ -46,6 +48,10 @@ namespace Viret.Submission
                     string responseString = response.Content.ReadAsStringAsync().Result;
                     _localLogger.WriteLine("--------------------------------------------------------------------------------");
                     _localLogger.WriteLine($"Response received at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{responseString}");
+
+                    SuccessfulSubmissionsStatus status = JsonConvert.DeserializeObject<SuccessfulSubmissionsStatus>(responseString);
+                    //throw new Exception(status.Description);
+
                     return responseString;
                 }
             }
@@ -53,7 +59,7 @@ namespace Viret.Submission
             {
                 throw new IOException($"Error storing submission log locally: {ex}", ex);
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
                 _localLogger.WriteLine("--------------------------------------------------------------------------------");
                 _localLogger.WriteLine($"Error submitting candidate video {videoId} and frame {frameId}: {ex}");

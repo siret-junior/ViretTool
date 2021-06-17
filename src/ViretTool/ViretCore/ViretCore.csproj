@@ -54,6 +54,7 @@
     <Compile Include="Logging\DresApi\QueryEventLog.cs" />
     <Compile Include="Logging\DresApi\QueryResult.cs" />
     <Compile Include="Logging\DresApi\QueryResultLog.cs" />
+    <Compile Include="Logging\DresApi\SuccessfulSubmissionsStatus.cs" />
     <Compile Include="Logging\InteractionLogger.cs" />
     <Compile Include="Logging\Json\CamelcaseJsonSerializer.cs" />
     <Compile Include="Logging\Json\LowercaseJsonSerializer.cs" />

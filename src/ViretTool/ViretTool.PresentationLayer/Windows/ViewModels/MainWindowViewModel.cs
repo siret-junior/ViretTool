@@ -548,7 +548,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 {
                     try
                     {
-                        _ = Task.Run(() => _viretCore.ItemSubmitter.SubmitItem(VideoId, FrameNumber));
+                        _ = Task.Run(() => _viretCore.ItemSubmitter.SubmitItem(VideoId, FrameNumber))
+                            .ContinueWith((t) =>
+                            {
+                                if (t.IsFaulted)
+                                {
+                                    _logger.Error($"Error submitting frame V{VideoId}, F{FrameNumber}: {t.Exception}");
+                                    MessageBox.Show(t.Exception.InnerException.Message);
+                                }
+                            }); ;
                     }
                     catch (Exception ex)
                     {
