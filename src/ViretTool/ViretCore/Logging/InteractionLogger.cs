@@ -36,7 +36,7 @@ namespace Viret.Logging
         }
 
 
-        public void LogInteraction(EventCategory category, EventType type, string value = "")
+        public QueryEvent LogInteraction(EventCategory category, EventType type, string value = "")
         {
             long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             QueryEvent queryEvent = new QueryEvent(timestamp, category, type, value);
@@ -60,7 +60,7 @@ namespace Viret.Logging
                         long lastEventTime = _browsingEvents.Last().Timestamp;
                         if (Math.Abs(lastEventTime - timestamp) < EVENT_AGGREGATION_DELAY_MS)
                         {
-                            return;
+                            return queryEvent;
                         }
                     }
                     // append browsing event
@@ -71,6 +71,8 @@ namespace Viret.Logging
             // store event locally in JSON
             string eventJson = LowercaseJsonSerializer.SerializeObject(queryEvent);
             _localLogger.WriteLine(eventJson);
+            
+            return queryEvent;
         }
 
         public List<QueryEvent> GetAndClearBrowsingEvents()

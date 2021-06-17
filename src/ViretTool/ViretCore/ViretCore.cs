@@ -56,7 +56,7 @@ namespace Viret
             }
             else
             {
-                Config = Config.Default;
+                Config = new Config();
             }
             File.WriteAllText(configFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
 

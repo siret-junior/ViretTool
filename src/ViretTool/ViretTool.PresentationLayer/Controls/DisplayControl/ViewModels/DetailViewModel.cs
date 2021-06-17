@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Caliburn.Micro;
 using Castle.Core.Logging;
+using Viret;
 using Viret.Logging.DresApi;
 using ViretTool.BusinessLayer.Services;
 using ViretTool.PresentationLayer.Controls.Common;
@@ -15,11 +16,12 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
     {
         public DetailViewModel(
             ILogger logger,
-            IDatasetServicesManager datasetServicesManager/*,
+            IDatasetServicesManager datasetServicesManager,
+            ViretCore viretCore/*,
             IInteractionLogger interactionLogger*/) : base(logger, datasetServicesManager/*, interactionLogger*/)
         {
-            ColumnCount = 9;
-            RowCount = 8;
+            ColumnCount = viretCore.Config.DetailWindowColumns;
+            RowCount = viretCore.Config.DetailWindowRows;
         }
 
         public BindableCollection<FrameViewModel> SampledFrames { get; } = new BindableCollection<FrameViewModel>();

@@ -15,6 +15,7 @@ using Viret;
 using Viret.Logging;
 using Viret.Logging.DresApi;
 using Viret.Ranking.ContextAware;
+using Viret.Ranking.Features;
 //using ViretTool.BusinessLayer.ActionLogging;
 using ViretTool.BusinessLayer.Datasets;
 using ViretTool.BusinessLayer.Services;
@@ -389,41 +390,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                         // collect GUI query settings
                         string textualQuery = Query.KeywordQueryResult?.FullQuery ?? "";
                         string[] querySentences = textualQuery.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        RankingModel rankingModel = _isW2vvChecked ? RankingModel.W2vvBow 
-                                            : _isBertChecked ? RankingModel.W2vvBert 
-                                            : _isClipChecked ? RankingModel.Clip 
+                        RankingModel rankingModel = _isW2vvChecked ? RankingModel.W2vvBow
+                                            : _isBertChecked ? RankingModel.W2vvBert
+                                            : _isClipChecked ? RankingModel.Clip
                                             : throw new Exception("No ranking model is selected!");
                         string loggedTextualQueryValue = $"{Enum.GetName(typeof(RankingModel), rankingModel)}:{textualQuery}";
                         QueryEvent textualQueryEvent = new QueryEvent(EventCategory.Text, EventType.Caption, loggedTextualQueryValue);
 
                         // compute ranked result
-                        List<VideoSegment> resultSet = _datasetServicesManager.ViretCore.RankingService.ComputeRankedResultSet(querySentences, rankingModel);
-
-                        // apply presentation filters (filter overlapping)
-                        bool[] keyframeMask = new bool[_datasetServicesManager.CurrentDataset.DatasetService.FrameCount];
-                        List<VideoSegment> presentedResultSet = new List<VideoSegment>();
-                        foreach (VideoSegment segment in resultSet)
-                        {
-                            // check
-                            bool isOverlapping = false;
-                            for (int i = segment.SegmentFirstFrameIndex; i < segment.SegmentFirstFrameIndex + segment.Length; i++)
-                            {
-                                if (keyframeMask[i])
-                                {
-                                    isOverlapping = true;
-                                    break;
-                                }
-                            }
-                            // mark
-                            if (!isOverlapping)
-                            {
-                                for (int i = segment.SegmentFirstFrameIndex; i < segment.SegmentFirstFrameIndex + segment.Length; i++)
-                                {
-                                    keyframeMask[i] = true;
-                                }
-                                presentedResultSet.Add(segment);
-                            }
-                        }
+                        List<VideoSegment> resultSet = _viretCore.RankingService.ComputeRankedResultSet(querySentences, rankingModel);
+                        List<VideoSegment> presentedResultSet = ApplyPresentationFilters(resultSet);
 
                         // annotate
                         List<AnnotatedVideoSegment> annotatedSegments = presentedResultSet
@@ -432,12 +408,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                         // log presented result set
                         // TODO: background task
                         List<QueryResult> resultSetLog = annotatedSegments.Select((segment, rank) => new QueryResult(
-                            _datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(segment.SegmentFirstFrameIndex).ToString(),
+                            (_datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(segment.SegmentFirstFrameIndex) + 1).ToString("00000"),
                             _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(segment.SegmentFirstFrameIndex),
+                            segment.Length,
                             segment.Score, rank)
                             ).ToList();
                         Task.Run(() => _datasetServicesManager.ViretCore.LogSubmitter.SubmitResultLog(resultSetLog, textualQueryEvent));
-                        
+
                         return annotatedSegments;
                     });
                 //if (videoSegmentResults.Count == 0)
@@ -451,7 +428,9 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 
-                await ResultDisplay.LoadFramesForAnnotatedSegments(videoSegmentResults.Take(100).ToList());
+                await ResultDisplay.LoadFramesForAnnotatedSegments(videoSegmentResults
+                    .Take(_viretCore.Config.SegmentsInResultDisplay)
+                    .ToList());
             }
             catch (Exception e)
             {
@@ -461,6 +440,37 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private List<VideoSegment> ApplyPresentationFilters(List<VideoSegment> resultSet)
+        {
+            // filter overlapping segments
+            bool[] keyframeMask = new bool[_viretCore.Dataset.Keyframes.Count];
+            List<VideoSegment> presentedResultSet = new List<VideoSegment>();
+            foreach (VideoSegment segment in resultSet)
+            {
+                // check
+                bool isOverlapping = false;
+                for (int i = segment.SegmentFirstFrameIndex; i < segment.SegmentFirstFrameIndex + segment.Length; i++)
+                {
+                    if (keyframeMask[i])
+                    {
+                        isOverlapping = true;
+                        break;
+                    }
+                }
+                // add and mark
+                if (!isOverlapping)
+                {
+                    presentedResultSet.Add(segment);
+                    for (int i = segment.SegmentFirstFrameIndex; i < segment.SegmentFirstFrameIndex + segment.Length; i++)
+                    {
+                        keyframeMask[i] = true;
+                    }
+                }
+            }
+
+            return presentedResultSet;
         }
 
         private void UpdateTestFramesPositionIfActive(List<int> sortedIds)
@@ -565,7 +575,13 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
 
             int keyframeId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber);
-            await DetailViewModel.LoadSortedDisplay(selectedFrame, _viretCore.FeatureVectorsW2vv.ComputeKnnRanking(keyframeId).Take(1000).ToArray());
+
+            FeatureVectors featureVectors = _viretCore.FeatureVectorsBert ?? _viretCore.FeatureVectorsW2vv ?? _viretCore.FeatureVectorsClip;
+            int[] sortedFrameIds = featureVectors.ComputeKnnRanking(keyframeId)
+                            .Take(_viretCore.Config.FramesInSimilarWindow)
+                            .ToArray();
+            // TODO: log displayed result
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedFrameIds);
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)

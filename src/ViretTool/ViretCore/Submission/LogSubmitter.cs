@@ -46,16 +46,18 @@ namespace Viret.Submission
         /// Builds a result log from result set, current query state and browsing events that occured since last log submission.
         /// </summary>
         /// <param name="resultSet"></param>
-        /// <param name="queryState"></param>
+        /// <param name="query"></param>
         /// <param name="browsingEvents"></param>
-        public string SubmitResultLog(List<QueryResult> resultSet, QueryEvent queryState)
+        public string SubmitResultLog(List<QueryResult> resultSet, QueryEvent query)
         {
             long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            QueryResultLog resultLog = new QueryResultLog(timestamp, resultSet, queryState, _interactionLogger.GetAndClearBrowsingEvents());
+
+            QueryResultLog resultLog = new QueryResultLog(timestamp, resultSet, query, _interactionLogger.GetAndClearBrowsingEvents());
+            
             StringContent httpPostContent = new StringContent(resultLog.ToJson(), Encoding.UTF8, "application/json");
             try
             {
-                string url = $"{LoggingServerUrl}?&session={SessionId}";
+                string url = $"{LoggingServerUrl}/log/result?&session={SessionId}";
                 _localLogger.WriteLine("================================================================================");
                 _localLogger.WriteLine($"Sending result log at {timestamp} to '{url}':{_localLogger.NewLine}{httpPostContent}");
                 using (HttpClient httpClient = new HttpClient())
