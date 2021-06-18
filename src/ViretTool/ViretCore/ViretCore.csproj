@@ -50,6 +50,9 @@
     <Compile Include="DataModel\Keyframe.cs" />
     <Compile Include="DataModel\Shot.cs" />
     <Compile Include="DataModel\Video.cs" />
+    <Compile Include="Logging\DresApi\ClientRunInfo.cs" />
+    <Compile Include="Logging\DresApi\ClientRunInfoList.cs" />
+    <Compile Include="Logging\DresApi\CurrentTime.cs" />
     <Compile Include="Logging\DresApi\QueryEvent.cs" />
     <Compile Include="Logging\DresApi\QueryEventLog.cs" />
     <Compile Include="Logging\DresApi\QueryResult.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="Logging\Json\CamelcaseJsonSerializer.cs" />
     <Compile Include="Logging\Json\LowercaseJsonSerializer.cs" />
     <Compile Include="Logging\ResultLogger.cs" />
+    <Compile Include="Logging\ServerTimeLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ranking\ContextAware\AnnotatedVideoSegment.cs" />
     <Compile Include="Ranking\ContextAware\ContextAwareRanker.cs" />

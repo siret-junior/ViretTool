@@ -70,7 +70,7 @@ namespace Viret.Ranking.Features
         }
 
 
-        public int[] ComputeKnnRanking(float[] queryVector)
+        public (int[] Ranks, double[] Scores) ComputeKnnRanking(float[] queryVector)
         {
             int[] ranks = new int[Vectors.Length];
             double[] similarities = new double[Vectors.Length];
@@ -84,7 +84,7 @@ namespace Viret.Ranking.Features
 
             // sort descending
             Array.Sort(similarities, ranks, Comparer<double>.Create((x, y) => y.CompareTo(x)));
-            return ranks;
+            return (ranks, similarities);
         }
 
         public IEnumerable<(int ItemId, double Score)> ComputeKnnRankingWithScores(float[] queryVector)
@@ -93,7 +93,7 @@ namespace Viret.Ranking.Features
                 .OrderByDescending(item => item.Score);
         }
 
-        public int[] ComputeKnnRanking(int vectorId)
+        public (int[] Ranks, double[] Scores) ComputeKnnRanking(int vectorId)
         {
             // TODO: cache or pre-compute
             return ComputeKnnRanking(Vectors[vectorId]);

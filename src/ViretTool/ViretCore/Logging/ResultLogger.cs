@@ -16,11 +16,13 @@ namespace Viret.Logging
         public string SessionId { get; set; }
 
         private readonly StreamWriter _localLogger;
+        private readonly ServerTimeLogger _serverTimeLogger;
 
-        public ResultLogger(string loggingServerUrl, string sessionId)
+        public ResultLogger(string loggingServerUrl, string sessionId, ServerTimeLogger serverTimeLogger)
         {
             LoggingServerUrl = loggingServerUrl;
             SessionId = sessionId;
+            _serverTimeLogger = serverTimeLogger;
 
             string logDirectory = Path.Combine("Logs", "Results");
             Directory.CreateDirectory(logDirectory);
@@ -37,6 +39,7 @@ namespace Viret.Logging
             long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             QueryResultLog resultSetLog = new QueryResultLog(timestamp, resultSet, query, sortType, resultSetAvailability);
             _localLogger.WriteLine(resultSetLog.ToJson());
+            _serverTimeLogger.LogServerTime(timestamp);
             return resultSetLog;
         }
 

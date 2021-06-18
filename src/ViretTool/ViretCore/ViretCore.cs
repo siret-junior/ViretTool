@@ -27,7 +27,8 @@ namespace Viret
         public InteractionLogger InteractionLogger { get; private set; }
         public ItemSubmitter ItemSubmitter { get; private set; }
         public ResultLogger ResultLogger { get; private set; }
-        
+        public ServerTimeLogger ServerTimeLogger { get; private set; }
+
         public Dataset Dataset { get; private set; }
         public ThumbnailReader ThumbnailReader { get; private set; }
 
@@ -61,7 +62,8 @@ namespace Viret
             File.WriteAllText(configFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
 
             InteractionLogger = new InteractionLogger();
-            ResultLogger = new ResultLogger(Config.DresServer, Config.SessionId);
+            ServerTimeLogger = new ServerTimeLogger(Config.DresServer, Config.SessionId);
+            ResultLogger = new ResultLogger(Config.DresServer, Config.SessionId, ServerTimeLogger);
             ItemSubmitter = new ItemSubmitter(Config.DresServer, Config.SessionId);
         }
 

@@ -414,7 +414,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                             segment.Score, rank)
                             ).ToList();
                         Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, textualQueryEvent, 
-                            $"textQuery-{Enum.GetName(typeof(RankingModel), rankingModel)}",
+                            $"textSearch-{Enum.GetName(typeof(RankingModel), rankingModel)}",
                             $"top{_viretCore.Config.SegmentsInResultDisplay}SegmentsOfLength{_viretCore.Config.VideoSegmentLength}"));
 
                         return annotatedSegments;
@@ -582,15 +582,23 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             IsBusy = true;
             IsDetailViewVisible = true;
-            _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.VideoSummary, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
+            _viretCore.InteractionLogger.LogInteraction(EventCategory.Image, EventType.JointEmbedding, $"V_{selectedFrame.VideoId}|F_{selectedFrame.FrameNumber}");
 
             int keyframeId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber);
 
             FeatureVectors featureVectors = _viretCore.FeatureVectorsBert ?? _viretCore.FeatureVectorsW2vv ?? _viretCore.FeatureVectorsClip;
-            int[] sortedFrameIds = featureVectors.ComputeKnnRanking(keyframeId)
-                            .Take(_viretCore.Config.FramesInSimilarWindow)
-                            .ToArray();
+            (int[] sortedFrameIds, double[] scores) = featureVectors.ComputeKnnRanking(keyframeId);
+
+            sortedFrameIds = sortedFrameIds.Take(_viretCore.Config.FramesInSimilarWindow).ToArray();
+            
             // TODO: log displayed result
+            QueryEvent similarQueryEvent = new QueryEvent(EventCategory.Image, EventType.JointEmbedding, $"V_{selectedFrame.VideoId}|F_{selectedFrame.FrameNumber}");
+            List<QueryResult> resultSetLog = sortedFrameIds.Select((frameId, rank) => new QueryResult(
+                            (_datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(frameId) + 1).ToString("00000"),
+                            _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(frameId),
+                            1, scores[rank], rank)
+                            ).ToList();
+            _ = Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, similarQueryEvent, "kNNtoExampleImage", $"top{_viretCore.Config.FramesInSimilarWindow}"));
             await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedFrameIds);
         }
 
