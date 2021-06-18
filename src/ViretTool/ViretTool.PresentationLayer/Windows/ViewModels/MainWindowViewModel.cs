@@ -399,7 +399,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                         // compute ranked result
                         List<VideoSegment> resultSet = _viretCore.RankingService.ComputeRankedResultSet(querySentences, rankingModel);
-                        List<VideoSegment> presentedResultSet = ApplyPresentationFilters(resultSet);
+                        List<VideoSegment> presentedResultSet = ApplyPresentationFiltersSegmentOverlaps(resultSet);
 
                         // annotate
                         List<AnnotatedVideoSegment> annotatedSegments = presentedResultSet
@@ -444,7 +444,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        private List<VideoSegment> ApplyPresentationFilters(List<VideoSegment> resultSet)
+        private List<VideoSegment> ApplyPresentationFiltersSegmentOverlaps(List<VideoSegment> resultSet)
         {
             // filter overlapping segments
             bool[] keyframeMask = new bool[_viretCore.Dataset.Keyframes.Count];
@@ -473,6 +473,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
 
             return presentedResultSet;
+        }
+
+        private int[] ApplyPresentationFiltersMaxFromVideoShot(int[] resultSet)
+        {
+            // filter overlapping segments
+            int[] videoCounter = new int[_viretCore.Dataset.Videos.Count];
+            int[] shotCounter = new int[_viretCore.Dataset.Shots.Count];
+
+            return resultSet.Where(keyframeId => 
+                videoCounter[_viretCore.Dataset.Keyframes[keyframeId].ParentVideo.Id]++ < _viretCore.Config.PresentationFilterMaxFromVideo
+                && shotCounter[_viretCore.Dataset.Keyframes[keyframeId].ParentShot.Id]++ < _viretCore.Config.PresentationFilterMaxFromShot
+                ).ToArray();
         }
 
         private void UpdateTestFramesPositionIfActive(List<int> sortedIds)
@@ -589,17 +601,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             FeatureVectors featureVectors = _viretCore.FeatureVectorsBert ?? _viretCore.FeatureVectorsW2vv ?? _viretCore.FeatureVectorsClip;
             (int[] sortedFrameIds, double[] scores) = featureVectors.ComputeKnnRanking(keyframeId);
 
-            sortedFrameIds = sortedFrameIds.Take(_viretCore.Config.FramesInSimilarWindow).ToArray();
+            int[] filteredSortedFrameIds = ApplyPresentationFiltersMaxFromVideoShot(sortedFrameIds);
+            filteredSortedFrameIds = filteredSortedFrameIds.Take(_viretCore.Config.FramesInSimilarWindow).ToArray();
             
             // TODO: log displayed result
             QueryEvent similarQueryEvent = new QueryEvent(EventCategory.Image, EventType.JointEmbedding, $"V_{selectedFrame.VideoId}|F_{selectedFrame.FrameNumber}");
-            List<QueryResult> resultSetLog = sortedFrameIds.Select((frameId, rank) => new QueryResult(
+            List<QueryResult> resultSetLog = filteredSortedFrameIds.Select((frameId, rank) => new QueryResult(
                             (_datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(frameId) + 1).ToString("00000"),
                             _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(frameId),
                             1, scores[rank], rank)
                             ).ToList();
-            _ = Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, similarQueryEvent, "kNNtoExampleImage", $"top{_viretCore.Config.FramesInSimilarWindow}"));
-            await DetailViewModel.LoadSortedDisplay(selectedFrame, sortedFrameIds);
+            _ = Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, similarQueryEvent, "knnToExampleImage", $"top{_viretCore.Config.FramesInSimilarWindow}"));
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, filteredSortedFrameIds);
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)

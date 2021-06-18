@@ -17,6 +17,9 @@ namespace Viret
         public int DetailWindowColumns { get; set; } = 9;
         public int DetailWindowRows { get; set; } = 8;
 
+        public int PresentationFilterMaxFromVideo { get; set; } = 3;
+        public int PresentationFilterMaxFromShot { get; set; } = 1;
+
 
     }
 }
