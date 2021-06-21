@@ -119,7 +119,7 @@ namespace Viret.Thumbnails
         }
 
 
-        private ThumbnailJpeg ReadThumbnail(int globalId)
+        public virtual ThumbnailJpeg ReadThumbnail(int globalId)
         {
             byte[] jpegData = ReadByteBlob(globalId);
             int videoId = GlobalIdToVideoFrame[globalId].videoId;
@@ -130,9 +130,6 @@ namespace Viret.Thumbnails
 
         public ThumbnailJpeg ReadThumbnail(int videoId, int frameNumber)
         {
-            // hotfix 5563+
-            videoId = (videoId >= 5563) ? videoId - 1 : videoId;
-
             if (_videoFrameToGlobalId.TryGetValue(videoId, out Dictionary<int, int> dict)
                 && dict.TryGetValue(frameNumber, out int globalId))
             {
@@ -147,9 +144,6 @@ namespace Viret.Thumbnails
 
         public virtual ThumbnailJpeg[] ReadVideoThumbnails(int videoId)
         {
-            // hotfix 5563+
-            videoId = (videoId >= 5563) ? videoId - 1 : videoId;
-
             int thumbIdStart = VideoOffsets[videoId];
             int videoLength = VideoFrameCounts[videoId];
             int thumbIdEnd = thumbIdStart + videoLength;
@@ -168,9 +162,6 @@ namespace Viret.Thumbnails
 
         public virtual int[] ReadVideoFrameNumbers(int videoId)
         {
-            // hotfix 5563+
-            videoId = (videoId >= 5563) ? videoId - 1 : videoId;
-            
             int thumbIdStart = VideoOffsets[videoId];
             int videoLength = VideoFrameCounts[videoId];
             int thumbIdEnd = thumbIdStart + videoLength;
