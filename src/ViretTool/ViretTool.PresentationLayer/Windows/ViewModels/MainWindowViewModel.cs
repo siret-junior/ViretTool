@@ -418,6 +418,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
                         // annotate
                         List<AnnotatedVideoSegment> annotatedSegments = presentedResultSet
+                            .Take(_viretCore.Config.ResultsToLog)
                             .Select(segment => new AnnotatedVideoSegment(segment, querySentences)).ToList();
 
                         // log presented result set
@@ -630,17 +631,18 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             (int[] sortedFrameIds, double[] scores) = featureVectors.ComputeKnnRanking(keyframeId);
 
             int[] filteredSortedFrameIds = ApplyPresentationFiltersMaxFromVideoShot(sortedFrameIds);
-            filteredSortedFrameIds = filteredSortedFrameIds.Take(_viretCore.Config.FramesInSimilarWindow).ToArray();
             
             // TODO: log displayed result
             QueryEvent similarQueryEvent = new QueryEvent(EventCategory.Image, EventType.JointEmbedding, $"V_{selectedFrame.VideoId}|F_{selectedFrame.FrameNumber}");
-            List<QueryResult> resultSetLog = filteredSortedFrameIds.Select((frameId, rank) => new QueryResult(
+            List<QueryResult> resultSetLog = filteredSortedFrameIds
+                        .Take(_viretCore.Config.ResultsToLog)
+                        .Select((frameId, rank) => new QueryResult(
                             (_datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(frameId) + 1).ToString("00000"),
                             _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(frameId),
                             1, scores[rank], rank)
                             ).ToList();
             _ = Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, similarQueryEvent, "knnToExampleImage", $"top{_viretCore.Config.FramesInSimilarWindow}"));
-            await DetailViewModel.LoadSortedDisplay(selectedFrame, filteredSortedFrameIds);
+            await DetailViewModel.LoadSortedDisplay(selectedFrame, filteredSortedFrameIds.Take(_viretCore.Config.FramesInSimilarWindow).ToArray());
         }
 
         private async Task OnFrameForVideoChanged(FrameViewModel selectedFrame)

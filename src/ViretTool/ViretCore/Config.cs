@@ -20,6 +20,7 @@ namespace Viret
         public int PresentationFilterMaxFromVideo { get; set; } = 3;
         public int PresentationFilterMaxFromShot { get; set; } = 1;
 
+        public int ResultsToLog { get; set; } = 10000;
 
         public double HighlightFrameGreenAt { get; set; } = 1.7;
 
