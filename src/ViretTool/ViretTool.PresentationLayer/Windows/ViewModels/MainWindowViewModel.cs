@@ -561,7 +561,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Frames submitted: {submittedFramesForLogging}");
 
                 // submit all items
-                _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
+                _logger.Info($"Frames submitted: {submittedFramesForLogging}");
                 foreach ((int VideoId, int FrameNumber) in _submitControlViewModel.SubmittedFrames.Select(f => (f.VideoId, f.FrameNumber)))
                 {
                     try
