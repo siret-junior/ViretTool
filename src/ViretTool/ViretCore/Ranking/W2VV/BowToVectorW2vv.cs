@@ -32,15 +32,15 @@ namespace Viret.Ranking.W2VV
             string keywordToIdPattern, string keywordWeightsPattern, string keywordBiasPattern,
             string pcaMatrixPattern, string pcaMeanPattern, int vectorDimension)
         {
-            // load filenames based on patterns
-            string keywordToIdFile = Directory.GetFiles(inputDirectory, keywordToIdPattern).FirstOrDefault();
-            string keywordWeightsFile = Directory.GetFiles(inputDirectory, keywordWeightsPattern).FirstOrDefault();
-            string keywordBiasFile = Directory.GetFiles(inputDirectory, keywordBiasPattern).FirstOrDefault();
-            string pcaMatrixFile = Directory.GetFiles(inputDirectory, pcaMatrixPattern).FirstOrDefault();
-            string pcaMeanFile = Directory.GetFiles(inputDirectory, pcaMeanPattern).FirstOrDefault();
-
             try
             {
+                // load filenames based on patterns
+                string keywordToIdFile = Directory.GetFiles(inputDirectory, keywordToIdPattern).FirstOrDefault();
+                string keywordWeightsFile = Directory.GetFiles(inputDirectory, keywordWeightsPattern).FirstOrDefault();
+                string keywordBiasFile = Directory.GetFiles(inputDirectory, keywordBiasPattern).FirstOrDefault();
+                string pcaMatrixFile = Directory.GetFiles(inputDirectory, pcaMatrixPattern).FirstOrDefault();
+                string pcaMeanFile = Directory.GetFiles(inputDirectory, pcaMeanPattern).FirstOrDefault();
+
                 // check if files exist
                 foreach ((string file, string pattern) in new (string, string)[] 
                 { 

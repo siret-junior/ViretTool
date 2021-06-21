@@ -19,12 +19,21 @@ namespace Viret.Ranking.W2VV
         public readonly string ServerUrl;
         public readonly int VectorDimension;
 
+        private readonly bool _applyPca;
         private readonly PcaConversion _pcaConversion;
-
+        
         public TextToVectorRemote(string serverUrlFile, string pcaMatrixFile, string pcaMeanFile, int vectorDimension)
         {
             ServerUrl = File.ReadAllText(serverUrlFile);
             _pcaConversion = new PcaConversion(pcaMatrixFile, pcaMeanFile, vectorDimension);
+            _applyPca = true;
+            VectorDimension = vectorDimension;
+        }
+
+        public TextToVectorRemote(string serverUrlFile, int vectorDimension)
+        {
+            ServerUrl = File.ReadAllText(serverUrlFile);
+            _applyPca = false;
             VectorDimension = vectorDimension;
         }
 
@@ -62,12 +71,41 @@ namespace Viret.Ranking.W2VV
             }
         }
 
+        public static TextToVectorRemote FromDirectory(string inputDirectory, string serverUrlPattern, int vectorDimension)
+        {
+            try
+            {
+                // load filenames based on patterns
+                string serverUrlFile = Directory.GetFiles(inputDirectory, serverUrlPattern).FirstOrDefault();
+
+                // check if files exist
+                foreach ((string file, string pattern) in new (string, string)[]
+                {
+                    (serverUrlFile, serverUrlPattern),
+                })
+                {
+                    if (file == null)
+                    {
+                        throw new FileNotFoundException($"File '{file}' was not found in directory '{inputDirectory}'.");
+                    }
+                }
+
+                // load the instance
+                return new TextToVectorRemote(serverUrlFile, vectorDimension);
+            }
+            catch
+            {
+                // TODO: temporarily fail silently
+                return null;
+            }
+        }
+
         public /* async? */ float[] TextToVector(string[] queryKeywords)
         {
             if (queryKeywords == null || queryKeywords.Length == 0)
             {
                 float[] vector = new float[VectorDimension]; // TODO: convert query to vector
-                vector = _pcaConversion.ApplyPCA(vector);
+                vector = _applyPca ? _pcaConversion.ApplyPCA(vector) : vector; 
                 return vector;
             }
 
@@ -93,7 +131,7 @@ namespace Viret.Ranking.W2VV
             Buffer.BlockCopy(responseDataBytes, 0, responseVectorFloats, 0, responseDataBytes.Length);
 
             // apply PCA
-            float[] resultVector = _pcaConversion.ApplyPCA(responseVectorFloats);
+            float[] resultVector = _applyPca ? _pcaConversion.ApplyPCA(responseVectorFloats) : responseVectorFloats;
 
             return resultVector;
         }

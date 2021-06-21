@@ -95,8 +95,6 @@ namespace Viret
                 vectorDimension: 2048);
             TextToVectorRemoteClip = TextToVectorRemote.FromDirectory(Path.Combine(inputDirectory, "CLIP"),
                 "server.url",
-                "PCA-matrix.*.float32.bin",
-                "PCA-mean.*.float32.bin",
                 vectorDimension: 640);
 
             // ranking

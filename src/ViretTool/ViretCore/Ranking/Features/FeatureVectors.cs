@@ -50,23 +50,31 @@ namespace Viret.Ranking.Features
 
         public static FeatureVectors FromDirectory(string inputDirectory, string filePattern, int maxKeyframes = -1)
         {
-            string inputFile = Directory.GetFiles(inputDirectory, filePattern).FirstOrDefault();
-            if (inputFile == null)
+            try
             {
-                // TODO: temporarily fail silently
-                return null;
-                //throw new FileNotFoundException($"Features file with extension '{extension}' was not found in directory '{inputDirectory}'.");
-            }
-            Regex regex = new Regex(@".*\.(?<vectorCount>[0-9]+)x(?<vectorDimension>[0-9]+)\..*");
-            Match match = regex.Match(Path.GetFileNameWithoutExtension(inputFile));
-            if (!match.Success)
-            {
-                throw new FileNotFoundException($"Error parsing vector count and vector dimension from '{inputFile}' ({regex.ToString()})");
-            }
+                string inputFile = Directory.GetFiles(inputDirectory, filePattern).FirstOrDefault();
+                if (inputFile == null)
+                {
+                    // TODO: temporarily fail silently
+                    return null;
+                    //throw new FileNotFoundException($"Features file with extension '{extension}' was not found in directory '{inputDirectory}'.");
+                }
+                Regex regex = new Regex(@".*\.(?<vectorCount>[0-9]+)x(?<vectorDimension>[0-9]+)\..*");
+                Match match = regex.Match(Path.GetFileNameWithoutExtension(inputFile));
+                if (!match.Success)
+                {
+                    throw new FileNotFoundException($"Error parsing vector count and vector dimension from '{inputFile}' ({regex.ToString()})");
+                }
 
-            int vectorCount = int.Parse(match.Groups["vectorCount"].Value);
-            int vectorDimension = int.Parse(match.Groups["vectorDimension"].Value);
-            return FromFile(inputFile, vectorDimension, vectorCount, maxKeyframes);
+                int vectorCount = int.Parse(match.Groups["vectorCount"].Value);
+                int vectorDimension = int.Parse(match.Groups["vectorDimension"].Value);
+                return FromFile(inputFile, vectorDimension, vectorCount, maxKeyframes);
+            }
+            catch
+            {
+                // temporarily fail silently
+                return null;
+            }
         }
 
 
