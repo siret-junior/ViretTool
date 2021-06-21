@@ -549,12 +549,16 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             try
             {
                 // open submission window
+                string submittedFramesForLogging = string.Join(", ", submittedFrames.Select(f => $"{f.VideoId}|{f.FrameNumber}"));
+                _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Opened submit window: {submittedFramesForLogging}");
                 _submitControlViewModel.Initialize(submittedFrames);
                 if (_windowManager.ShowDialog(_submitControlViewModel) != true)
                 {
                     // submission cancelled
+                    _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Cancelled submit: {submittedFramesForLogging}");
                     return;
                 }
+                _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Frames submitted: {submittedFramesForLogging}");
 
                 // submit all items
                 _logger.Info($"Frames submitted: {string.Join(",", _submitControlViewModel.SubmittedFrames.Select(f => f.FrameNumber))}");
@@ -594,7 +598,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
         {
             IsBusy = true;
             IsDetailViewVisible = true;
-            _viretCore.InteractionLogger.LogInteraction(EventCategory.Image, EventType.JointEmbedding, $"V_{selectedFrame.VideoId}|F_{selectedFrame.FrameNumber}");
+            _viretCore.InteractionLogger.LogInteraction(EventCategory.Image, EventType.JointEmbedding, $"{selectedFrame.VideoId}|{selectedFrame.FrameNumber}");
 
             int keyframeId = _datasetServicesManager.CurrentDataset.DatasetService.GetFrameIdForFrameNumber(selectedFrame.VideoId, selectedFrame.FrameNumber);
 
@@ -632,6 +636,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         private void CloseDetailViewModel()
         {
+            _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, DetailViewModel.BrowsingEvent, "Window closed.");
             IsBusy = false;
             IsDetailViewVisible = false;
         }

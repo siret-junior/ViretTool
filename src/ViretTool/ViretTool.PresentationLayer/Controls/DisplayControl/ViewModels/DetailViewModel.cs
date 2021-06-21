@@ -28,6 +28,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
 
         public Action<int> ScrollToSampleRow { private get; set; }
 
+        public EventType BrowsingEvent = EventType.VideoSummary;
         public override async Task LoadVideoForFrame(FrameViewModel selectedFrame)
         {
             IsBusy = true;
@@ -45,6 +46,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
             ScrollToSampleRow(0);
+            BrowsingEvent = EventType.VideoSummary;
             IsBusy = false;
         }
 
@@ -65,6 +67,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             FrameViewModel newlySelectedFrame = SelectFrame(selectedFrame);
             ScrollToFrameHorizontally(newlySelectedFrame);
             ScrollToSampleRow(0);
+            BrowsingEvent = EventType.JointEmbedding;
             IsBusy = false;
         }
 

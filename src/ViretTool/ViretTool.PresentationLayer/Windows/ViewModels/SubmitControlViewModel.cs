@@ -16,7 +16,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
         
         // TODO: fix FrameViewModel dependencies
-        public double LargeFramesMultiplier => 1.5;
+        public double LargeFramesMultiplier => 2;
 
         private bool _isTextFacesChecked = false;
         private bool _isTextChecked = false;
