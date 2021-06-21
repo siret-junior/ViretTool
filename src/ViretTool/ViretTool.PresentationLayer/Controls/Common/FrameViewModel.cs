@@ -202,8 +202,8 @@ namespace ViretTool.PresentationLayer.Controls.Common
         public string Annotation { get; set; }
 
         private double _score = 0;
-        private double _scoreTop = 1.7;
-        private double _scoreBottom = 1;
+        //private double _scoreTop = 1.7;
+        //private double _scoreBottom = 1;
         public double Score 
         {
             get => _score; 
@@ -214,6 +214,9 @@ namespace ViretTool.PresentationLayer.Controls.Common
                     return;
                 }
                 _score = value;
+
+                double _scoreTop = _servicesManager.ViretCore.Config.HighlightFrameGreenAt;
+                double _scoreBottom = _servicesManager.ViretCore.Config.HighlightFrameRedAt;
                 HighlightColor = new SolidColorBrush(ColorInterpolationHelper.InterpolateColorHSV((_scoreTop - _score) / (_scoreTop - _scoreBottom), true));
                 NotifyOfPropertyChange();
             }

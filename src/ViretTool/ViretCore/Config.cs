@@ -21,5 +21,9 @@ namespace Viret
         public int PresentationFilterMaxFromShot { get; set; } = 1;
 
 
+        public double HighlightFrameGreenAt { get; set; } = 1.7;
+
+        public double HighlightFrameRedAt { get; set; } = 1.0;
+
     }
 }
