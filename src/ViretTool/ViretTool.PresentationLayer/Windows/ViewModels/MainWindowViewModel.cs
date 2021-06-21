@@ -411,6 +411,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                                             : throw new Exception("No ranking model is selected!");
                         string loggedTextualQueryValue = $"{Enum.GetName(typeof(RankingModel), rankingModel)}:{textualQuery}";
                         QueryEvent textualQueryEvent = new QueryEvent(EventCategory.Text, EventType.Caption, loggedTextualQueryValue);
+                        _viretCore.InteractionLogger.LogInteraction(EventCategory.Text, EventType.Caption, loggedTextualQueryValue);
 
                         // compute ranked result
                         List<VideoSegment> resultSet = _viretCore.RankingService.ComputeRankedResultSet(querySentences, rankingModel);
