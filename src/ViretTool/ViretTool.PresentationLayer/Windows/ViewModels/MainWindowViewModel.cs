@@ -555,10 +555,10 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 if (_windowManager.ShowDialog(_submitControlViewModel) != true)
                 {
                     // submission cancelled
-                    _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Cancelled submit: {submittedFramesForLogging}");
+                    _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Closed submit window: {submittedFramesForLogging}");
                     return;
                 }
-                _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Frames submitted: {submittedFramesForLogging}");
+                _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Submit, $"Frames submitted: {submittedFramesForLogging}");
 
                 // submit all items
                 _logger.Info($"Frames submitted: {submittedFramesForLogging}");

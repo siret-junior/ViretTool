@@ -26,7 +26,7 @@ namespace Viret.Logging.DresApi
         // Filter
         BW, MaxFrames, Lifelog, ASR,
         // browsing
-        RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll,
+        RankedList, VideoSummary, TemporalContext, Exploration, ExplicitSort, ResetAll, Submit,
         // none
         None
     }

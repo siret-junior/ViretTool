@@ -225,7 +225,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 //frameViewModel.IsSelectedForQuery = !frameViewModel.IsSelectedForQuery;
-                _datasetServicesManager.ViretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, 
+                _datasetServicesManager.ViretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Submit, 
                     $"Frames submitted by Ctrl + click: {frameViewModel.VideoId}|{frameViewModel.FrameNumber}");
                 _ = Task.Run(() => _datasetServicesManager.ViretCore.ItemSubmitter.SubmitItem(frameViewModel.VideoId, frameViewModel.FrameNumber))
                             .ContinueWith((t) =>

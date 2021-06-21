@@ -48,7 +48,8 @@ namespace Viret.Logging
             //}
 
             // accumulate browsing events
-            if (category == EventCategory.Browsing)
+            if (category == EventCategory.Browsing 
+                && (type == EventType.Exploration || type == EventType.TemporalContext))
             {
                 lock (_browsingEventsLock)
                 {
