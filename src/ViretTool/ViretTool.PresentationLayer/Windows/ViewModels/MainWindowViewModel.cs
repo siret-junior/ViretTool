@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -230,6 +231,20 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
+        private string _submissionResultLabel = "";
+        public string SubmissionResultLabel
+        {
+            get { return _submissionResultLabel; }
+            set
+            {
+                if (_submissionResultLabel == value)
+                {
+                    return;
+                }
+                _submissionResultLabel = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
         // TODO: remove? merge with OpenDataset()?
         public async void OpenDatabase()
@@ -567,6 +582,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     try
                     {
                         _ = Task.Run(() => _viretCore.ItemSubmitter.SubmitItem(VideoId, FrameNumber))
+                            .ContinueWith((t) =>
+                            {
+                                SubmissionResultLabel = t.Result;
+
+                                if (t.Result.Equals("WRONG"))
+                                {
+                                    SystemSounds.Exclamation.Play();
+                                }
+                            })
                             .ContinueWith((t) =>
                             {
                                 if (t.IsFaulted)

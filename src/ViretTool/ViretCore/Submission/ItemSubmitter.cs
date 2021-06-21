@@ -52,7 +52,7 @@ namespace Viret.Submission
                     SuccessfulSubmissionsStatus status = JsonConvert.DeserializeObject<SuccessfulSubmissionsStatus>(responseString);
                     //throw new Exception(status.Description);
 
-                    return responseString;
+                    return Enum.GetName(typeof(SubmissionOutcomes), status.Submission);
                 }
             }
             catch (IOException ex)
