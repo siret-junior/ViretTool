@@ -425,7 +425,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                         List<QueryResult> resultSetLog = annotatedSegments.Select((segment, rank) => new QueryResult(
                             (_datasetServicesManager.CurrentDataset.DatasetService.GetVideoIdForFrameId(segment.SegmentFirstFrameIndex) + 1).ToString("00000"),
                             _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(segment.SegmentFirstFrameIndex),
-                            segment.Length,
+                            _datasetServicesManager.CurrentDataset.DatasetService.GetFrameNumberForFrameId(segment.SegmentFirstFrameIndex + segment.Length - 1),
                             segment.Score, rank)
                             ).ToList();
                         Task.Run(() => _viretCore.ResultLogger.LogResultSet(resultSetLog, textualQueryEvent, 
