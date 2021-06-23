@@ -387,14 +387,14 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             Query.OnKeywordsCleared();
             Query.OnQueryResultUpdated(null);
 
-            _correctSubmissionsCount = 0;
-            _wrongSubmissionsCount = 0;
-            _indeterminateSubmissionsCount = 0;
-            _emptySubmissionsCount = 0;
+            CorrectSubmissionsCount = 0;
+            WrongSubmissionsCount = 0;
+            IndeterminateSubmissionsCount = 0;
+            EmptySubmissionsCount = 0;
 
-            _sentSubmissionsCount = 0;
-            _receivedSubmissionsCount = 0;
-            _lostSubmissionsCount = 0;
+            SentSubmissionsCount = 0;
+            ReceivedSubmissionsCount = 0;
+            LostSubmissionsCount = 0;
 
             // logging
             _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.ResetAll);
