@@ -259,7 +259,7 @@ namespace ViretTool.Resources.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Key word.
+        ///   Looks up a localized string similar to Text input.
         /// </summary>
         public static string KeywordModelName {
             get {

@@ -130,7 +130,7 @@
     <value>% of Black</value>
   </data>
   <data name="KeywordModelName" xml:space="preserve">
-    <value>Key word</value>
+    <value>Text input</value>
   </data>
   <data name="SketchModelName" xml:space="preserve">
     <value>Color</value>
