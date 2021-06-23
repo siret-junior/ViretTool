@@ -104,6 +104,7 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 display.FrameForSimilarChanged += async (sender, selectedFrame) => await OnFrameForSimilarChanged(selectedFrame);
                 display.FrameForVideoChanged += async (sender, selectedFrame) => await OnFrameForVideoChanged(selectedFrame);
                 display.FrameForScrollVideoChanged += async (sender, selectedFrame) => await OnFrameForScrollVideoChanged(selectedFrame);
+                display.SubmitFramesDirectly += (sender, submittedFrames) => SubmitFrames(submittedFrames);
             }
 
             // Miscelaneous windows
@@ -691,62 +692,8 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                     _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Exploration, $"Closed submit window: {submittedFramesForLogging}");
                     return;
                 }
-                _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Submit, $"Frames submitted: {submittedFramesForLogging}");
-
-                // submit all items
-                _logger.Info($"Frames submitted: {submittedFramesForLogging}");
-                foreach ((int VideoId, int FrameNumber) in _submitControlViewModel.SubmittedFrames.Select(f => (f.VideoId, f.FrameNumber)))
-                {
-                    try
-                    {
-                        SentSubmissionsCount++;
-                        _ = Task.Run(() => _viretCore.ItemSubmitter.SubmitItem(VideoId, FrameNumber))
-                            .ContinueWith((t) =>
-                            {
-                                SuccessfulSubmissionsStatus result = t.Result;
-                                ReceivedSubmissionsCount++;
-
-                                if (result.Submission != null)
-                                {
-                                    switch (result.Submission)
-                                    {
-                                        case SubmissionOutcomes.CORRECT:
-                                            CorrectSubmissionsCount++;
-                                            break;
-                                        case SubmissionOutcomes.WRONG:
-                                            WrongSubmissionsCount++;
-                                            SystemSounds.Exclamation.Play();
-                                            break;
-                                        case SubmissionOutcomes.INDETERMINATE:
-                                        case SubmissionOutcomes.UNDECIDABLE:
-                                            IndeterminateSubmissionsCount++;
-                                            break;
-
-                                        default:
-                                            EmptySubmissionsCount++;
-                                            break;
-                                    }
-                                }
-                                else
-                                {
-                                    EmptySubmissionsCount++;
-                                }
-                            })
-                            .ContinueWith((t) =>
-                            {
-                                if (t.IsFaulted)
-                                {
-                                    LostSubmissionsCount++;
-                                    _logger.Error($"Error submitting frame V{VideoId}, F{FrameNumber}: {t.Exception}");
-                                    MessageBox.Show(t.Exception.InnerException.Message);
-                                }
-                            }); ;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"Error submitting frame V{VideoId}, F{FrameNumber}: {ex}");
-                    }
-                }
+                BindableCollection<FrameViewModel> framesForSubmit = _submitControlViewModel.SubmittedFrames;
+                SubmitFrames(framesForSubmit);
             }
             catch (Exception e)
             {
@@ -757,6 +704,67 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             {
                 IsBusy = isDetailVisible;
                 IsDetailViewVisible = isDetailVisible;
+            }
+        }
+
+        private void SubmitFrames(IList<FrameViewModel> framesForSubmit)
+        {
+            string submittedFramesForLogging = string.Join(", ", framesForSubmit.Select(f => $"{f.VideoId}|{f.FrameNumber}"));
+
+            // submit all items
+            _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Submit, $"Frames submitted: {submittedFramesForLogging}");
+            _logger.Info($"Frames submitted: {submittedFramesForLogging}");
+            foreach ((int VideoId, int FrameNumber) in framesForSubmit.Select(f => (f.VideoId, f.FrameNumber)))
+            {
+                try
+                {
+                    SentSubmissionsCount++;
+                    _ = Task.Run(() => _viretCore.ItemSubmitter.SubmitItem(VideoId, FrameNumber))
+                        .ContinueWith((t) =>
+                        {
+                            SuccessfulSubmissionsStatus result = t.Result;
+                            ReceivedSubmissionsCount++;
+
+                            if (result.Submission != null)
+                            {
+                                switch (result.Submission)
+                                {
+                                    case SubmissionOutcomes.CORRECT:
+                                        CorrectSubmissionsCount++;
+                                        break;
+                                    case SubmissionOutcomes.WRONG:
+                                        WrongSubmissionsCount++;
+                                        SystemSounds.Exclamation.Play();
+                                        break;
+                                    case SubmissionOutcomes.INDETERMINATE:
+                                    case SubmissionOutcomes.UNDECIDABLE:
+                                        IndeterminateSubmissionsCount++;
+                                        break;
+
+                                    default:
+                                        EmptySubmissionsCount++;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                EmptySubmissionsCount++;
+                            }
+                        })
+                        .ContinueWith((t) =>
+                        {
+                            if (t.IsFaulted)
+                            {
+                                LostSubmissionsCount++;
+                                _logger.Error($"Error submitting frame V{VideoId}, F{FrameNumber}: {t.Exception}");
+                                MessageBox.Show(t.Exception.InnerException.Message);
+                            }
+                        }); ;
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"Error submitting frame V{VideoId}, F{FrameNumber}: {ex}");
+                }
             }
         }
 

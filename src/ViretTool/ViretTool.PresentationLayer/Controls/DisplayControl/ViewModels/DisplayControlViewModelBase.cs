@@ -193,6 +193,7 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         public event EventHandler<FrameViewModel> FrameForVideoChanged;             // video inspection
         public event EventHandler<FrameViewModel> FrameForScrollVideoChanged;       // TODO: rename. (video scrolling playback / scrolling sidebar?)
         public event EventHandler<IList<FrameViewModel>> SubmittedFramesChanged;    // submit collection
+        public event EventHandler<IList<FrameViewModel>> SubmitFramesDirectly;    // submit directly
         //public event EventHandler<FrameViewModel> FrameForSortChanged;            // TODO: remove? (unused - used to be noodle map)
         //public event EventHandler<FrameViewModel> FrameForZoomIntoChanged;        // ZoomDisplay zoom in
         //public event EventHandler<FrameViewModel> FrameForZoomOutChanged;         // ZoomDisplay zoom out
@@ -224,17 +225,18 @@ namespace ViretTool.PresentationLayer.Controls.DisplayControl.ViewModels
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
+                SubmitFramesDirectly?.Invoke(this, new FrameViewModel[] { frameViewModel });
                 //frameViewModel.IsSelectedForQuery = !frameViewModel.IsSelectedForQuery;
-                _datasetServicesManager.ViretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Submit, 
-                    $"Frames submitted by Ctrl + click: {frameViewModel.VideoId}|{frameViewModel.FrameNumber}");
-                _ = Task.Run(() => _datasetServicesManager.ViretCore.ItemSubmitter.SubmitItem(frameViewModel.VideoId, frameViewModel.FrameNumber))
-                            .ContinueWith((t) =>
-                            {
-                                if (t.IsFaulted)
-                                {
-                                    _logger.Error($"Error submitting frame V{frameViewModel.VideoId}, F{frameViewModel.FrameNumber}: {t.Exception}");
-                                }
-                            }); ;
+                //_datasetServicesManager.ViretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.Submit, 
+                //    $"Frames submitted by Ctrl + click: {frameViewModel.VideoId}|{frameViewModel.FrameNumber}");
+                //_ = Task.Run(() => _datasetServicesManager.ViretCore.ItemSubmitter.SubmitItem(frameViewModel.VideoId, frameViewModel.FrameNumber))
+                //            .ContinueWith((t) =>
+                //            {
+                //                if (t.IsFaulted)
+                //                {
+                //                    _logger.Error($"Error submitting frame V{frameViewModel.VideoId}, F{frameViewModel.FrameNumber}: {t.Exception}");
+                //                }
+                //            }); ;
             }
             else if (Mouse.RightButton == MouseButtonState.Pressed)
             {
