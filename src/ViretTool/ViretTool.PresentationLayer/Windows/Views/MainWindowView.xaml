@@ -70,6 +70,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Menu -->
@@ -107,11 +109,51 @@
                     <!-- Model remote status? -->
 
                     <!-- Submission result -->
-                    <StackPanel Grid.Column="4" Margin="5" MinWidth="100">
-                        <TextBlock Grid.Column="4" Text="Submission:" />
-                        <TextBlock Grid.Column="4" Text="{Binding SubmissionResultLabel}" />
+                    <StackPanel Grid.Column="4" Margin="5" MinWidth="100" Orientation="Vertical">
+                        <TextBlock Text="Last submission:" />
+                        <TextBlock Text="{Binding LastSubmissionResultLabel}" />
                     </StackPanel>
-                    
+
+                    <!-- Submission result counter -->
+                    <StackPanel Grid.Column="5" Margin="0" MinWidth="100" Orientation="Vertical" TextBlock.FontSize="10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Correct: " />
+                            <TextBlock Text="{Binding CorrectSubmissionsCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Wrong: " />
+                            <TextBlock Text="{Binding WrongSubmissionsCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Indeterminate: " />
+                            <TextBlock Text="{Binding IndeterminateSubmissionsCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Empty: " />
+                            <TextBlock Text="{Binding EmptySubmissionsCount}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Submission total counter -->
+                    <StackPanel Grid.Column="6" Margin="0" MinWidth="100" Orientation="Vertical" TextBlock.FontSize="10">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Sent: " />
+                            <TextBlock Text="{Binding SentSubmissionsCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Received: " />
+                            <TextBlock Text="{Binding ReceivedSubmissionsCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Waiting: " />
+                            <TextBlock Text="{Binding WaitingSubmissionsCount}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Lost: " />
+                            <TextBlock Text="{Binding LostSubmissionsCount}" />
+                        </StackPanel>
+                    </StackPanel>
+
 
                 </Grid>
 

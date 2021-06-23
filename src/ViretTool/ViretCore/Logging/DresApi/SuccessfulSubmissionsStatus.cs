@@ -12,7 +12,7 @@ namespace Viret.Logging.DresApi
     }
     public class SuccessfulSubmissionsStatus
     {
-        public SubmissionOutcomes Submission { get; set; }
+        public SubmissionOutcomes? Submission { get; set; }
         public string Description { get; set; }
         public bool Status { get; set; }
     }

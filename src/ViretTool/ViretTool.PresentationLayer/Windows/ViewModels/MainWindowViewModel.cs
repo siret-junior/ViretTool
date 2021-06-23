@@ -231,20 +231,127 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
             }
         }
 
-        private string _submissionResultLabel = "";
-        public string SubmissionResultLabel
+        private string _lastSubmissionResultLabel = "";
+        public string LastSubmissionResultLabel
         {
-            get { return _submissionResultLabel; }
+            get { return _lastSubmissionResultLabel; }
             set
             {
-                if (_submissionResultLabel == value)
+                if (_lastSubmissionResultLabel == value)
                 {
                     return;
                 }
-                _submissionResultLabel = value;
+                _lastSubmissionResultLabel = value;
                 NotifyOfPropertyChange();
             }
         }
+
+
+        private int _correctSubmissionsCount = 0;
+        public int CorrectSubmissionsCount
+        {
+            get { return _correctSubmissionsCount; }
+            set
+            {
+                if (_correctSubmissionsCount == value)
+                {
+                    return;
+                }
+                _correctSubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        private int _wrongSubmissionsCount = 0;
+        public int WrongSubmissionsCount
+        {
+            get { return _wrongSubmissionsCount; }
+            set
+            {
+                if (_wrongSubmissionsCount == value)
+                {
+                    return;
+                }
+                _wrongSubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        private int _indeterminateSubmissionsCount = 0;
+        public int IndeterminateSubmissionsCount
+        {
+            get { return _indeterminateSubmissionsCount; }
+            set
+            {
+                if (_indeterminateSubmissionsCount == value)
+                {
+                    return;
+                }
+                _indeterminateSubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        private int _emptySubmissionsCount = 0;
+        public int EmptySubmissionsCount
+        {
+            get { return _emptySubmissionsCount; }
+            set
+            {
+                if (_emptySubmissionsCount == value)
+                {
+                    return;
+                }
+                _emptySubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private int _sentSubmissionsCount = 0;
+        public int SentSubmissionsCount
+        {
+            get { return _sentSubmissionsCount; }
+            set
+            {
+                if (_sentSubmissionsCount == value)
+                {
+                    return;
+                }
+                _sentSubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private int _receivedSubmissionsCount = 0;
+        public int ReceivedSubmissionsCount
+        {
+            get { return _receivedSubmissionsCount; }
+            set
+            {
+                if (_receivedSubmissionsCount == value)
+                {
+                    return;
+                }
+                _receivedSubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public int WaitingSubmissionsCount => _sentSubmissionsCount - _receivedSubmissionsCount - _lostSubmissionsCount;
+
+        private int _lostSubmissionsCount = 0;
+        public int LostSubmissionsCount
+        {
+            get { return _lostSubmissionsCount; }
+            set
+            {
+                if (_lostSubmissionsCount == value)
+                {
+                    return;
+                }
+                _lostSubmissionsCount = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+
 
         // TODO: remove? merge with OpenDataset()?
         public async void OpenDatabase()
@@ -278,6 +385,15 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
 
             Query.OnKeywordsCleared();
             Query.OnQueryResultUpdated(null);
+
+            _correctSubmissionsCount = 0;
+            _wrongSubmissionsCount = 0;
+            _indeterminateSubmissionsCount = 0;
+            _emptySubmissionsCount = 0;
+
+            _sentSubmissionsCount = 0;
+            _receivedSubmissionsCount = 0;
+            _lostSubmissionsCount = 0;
 
             // logging
             _viretCore.InteractionLogger.LogInteraction(EventCategory.Browsing, EventType.ResetAll);
@@ -583,20 +699,44 @@ namespace ViretTool.PresentationLayer.Windows.ViewModels
                 {
                     try
                     {
+                        SentSubmissionsCount++;
                         _ = Task.Run(() => _viretCore.ItemSubmitter.SubmitItem(VideoId, FrameNumber))
                             .ContinueWith((t) =>
                             {
-                                SubmissionResultLabel = t.Result;
+                                SuccessfulSubmissionsStatus result = t.Result;
+                                ReceivedSubmissionsCount++;
 
-                                if (t.Result.Equals("WRONG"))
+                                if (result.Submission != null)
                                 {
-                                    SystemSounds.Exclamation.Play();
+                                    switch (result.Submission)
+                                    {
+                                        case SubmissionOutcomes.CORRECT:
+                                            CorrectSubmissionsCount++;
+                                            break;
+                                        case SubmissionOutcomes.WRONG:
+                                            WrongSubmissionsCount++;
+                                            SystemSounds.Exclamation.Play();
+                                            break;
+                                        case SubmissionOutcomes.INDETERMINATE:
+                                        case SubmissionOutcomes.UNDECIDABLE:
+                                            IndeterminateSubmissionsCount++;
+                                            break;
+
+                                        default:
+                                            EmptySubmissionsCount++;
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    EmptySubmissionsCount++;
                                 }
                             })
                             .ContinueWith((t) =>
                             {
                                 if (t.IsFaulted)
                                 {
+                                    LostSubmissionsCount++;
                                     _logger.Error($"Error submitting frame V{VideoId}, F{FrameNumber}: {t.Exception}");
                                     MessageBox.Show(t.Exception.InnerException.Message);
                                 }

@@ -34,7 +34,7 @@ namespace Viret.Submission
         }
 
 
-        public string SubmitItem(int videoId, int frameId)
+        public SuccessfulSubmissionsStatus SubmitItem(int videoId, int frameId)
         {
             try
             {
@@ -50,9 +50,10 @@ namespace Viret.Submission
                         + $"Response received at {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}:{_localLogger.NewLine}{responseString}");
 
                     SuccessfulSubmissionsStatus status = JsonConvert.DeserializeObject<SuccessfulSubmissionsStatus>(responseString);
+                    return status;
                     //throw new Exception(status.Description);
 
-                    return Enum.GetName(typeof(SubmissionOutcomes), status.Submission);
+                    //return Enum.GetName(typeof(SubmissionOutcomes), status.Submission);
                 }
             }
             catch (IOException ex)
