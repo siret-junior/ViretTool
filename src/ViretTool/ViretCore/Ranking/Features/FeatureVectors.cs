@@ -78,21 +78,21 @@ namespace Viret.Ranking.Features
         }
 
 
-        public (int[] Ranks, double[] Scores) ComputeKnnRanking(float[] queryVector)
+        public (int[] ItemIds, double[] Scores) ComputeKnnRanking(float[] queryVector)
         {
-            int[] ranks = new int[Vectors.Length];
+            int[] itemIds = new int[Vectors.Length];
             double[] similarities = new double[Vectors.Length];
 
             // compute similarities
             Parallel.For(0, Vectors.Length, (i) => 
             {
                 similarities[i] = GetSimilarity(Vectors[i], queryVector);
-                ranks[i] = i;
+                itemIds[i] = i;
             });
 
             // sort descending
-            Array.Sort(similarities, ranks, Comparer<double>.Create((x, y) => y.CompareTo(x)));
-            return (ranks, similarities);
+            Array.Sort(similarities, itemIds, Comparer<double>.Create((x, y) => y.CompareTo(x)));
+            return (itemIds, similarities);
         }
 
         public IEnumerable<(int ItemId, double Score)> ComputeKnnRankingWithScores(float[] queryVector)
@@ -101,7 +101,12 @@ namespace Viret.Ranking.Features
                 .OrderByDescending(item => item.Score);
         }
 
-        public (int[] Ranks, double[] Scores) ComputeKnnRanking(int vectorId)
+        public IEnumerable<(int ItemId, double Score)> ComputeScores(float[] queryVector)
+        {
+            return Vectors.Select<float[], (int ItemId, double Score)>((vector, index) => (index, GetSimilarity(vector, queryVector)));
+        }
+
+        public (int[] ItemIds, double[] Scores) ComputeKnnRanking(int vectorId)
         {
             // TODO: cache or pre-compute
             return ComputeKnnRanking(Vectors[vectorId]);

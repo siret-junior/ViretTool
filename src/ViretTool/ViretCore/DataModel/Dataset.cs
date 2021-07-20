@@ -40,7 +40,7 @@ namespace Viret.DataModel
         {
             // parse records
             var records = File.ReadAllLines(inputFile)
-                .AsParallel()
+                //.AsParallel().AsOrdered()
                 .Select((relativePath, index) =>
                 {
                     ParseFrameHierarchy(Path.GetFileName(relativePath),
@@ -258,8 +258,8 @@ namespace Viret.DataModel
             Keyframe keyframe = new Keyframe(parentVideo, parentVideo.Keyframes.Count, frameInVideo, parentShot, parentShot.Keyframes.Count);
 
             // link to parents
-            parentShot.Keyframes.Add(keyframe);
-            parentShot.ParentVideo.Keyframes.Add(keyframe);
+            //parentShot.Keyframes.Add(keyframe);
+            //parentShot.ParentVideo.Keyframes.Add(keyframe);
             
             return keyframe;
         }

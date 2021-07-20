@@ -19,8 +19,7 @@ namespace Viret.Ranking.ContextAware
         /// </summary>
         public readonly int[] VideoLastFrameIds;
 
-
-        private readonly ConcurrentDictionary<string, double[]> _queryScoreCache = new ConcurrentDictionary<string, double[]>();
+        //private readonly ConcurrentDictionary<string, double[]> _queryScoreCache = new ConcurrentDictionary<string, double[]>();
 
         public ContextAwareRanker(float[][] keyframeVectors, int[] videoLastFrameIds)
         {
@@ -70,7 +69,7 @@ namespace Viret.Ranking.ContextAware
         }
 
 
-        private List<VideoSegment> RankSegmentsInVideo(
+        private IList<VideoSegment> RankSegmentsInVideo(
             List<double[]> scoresForEachQuery,
             int segmentSize,
             int videoStart,
@@ -82,44 +81,71 @@ namespace Viret.Ranking.ContextAware
                 segmentSize = videoEnd - videoStart;
             }
 
-            List<VideoSegment> segments = new List<VideoSegment>();
+            //List<VideoSegment> segments = new List<VideoSegment>();
             int queryCount = scoresForEachQuery.Count;
 
             // scan one video with a window of size = segmentSize
-            for (int i = videoStart; i < videoEnd - segmentSize + 1; i++)
-            {
-                VideoSegment videoSegment = new VideoSegment(queryCount, i, segmentSize);
-                segments.Add(videoSegment);
-            }
+            VideoSegment[] segments = new VideoSegment[videoEnd - segmentSize + 1 - videoStart];
 
-            Parallel.For(videoStart, videoEnd - segmentSize + 1, i =>
+            Parallel.For(videoStart, videoEnd - segmentSize + 1, segmentFirstKeyframeId =>
             {
-                VideoSegment videoSegment = segments[i - videoStart];
+                segments[segmentFirstKeyframeId - videoStart] = new VideoSegment(queryCount, segmentFirstKeyframeId, segmentSize);
+                VideoSegment videoSegment = segments[segmentFirstKeyframeId - videoStart];
 
                 // for one segment, find the best score and its position for each query
-                int ii = i + segmentSize;
-                for (int q = 0; q < queryCount; q++)
+                int segmentEndExclusive = segmentFirstKeyframeId + segmentSize;
+                for (int iQuery = 0; iQuery < queryCount; iQuery++)
                 {
-                    double[] scores = scoresForEachQuery[q];
+                    double[] queryScores = scoresForEachQuery[iQuery];
                     double max = double.MinValue;
                     int maxId = 0;
 
-                    for (int k = i; k < ii; k++)
-                        if (scores[k] > max)
+                    for (int keyframeId = segmentFirstKeyframeId; keyframeId < segmentEndExclusive; keyframeId++)
+                    {
+                        if (queryScores[keyframeId] > max)
                         {
-                            max = scores[k];
-                            maxId = k;
+                            max = queryScores[keyframeId];
+                            maxId = keyframeId;
                         }
+                    }
 
-                    videoSegment.KeyframeIdForEachQuery[q] = maxId;
-                    videoSegment.ScoresForEachQuery[q] = max;
+                    videoSegment.KeyframeIdForEachQuery[iQuery] = maxId;
+                    videoSegment.ScoresForEachQuery[iQuery] = max;
                 }
 
-                videoSegment.ComputeSegmentScore();
+                videoSegment.UpdateSegmentScore();
             });
 
             return segments;
         }
+
+        //private List<VideoSegment> GenerateVideoSegments(int segmentSize = 10)
+        //{
+        //    List<VideoSegment> segments = new List<VideoSegment>();
+        //    int videoFirstFrameId = 0;
+        //    foreach (int videoLastFrameId in VideoLastFrameIds)
+        //    {
+        //        segments.AddRange(GenerateSegmentsForVideo(segmentSize, videoFirstFrameId, videoLastFrameId + 1));
+        //        videoFirstFrameId = videoLastFrameId + 1;
+        //    }
+
+        //    return segments;
+        //}
+
+        //private IEnumerable<VideoSegment> GenerateSegmentsForVideo(int segmentSize, int videoStart, int videoEnd)
+        //{
+        //    // for too short video, trim segmentSize
+        //    if (videoEnd - videoStart < segmentSize)
+        //    {
+        //        segmentSize = videoEnd - videoStart;
+        //    }
+
+        //    // scan one video with a window of size = segmentSize
+        //    for (int i = videoStart; i < videoEnd - segmentSize + 1; i++)
+        //    {
+        //        yield return new VideoSegment(10, i, segmentSize);
+        //    }
+        //}
 
         private List<double[]> ComputeScoresForQueries(IList<float[]> queryVectors)
         {
@@ -127,19 +153,23 @@ namespace Viret.Ranking.ContextAware
 
             foreach (float[] queryVector in queryVectors)
             {
-                string key = string.Join(",", queryVector);
-                if (!_queryScoreCache.TryGetValue(key, out double[] scores))
-                {
-                    scores = new double[KeyframeVectors.Length];
-                    Parallel.For(0, KeyframeVectors.Length, i => { scores[i] = DotProductPlusOne(queryVector, KeyframeVectors[i]); });
-                    _queryScoreCache.TryAdd(key, scores);
-                }
+                //string key = string.Join(",", queryVector);
+                //if (!_queryScoreCache.TryGetValue(key, out double[] scores))
+                //{
+                //    scores = new double[KeyframeVectors.Length];
+                //    Parallel.For(0, KeyframeVectors.Length, i => { scores[i] = DotProductPlusOne(queryVector, KeyframeVectors[i]); });
+                //    _queryScoreCache.TryAdd(key, scores);
+                //}
+                double[] scores = new double[KeyframeVectors.Length];
+                Parallel.For(0, KeyframeVectors.Length, i => { scores[i] = DotProductPlusOne(queryVector, KeyframeVectors[i]); });
 
                 scoreLists.Add(scores);
             }
 
             return scoreLists;
         }
+
+
 
         /// <summary>
         /// Returns values from 0 to 2, but only for normalized vectors!

@@ -43,7 +43,7 @@ namespace Viret.Ranking.ContextAware
             Length = segmentSize;
         }
 
-        public void ComputeSegmentScore()
+        public void UpdateSegmentScore()
         {
             // TODO - in future, test various aggregations...
 
@@ -53,6 +53,8 @@ namespace Viret.Ranking.ContextAware
                 Score *= ScoresForEachQuery[i];
             }
         }
+
+        public IEnumerable<int> Keyframes => Enumerable.Range(SegmentFirstFrameIndex, Length);
 
         public override string ToString()
         {

@@ -29,9 +29,9 @@ namespace Viret.Ranking
         /// <param name="querySentences"></param>
         /// <param name="rankingModel"></param>
         /// <returns></returns>
-        public List<VideoSegment> ComputeRankedResultSet(string[] querySentences, RankingModel rankingModel)
+        public List<VideoSegment> ComputeRankedResultSet(IList<string> querySentences, RankingModel rankingModel)
         {
-            if (querySentences == null || querySentences.Length == 0) return new List<VideoSegment>();
+            if (querySentences == null || querySentences.Count == 0) return new List<VideoSegment>();
 
             // split to sentences of words
             string[][] sentencesOfWords = querySentences.Select(sentence => sentence.Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries)).ToArray();
@@ -100,6 +100,17 @@ namespace Viret.Ranking
             return rankedResultSet;
         }
 
+        
+        public List<VideoSegment> ComputeFilteredRankedResultSet(
+            IList<string> querySentences, 
+            RankingModel rankingModel,
+            int maxResults = 1000)
+        {
+            return ApplyPresentationFiltersSegmentOverlaps(ComputeRankedResultSet(querySentences, rankingModel))
+                .Take(maxResults)
+                .ToList();
+        }
+
 
         /// <summary>
         /// Preloads queries for all models.
@@ -138,6 +149,52 @@ namespace Viret.Ranking
                     ViretCore.ContextAwareRankerClip.PreloadQueryConcurrent(queryVectors);
                 });
             }
+        }
+
+        public IEnumerable<VideoSegment> ApplyPresentationFiltersSegmentOverlaps(List<VideoSegment> resultSet)
+        {
+            // filter overlapping segments
+            bool[] keyframeMask = new bool[ViretCore.Dataset.Keyframes.Count];
+            //List<VideoSegment> presentedResultSet = new List<VideoSegment>(keyframeMask.Length / resultSet[0].Length);
+            foreach (VideoSegment segment in resultSet)
+            {
+                // check
+                bool isOverlapping = false;
+                for (int i = segment.SegmentFirstFrameIndex; i < segment.SegmentFirstFrameIndex + segment.Length; i++)
+                {
+                    if (keyframeMask[i])
+                    {
+                        isOverlapping = true;
+                        break;
+                    }
+                }
+                // add and mark
+                if (!isOverlapping)
+                {
+                    //presentedResultSet.Add(segment);
+                    yield return segment;
+                    for (int i = segment.SegmentFirstFrameIndex; i < segment.SegmentFirstFrameIndex + segment.Length; i++)
+                    {
+                        keyframeMask[i] = true;
+                    }
+                }
+            }
+
+            //return presentedResultSet;
+        }
+
+        public int[] ApplyPresentationFiltersMaxFromVideoShot(int[] resultSet, int maxResults = 1000)
+        {
+            // filter overlapping segments
+            int[] videoCounter = new int[ViretCore.Dataset.Videos.Count];
+            int[] shotCounter = new int[ViretCore.Dataset.Shots.Count];
+
+            return resultSet
+                .Where(keyframeId =>
+                    videoCounter[ViretCore.Dataset.Keyframes[keyframeId].ParentVideo.Id]++ < ViretCore.Config.PresentationFilterMaxFromVideo
+                    && shotCounter[ViretCore.Dataset.Keyframes[keyframeId].ParentShot.Id]++ < ViretCore.Config.PresentationFilterMaxFromShot)
+                .Take(maxResults)
+                .ToArray();
         }
     }
 }

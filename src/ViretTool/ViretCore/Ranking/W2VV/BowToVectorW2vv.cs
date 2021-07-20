@@ -13,7 +13,7 @@ namespace Viret.Ranking.W2VV
         private const int VECTOR_DIMENSION = 2048;
 
         private readonly Dictionary<string, int> _wordToIdDictionary;
-        private readonly ConcurrentDictionary<string, float[]> _queryVectorCache = new ConcurrentDictionary<string, float[]>();
+        //private readonly ConcurrentDictionary<string, float[]> _queryVectorCache = new ConcurrentDictionary<string, float[]>();
         private readonly float[][] _wordIdToVector;
         private readonly float[] _biasVector;
         private readonly PcaConversion _pcaConversion;
@@ -67,6 +67,10 @@ namespace Viret.Ranking.W2VV
             }
         }
 
+        public string[] GetSupportedKeywords()
+        {
+            return _wordToIdDictionary.Keys.ToArray();
+        }
         public bool ContainsWord(string word)
         {
             return _wordToIdDictionary.ContainsKey(word);
@@ -79,19 +83,17 @@ namespace Viret.Ranking.W2VV
 
         public static string[] FulltextToWordArray(string fulltext)
         {
-            return fulltext
-                .Trim(new char[] { '.' })
-                .Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return fulltext.ToLower().Split(new char[] { ' ', ',', '.', '-' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public float[] BowToVector(string[] query, bool applyPCA = true)
         {
             // check cache
-            string cacheKey = string.Join("~", query);
-            if (_queryVectorCache.TryGetValue(cacheKey, out float[] cachedVector))
-            {
-                return cachedVector;
-            }
+            //string cacheKey = string.Join("~", query);
+            //if (_queryVectorCache.TryGetValue(cacheKey, out float[] cachedVector))
+            //{
+            //    return cachedVector;
+            //}
 
             float[] vector = new float[VECTOR_DIMENSION];
 
@@ -121,7 +123,7 @@ namespace Viret.Ranking.W2VV
                 vector = _pcaConversion.ApplyPCA(vector);
             }
 
-            _queryVectorCache.TryAdd(cacheKey, vector);
+            //_queryVectorCache.TryAdd(cacheKey, vector);
             return vector;
         }
 

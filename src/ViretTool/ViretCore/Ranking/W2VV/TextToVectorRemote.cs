@@ -40,6 +40,10 @@ namespace Viret.Ranking.W2VV
         public static TextToVectorRemote FromDirectory(string inputDirectory, string serverUrlPattern,
             string pcaMatrixPattern, string pcaMeanPattern, int vectorDimension)
         {
+            if (!Directory.Exists(inputDirectory))
+            {
+                return null;
+            }
             // load filenames based on patterns
             string serverUrlFile = Directory.GetFiles(inputDirectory, serverUrlPattern).FirstOrDefault();
             string pcaMatrixFile = Directory.GetFiles(inputDirectory, pcaMatrixPattern).FirstOrDefault();
